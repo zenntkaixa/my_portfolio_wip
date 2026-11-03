@@ -11,7 +11,7 @@ Agent hints in brackets.
 - [x] `POST /api/estimate` with Turnstile verification and Claude call
 - [x] Claude Code framework: CLAUDE.md, docs, subagents, skills, hooks
 - [x] Component and test skeletons that compile
-- [ ] First run on Ubuntu: `npm install`, `npm run check`, `npx playwright install chromium`, log result
+- [x] First run on Ubuntu: `npm install`, `npm run check`, `npx playwright install chromium`, log result
 
 ## M1 — Layout and design system
 - [ ] Finish `app/globals.css`: grid spans, breakpoints, tile base styles, focus styles [ui-builder]

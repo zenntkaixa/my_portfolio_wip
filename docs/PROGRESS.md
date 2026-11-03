@@ -36,11 +36,15 @@ was deferred.
 - Turnstile widget isn't painted in the 390px screenshot (same on Next 15). Look at it in M1/M2.
 - npm's install-scripts policy blocks esbuild's postinstall; everything works without it.
 
+- M0 "First run on Ubuntu" ticked: Izzat installed Node 26.13.0 via nvm (default alias `lts/*`,
+  npm 11.20.0). On it, `npm run check` passes and Playwright passes 11/11.
+
 **Next up**
-- M0's last task (first run on Ubuntu, now largely covered by this session), then M1 via `/next-task`.
+- M1 via `/next-task`: finish `app/globals.css`.
 
 **Waiting on Izzat**
-- Install Node 26 locally (system Node is still 22.22.1; checks ran on a temporary Node 26 copy).
+- Nothing blocking M1. M2 needs the Anthropic key in `.env.local` for the manual test.
+- Decide what to do with the untracked `AGENTS.md`.
 
 ---
 
