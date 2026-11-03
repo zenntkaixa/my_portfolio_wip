@@ -54,7 +54,22 @@ Theme switching: `data-theme="light|dark"` on `<html>`, set before paint by an i
 - **≤ 1024px:** 6 columns. Half width (span 3): case studies 1 and 2, Stack, Certifications.
   Everything else is full width (span 6). In DOM order this gives clean rows with no orphans.
   Adjust only if `/visual-check` shows a problem, and update this line.
-- **≤ 720px:** single column, Estimator directly after Hero.
+- **≤ 720px:** single column, Estimator directly after Hero. This is visual only (CSS `order` on
+  `.tile--hero` and `.tile--estimator`). DOM, reading and focus order stay Hero, Now, Estimator, so
+  keyboard and screen-reader users reach Now before the Estimator. Accepted trade-off (Izzat, 2026-11-03):
+  the Now tile has nothing focusable, and moving the DOM would need explicit desktop grid placement.
+
+## Focus
+- `:focus-visible`: 2px `--accent` outline, 2px offset, plus a 4px `--accent-soft` halo (the only shadow).
+- `forced-colors: active`: 2px `Highlight` outline, no halo.
+
+## Form controls
+- Text inputs, textareas and selects: `--surface` fill, 1px `--muted` border (3:1 non-text contrast;
+  `--line` is too faint for a field edge), `--r-sm`.
+- Buttons: 1px `--line` border (their text labels them), `--accent` border on hover.
+- Range, radio, checkbox: native shape with `accent-color: var(--accent)`.
+- Disabled: `--muted` text on `--surface-2`, no opacity fade.
+- Base link and control styles sit in `@layer base`, so component styles always override them.
 
 ## Motion
 - Tiles fade and rise 8px on first load, staggered 40ms, 400ms ease-out.

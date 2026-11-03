@@ -5,6 +5,37 @@ what's next, anything blocked on Izzat.
 
 ---
 
+## 2026-11-03 — Session 2: M1 finish `app/globals.css`
+
+**Done**
+- ≤720px: Hero then Estimator via CSS `order` (`.tile--hero`, `.tile--estimator`); DOM/focus order
+  unchanged. Trade-off recorded in docs/01.
+- Tile base: `.tile__title`, vertical rhythm (`.tile > * + *`), lists, `.muted`/`.tile__meta` hooks,
+  shared `.chips`. Rules inside tiles use `:where(.tile)` so component classes win.
+- Links and form controls in `@layer base`. Text fields use a `--muted` border (3:1 non-text contrast;
+  `--line` was 1.36:1). Range/radio/checkbox keep native shape with `accent-color`.
+- Focus: existing outline + halo, plus a `forced-colors` `Highlight` outline. Focus and form-control
+  specs added to docs/01.
+
+**Verified**
+- `npm run check` passes; Playwright 11/11. Visual check at 390/1024/1440, light and dark: spans per
+  docs/01, no horizontal scroll, 390px order Hero → Estimator → Now. Computed styles confirmed the
+  textarea border, range slider and chips in both themes. Focus ring checked normally and with
+  emulated forced colours.
+- code-reviewer: one blocker (field border contrast) and the cascade findings fixed before commit.
+
+**Found, not fixed** (belong to later tasks)
+- Hero, Now stats, Contact links and the estimator form are still unstyled. Stale "stack chips"
+  TODOs remain in ProjectTile, CaseStudyTile and StackTile; clear them in those tile tasks.
+
+**Next up**
+- M1: theme toggle with no flash on load.
+
+**Waiting on Izzat**
+- Nothing blocking M1. M2 needs the Anthropic key in `.env.local`. Decide on untracked `AGENTS.md`.
+
+---
+
 ## 2026-11-03 — Session 1: stack upgrade (Izzat's instruction, outside the roadmap)
 
 Izzat asked to upgrade to the latest LTS/stable versions before starting M1, so the first roadmap task

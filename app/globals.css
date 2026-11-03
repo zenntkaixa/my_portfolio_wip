@@ -98,14 +98,91 @@ p {
   margin: 0;
 }
 
-a {
-  color: var(--accent);
+/* ---- Links and form-control base ----
+   In a cascade layer so any unlayered component rule (tiles, the M2 estimator) always wins,
+   whatever its specificity. Estimator-specific styling is M2. */
+
+@layer base {
+  a {
+    color: var(--accent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  a:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+    color: var(--ink);
+  }
+
+  /* Text-like fields: the border is their only visible edge, so it uses --muted for 3:1
+     non-text contrast (WCAG 1.4.11). --line would be 1.36:1 on --surface. */
+  input:not([type="range"], [type="radio"], [type="checkbox"]),
+  textarea,
+  select {
+    padding: 0.5em 0.75em;
+    background: var(--surface);
+    border: 1px solid var(--muted);
+    border-radius: var(--r-sm);
+  }
+
+  /* Sliders, radios and checkboxes keep their native shape, tinted with the accent. */
+  input:is([type="range"], [type="radio"], [type="checkbox"]) {
+    accent-color: var(--accent);
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  /* Buttons are labelled by their text, so the quieter --line border is fine. */
+  button {
+    padding: 0.5em 1em;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    cursor: pointer;
+  }
+
+  button:hover:not(:disabled) {
+    border-color: var(--accent);
+  }
+
+  /* Disabled stays readable: muted ink on an inset surface, no opacity fade. */
+  button:disabled,
+  input:not([type="range"], [type="radio"], [type="checkbox"]):disabled,
+  textarea:disabled,
+  select:disabled {
+    color: var(--muted);
+    background: var(--surface-2);
+    cursor: not-allowed;
+  }
 }
+
+/* ---- Focus ----
+   One rule for links, buttons and form controls. Nothing else in this file sets outline or
+   box-shadow on these elements, so it is never overridden. The halo is the only shadow on the site. */
 
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
   box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+/* Windows High Contrast and other forced-colour modes drop box-shadow and remap colours,
+   so rely on a system-colour outline only. */
+@media (forced-colors: active) {
+  :focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+    box-shadow: none;
+  }
 }
 
 /* ---- Page shell ---- */
@@ -123,8 +200,8 @@ a {
 }
 
 /* ---- Bento grid ----
-   Basic breakpoints are in place. TODO(M1, ui-builder): tile hover states, tile internals,
-   and the load animation with reduced-motion support. */
+   12 -> 6 -> 1 columns, spans per docs/01-design-system.md.
+   TODO(M1, ui-builder): tile hover states and the load animation with reduced-motion support. */
 
 .bento {
   display: grid;
@@ -161,6 +238,80 @@ a {
   .tile {
     grid-column: 1 / -1;
   }
+  /* Visual order only: Hero, then Estimator, then every other tile in DOM order (order 0).
+     Reading and keyboard focus order still follow the DOM (Hero, Now, Estimator, ...). */
+  .bento > .tile--hero {
+    order: -2;
+  }
+  .bento > .tile--estimator {
+    order: -1;
+  }
+}
+
+/* ---- Tile base styles (shared by every tile) ---- */
+
+.tile__title {
+  font-size: var(--fs-xl);
+}
+
+/* Vertical rhythm between direct children (this also spaces the title from what follows).
+   The visually hidden hero title adds no space. */
+.tile > * + * {
+  margin-top: 0.75em;
+}
+
+.tile > .sr-only + * {
+  margin-top: 0;
+}
+
+/* Everything inside tiles uses :where(.tile) so specificity stays at element level: the rhythm
+   rule above still applies, and any single-class component rule (e.g. M2 estimator) wins. */
+:where(.tile) h3 {
+  font-size: var(--fs-base);
+  margin-bottom: 0.5em;
+}
+
+/* Lists keep their markers (numbered lists stay numbered); only .chips resets bullets. */
+:where(.tile) ul,
+:where(.tile) ol {
+  margin-block: 0;
+  padding-left: 1.25em;
+}
+
+:where(.tile) li + li {
+  margin-top: 0.4em;
+}
+
+:where(.tile) dl,
+:where(.tile) dd {
+  margin: 0;
+}
+
+/* Secondary and meta text. */
+.muted,
+.tile__meta {
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+
+/* ---- Chips (ProjectTile, CaseStudyTile, StackTile; reusable by the M2 role chips) ---- */
+
+.chips {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--gap) / 2);
+}
+
+.chips > li {
+  margin: 0;
+  padding: 0.2em 0.7em;
+  font-size: var(--fs-sm);
+  line-height: 1.4;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
 }
 
 /* TODO(M2, ui-builder): estimator tile with blueprint grid background (var(--grid)), form controls,

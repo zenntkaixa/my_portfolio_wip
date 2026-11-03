@@ -5,7 +5,7 @@ import { profile } from "@/lib/content";
 // location line. Bento span 7, size lg. See docs/01-design-system.md.
 export function HeroTile() {
   return (
-    <Tile span={7} size="lg" title={`About ${profile.name}`} hideTitle id="about">
+    <Tile span={7} size="lg" title={`About ${profile.name}`} hideTitle id="about" className="tile--hero">
       <div className="hero__avatar" aria-hidden="true">
         {profile.initials}
       </div>

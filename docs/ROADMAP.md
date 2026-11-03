@@ -14,7 +14,7 @@ Agent hints in brackets.
 - [x] First run on Ubuntu: `npm install`, `npm run check`, `npx playwright install chromium`, log result
 
 ## M1 — Layout and design system
-- [ ] Finish `app/globals.css`: grid spans, breakpoints, tile base styles, focus styles [ui-builder]
+- [x] Finish `app/globals.css`: grid spans, breakpoints, tile base styles, focus styles [ui-builder]
 - [ ] Theme toggle with no flash on load, persists choice [ui-builder]
 - [ ] Hero tile: initials avatar, name, headline, summary, location, availability dot [ui-builder]
 - [ ] Now tile: current role and three stats [ui-builder]
