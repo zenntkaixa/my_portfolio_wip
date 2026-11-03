@@ -43,7 +43,7 @@ npm run check          # typecheck + unit tests + build: the pre-commit gate
 
 ## 4. Stack
 
-Next.js 15 (App Router) · React 19 · TypeScript strict · plain CSS with design tokens (no Tailwind)
+Next.js 16 (App Router) · React 19 · TypeScript strict · plain CSS with design tokens (no Tailwind)
 · Vercel hosting · Anthropic Messages API via `fetch` · Cloudflare Turnstile · Vitest · Playwright.
 
 ## 5. Session loop

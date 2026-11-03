@@ -15,3 +15,6 @@ zero-ops hosting on a free tier. Izzat chose Next.js + Vercel.
 ## Consequences
 - Every new dependency needs an ADR.
 - If styling grows painful, revisit with CSS Modules before reaching for Tailwind.
+
+## Amendments
+- 2026-11-03: upgraded to Next.js 16 (Turbopack by default, async-only request APIs). Decision unchanged.

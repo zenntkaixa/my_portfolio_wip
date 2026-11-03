@@ -25,7 +25,8 @@ test("rate limit shows the server message", async ({ page }) => {
   const submit = page.getByRole("button", { name: "Estimate this feature" });
   await expect(submit).toBeEnabled({ timeout: 15_000 });
   await submit.click();
-  await expect(page.getByRole("alert")).toContainText("estimates this hour");
+  // Filter by text: Next.js also renders an empty role="alert" route announcer.
+  await expect(page.getByRole("alert").filter({ hasText: "estimates this hour" })).toBeVisible();
 });
 
 // TODO(M3, qa-tester): 400 inline validation, 403 Turnstile failure, 502 retry button, keyboard tab navigation.
