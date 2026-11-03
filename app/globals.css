@@ -1,0 +1,179 @@
+/* Design tokens: source of truth is docs/01-design-system.md. Keep the two in sync. */
+
+:root,
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f2f4f8;
+  --surface: #ffffff;
+  --surface-2: #e9edf4;
+  --ink: #13203a;
+  --muted: #5a6578;
+  --line: #d7dde7;
+  --accent: #2b57e0;
+  --accent-ink: #ffffff;
+  --accent-soft: #e3eafd;
+  --ok: #0e8f7e;
+  --warn: #b4570c;
+  --grid: rgba(43, 87, 224, 0.08);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0d1424;
+  --surface: #152038;
+  --surface-2: #1c2a47;
+  --ink: #e6ecf6;
+  --muted: #9aa7bd;
+  --line: #26365a;
+  --accent: #7e9cff;
+  --accent-ink: #0d1424;
+  --accent-soft: #22325c;
+  --ok: #4cc9b4;
+  --warn: #f0a55e;
+  --grid: rgba(126, 156, 255, 0.09);
+}
+
+/* Fallback before the theme script runs (or with JS off). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --bg: #0d1424;
+    --surface: #152038;
+    --surface-2: #1c2a47;
+    --ink: #e6ecf6;
+    --muted: #9aa7bd;
+    --line: #26365a;
+    --accent: #7e9cff;
+    --accent-ink: #0d1424;
+    --accent-soft: #22325c;
+    --ok: #4cc9b4;
+    --warn: #f0a55e;
+    --grid: rgba(126, 156, 255, 0.09);
+  }
+}
+
+:root {
+  --fs-xs: 0.8rem;
+  --fs-sm: 0.9rem;
+  --fs-base: 1rem;
+  --fs-lg: 1.2rem;
+  --fs-xl: 1.6rem;
+  --fs-2xl: clamp(2.2rem, 5vw, 3.6rem);
+
+  --r-sm: 10px;
+  --r-md: 20px;
+  --r-lg: 28px;
+
+  --gap: 16px;
+  --page-pad: clamp(16px, 4vw, 40px);
+  --max-w: 1200px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: var(--fs-base);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display), system-ui, sans-serif;
+  line-height: 1.1;
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+/* ---- Page shell ---- */
+
+.page {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: var(--page-pad);
+}
+
+.topbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: var(--gap);
+}
+
+/* ---- Bento grid ----
+   Basic breakpoints are in place. TODO(M1, ui-builder): tile hover states, tile internals,
+   and the load animation with reduced-motion support. */
+
+.bento {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--gap);
+}
+
+.tile {
+  grid-column: span var(--span, 12);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: clamp(20px, 3vw, 32px);
+  min-width: 0;
+}
+
+.tile--lg {
+  border-radius: var(--r-lg);
+}
+
+@media (max-width: 1024px) {
+  .bento {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  .tile {
+    grid-column: span var(--span-md, 6);
+  }
+}
+
+@media (max-width: 720px) {
+  .bento {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tile {
+    grid-column: 1 / -1;
+  }
+}
+
+/* TODO(M2, ui-builder): estimator tile with blueprint grid background (var(--grid)), form controls,
+   tabs, timeline bars and task table. See docs/03-estimator-spec.md. */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

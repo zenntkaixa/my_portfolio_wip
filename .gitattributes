@@ -1,0 +1,8 @@
+# Normalise line endings so the repo works the same on Windows and Ubuntu.
+* text=auto eol=lf
+*.sh text eol=lf
+*.mjs text eol=lf
+*.png binary
+*.jpg binary
+*.ico binary
+*.woff2 binary

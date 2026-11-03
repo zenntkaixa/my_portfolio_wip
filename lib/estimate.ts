@@ -1,0 +1,98 @@
+export const SENIORITY = ["junior", "mid", "senior", "mixed"] as const;
+export type Seniority = (typeof SENIORITY)[number];
+
+export const ROLES = ["BA", "Architect", "Backend", "Frontend", "QA", "DevOps", "PM"] as const;
+
+export const FEATURE_MIN = 20;
+export const FEATURE_MAX = 1500;
+
+export type EstimateRequest = {
+  feature: string;
+  teamSize: number;
+  seniority: Seniority;
+  token: string;
+};
+
+export type Task = { task: string; role: string; hours: number };
+export type Phase = {
+  name: string;
+  goal: string;
+  startDay: number;
+  durationDays: number;
+  tasks: Task[];
+};
+export type Plan = {
+  title: string;
+  summary: string;
+  assumptions: string[];
+  phases: Phase[];
+  risks: string[];
+  confidence: "low" | "medium" | "high";
+  totalHours: number;
+  totalDays: number;
+  calendarWeeks: number;
+};
+
+export function validateRequest(body: unknown): { ok: true; value: EstimateRequest } | { ok: false; error: string } {
+  if (!body || typeof body !== "object") return { ok: false, error: "Send a JSON body with feature, teamSize and seniority." };
+  const b = body as Record<string, unknown>;
+  const feature = typeof b.feature === "string" ? b.feature.trim() : "";
+  if (feature.length < FEATURE_MIN) return { ok: false, error: `Describe the feature in at least ${FEATURE_MIN} characters.` };
+  if (feature.length > FEATURE_MAX) return { ok: false, error: `Keep the description under ${FEATURE_MAX} characters.` };
+  const teamSize = Number(b.teamSize);
+  if (!Number.isInteger(teamSize) || teamSize < 1 || teamSize > 12) return { ok: false, error: "Team size must be between 1 and 12." };
+  const seniority = b.seniority as Seniority;
+  if (!SENIORITY.includes(seniority)) return { ok: false, error: "Pick a seniority level." };
+  const token = typeof b.token === "string" ? b.token : "";
+  if (!token) return { ok: false, error: "Complete the human check, then try again." };
+  return { ok: true, value: { feature, teamSize, seniority, token } };
+}
+
+const str = (v: unknown, max = 400) => (typeof v === "string" ? v.trim().slice(0, max) : "");
+const num = (v: unknown, min: number, max: number) => {
+  const n = Number(v);
+  if (!Number.isFinite(n)) return min;
+  return Math.min(max, Math.max(min, Math.round(n * 2) / 2));
+};
+const strList = (v: unknown, limit: number) =>
+  Array.isArray(v) ? v.map((x) => str(x, 300)).filter(Boolean).slice(0, limit) : [];
+
+/** Turn whatever the model returned into a safe, consistent Plan. Totals are computed here, not trusted. */
+export function normalisePlan(raw: unknown): Plan | null {
+  if (!raw || typeof raw !== "object") return null;
+  const r = raw as Record<string, unknown>;
+  if (!Array.isArray(r.phases) || r.phases.length === 0) return null;
+
+  const phases: Phase[] = r.phases.slice(0, 10).map((p) => {
+    const ph = (p ?? {}) as Record<string, unknown>;
+    const tasks = Array.isArray(ph.tasks)
+      ? ph.tasks.slice(0, 12).map((t) => {
+          const tk = (t ?? {}) as Record<string, unknown>;
+          return { task: str(tk.task, 200), role: str(tk.role, 30) || "Backend", hours: num(tk.hours, 0.5, 400) };
+        }).filter((t) => t.task)
+      : [];
+    return {
+      name: str(ph.name, 60) || "Phase",
+      goal: str(ph.goal, 240),
+      startDay: num(ph.startDay, 0, 365),
+      durationDays: num(ph.durationDays, 0.5, 120),
+      tasks,
+    };
+  });
+
+  const totalHours = phases.reduce((s, p) => s + p.tasks.reduce((a, t) => a + t.hours, 0), 0);
+  const totalDays = Math.max(...phases.map((p) => p.startDay + p.durationDays));
+  const confidence = r.confidence === "low" || r.confidence === "high" ? r.confidence : "medium";
+
+  return {
+    title: str(r.title, 100) || "Delivery plan",
+    summary: str(r.summary, 600),
+    assumptions: strList(r.assumptions, 6),
+    phases,
+    risks: strList(r.risks, 6),
+    confidence,
+    totalHours: Math.round(totalHours),
+    totalDays,
+    calendarWeeks: Math.max(1, Math.round((totalDays / 5) * 10) / 10),
+  };
+}
