@@ -24,7 +24,8 @@ Local development uses Cloudflare's official **test keys** (already in `.env.exa
 7. In the Anthropic Console: set a **monthly spend limit** (start low, e.g. USD 10).
 
 ## Every later deploy
-Push to `main` → Vercel builds and deploys automatically. Pull requests get preview URLs.
+Push to `main` (a release, see CLAUDE.md §5 Branches) → Vercel builds and deploys to production. Pushes to
+`develop` and pull requests get preview URLs.
 
 ## Post-deploy checks
 - Estimator works on the live URL and the Turnstile widget appears.

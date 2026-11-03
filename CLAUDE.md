@@ -53,10 +53,19 @@ Next.js 16 (App Router) · React 19 · TypeScript strict · plain CSS with desig
             → delegate to the right subagent(s)
             → verify: npm run check, plus /visual-check for any UI change
             → code-reviewer subagent on the diff
-            → /ship  (tick ROADMAP, log PROGRESS, commit, push)
+            → /ship  (tick ROADMAP, log PROGRESS, commit, push to develop)
 ```
 
 One roadmap task per commit where practical. Keep diffs small and reviewable.
+
+### Branches
+
+- **`develop`** is the working branch. All task commits go here and are pushed to `origin/develop`.
+- **`main`** is the release branch and holds only released versions. The site deploys to production from it.
+  Don't commit to it directly.
+- **Releasing** means merging `develop` into `main` and pushing `main`. Do it only when Izzat asks, and only
+  after `npm run check` and `npm run test:e2e` pass on `develop`.
+- Start each session with `git switch develop && git pull`.
 
 ## 6. Subagents (`.claude/agents/`)
 
@@ -100,6 +109,7 @@ Run `security-reviewer` before anything touching `app/api/**`, env vars, or depl
 - **Never weaken abuse protection** (Turnstile, rate limit, daily cap, input length limits) without asking.
 - Don't change roadmap scope or design direction without asking Izzat first.
 - Never `git push --force` and never rewrite published history.
+- Never commit to or merge into `main` unless Izzat asks for a release (see §5 Branches).
 
 ## 10. Definition of done (per task)
 
