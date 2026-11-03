@@ -13,7 +13,7 @@ Claude returns an end-to-end delivery plan with effort and calendar estimates.
 ## Quick start
 
 ```bash
-nvm use                 # Node 22
+nvm use                 # Node 26
 npm install
 cp .env.example .env.local   # then add your ANTHROPIC_API_KEY
 npm run dev             # http://localhost:3000

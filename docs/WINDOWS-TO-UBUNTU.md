@@ -22,7 +22,7 @@ Don't run `npm install` on Windows unless you plan to develop there too; `node_m
 ```bash
 git clone https://github.com/zenntkaixa/my_portfolio.git
 cd my_portfolio
-nvm install && nvm use          # Node 22 from .nvmrc
+nvm install && nvm use          # Node 26 from .nvmrc
 npm install
 npx playwright install --with-deps chromium
 cp .env.example .env.local      # add ANTHROPIC_API_KEY yourself

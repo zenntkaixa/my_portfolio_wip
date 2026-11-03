@@ -113,4 +113,4 @@ Run `security-reviewer` before anything touching `app/api/**`, env vars, or depl
 
 - Developed on Windows (`C:\my_projects\my_portfolio`) and Ubuntu with Claude Code. Line endings are forced
   to LF by `.gitattributes`.
-- Node 22 (see `.nvmrc`).
+- Node 26 LTS (see `.nvmrc`).
