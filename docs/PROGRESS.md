@@ -5,6 +5,38 @@ what's next, anything blocked on Izzat.
 
 ---
 
+## 2026-11-04 — Session 3: M1 theme toggle
+
+**Done**
+- Repaired the local git repo: the VM shut down uncleanly and left 11 empty object files from
+  `96801b9`. I backed up `.git`, deleted the empty files and refetched them from origin; `git fsck` is
+  now clean and no work was lost.
+- `ThemeToggle`: 40px icon button (sun in light, moon in dark), fixed name "Dark theme" plus
+  `aria-pressed`. Both icons are in the HTML and CSS shows the right one, so it's correct before
+  hydration. Follows live system changes until the visitor picks a theme.
+- Fixed, from code-reviewer: with storage blocked, the bootstrap can't set `data-theme`, so the
+  toggle now falls back to the system scheme instead of assuming light.
+- e2e: `home.spec.ts` updated; new `theme.spec.ts` covers no-flash (JS chunks blocked), system
+  fallback, icons, live follow and blocked storage.
+- docs/01 and docs/02 synced.
+
+**Verified**
+- `npm run check` passes; Playwright 19/19, run twice. The blocked-storage test fails on the old code
+  and passes with the fix. Toggle checked at 390 and 1440, light and dark.
+
+**Found, not fixed**
+- Turnstile keeps the theme it rendered with; toggling doesn't restyle it (M2 Turnstile task).
+- qa-tester saw `visual.spec.ts` time out once on a cold first run (dev server compiling). It didn't
+  recur in 7 runs, including a cold one; watch for it.
+
+**Next up**
+- M1: Hero tile.
+
+**Waiting on Izzat**
+- Nothing blocking M1. M2 needs the Anthropic key in `.env.local`. Decide on untracked `AGENTS.md`.
+
+---
+
 ## 2026-11-03 — Session 2: M1 finish `app/globals.css`
 
 **Done**

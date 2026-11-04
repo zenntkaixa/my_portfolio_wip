@@ -141,7 +141,8 @@ p {
     resize: vertical;
   }
 
-  /* Buttons are labelled by their text, so the quieter --line border is fine. */
+  /* Buttons are identified by their text or icon (--ink on --surface), not their edge, so the
+     quieter --line border is fine (WCAG 1.4.11). */
   button {
     padding: 0.5em 1em;
     background: var(--surface);
@@ -197,6 +198,47 @@ p {
   display: flex;
   justify-content: flex-end;
   margin-bottom: var(--gap);
+}
+
+/* ---- Theme toggle ----
+   Icon-only button. Both icons are in the DOM; data-theme (or the system preference before the
+   bootstrap script runs) decides which one shows, so the icon is correct before hydration. */
+
+.theme-toggle {
+  /* Colours, border, radius, cursor and hover come from the base button rules (@layer base). */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+}
+
+.theme-toggle__icon {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+
+.theme-toggle__icon--moon {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-toggle__icon--sun {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-toggle__icon--moon {
+  display: block;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .theme-toggle__icon--sun {
+    display: none;
+  }
+  :root:not([data-theme]) .theme-toggle__icon--moon {
+    display: block;
+  }
 }
 
 /* ---- Bento grid ----

@@ -24,6 +24,9 @@ tile is the one bold element** (blueprint grid background, largest tile). Everyt
 
 Theme switching: `data-theme="light|dark"` on `<html>`, set before paint by an inline script in
 `app/layout.tsx` (stored choice, else `prefers-color-scheme`).
+With no stored choice the page follows live system changes; a click stores the choice and stops that.
+The toggle is a 40px icon button (sun in light, moon in dark) with the fixed name "Dark theme" and
+`aria-pressed`.
 
 ## Typography
 - **Display:** Bricolage Grotesque (600–700) via `next/font/google` → `--font-display`

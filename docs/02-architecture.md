@@ -28,7 +28,7 @@ Order matters: cheap checks run before the paid call. Never move the Claude call
 
 | Path | Responsibility | Status |
 |---|---|---|
-| `app/layout.tsx` | Fonts, metadata, theme bootstrap script | Skeleton |
+| `app/layout.tsx` | Fonts, metadata, theme bootstrap script | **Done** (OG metadata is M5) |
 | `app/page.tsx` | Composes the bento grid from tiles | Skeleton |
 | `app/globals.css` | Design tokens, grid, base styles | Tokens done, layout skeleton |
 | `app/api/estimate/route.ts` | Estimator endpoint (see 03) | **Done** |
@@ -39,7 +39,7 @@ Order matters: cheap checks run before the paid call. Never move the Claude call
 | `components/Bento.tsx` | Grid wrapper and `Tile` primitive with span props | Skeleton |
 | `components/tiles/*` | One file per tile | Skeletons |
 | `components/estimator/*` | Client UI for the demo | Skeletons |
-| `components/ThemeToggle.tsx` | Light/dark toggle | Skeleton |
+| `components/ThemeToggle.tsx` | Light/dark icon toggle; follows the system until the visitor chooses | **Done** |
 | `tests/unit/*` | Vitest | Started |
 | `tests/e2e/*` | Playwright, AI call mocked with `page.route` | Started |
 

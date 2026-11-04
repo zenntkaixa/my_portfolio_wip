@@ -15,7 +15,7 @@ Agent hints in brackets.
 
 ## M1 — Layout and design system
 - [x] Finish `app/globals.css`: grid spans, breakpoints, tile base styles, focus styles [ui-builder]
-- [ ] Theme toggle with no flash on load, persists choice [ui-builder]
+- [x] Theme toggle with no flash on load, persists choice [ui-builder]
 - [ ] Hero tile: initials avatar, name, headline, summary, location, availability dot [ui-builder]
 - [ ] Now tile: current role and three stats [ui-builder]
 - [ ] Featured project tile (radiozk) with stack chips and repo/live links [ui-builder]
