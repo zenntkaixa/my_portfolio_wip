@@ -20,7 +20,7 @@ Agent hints in brackets.
 - [x] Now tile: current role and three stats [ui-builder]
 - [x] Featured project tile (radiozk) with stack chips and repo/live links [ui-builder]
 - [x] AI workflow tile: four numbered steps [ui-builder]
-- [ ] Case study tiles x3 [ui-builder]
+- [x] Case study tiles x3 [ui-builder]
 - [ ] Experience, Stack, Certifications, Contact tiles [ui-builder]
 - [ ] Load animation with reduced-motion support [ui-builder]
 - [ ] `/visual-check` pass at 390 / 1024 / 1440, light and dark; fix findings [qa-tester]

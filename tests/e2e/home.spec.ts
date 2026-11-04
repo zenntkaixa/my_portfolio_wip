@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { aiWorkflow, featuredProject, now, profile } from "@/lib/content";
+import { aiWorkflow, caseStudies, featuredProject, now, profile } from "@/lib/content";
 
 test("home page renders every tile", async ({ page }) => {
   await page.goto("/");
@@ -169,6 +169,32 @@ test.describe("ai workflow tile", () => {
       const strong = items.nth(i).locator("strong");
       await expect(strong).toHaveCount(1);
       await expect(strong).toHaveText(s.step);
+    }
+  });
+});
+
+test.describe("case study tiles", () => {
+  test("one region per case study, each with its context, body and stack in order", async ({ page }) => {
+    await page.goto("/");
+
+    // Every title names exactly one region, and no case study is missing or duplicated.
+    const titles = caseStudies.map((s) => s.title);
+    expect(new Set(titles).size).toBe(caseStudies.length);
+    const escape = (t: string) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const anyTitle = new RegExp(`^(?:${titles.map(escape).join("|")})$`);
+    await expect(page.getByRole("region", { name: anyTitle })).toHaveCount(caseStudies.length);
+
+    for (const study of caseStudies) {
+      const tile = page.getByRole("region", { name: study.title, exact: true });
+      await expect(tile).toHaveCount(1);
+      await expect(tile).toBeVisible();
+      await expect(tile.getByText(study.context, { exact: true })).toBeVisible();
+      await expect(tile.getByText(study.body, { exact: true })).toBeVisible();
+
+      const stack = tile.getByRole("list", { name: "Tech stack", exact: true });
+      await expect(stack).toHaveCount(1);
+      await expect(stack).toBeVisible();
+      await expect(stack.getByRole("listitem")).toHaveText(study.stack);
     }
   });
 });

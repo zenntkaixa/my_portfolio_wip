@@ -567,6 +567,20 @@ p {
   font-weight: 600;
 }
 
+/* ---- Case study tile ----
+   A flex column so the body grows and the chips sit on the bottom edge. Tiles in a row stretch to
+   equal height, so chips line up across the row; the chips keep the normal 0.75em rhythm gap above
+   them because the body grows instead of the chips using margin-top: auto. */
+
+.tile--case {
+  display: flex;
+  flex-direction: column;
+}
+
+.case__body {
+  flex-grow: 1;
+}
+
 /* ---- Chips (ProjectTile, CaseStudyTile, StackTile; reusable by the M2 role chips) ---- */
 
 .chips {

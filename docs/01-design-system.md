@@ -64,6 +64,12 @@ The toggle is a 40px icon button (sun in light, moon in dark) with the fixed nam
 - Each step: name in semibold `--ink` on its own line, a visually hidden ":", then the sentence
   below; 0.9em between steps; 1.6em marker gutter.
 
+## Case studies
+- Title, then the context line in `--muted` at `--fs-sm` (`.tile__meta`), the body,
+  then "Tech stack" chips.
+- The tile is a flex column and the body grows, so the chips sit at the bottom and line up across
+  equal-height tiles in a row. Clients stay anonymised (see 04-content).
+
 ## Shape and depth
 - Radius by hierarchy: hero and estimator `--r-lg 28px`, standard tiles `--r-md 20px`, chips and inputs
   `--r-sm 10px`.

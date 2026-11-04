@@ -5,6 +5,37 @@ what's next, anything blocked on Izzat.
 
 ---
 
+## 2026-11-04 — Session 8: M1 case study tiles x3
+
+**Done**
+- Context line in `--muted` at `--fs-sm` (`.tile__meta`), body, then "Tech stack" chips.
+- Each tile is a flex column and the body grows, so the chips sit at the bottom and line up across the
+  equal-height row (desktop row 4; tablet tiles 1 and 2).
+- e2e (content only): one region per case study, context, body and stack items in order; no
+  duplicate or missing titles.
+- docs/01: Case studies section.
+
+**Verified**
+- `npm run check` passes; Playwright 28/28 (two runs; the new test was shown to fail when the
+  expected order was reversed). Checked at 390/1024/1440, light and dark.
+- code-reviewer: no blockers. Anonymisation guardrail passes: only vendor and product names
+  (Guidewire, Jutro, SonarQube, Azure and so on), no client names, internal system names or ticket IDs.
+
+**Found, not fixed** (copy decisions for Izzat, via `/update-content`)
+- "Guidewire Digital Portal program" could read as a client programme name; "Guidewire Digital
+  Portals" would be unambiguous.
+- "authorization" is US spelling; the other case studies use UK spelling.
+
+**Next up**
+- M1: Experience, Stack, Certifications, Contact tiles (Contact: same new-tab link treatment as the
+  project tile).
+
+**Waiting on Izzat**
+- The two copy points above. radiozk live URL. Optional: a shorter PR stat label. M2 needs the
+  Anthropic key in `.env.local`. Decide on untracked `AGENTS.md`.
+
+---
+
 ## 2026-11-04 — Session 7: M1 AI workflow tile
 
 **Done**
