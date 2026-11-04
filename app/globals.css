@@ -243,7 +243,8 @@ p {
 
 /* ---- Bento grid ----
    12 -> 6 -> 1 columns, spans per docs/01-design-system.md.
-   TODO(M1, ui-builder): tile hover states and the load animation with reduced-motion support. */
+   Tile hover is deferred to M2 with the estimator tile: no tile is clickable as a whole today,
+   so links and buttons inside tiles carry their own hover states. */
 
 .bento {
   display: grid;
@@ -288,6 +289,44 @@ p {
   .bento > .tile--estimator {
     order: -1;
   }
+}
+
+/* ---- Load animation ----
+   Pure CSS, so tiles appear without hydration (and with JS blocked). Each tile fades and rises 8px,
+   staggered 40ms in DOM order; tiles past the 12th reuse the last delay. On mobile, CSS `order`
+   moves the hero and estimator up but the delays still follow the DOM (accepted trade-off).
+   Reduced-motion users get no animation: the rules below only exist under no-preference.
+   Fill mode is `backwards`, not `both`: the end keyframe equals the resting style, and a forwards
+   fill would keep every tile a stacking context and a containing block for position: fixed
+   descendants (computed transform stays an identity matrix) after the animation finishes. */
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes tile-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .bento > .tile {
+    animation: tile-in 400ms ease-out var(--tile-delay, 0ms) backwards;
+  }
+
+  .bento > .tile:nth-child(2) { --tile-delay: 40ms; }
+  .bento > .tile:nth-child(3) { --tile-delay: 80ms; }
+  .bento > .tile:nth-child(4) { --tile-delay: 120ms; }
+  .bento > .tile:nth-child(5) { --tile-delay: 160ms; }
+  .bento > .tile:nth-child(6) { --tile-delay: 200ms; }
+  .bento > .tile:nth-child(7) { --tile-delay: 240ms; }
+  .bento > .tile:nth-child(8) { --tile-delay: 280ms; }
+  .bento > .tile:nth-child(9) { --tile-delay: 320ms; }
+  .bento > .tile:nth-child(10) { --tile-delay: 360ms; }
+  .bento > .tile:nth-child(11) { --tile-delay: 400ms; }
+  .bento > .tile:nth-child(n + 12) { --tile-delay: 440ms; }
 }
 
 /* ---- Tile base styles (shared by every tile) ---- */

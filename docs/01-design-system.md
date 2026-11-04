@@ -135,9 +135,21 @@ The toggle is a 40px icon button (sun in light, moon in dark) with the fixed nam
 - Base link and control styles sit in `@layer base`, so component styles always override them.
 
 ## Motion
-- Tiles fade and rise 8px on first load, staggered 40ms, 400ms ease-out.
-- Hover on interactive tiles: border colour moves to `--accent`, no scale.
-- Everything wrapped in `@media (prefers-reduced-motion: no-preference)`.
+- Tiles fade and rise 8px on first load (`@keyframes tile-in`, 400ms ease-out), ending at
+  `transform: none`. Pure CSS, so tiles appear without hydration or with JS blocked.
+- Fill mode is `backwards` (holds the first frame during the stagger delay). Not `both`: a forwards
+  fill keeps each tile a stacking context and a containing block for `position: fixed` children
+  after the animation ends, which would trap any M2 overlay inside a tile.
+- Stagger is 40ms per tile in DOM order: `.bento > .tile:nth-child(n)` sets `--tile-delay`
+  (0ms to 440ms for the 12 tiles), read by one `animation` rule. Tiles past the 12th reuse 440ms.
+- On mobile, CSS `order` moves the hero and estimator up, but delays still follow DOM order.
+  Accepted trade-off: Now starts 40ms before the Estimator above it; every other tile stays
+  in sequence.
+- Everything wrapped in `@media (prefers-reduced-motion: no-preference)`. Reduced-motion users get
+  no animation and full opacity immediately.
+- Tile hover is deferred to M2 with the estimator tile (no tile is clickable as a whole yet). When it
+  lands: border colour moves to `--accent`, no scale.
+- Visual-check screenshots emulate `reducedMotion: "reduce"` so they never catch a mid-fade.
 
 ## Copy style on the page
 - First person, plain English, short sentences.

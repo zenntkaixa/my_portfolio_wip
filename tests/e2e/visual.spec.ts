@@ -7,6 +7,9 @@ const widths = [390, 1024, 1440];
 const themes = ["light", "dark"] as const;
 const isTurnstile = (url: string) => url.startsWith("https://challenges.cloudflare.com/");
 
+// Reduced motion turns off the tile load animation, so screenshots never catch a mid-fade.
+test.use({ reducedMotion: "reduce" });
+
 for (const width of widths) {
   for (const theme of themes) {
     test(`screenshot ${width} ${theme}`, async ({ page }) => {
