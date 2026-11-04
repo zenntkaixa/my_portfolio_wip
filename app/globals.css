@@ -418,6 +418,105 @@ p {
   }
 }
 
+/* ---- Now tile ----
+   The tile is a size container so the stats switch layout on the tile's own width, not the
+   viewport's (it is 5/12 on desktop, full width on tablet). Stats DOM order is dt then dd
+   ("label: value"); the value is shown first with flex direction only. */
+
+.tile--now {
+  container: now / inline-size;
+}
+
+.now__title {
+  font-weight: 600;
+}
+
+.now__org {
+  color: var(--muted);
+}
+
+.tile--now > .stats {
+  margin-top: 1.5em;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.stats__item {
+  display: flex;
+  flex-direction: column-reverse;
+  /* In column-reverse, flex-end is the top: values line up even when labels wrap differently. */
+  justify-content: flex-end;
+  gap: 0.35em;
+  min-width: 0;
+  padding-inline: var(--gap);
+}
+
+.stats__item:first-child {
+  padding-inline-start: 0;
+}
+
+.stats__item:last-child {
+  padding-inline-end: 0;
+}
+
+/* Dividers between columns only, never around the group. */
+.stats__item + .stats__item {
+  border-inline-start: 1px solid var(--line);
+}
+
+.stats__value {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: var(--fs-xl);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  color: var(--ink);
+}
+
+.stats__label {
+  font-size: var(--fs-sm);
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+/* Narrow tile: stacked rows, number beside its label, dividers become horizontal. */
+@container now (max-width: 360px) {
+  .stats {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stats__item {
+    flex-direction: row-reverse;
+    /* In row-reverse, flex-end is the inline start: the value sits at the left. */
+    justify-content: flex-end;
+    align-items: baseline;
+    gap: 0.75em;
+    padding-inline: 0;
+    padding-block: 0.75em;
+  }
+
+  .stats__item:first-child {
+    padding-block-start: 0;
+  }
+
+  .stats__item:last-child {
+    padding-block-end: 0;
+  }
+
+  .stats__item + .stats__item {
+    border-inline-start: 0;
+    border-block-start: 1px solid var(--line);
+  }
+
+  .stats__value {
+    flex: none;
+    min-width: 2.25em;
+  }
+}
+
 /* ---- Chips (ProjectTile, CaseStudyTile, StackTile; reusable by the M2 role chips) ---- */
 
 .chips {

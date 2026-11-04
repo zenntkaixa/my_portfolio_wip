@@ -5,6 +5,37 @@ what's next, anything blocked on Izzat.
 
 ---
 
+## 2026-11-04 — Session 5: M1 Now tile
+
+**Done**
+- Role block: title semibold, organisation in `--muted`, then the detail (replaces `<strong>`/`<br>`).
+- Stats: `<dl>` groups with dt (label) before dd (value) in the DOM; CSS shows the value first, in the
+  display font at `--fs-xl`. Three columns with `--line` dividers between items.
+- The tile is a size container: under 360px wide it switches to rows, value beside label. That
+  happens on mobile and also on desktop around 1025-1125px.
+- e2e: content, and dt/dd pairing and order. Layout tests (columns at 1440, rows at 390 and 1100)
+  were written, then removed at Izzat's request; the layout is checked by `/visual-check` instead.
+- docs/01: Now section; Typography line notes the stat-value exception.
+
+**Verified**
+- `npm run check` passes; Playwright 22/22 with the final test set. Now tile checked
+  at 1440 and 390, light and dark; rows at 1100 were confirmed by a test before it was removed.
+- code-reviewer: no blockers; its docs sync and component nits applied.
+
+**Found, not fixed**
+- At 1440 each stat column is about 130px wide, so "merged pull requests contributed to, Apr to Oct
+  2026" wraps to 5 lines. Copy decision for Izzat (via `/update-content`).
+- One full e2e run took 2.7 minutes instead of about 30 seconds, likely VM load from another session.
+
+**Next up**
+- M1: Featured project tile (radiozk).
+
+**Waiting on Izzat**
+- Optional: a shorter PR stat label. radiozk live URL (featured project tile). M2 needs the Anthropic
+  key in `.env.local`. Decide on untracked `AGENTS.md`.
+
+---
+
 ## 2026-11-04 — Session 4: M1 hero tile
 
 **Done**

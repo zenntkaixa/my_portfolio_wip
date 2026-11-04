@@ -17,7 +17,7 @@ Agent hints in brackets.
 - [x] Finish `app/globals.css`: grid spans, breakpoints, tile base styles, focus styles [ui-builder]
 - [x] Theme toggle with no flash on load, persists choice [ui-builder]
 - [x] Hero tile: initials avatar, name, headline, summary, location, availability dot [ui-builder]
-- [ ] Now tile: current role and three stats [ui-builder]
+- [x] Now tile: current role and three stats [ui-builder]
 - [ ] Featured project tile (radiozk) with stack chips and repo/live links [ui-builder]
 - [ ] AI workflow tile: four numbered steps [ui-builder]
 - [ ] Case study tiles x3 [ui-builder]

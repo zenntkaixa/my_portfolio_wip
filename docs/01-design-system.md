@@ -31,7 +31,8 @@ The toggle is a 40px icon button (sun in light, moon in dark) with the fixed nam
 ## Typography
 - **Display:** Bricolage Grotesque (600–700) via `next/font/google` → `--font-display`
 - **Body:** IBM Plex Sans (400, 500, 600) → `--font-body`
-- **Numbers in tables/timeline:** IBM Plex Sans with `font-variant-numeric: tabular-nums` (no mono font)
+- **Numbers in tables/timeline:** IBM Plex Sans with `font-variant-numeric: tabular-nums` (no mono font).
+  Now-tile stat values are the exception: display font, `--fs-xl`, `tabular-nums`.
 - Scale: `--fs-xs 0.8rem`, `--fs-sm 0.9rem`, `--fs-base 1rem`, `--fs-lg 1.2rem`, `--fs-xl 1.6rem`,
   `--fs-2xl clamp(2.2rem, 5vw, 3.6rem)` (name in hero only)
 - Line height 1.55 for body, 1.1 for display.
@@ -40,6 +41,14 @@ The toggle is a 40px icon button (sun in light, moon in dark) with the fixed nam
 - The name is the page's only `<h1>` (display font, `--fs-2xl`) and names the hero section.
 - A 72px initials avatar (`--accent` on `--accent-soft`, `--r-md`) sits beside the name and role.
 - The meta line is the location, then the availability text with a small `--ok` dot before it.
+
+## Now
+- Role block: job title semibold, organisation in `--muted`, then the detail line.
+- Stats: a `<dl>` of div groups, `<dt>` (label) before `<dd>` (value) in the DOM; CSS shows the value
+  first. Value in the display font at `--fs-xl`; label at `--fs-sm` in `--muted`.
+- Three columns with 1px `--line` dividers between items only. The tile is a size container: under
+  360px wide (mobile, and desktop around 1025-1125px) the stats become rows, value beside label,
+  with horizontal dividers.
 
 ## Shape and depth
 - Radius by hierarchy: hero and estimator `--r-lg 28px`, standard tiles `--r-md 20px`, chips and inputs

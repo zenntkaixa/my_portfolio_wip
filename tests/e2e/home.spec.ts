@@ -1,5 +1,5 @@
-import { expect, test } from "@playwright/test";
-import { profile } from "@/lib/content";
+import { expect, test, type Page } from "@playwright/test";
+import { now, profile } from "@/lib/content";
 
 test("home page renders every tile", async ({ page }) => {
   await page.goto("/");
@@ -63,4 +63,36 @@ test("theme toggle switches and remembers", async ({ page }) => {
   await page.reload();
   await expect(html).toHaveAttribute("data-theme", after);
   await expect(toggle).toHaveAttribute("aria-pressed", String(after === "dark"));
+});
+
+test.describe("now tile", () => {
+  const region = (page: Page) =>
+    page.getByRole("region", { name: "Right now", exact: true });
+
+  test("shows the current role, org and detail", async ({ page }) => {
+    await page.goto("/");
+    const tile = region(page);
+    await expect(tile.getByText(now.title, { exact: true })).toBeVisible();
+    await expect(tile.getByText(now.org, { exact: true })).toBeVisible();
+    await expect(tile.getByText(now.detail, { exact: true })).toBeVisible();
+  });
+
+  test("stats pair each label with its value, label first in the DOM", async ({ page }) => {
+    await page.goto("/");
+    const tile = region(page);
+    // dl has no implicit ARIA role, so the list itself is found by tag; its contents by role.
+    const groups = tile.locator("dl > div");
+    await expect(groups).toHaveCount(now.stats.length);
+    await expect(tile.getByRole("term")).toHaveText(now.stats.map((s) => s.label));
+    await expect(tile.getByRole("definition")).toHaveText(now.stats.map((s) => s.value));
+
+    for (const [i, stat] of now.stats.entries()) {
+      const group = groups.nth(i);
+      // Screen readers follow DOM order: exactly one dt then one dd per group.
+      const tags = await group.evaluate((el) => Array.from(el.children, (c) => c.tagName));
+      expect(tags).toEqual(["DT", "DD"]);
+      await expect(group.getByRole("term")).toHaveText(stat.label);
+      await expect(group.getByRole("definition")).toHaveText(stat.value);
+    }
+  });
 });
