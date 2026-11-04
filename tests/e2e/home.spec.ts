@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { featuredProject, now, profile } from "@/lib/content";
+import { aiWorkflow, featuredProject, now, profile } from "@/lib/content";
 
 test("home page renders every tile", async ({ page }) => {
   await page.goto("/");
@@ -144,5 +144,31 @@ test.describe("featured project tile", () => {
     await expect(link).toHaveAttribute("target", "_blank");
     await expect(link).toHaveAttribute("rel", /\bnoopener\b/);
     await expect(link).toHaveAttribute("rel", /\bnoreferrer\b/);
+  });
+});
+
+test.describe("ai workflow tile", () => {
+  const region = (page: Page) =>
+    page.getByRole("region", { name: "How I build with AI agents", exact: true });
+
+  test("is one ordered list of the steps in content order, name in strong", async ({ page }) => {
+    await page.goto("/");
+    const tile = region(page);
+    // Role "list" covers both ol and ul, so the ordered-ness is checked by tag.
+    const lists = tile.getByRole("list");
+    await expect(lists).toHaveCount(1);
+    expect(await lists.evaluate((el) => el.tagName)).toBe("OL");
+
+    // Exact text also proves there is no hand-typed number (numbering comes from the <ol>) and
+    // that the hidden ":" separates the step name from its sentence for screen readers.
+    const items = lists.getByRole("listitem");
+    await expect(items).toHaveCount(aiWorkflow.length);
+    await expect(items).toHaveText(aiWorkflow.map((s) => `${s.step}: ${s.text}`));
+
+    for (const [i, s] of aiWorkflow.entries()) {
+      const strong = items.nth(i).locator("strong");
+      await expect(strong).toHaveCount(1);
+      await expect(strong).toHaveText(s.step);
+    }
   });
 });

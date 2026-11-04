@@ -15,7 +15,7 @@ tile is the one bold element** (blueprint grid background, largest tile). Everyt
 | `--ink` | `#13203A` | `#E6ECF6` | Primary text |
 | `--muted` | `#5A6578` | `#9AA7BD` | Secondary text |
 | `--line` | `#D7DDE7` | `#26365A` | Borders, dividers |
-| `--accent` | `#2B57E0` | `#7E9CFF` | Links, primary buttons, timeline bars |
+| `--accent` | `#2B57E0` | `#7E9CFF` | Links, primary buttons, timeline bars, list markers |
 | `--accent-ink` | `#FFFFFF` | `#0D1424` | Text on accent |
 | `--accent-soft` | `#E3EAFD` | `#22325C` | Accent backgrounds, focus halo |
 | `--ok` | `#0E8F7E` | `#4CC9B4` | Success, "open to roles" dot |
@@ -56,6 +56,13 @@ The toggle is a 40px icon button (sun in light, moon in dark) with the fixed nam
 - Highlights: bulleted list with tighter 0.25em item spacing. Stack: `.chips` labelled "Tech stack".
 - Links: a list in a wrapping flex row. Every external link gets `target="_blank"`,
   `rel="noopener noreferrer"` and visually hidden " (opens in a new tab)". No arrow glyphs or icons.
+
+## AI workflow
+- A real `<ol>` with native numbering. Numbers are styled with `::marker` (display font, `--accent`,
+  tabular-nums). No `list-style: none` or CSS counters: Safari drops list semantics, and generated
+  numbers can be read twice.
+- Each step: name in semibold `--ink` on its own line, a visually hidden ":", then the sentence
+  below; 0.9em between steps; 1.6em marker gutter.
 
 ## Shape and depth
 - Radius by hierarchy: hero and estimator `--r-lg 28px`, standard tiles `--r-md 20px`, chips and inputs

@@ -542,6 +542,31 @@ p {
   margin: 0;
 }
 
+/* ---- AI workflow tile ----
+   Native <ol> numbers (no counters, so list semantics survive in Safari/VoiceOver), styled via
+   ::marker. Outside markers keep wrapped text aligned under the text, not under the number. */
+
+.workflow {
+  list-style-position: outside;
+  padding-left: 1.6em;
+}
+
+.workflow > li + li {
+  margin-top: 0.9em;
+}
+
+.workflow > li::marker {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+}
+
+.workflow__step {
+  display: block;
+  font-weight: 600;
+}
+
 /* ---- Chips (ProjectTile, CaseStudyTile, StackTile; reusable by the M2 role chips) ---- */
 
 .chips {

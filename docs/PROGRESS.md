@@ -5,6 +5,31 @@ what's next, anything blocked on Izzat.
 
 ---
 
+## 2026-11-04 — Session 7: M1 AI workflow tile
+
+**Done**
+- Native `<ol>` with numbers styled via `::marker` (display font, `--accent`). No `list-style: none` or
+  counters, so Safari/VoiceOver keep list semantics and numbers aren't read twice.
+- Each step: semibold name on its own line, then the sentence; a visually hidden ":" between them so
+  screen readers don't run the two together. Hand-typed "1." numbering removed.
+- e2e (content only): one `<ol>`, steps in content order with exact text, name in `<strong>`.
+- docs/01: AI workflow section; `--accent` usage now includes list markers.
+
+**Verified**
+- `npm run check` passes; Playwright 27/27. Tile checked at 390 and 1440, light and dark: markers align
+  with the step name and wrapped text aligns under the text. Marker contrast 5.9:1 light, 6.2:1 dark.
+- code-reviewer: no blockers; the hidden separator, test merge and doc nits applied.
+
+**Next up**
+- M1: Case study tiles x3.
+- Contact tile: same new-tab link treatment as the project tile (see Session 6).
+
+**Waiting on Izzat**
+- radiozk live URL (one line in `lib/content.ts`). Optional: a shorter PR stat label. M2 needs the
+  Anthropic key in `.env.local`. Decide on untracked `AGENTS.md`.
+
+---
+
 ## 2026-11-04 — Session 6: M1 featured project tile (radiozk)
 
 **Done**
