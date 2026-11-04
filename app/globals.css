@@ -308,7 +308,9 @@ p {
   margin-bottom: 0.5em;
 }
 
-/* Lists keep their markers (numbered lists stay numbered); only .chips resets bullets. */
+/* Lists keep their markers by default. Component lists that reset bullets (.chips, .timeline,
+   .certs, .contact__links, .project__links) must carry role="list"; see docs/01-design-system.md
+   "Lists and external links". An e2e test enforces this. */
 :where(.tile) ul,
 :where(.tile) ol {
   margin-block: 0;
@@ -579,6 +581,179 @@ p {
 
 .case__body {
   flex-grow: 1;
+}
+
+/* ---- Experience tile ----
+   A vertical timeline: period in a left column, org and role beside it, a 1px --line rule between.
+   Markers are removed, so the <ol> carries role="list". The tile is a size container: when it is
+   narrow the period moves above each entry and the rule runs down the left edge. */
+
+.tile--experience {
+  container: experience / inline-size;
+}
+
+.timeline {
+  list-style: none;
+  padding: 0;
+}
+
+.timeline > li + li {
+  margin-top: 0;
+}
+
+.timeline__item {
+  display: grid;
+  grid-template-columns: 7.5em minmax(0, 1fr);
+  column-gap: var(--gap);
+  align-items: baseline;
+}
+
+.timeline__period {
+  font-size: var(--fs-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+.timeline__body {
+  display: flex;
+  flex-direction: column;
+  padding-inline-start: var(--gap);
+  padding-block-end: 0.9em;
+  border-inline-start: 1px solid var(--line);
+}
+
+.timeline__item:last-child > .timeline__body {
+  padding-block-end: 0;
+}
+
+.timeline__org {
+  font-weight: 600;
+}
+
+.experience__label,
+.stack__heading {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+
+.tile > .experience__label {
+  margin-top: 1.5em;
+  margin-bottom: 0;
+}
+
+.tile > .experience__label + p {
+  margin-top: 0.35em;
+}
+
+@container experience (width < 420px) {
+  .timeline__item {
+    display: block;
+    padding-inline-start: var(--gap);
+    padding-block-end: 0.9em;
+    border-inline-start: 1px solid var(--line);
+  }
+
+  .timeline__item:last-child {
+    padding-block-end: 0;
+  }
+
+  .timeline__period {
+    display: block;
+  }
+
+  .timeline__body {
+    padding: 0;
+    border: 0;
+  }
+}
+
+/* ---- Stack tile ---- */
+
+.tile > .stack__group + .stack__group {
+  margin-top: 1.25em;
+}
+
+/* ---- Certifications tile ----
+   Name left, year right in tabular numbers. Bullets removed, so the <ul> carries role="list". */
+
+.certs {
+  list-style: none;
+  padding: 0;
+}
+
+.certs > li + li {
+  margin-top: 0;
+  border-block-start: 1px solid var(--line);
+}
+
+.certs__item {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--gap);
+  padding-block: 0.6em;
+}
+
+.certs__item:first-child {
+  padding-block-start: 0;
+}
+
+.certs__item:last-child {
+  padding-block-end: 0;
+}
+
+.certs__year {
+  flex: none;
+  font-size: var(--fs-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+/* ---- Contact tile ----
+   The email is a mailto link styled as the primary button (--accent-ink on --accent passes AA
+   in both themes). LinkedIn and GitHub are quieter text links in a bullet-less list. */
+
+.tile > .contact__primary {
+  margin-top: 1.25em;
+}
+
+.button-link {
+  display: inline-block;
+  max-width: 100%;
+  padding: 0.65em 1.25em;
+  background: var(--accent);
+  color: var(--accent-ink);
+  /* Transparent border so the button keeps an edge in forced-colour modes. */
+  border: 1px solid transparent;
+  border-radius: var(--r-sm);
+  font-weight: 600;
+  line-height: 1.3;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.button-link:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+}
+
+.tile > .contact__links {
+  list-style: none;
+  padding: 0;
+  margin-top: 1em;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em var(--gap);
+}
+
+.contact__links > li {
+  margin: 0;
+}
+
+@media (forced-colors: active) {
+  .button-link {
+    border-color: LinkText;
+  }
 }
 
 /* ---- Chips (ProjectTile, CaseStudyTile, StackTile; reusable by the M2 role chips) ---- */

@@ -11,6 +11,7 @@ export const profile = {
     "I work across Java, Spring Boot and REST APIs on the backend and React with TypeScript on the front. Lately I orchestrate AI coding agents to turn requirements into reviewed, production-ready changes, and I stay accountable for every line that merges.",
   location: "Petaling Jaya, Malaysia",
   availability: "Open to senior full-stack roles in Malaysia",
+  contactNote: "The fastest way to reach me is email.",
   email: "zenntkaixa@yahoo.com",
   linkedin: "https://www.linkedin.com/in/mohamad-izzat-fahmi-bin-suhaimi-00b047145",
   github: "https://github.com/zenntkaixa",

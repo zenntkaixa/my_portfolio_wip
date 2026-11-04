@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
+import { slug } from "@/lib/slug";
 
 /** The 12-column bento grid. Layout rules live in app/globals.css and docs/01-design-system.md. */
 export function Bento({ children }: { children: ReactNode }) {
@@ -49,8 +50,4 @@ export function Tile({
       {children}
     </section>
   );
-}
-
-function slug(text: string) {
-  return text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 }

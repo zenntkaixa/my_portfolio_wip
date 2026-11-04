@@ -1,5 +1,15 @@
 import { expect, test, type Page } from "@playwright/test";
-import { aiWorkflow, caseStudies, featuredProject, now, profile } from "@/lib/content";
+import {
+  aiWorkflow,
+  caseStudies,
+  certifications,
+  education,
+  experience,
+  featuredProject,
+  now,
+  profile,
+  stack,
+} from "@/lib/content";
 
 test("home page renders every tile", async ({ page }) => {
   await page.goto("/");
@@ -196,5 +206,104 @@ test.describe("case study tiles", () => {
       await expect(stack).toBeVisible();
       await expect(stack.getByRole("listitem")).toHaveText(study.stack);
     }
+  });
+});
+
+test.describe("experience tile", () => {
+  const region = (page: Page) => page.getByRole("region", { name: "Experience", exact: true });
+
+  test("timeline lists every role in content order as period, org, role", async ({ page }) => {
+    await page.goto("/");
+    const tile = region(page);
+    const timeline = tile.getByRole("list");
+    await expect(timeline).toHaveCount(1);
+    // Exact text proves the hidden ", " separators sit between the parts, in this order.
+    await expect(timeline.getByRole("listitem")).toHaveText(
+      experience.map((e) => `${e.period}, ${e.org}, ${e.role}`),
+    );
+  });
+
+  test("has an Education h3 followed by the education entry", async ({ page }) => {
+    await page.goto("/");
+    const tile = region(page);
+    await expect(tile.getByRole("heading", { level: 3, name: "Education", exact: true })).toBeVisible();
+    await expect(tile.getByText(education, { exact: true })).toBeVisible();
+  });
+});
+
+test.describe("stack tile", () => {
+  const region = (page: Page) => page.getByRole("region", { name: "Stack", exact: true });
+
+  test("each group is an h3 naming its chips list, items in content order", async ({ page }) => {
+    await page.goto("/");
+    const tile = region(page);
+    await expect(tile.getByRole("heading", { level: 3 })).toHaveText(stack.map((g) => g.group));
+    await expect(tile.getByRole("list")).toHaveCount(stack.length);
+
+    for (const g of stack) {
+      await expect(tile.getByRole("heading", { level: 3, name: g.group, exact: true })).toBeVisible();
+      // The list's accessible name comes from aria-labelledby pointing at the heading.
+      const list = tile.getByRole("list", { name: g.group, exact: true });
+      await expect(list).toHaveCount(1);
+      await expect(list).toBeVisible();
+      await expect(list.getByRole("listitem")).toHaveText(g.items);
+    }
+  });
+});
+
+test.describe("certifications tile", () => {
+  const region = (page: Page) => page.getByRole("region", { name: "Certifications", exact: true });
+
+  test("lists certifications in content order; an empty year leaves no year or separator", async ({ page }) => {
+    await page.goto("/");
+    const items = region(page).getByRole("list").getByRole("listitem");
+    // Exact text: "name, year" when there is a year, just "name" (no trailing ", ") when not.
+    await expect(items).toHaveText(
+      certifications.map((c) => (c.year ? `${c.name}, ${c.year}` : c.name)),
+    );
+  });
+});
+
+test.describe("contact tile", () => {
+  const region = (page: Page) => page.getByRole("region", { name: "Let's talk", exact: true });
+
+  test("shows the contact note and an email link with an exact mailto href", async ({ page }) => {
+    await page.goto("/");
+    const tile = region(page);
+    await expect(tile.getByText(profile.contactNote)).toBeVisible();
+    const email = tile.getByRole("link", { name: profile.email, exact: true });
+    await expect(email).toBeVisible();
+    await expect(email).toHaveAttribute("href", `mailto:${profile.email}`);
+  });
+
+  for (const [label, key] of [
+    ["LinkedIn", "linkedin"],
+    ["GitHub", "github"],
+  ] as const) {
+    test(`${label} link opens safely in a new tab`, async ({ page }) => {
+      await page.goto("/");
+      const link = region(page).getByRole("link", {
+        name: `${label} (opens in a new tab)`,
+        exact: true,
+      });
+      await expect(link).toBeVisible();
+      await expect(link).toHaveAttribute("href", profile[key]);
+      await expect(link).toHaveAttribute("target", "_blank");
+      await expect(link).toHaveAttribute("rel", /\bnoopener\b/);
+      await expect(link).toHaveAttribute("rel", /\bnoreferrer\b/);
+    });
+  }
+});
+
+test.describe("list semantics", () => {
+  test("every unstyled ul/ol keeps role=list (Safari drops it otherwise)", async ({ page }) => {
+    await page.goto("/");
+    const offenders = await page.evaluate(() =>
+      Array.from(document.querySelectorAll("ul, ol"))
+        .filter((el) => getComputedStyle(el).listStyleType === "none")
+        .filter((el) => el.getAttribute("role") !== "list")
+        .map((el) => `${el.tagName.toLowerCase()}.${el.className}`),
+    );
+    expect(offenders).toEqual([]);
   });
 });

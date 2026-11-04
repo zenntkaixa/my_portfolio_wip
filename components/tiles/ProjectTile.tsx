@@ -1,4 +1,5 @@
 import { Tile } from "@/components/Bento";
+import { ExternalLink } from "@/components/ExternalLink";
 import { featuredProject as p } from "@/lib/content";
 
 /** Featured project: lead tagline, description, highlights, stack chips, then repo and live links. */
@@ -12,23 +13,19 @@ export function ProjectTile() {
           <li key={h}>{h}</li>
         ))}
       </ul>
-      <ul className="chips" aria-label="Tech stack">
+      <ul className="chips" role="list" aria-label="Tech stack">
         {p.stack.map((s) => (
           <li key={s}>{s}</li>
         ))}
       </ul>
       {/* A list, so the links stay separate items when copied or read in reading modes. */}
-      <ul className="project__links">
+      <ul className="project__links" role="list">
         <li>
-          <a href={p.repo} target="_blank" rel="noopener noreferrer">
-            View code on GitHub<span className="sr-only"> (opens in a new tab)</span>
-          </a>
+          <ExternalLink href={p.repo}>View code on GitHub</ExternalLink>
         </li>
         {p.live ? (
           <li>
-            <a href={p.live} target="_blank" rel="noopener noreferrer">
-              Live demo<span className="sr-only"> (opens in a new tab)</span>
-            </a>
+            <ExternalLink href={p.live}>Live demo</ExternalLink>
           </li>
         ) : null}
       </ul>

@@ -70,6 +70,32 @@ The toggle is a 40px icon button (sun in light, moon in dark) with the fixed nam
 - The tile is a flex column and the body grows, so the chips sit at the bottom and line up across
   equal-height tiles in a row. Clients stay anonymised (see 04-content).
 
+## Experience
+- A vertical timeline (`ol.timeline`, `role="list"`): the period in a 7.5em left column at `--fs-sm`,
+  tabular-nums, `--muted`; the org in semibold with the role below it; a 1px `--line` rule between.
+- Visually hidden commas separate period, org and role for screen readers and copy-paste.
+- Container query: when the tile is narrower than 420px, the period sits above each entry and the rule runs down
+  the left edge. Education follows under an h3 "Education".
+
+## Stack
+- One group per category: an h3 at `--fs-sm` semibold, then a chips list whose accessible name comes
+  from that heading (`aria-labelledby`). 1.25em between groups.
+
+## Certifications
+- A bullet-less list (`role="list"`): name on the left, year on the right at `--fs-sm`, tabular-nums,
+  `--muted`, with 1px `--line` dividers. An empty year renders nothing.
+
+## Contact
+- The email is a mailto link styled as the primary button (`.button-link`: `--accent` background,
+  `--accent-ink` text, `--r-sm`, 2px underline on hover, `LinkText` border in forced colours).
+- LinkedIn and GitHub are plain text links in a wrapping row. Never a phone number.
+
+## Lists and external links
+- Any list with `list-style: none` gets `role="list"`, because Safari/VoiceOver drops list semantics
+  otherwise.
+- New-tab links use `components/ExternalLink.tsx`: `target="_blank"`, `rel="noopener noreferrer"`
+  and a visually hidden " (opens in a new tab)".
+
 ## Shape and depth
 - Radius by hierarchy: hero and estimator `--r-lg 28px`, standard tiles `--r-md 20px`, chips and inputs
   `--r-sm 10px`.
