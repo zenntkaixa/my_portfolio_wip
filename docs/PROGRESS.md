@@ -5,6 +5,32 @@ what's next, anything blocked on Izzat.
 
 ---
 
+## 2026-11-04 — Session 4: M1 hero tile
+
+**Done**
+- The hero name is now the page's only `<h1>` and names the hero section (was a hidden "About Izzat
+  Fahmi" h2; the page had no h1). `Tile` gained `headingLevel` and `titleClassName`; `hideTitle`
+  removed.
+- Hero layout: 72px initials avatar beside the name (`--fs-2xl`) and role, then headline, summary,
+  and a meta line with the location and the availability text after an `--ok` dot. Forced-colours
+  handling for the avatar and dot.
+- e2e: region name updated; new test for a single h1, hero content and the hidden avatar.
+- docs/01 has a Hero section; docs/02 Bento row updated.
+
+**Verified**
+- `npm run check` passes; Playwright 20/20 (qa-tester ran it twice plus 3 repeats of home.spec;
+  I reran it after the review fixes). Hero checked at 390 and 1440, light and dark: the name fits on
+  one line at 390.
+- code-reviewer: no blockers. Contrast: initials 4.9:1, dot 4.0:1, meta 5.9:1 or better.
+
+**Next up**
+- M1: Now tile (current role and three stats).
+
+**Waiting on Izzat**
+- Nothing blocking M1. M2 needs the Anthropic key in `.env.local`. Decide on untracked `AGENTS.md`.
+
+---
+
 ## 2026-11-04 — Session 3: M1 theme toggle
 
 **Done**

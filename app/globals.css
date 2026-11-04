@@ -296,14 +296,9 @@ p {
   font-size: var(--fs-xl);
 }
 
-/* Vertical rhythm between direct children (this also spaces the title from what follows).
-   The visually hidden hero title adds no space. */
+/* Vertical rhythm between direct children (this also spaces the title from what follows). */
 .tile > * + * {
   margin-top: 0.75em;
-}
-
-.tile > .sr-only + * {
-  margin-top: 0;
 }
 
 /* Everything inside tiles uses :where(.tile) so specificity stays at element level: the rhythm
@@ -334,6 +329,93 @@ p {
 .tile__meta {
   color: var(--muted);
   font-size: var(--fs-sm);
+}
+
+/* ---- Hero tile ----
+   A two-column grid: the avatar sits beside the name (h1) and role; everything after spans the
+   full width. The avatar follows the h1 in the DOM but is aria-hidden, so reading order is
+   name, role, headline. Margins (not gap) keep the shared rhythm rule working. */
+
+.tile--hero {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: var(--gap);
+  align-content: start;
+}
+
+.tile--hero > * {
+  grid-column: 1 / -1;
+}
+
+.tile--hero > .hero__name {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: end;
+  font-size: var(--fs-2xl);
+}
+
+.tile--hero > .hero__avatar {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  align-self: center;
+  margin-top: 0;
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border-radius: var(--r-md);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: var(--fs-xl);
+  font-weight: 600;
+  line-height: 1;
+}
+
+.tile--hero > .hero__role {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: start;
+  margin-top: 0.25em;
+  color: var(--muted);
+}
+
+.tile--hero > .hero__headline {
+  margin-top: 1.25em;
+  font-size: var(--fs-lg);
+  line-height: 1.4;
+}
+
+.hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 1.25em;
+  row-gap: 0.25em;
+}
+
+.hero__availability {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.hero__dot {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--ok);
+}
+
+/* Forced-colour modes drop backgrounds: keep the avatar edge and the dot visible. */
+@media (forced-colors: active) {
+  .hero__avatar {
+    border: 1px solid CanvasText;
+  }
+  .hero__dot {
+    forced-color-adjust: none;
+    background: CanvasText;
+  }
 }
 
 /* ---- Chips (ProjectTile, CaseStudyTile, StackTile; reusable by the M2 role chips) ---- */

@@ -36,6 +36,11 @@ The toggle is a 40px icon button (sun in light, moon in dark) with the fixed nam
   `--fs-2xl clamp(2.2rem, 5vw, 3.6rem)` (name in hero only)
 - Line height 1.55 for body, 1.1 for display.
 
+## Hero
+- The name is the page's only `<h1>` (display font, `--fs-2xl`) and names the hero section.
+- A 72px initials avatar (`--accent` on `--accent-soft`, `--r-md`) sits beside the name and role.
+- The meta line is the location, then the availability text with a small `--ok` dot before it.
+
 ## Shape and depth
 - Radius by hierarchy: hero and estimator `--r-lg 28px`, standard tiles `--r-md 20px`, chips and inputs
   `--r-sm 10px`.

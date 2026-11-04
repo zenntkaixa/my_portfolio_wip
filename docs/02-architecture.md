@@ -36,7 +36,7 @@ Order matters: cheap checks run before the paid call. Never move the Claude call
 | `lib/estimate.ts` | Types, request validation, plan normalisation | **Done** |
 | `lib/rateLimit.ts` | In-memory per-IP limit and daily cap | **Done** |
 | `lib/timeline.ts` | Pure maths for the timeline chart and role totals | Skeleton + tests |
-| `components/Bento.tsx` | Grid wrapper and `Tile` primitive with span props | Skeleton |
+| `components/Bento.tsx` | Grid wrapper and `Tile` primitive (span props, `headingLevel`, `titleClassName`) | **Done** |
 | `components/tiles/*` | One file per tile | Skeletons |
 | `components/estimator/*` | Client UI for the demo | Skeletons |
 | `components/ThemeToggle.tsx` | Light/dark icon toggle; follows the system until the visitor chooses | **Done** |
