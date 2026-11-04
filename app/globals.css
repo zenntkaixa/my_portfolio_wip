@@ -517,6 +517,31 @@ p {
   }
 }
 
+/* ---- Project tile ---- */
+
+.project__tagline {
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.project__highlights > li + li {
+  margin-top: 0.25em;
+}
+
+.tile > .project__links {
+  list-style: none;
+  padding: 0;
+  margin-top: 1.25em;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em var(--gap);
+}
+
+.project__links > li {
+  margin: 0;
+}
+
 /* ---- Chips (ProjectTile, CaseStudyTile, StackTile; reusable by the M2 role chips) ---- */
 
 .chips {

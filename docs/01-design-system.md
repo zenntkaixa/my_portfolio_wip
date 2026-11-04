@@ -50,6 +50,13 @@ The toggle is a 40px icon button (sun in light, moon in dark) with the fixed nam
   360px wide (mobile, and desktop around 1025-1125px) the stats become rows, value beside label,
   with horizontal dividers.
 
+## Featured project
+- Tagline is the lead line: `--fs-lg`, weight 600 (bolder than the hero headline because it sits
+  right under a tile title), line-height 1.4.
+- Highlights: bulleted list with tighter 0.25em item spacing. Stack: `.chips` labelled "Tech stack".
+- Links: a list in a wrapping flex row. Every external link gets `target="_blank"`,
+  `rel="noopener noreferrer"` and visually hidden " (opens in a new tab)". No arrow glyphs or icons.
+
 ## Shape and depth
 - Radius by hierarchy: hero and estimator `--r-lg 28px`, standard tiles `--r-md 20px`, chips and inputs
   `--r-sm 10px`.

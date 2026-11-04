@@ -5,6 +5,33 @@ what's next, anything blocked on Izzat.
 
 ---
 
+## 2026-11-04 — Session 6: M1 featured project tile (radiozk)
+
+**Done**
+- Tagline as a lead line (`--fs-lg`, 600), description, compact highlights list, "Tech stack" chips.
+- Links as a list in a wrapping row: "View code on GitHub", plus "Live demo" once
+  `featuredProject.live` is set. Both open in a new tab with `rel="noopener noreferrer"` and hidden
+  " (opens in a new tab)" text for screen readers.
+- e2e (content only, per Izzat): tagline, description and highlights; stack items in order; GitHub
+  link href/target/rel/name; no live link while `live` is empty (and the right one once it's set).
+- docs/01: Featured project section.
+
+**Verified**
+- `npm run check` passes; Playwright 26/26. The GitHub repo URL returns 200. With a temporary live URL
+  (reverted), the two-link row renders correctly and the live branch of the test passes.
+- code-reviewer: no blockers; docs sync, tagline line-height and the links-as-list nit applied.
+
+**Next up**
+- M1: AI workflow tile (four numbered steps).
+- When doing the Contact tile: give its links the same new-tab treatment (`rel="noopener noreferrer"`,
+  hidden new-tab text, no `" "` spacing). Consider a shared `ExternalLink` component then.
+
+**Waiting on Izzat**
+- radiozk live URL (one line in `lib/content.ts`). Optional: a shorter PR stat label. M2 needs the
+  Anthropic key in `.env.local`. Decide on untracked `AGENTS.md`.
+
+---
+
 ## 2026-11-04 — Session 5: M1 Now tile
 
 **Done**

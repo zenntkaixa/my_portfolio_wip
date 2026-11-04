@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { now, profile } from "@/lib/content";
+import { featuredProject, now, profile } from "@/lib/content";
 
 test("home page renders every tile", async ({ page }) => {
   await page.goto("/");
@@ -94,5 +94,55 @@ test.describe("now tile", () => {
       await expect(group.getByRole("term")).toHaveText(stat.label);
       await expect(group.getByRole("definition")).toHaveText(stat.value);
     }
+  });
+});
+
+test.describe("featured project tile", () => {
+  const region = (page: Page) =>
+    page.getByRole("region", { name: `Featured project: ${featuredProject.name}`, exact: true });
+
+  test("shows the tagline, description and each highlight", async ({ page }) => {
+    await page.goto("/");
+    const tile = region(page);
+    await expect(tile.getByText(featuredProject.tagline, { exact: true })).toBeVisible();
+    await expect(tile.getByText(featuredProject.description, { exact: true })).toBeVisible();
+    for (const highlight of featuredProject.highlights) {
+      await expect(tile.getByText(highlight, { exact: true })).toBeVisible();
+    }
+  });
+
+  test("tech stack list has exactly the stack items, in order", async ({ page }) => {
+    await page.goto("/");
+    const stack = region(page).getByRole("list", { name: "Tech stack", exact: true });
+    await expect(stack).toBeVisible();
+    await expect(stack.getByRole("listitem")).toHaveText(featuredProject.stack);
+  });
+
+  test("GitHub link points at the repo and opens safely in a new tab", async ({ page }) => {
+    await page.goto("/");
+    const link = region(page).getByRole("link", {
+      name: "View code on GitHub (opens in a new tab)",
+      exact: true,
+    });
+    await expect(link).toBeVisible();
+    await expect(link).toHaveAttribute("href", featuredProject.repo);
+    await expect(link).toHaveAttribute("target", "_blank");
+    await expect(link).toHaveAttribute("rel", /\bnoopener\b/);
+    await expect(link).toHaveAttribute("rel", /\bnoreferrer\b/);
+  });
+
+  test("live demo link appears only when a live URL is set", async ({ page }) => {
+    await page.goto("/");
+    const link = region(page).getByRole("link", { name: /Live demo/ });
+    if (!featuredProject.live) {
+      await expect(link).toHaveCount(0);
+      return;
+    }
+    await expect(link).toHaveCount(1);
+    await expect(link).toBeVisible();
+    await expect(link).toHaveAttribute("href", featuredProject.live);
+    await expect(link).toHaveAttribute("target", "_blank");
+    await expect(link).toHaveAttribute("rel", /\bnoopener\b/);
+    await expect(link).toHaveAttribute("rel", /\bnoreferrer\b/);
   });
 });
