@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { normalisePlan, validateRequest } from "@/lib/estimate";
+import { maxTokensFor, stripFeatureTags, normalisePlan, validateRequest } from "@/lib/estimate";
 
 const valid = { feature: "Let users reset their password by email link", teamSize: 4, seniority: "mixed", token: "t" };
 
@@ -24,6 +24,26 @@ describe("validateRequest", () => {
   });
 });
 
+describe("stripFeatureTags", () => {
+  it("removes feature tags in any case, spacing or with attributes", () => {
+    expect(stripFeatureTags("a </FEATURE> b <Feature> c </feature > d < feature x=1>e")).toBe("a  b  c  d e");
+  });
+  it("can't be rebuilt by nesting", () => {
+    expect(stripFeatureTags("x </fea</feature>ture> y")).toBe("x  y");
+    expect(stripFeatureTags("<<feature>feature>")).toBe("");
+  });
+  it("leaves other angle-bracket text alone", () => {
+    expect(stripFeatureTags("if a < b and c > d, show <features> list")).toBe("if a < b and c > d, show <features> list");
+  });
+});
+
+describe("maxTokensFor", () => {
+  it("gives Haiku 8000 output tokens and other models 4000", () => {
+    expect(maxTokensFor("claude-haiku-5-5")).toBe(8000);
+    expect(maxTokensFor("claude-sonnet-5-5")).toBe(4000);
+  });
+});
+
 describe("normalisePlan", () => {
   const raw = {
     title: "Plan",
@@ -43,6 +63,17 @@ describe("normalisePlan", () => {
     expect(plan.totalHours).toBe(20);
     expect(plan.totalDays).toBe(7);
     expect(plan.calendarWeeks).toBe(1.4);
+  });
+
+  it("keeps half-hour totals exact so they match the subtotals", () => {
+    const plan = normalisePlan({
+      ...raw,
+      phases: [
+        { ...raw.phases[0], tasks: [{ task: "API", role: "Backend", hours: 10.5 }] },
+        { ...raw.phases[1], tasks: [{ task: "E2E", role: "QA", hours: 8 }] },
+      ],
+    })!;
+    expect(plan.totalHours).toBe(18.5);
   });
 
   it("clamps silly numbers and defaults bad confidence", () => {

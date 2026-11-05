@@ -1,36 +1,34 @@
 import { Tile } from "@/components/Bento";
+import { ExternalLink } from "@/components/ExternalLink";
 import { featuredProject as p } from "@/lib/content";
 
-// TODO(M1, ui-builder): stack chips, highlights list styling, "View code" and "Live demo" links
-// (hide live link while p.live is empty). Bento span 7.
+/** Featured project: lead tagline, description, highlights, stack chips, then repo and live links. */
 export function ProjectTile() {
   return (
     <Tile span={7} title={`Featured project: ${p.name}`} id="projects">
-      <p>{p.tagline}</p>
+      <p className="project__tagline">{p.tagline}</p>
       <p>{p.description}</p>
-      <ul>
+      <ul className="project__highlights">
         {p.highlights.map((h) => (
           <li key={h}>{h}</li>
         ))}
       </ul>
-      <ul className="chips" aria-label="Tech stack">
+      <ul className="chips" role="list" aria-label="Tech stack">
         {p.stack.map((s) => (
           <li key={s}>{s}</li>
         ))}
       </ul>
-      <p>
-        <a href={p.repo} target="_blank" rel="noreferrer">
-          View code on GitHub
-        </a>
+      {/* A list, so the links stay separate items when copied or read in reading modes. */}
+      <ul className="project__links" role="list">
+        <li>
+          <ExternalLink href={p.repo}>View code on GitHub</ExternalLink>
+        </li>
         {p.live ? (
-          <>
-            {" "}
-            <a href={p.live} target="_blank" rel="noreferrer">
-              Live demo
-            </a>
-          </>
+          <li>
+            <ExternalLink href={p.live}>Live demo</ExternalLink>
+          </li>
         ) : null}
-      </p>
+      </ul>
     </Tile>
   );
 }

@@ -1,21 +1,21 @@
 import { Tile } from "@/components/Bento";
 import { now } from "@/lib/content";
 
-// TODO(M1, ui-builder): stats as a 3-up row with large tabular numbers. Bento span 5.
+/** Now: current role and org, what the work is, then three stats. */
 export function NowTile() {
   return (
-    <Tile span={5} title="Right now">
-      <p>
-        <strong>{now.title}</strong>
-        <br />
-        {now.org}
-      </p>
+    <Tile span={5} title="Right now" className="tile--now">
+      <div>
+        <p className="now__title">{now.title}</p>
+        <p className="now__org">{now.org}</p>
+      </div>
       <p>{now.detail}</p>
+      {/* DOM order is dt then dd so it reads "label: value"; CSS shows the value on top. */}
       <dl className="stats">
         {now.stats.map((s) => (
-          <div key={s.label}>
-            <dt>{s.label}</dt>
-            <dd>{s.value}</dd>
+          <div key={s.label} className="stats__item">
+            <dt className="stats__label">{s.label}</dt>
+            <dd className="stats__value">{s.value}</dd>
           </div>
         ))}
       </dl>

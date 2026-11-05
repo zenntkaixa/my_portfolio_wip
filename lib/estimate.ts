@@ -6,6 +6,28 @@ export const ROLES = ["BA", "Architect", "Backend", "Frontend", "QA", "DevOps", 
 export const FEATURE_MIN = 20;
 export const FEATURE_MAX = 1500;
 
+/**
+ * Remove anything that looks like a <feature> or </feature> tag (any case, spacing or attributes),
+ * repeating until stable so nested tricks like "</fea</feature>ture>" can't rebuild one.
+ */
+export function stripFeatureTags(text: string) {
+  const tag = /<\s*\/?\s*feature\b[^>]*>/gi;
+  let out = text;
+  for (let prev = ""; prev !== out; ) {
+    prev = out;
+    out = out.replace(tag, "");
+  }
+  return out;
+}
+
+/**
+ * Output cap per model request. Haiku is cheap enough to give thinking plus a long plan room (8000);
+ * pricier models get a lower cap so the worst case under the daily cap stays bounded.
+ */
+export function maxTokensFor(model: string) {
+  return model.includes("haiku") ? 8000 : 4000;
+}
+
 export type EstimateRequest = {
   feature: string;
   teamSize: number;
@@ -48,7 +70,7 @@ export function validateRequest(body: unknown): { ok: true; value: EstimateReque
   return { ok: true, value: { feature, teamSize, seniority, token } };
 }
 
-const str = (v: unknown, max = 400) => (typeof v === "string" ? v.trim().slice(0, max) : "");
+export const str = (v: unknown, max = 400) => (typeof v === "string" ? v.trim().slice(0, max) : "");
 const num = (v: unknown, min: number, max: number) => {
   const n = Number(v);
   if (!Number.isFinite(n)) return min;
@@ -91,7 +113,9 @@ export function normalisePlan(raw: unknown): Plan | null {
     phases,
     risks: strList(r.risks, 6),
     confidence,
-    totalHours: Math.round(totalHours),
+    // Task hours are in 0.5 steps, so the sum is exact. Not rounded, so it always equals the
+    // phase subtotals and role totals the UI shows.
+    totalHours,
     totalDays,
     calendarWeeks: Math.max(1, Math.round((totalDays / 5) * 10) / 10),
   };

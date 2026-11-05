@@ -8,6 +8,7 @@
 | `ANTHROPIC_MODEL` | Optional | Default `claude-haiku-5-5` |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Vercel, `.env.local` | Public by design |
 | `TURNSTILE_SECRET_KEY` | Vercel, `.env.local` | Server only |
+| `TURNSTILE_HOSTNAME` | Optional, Vercel | Production domain; when set, siteverify must report this hostname |
 | `RATE_LIMIT_PER_HOUR` | Optional | Default 5 |
 | `DAILY_LIMIT` | Optional | Default 150 |
 
@@ -24,7 +25,8 @@ Local development uses Cloudflare's official **test keys** (already in `.env.exa
 7. In the Anthropic Console: set a **monthly spend limit** (start low, e.g. USD 10).
 
 ## Every later deploy
-Push to `main` → Vercel builds and deploys automatically. Pull requests get preview URLs.
+Push to `main` (a release, see CLAUDE.md section 4, Branches) → Vercel builds and deploys to production. Pushes to
+`develop` and pull requests get preview URLs.
 
 ## Post-deploy checks
 - Estimator works on the live URL and the Turnstile widget appears.

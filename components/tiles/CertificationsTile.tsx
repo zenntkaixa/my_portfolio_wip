@@ -1,14 +1,20 @@
 import { Tile } from "@/components/Bento";
 import { certifications } from "@/lib/content";
 
-// TODO(M1, ui-builder): compact list with year aligned right. Bento span 5, tablet span 3.
+/** Certifications: name on the left, year right-aligned; no year renders nothing. */
 export function CertificationsTile() {
   return (
-    <Tile span={5} tabletSpan={3} title="Certifications">
-      <ul>
+    <Tile span={5} tabletSpan={3} title="Certifications" id="certifications">
+      <ul className="certs" role="list">
         {certifications.map((c) => (
-          <li key={c.name}>
-            {c.name} {c.year ? <span>{c.year}</span> : null}
+          <li key={c.name} className="certs__item">
+            <span className="certs__name">{c.name}</span>
+            {c.year ? (
+              <>
+                <span className="sr-only">, </span>
+                <span className="certs__year">{c.year}</span>
+              </>
+            ) : null}
           </li>
         ))}
       </ul>

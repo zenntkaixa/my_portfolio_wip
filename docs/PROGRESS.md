@@ -1,58 +1,41 @@
 # Progress log
 
-Newest entry first. Each session adds one entry. Keep entries short: what changed, what was verified,
-what's next, anything blocked on Izzat.
+Newest entry first. Each session adds one entry of 12 lines or fewer: done, verified, next up,
+waiting on Izzat. Keep the latest two entries here; move older ones to `docs/progress-archive.md`.
 
 ---
 
-## 2026-11-03 — Session 1: stack upgrade (Izzat's instruction, outside the roadmap)
-
-Izzat asked to upgrade to the latest LTS/stable versions before starting M1, so the first roadmap task
-was deferred.
+## 2026-11-05 — Session 22: M2 estimator security review (closes M2)
 
 **Done**
-- `194ff48` Node 22 → 26 LTS: `.nvmrc` 26, `engines.node` `26.x` (the old `>=20` would have let Vercel
-  silently move to 26), `@types/node` ^26, version notes in docs.
-- `fc96df9` React 19.1 → 19.3.1, Vitest 3 → 5.1 (Vite 8 is now a peer). `vitest.config.ts` renamed to
-  `.mts` for Vite's native config loader; `*.mts` added to tsconfig `include`.
-- Next.js 15.5 → 16.4.4 via `@next/codemod upgrade --skip-adoption` (no source changes needed; Next
-  rewrote `tsconfig.json`: `jsx: react-jsx`, `.next/dev/types`).
-- e2e: `visual.spec.ts` waits for fonts + the Turnstile iframe instead of `networkidle`, which timed out
-  10/12 runs on Next 16 vs 0/12 on Next 15 (root cause not found). Fixed the rate-limit test's
-  `getByRole("alert")`, which also matched Next's route announcer (failed on Next 15 too).
+- security-reviewer: 1 High, 2 Medium, 6 Low, 3 Info; `npm audit` clean. All fixed: Turnstile before
+  limits, action + optional hostname check, CSP + HSTS, 415/413 limits, capped model error, safe env
+  limits, `stripFeatureTags`, generic 503, `.env*` ignored. `docs/security-review-m2.md` records it all.
+- ROADMAP: new M4 item for production guards (dummy Turnstile keys, missing `TURNSTILE_HOSTNAME`).
 
-**Verified** (on Node 26.13.0)
-- `npm run check` passes. Playwright 11/11 in 3 consecutive runs. This is the first e2e run on Ubuntu.
-
-**Found, not fixed**
-- Turnstile widget isn't painted in the 390px screenshot (same on Next 15). Look at it in M1/M2.
-- npm's install-scripts policy blocks esbuild's postinstall; everything works without it.
-
-**Next up**
-- Optional: TypeScript 5.7 → 7 (needs Next ≥16.3, which we now have; add `"types": ["node"]` to tsconfig).
-- Then M0's last task and M1 via `/next-task`.
+**Verified**
+- `npm run check` 62 unit; e2e 72/72; CSP/Turnstile/theme 13/13 on a production build. reviewer and
+  security-reviewer re-check: no blockers.
 
 **Waiting on Izzat**
-- Install Node 26 locally (system Node is still 22.22.1; checks ran on a temporary Node 26 copy).
+- `.claude/settings.json` has empty deny/ask lists locally: restore or keep on purpose (not committed).
 
 ---
 
-## 2026-11-03 — Session 0 (planned in Claude.ai, before first clone)
+## 2026-11-05 — Session 21: M2 real-key test and estimator tuning
 
 **Done**
-- Scaffolded Next.js 15 project, wrote `lib/content.ts`, `lib/estimate.ts`, `lib/rateLimit.ts` and
-  `app/api/estimate/route.ts`.
-- Wrote CLAUDE.md, docs 00–05, ADRs 001–003, subagents, skills and the post-edit typecheck hook.
-- Added compiling skeletons for every tile and the estimator UI, plus starter tests.
+- Izzat ran 5 real cases (Haiku 5.5). Run 1: larger feature 502'd (thinking ate `max_tokens` 2500);
+  "mixed" made the model invent 3 people for a team of 2. Injection and non-software 422 were fine.
+- `fix(api)`: `maxTokensFor` (8000 Haiku / 4000 others), `effort: "low"`, `stop_reason` handling
+  (cut off 502, refusal 422), metadata-only logging, neutral "mixed" wording + team-size rule.
+- Run 2: all 4 cases 200; senior team of 6 = 4 wk vs 6.4 wk for juniors. 7 route tests (mocked).
 
-**Verified in the sandbox**
-- `npm run typecheck` and `npm run test` pass.
-- `npm run build` passes with fonts stubbed (the sandbox can't reach Google Fonts). Run the real build on Ubuntu.
-- PostToolUse typecheck hook: exits 0 on clean edits, 2 with errors on broken ones.
-- **Not yet run:** Playwright e2e (no browser in the sandbox). Run `npm run test:e2e` on Ubuntu.
+**Verified**
+- `npm run check` 50 unit; e2e 71/71. security-reviewer and reviewer: no blockers, fixes applied.
 
 **Next up**
-- M0 last task: first run on Ubuntu, then start M1 with `/next-task`.
+- M2: Security review of the whole estimator path [security-reviewer].
 
-**Waiting on Izzat**
-- radiozk live URL, Anthropic API key in `.env.local`, Vercel and Cloudflare accounts.
+---
+
