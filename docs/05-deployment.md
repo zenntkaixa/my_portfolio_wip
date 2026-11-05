@@ -8,6 +8,7 @@
 | `ANTHROPIC_MODEL` | Optional | Default `claude-haiku-5-5` |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Vercel, `.env.local` | Public by design |
 | `TURNSTILE_SECRET_KEY` | Vercel, `.env.local` | Server only |
+| `TURNSTILE_HOSTNAME` | Optional, Vercel | Production domain; when set, siteverify must report this hostname |
 | `RATE_LIMIT_PER_HOUR` | Optional | Default 5 |
 | `DAILY_LIMIT` | Optional | Default 150 |
 

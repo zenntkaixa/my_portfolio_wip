@@ -23,4 +23,13 @@ describe("checkLimits", () => {
     expect(checkLimits("c").ok).toBe(true);
     expect(checkLimits("d").ok).toBe(false);
   });
+
+  it("falls back to defaults for NaN, zero or negative env values", async () => {
+    process.env.RATE_LIMIT_PER_HOUR = "abc";
+    process.env.DAILY_LIMIT = "-1";
+    const { checkLimits } = await import("@/lib/rateLimit");
+    for (let i = 0; i < 5; i++) expect(checkLimits("z").ok).toBe(true);
+    expect(checkLimits("z").ok).toBe(false); // default 5 per hour
+    expect(checkLimits("y").ok).toBe(true); // default daily cap is not zero
+  });
 });

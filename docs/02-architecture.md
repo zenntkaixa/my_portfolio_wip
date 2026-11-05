@@ -18,7 +18,7 @@ flowchart LR
 ## Request flow for the estimator
 1. Visitor fills the form; the Turnstile widget produces a one-time token.
 2. Browser POSTs `{ feature, teamSize, seniority, token }` to `/api/estimate`.
-3. Route handler, in this order: parse JSON → `validateRequest` → `checkLimits(ip)` → verify Turnstile
+3. Route handler, in this order: check content-type/size → parse JSON → `validateRequest` → verify Turnstile → `checkLimits(ip)`
    → call Claude → parse JSON → `normalisePlan` (recomputes totals) → respond.
 4. Browser renders the plan in two tabs and resets the Turnstile widget (tokens are single-use).
 

@@ -5,6 +5,23 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-05 — Session 22: M2 estimator security review (closes M2)
+
+**Done**
+- security-reviewer: 1 High, 2 Medium, 6 Low, 3 Info; `npm audit` clean. All fixed: Turnstile before
+  limits, action + optional hostname check, CSP + HSTS, 415/413 limits, capped model error, safe env
+  limits, `stripFeatureTags`, generic 503, `.env*` ignored. `docs/security-review-m2.md` records it all.
+- ROADMAP: new M4 item for production guards (dummy Turnstile keys, missing `TURNSTILE_HOSTNAME`).
+
+**Verified**
+- `npm run check` 62 unit; e2e 72/72; CSP/Turnstile/theme 13/13 on a production build. reviewer and
+  security-reviewer re-check: no blockers.
+
+**Waiting on Izzat**
+- `.claude/settings.json` has empty deny/ask lists locally: restore or keep on purpose (not committed).
+
+---
+
 ## 2026-11-05 — Session 21: M2 real-key test and estimator tuning
 
 **Done**
@@ -19,25 +36,6 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 **Next up**
 - M2: Security review of the whole estimator path [security-reviewer].
-
----
-
-## 2026-11-05 — Session 20: M2 accessible result tabs
-
-**Done**
-- `feat(ui)`: new `ResultTabs` (WAI-ARIA tabs, automatic activation, roving tabindex, Arrow wrap,
-  Home/End, focusable panels, `useId` ids); Estimator keeps the state so a new plan resets to Tab 1.
-  Underline styling with tokens, 44px targets. Copy in `estimatorCopy`.
-- New `tests/e2e/estimator-tabs.spec.ts` (6 tests, focus asserted with `toBeFocused`).
-
-**Verified**
-- `npm run check` passes; Playwright 71/71. Tab crops 320/1440 light+dark + focus clean. reviewer: no findings.
-
-**Next up**
-- M2: Manual test with a real API key locally (Izzat runs it) [prompt-engineer].
-
-**Waiting on Izzat**
-- Merge the PR. Then the next task needs Izzat to run the estimator with a real key in `.env.local`.
 
 ---
 

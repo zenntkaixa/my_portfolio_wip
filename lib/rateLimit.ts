@@ -3,8 +3,13 @@
 // and a monthly spend limit in the Anthropic Console is the real backstop.
 // For strict limits across instances, swap this for Upstash Redis (see README).
 
-const PER_HOUR = Number(process.env.RATE_LIMIT_PER_HOUR ?? 5);
-const PER_DAY = Number(process.env.DAILY_LIMIT ?? 150);
+function envLimit(raw: string | undefined, fallback: number) {
+  const n = Number(raw);
+  return raw !== undefined && Number.isFinite(n) && n > 0 ? n : fallback;
+}
+
+const PER_HOUR = envLimit(process.env.RATE_LIMIT_PER_HOUR, 5);
+const PER_DAY = envLimit(process.env.DAILY_LIMIT, 150);
 
 const visitors = new Map<string, number[]>();
 let day = new Date().toISOString().slice(0, 10);

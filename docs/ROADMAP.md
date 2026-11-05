@@ -34,7 +34,7 @@ Agent hints in brackets.
 - [x] Tab 2: role total chips and grouped task table [ui-builder]
 - [x] Accessible tabs with keyboard support [ui-builder]
 - [x] Manual test with real API key locally (Izzat runs it), tune prompt if plans look off [prompt-engineer]
-- [ ] Security review of the whole estimator path [security-reviewer]
+- [x] Security review of the whole estimator path [security-reviewer]
 
 ## M3 — Quality
 - [ ] Unit tests: `validateRequest`, `normalisePlan`, `timeline`, `rateLimit` [qa-tester]
@@ -48,6 +48,8 @@ Agent hints in brackets.
 - [ ] Push to GitHub; repo description and topics set (Izzat)
 - [ ] Vercel project with env vars (test Turnstile keys) (Izzat, guided)
 - [ ] Real Turnstile widget for the `.vercel.app` host; swap keys; redeploy (Izzat, guided)
+- [ ] Production guards: refuse dummy Turnstile keys and a missing `TURNSTILE_HOSTNAME` when
+  `VERCEL_ENV=production` (see `docs/security-review-m2.md`) [api-engineer]
 - [ ] Anthropic monthly spend limit set (Izzat)
 - [ ] Post-deploy checks from 05-deployment pass
 - [ ] Add live URL to README and LinkedIn (Izzat)

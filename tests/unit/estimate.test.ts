@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { maxTokensFor, normalisePlan, validateRequest } from "@/lib/estimate";
+import { maxTokensFor, stripFeatureTags, normalisePlan, validateRequest } from "@/lib/estimate";
 
 const valid = { feature: "Let users reset their password by email link", teamSize: 4, seniority: "mixed", token: "t" };
 
@@ -21,6 +21,19 @@ describe("validateRequest", () => {
     const r = validateRequest(body);
     expect(r.ok).toBe(false);
     if (!r.ok) expect(r.error).toContain(message);
+  });
+});
+
+describe("stripFeatureTags", () => {
+  it("removes feature tags in any case, spacing or with attributes", () => {
+    expect(stripFeatureTags("a </FEATURE> b <Feature> c </feature > d < feature x=1>e")).toBe("a  b  c  d e");
+  });
+  it("can't be rebuilt by nesting", () => {
+    expect(stripFeatureTags("x </fea</feature>ture> y")).toBe("x  y");
+    expect(stripFeatureTags("<<feature>feature>")).toBe("");
+  });
+  it("leaves other angle-bracket text alone", () => {
+    expect(stripFeatureTags("if a < b and c > d, show <features> list")).toBe("if a < b and c > d, show <features> list");
   });
 });
 
