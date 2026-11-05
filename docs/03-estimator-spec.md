@@ -54,9 +54,9 @@ Errors, always `{ "error": "human-readable sentence" }`:
 |---|---|---|
 | 400 | Invalid body or input rules broken | Inline under the field |
 | 403 | Turnstile failed | Banner, reset widget |
-| 422 | Model says input isn't a software feature | Banner with the model's sentence |
+| 422 | Model says input isn't a software feature, or refuses (`stop_reason: refusal`) | Banner with the model's sentence (generic sentence on refusal) |
 | 429 | Rate limit or daily cap (`Retry-After` header) | Warn-coloured banner, disable button |
-| 502 / 504 | Model error, bad JSON, timeout | Banner with retry button |
+| 502 / 504 | Model error, bad JSON, reply cut off (`stop_reason: max_tokens`), timeout | Banner with retry button |
 | 503 | `ANTHROPIC_API_KEY` missing | Banner (shows during local setup only) |
 
 ## Prompt
@@ -66,6 +66,10 @@ Lives in `app/api/estimate/route.ts` as `SYSTEM_PROMPT`. Owned by the `prompt-en
 - Model returns JSON only. Server strips fences, parses, then `normalisePlan` clamps numbers,
   trims strings, caps array lengths and **recomputes all totals**. Never trust model totals.
 - Default model: `claude-haiku-5-5` (cheapest). `ANTHROPIC_MODEL` env var can switch to Sonnet.
+- Request: `max_tokens` 8000 on Haiku, 4000 on pricier models (`maxTokensFor`),
+  `output_config: { effort: "low" }`, `thinking` omitted (adaptive by default; its tokens count
+  against `max_tokens`). On failure the server logs only `stop_reason`,
+  token usage and text length, never the feature or model text.
 
 ## UI states
 `idle → submitting → success | error`. While submitting: disable the form, show a skeleton of the
@@ -92,5 +96,6 @@ Tabs use proper ARIA (`role="tablist"`, `aria-selected`, arrow-key navigation).
 
 ## Testing
 - Unit: `validateRequest`, `normalisePlan`, `lib/timeline.ts` (pure functions, no network).
+- Unit: `tests/unit/route.test.ts` calls `POST` with `fetch` mocked for Turnstile and Anthropic.
 - E2E: Playwright intercepts `POST /api/estimate` with `page.route` and returns
   `tests/fixtures/plan.json`. Never hit the real API in tests. Turnstile uses Cloudflare's test site key.

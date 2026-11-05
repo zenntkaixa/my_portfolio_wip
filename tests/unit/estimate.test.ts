@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { normalisePlan, validateRequest } from "@/lib/estimate";
+import { maxTokensFor, normalisePlan, validateRequest } from "@/lib/estimate";
 
 const valid = { feature: "Let users reset their password by email link", teamSize: 4, seniority: "mixed", token: "t" };
 
@@ -21,6 +21,13 @@ describe("validateRequest", () => {
     const r = validateRequest(body);
     expect(r.ok).toBe(false);
     if (!r.ok) expect(r.error).toContain(message);
+  });
+});
+
+describe("maxTokensFor", () => {
+  it("gives Haiku 8000 output tokens and other models 4000", () => {
+    expect(maxTokensFor("claude-haiku-5-5")).toBe(8000);
+    expect(maxTokensFor("claude-sonnet-5-5")).toBe(4000);
   });
 });
 

@@ -5,6 +5,23 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-05 — Session 21: M2 real-key test and estimator tuning
+
+**Done**
+- Izzat ran 5 real cases (Haiku 5.5). Run 1: larger feature 502'd (thinking ate `max_tokens` 2500);
+  "mixed" made the model invent 3 people for a team of 2. Injection and non-software 422 were fine.
+- `fix(api)`: `maxTokensFor` (8000 Haiku / 4000 others), `effort: "low"`, `stop_reason` handling
+  (cut off 502, refusal 422), metadata-only logging, neutral "mixed" wording + team-size rule.
+- Run 2: all 4 cases 200; senior team of 6 = 4 wk vs 6.4 wk for juniors. 7 route tests (mocked).
+
+**Verified**
+- `npm run check` 50 unit; e2e 71/71. security-reviewer and reviewer: no blockers, fixes applied.
+
+**Next up**
+- M2: Security review of the whole estimator path [security-reviewer].
+
+---
+
 ## 2026-11-05 — Session 20: M2 accessible result tabs
 
 **Done**
@@ -21,22 +38,6 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 **Waiting on Izzat**
 - Merge the PR. Then the next task needs Izzat to run the estimator with a real key in `.env.local`.
-
----
-
-## 2026-11-05 — Session 19: M2 results Tab 2
-
-**Done**
-- `feat(ui)`: role chips from `roleTotals`; task table with one `<tbody>` per phase (rowgroup header,
-  subtotal row), total footer, focusable scroll region on mobile. `fix`: `normalisePlan` keeps exact
-  half-hour `totalHours` (was rounded, so footer and summary could disagree with subtotals).
-- ROADMAP: M3 CI item gets the agreed follow-up (branch protection, auto-delete head branches).
-
-**Verified**
-- `npm run check` passes (42 unit); Playwright 65/65 (develop had 61, not 65 as PR #4 said). Tab 2 crops clean.
-
-**Next up**
-- M2: Accessible tabs with keyboard support [ui-builder].
 
 ---
 
