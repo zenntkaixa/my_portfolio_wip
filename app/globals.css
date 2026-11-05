@@ -173,7 +173,8 @@ p {
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
-  box-shadow: 0 0 0 4px var(--accent-soft);
+  /* Spread 8px = 4px covered by the 2px offset and 2px outline, plus a visible 4px halo outside. */
+  box-shadow: 0 0 0 8px var(--accent-soft);
 }
 
 /* Windows High Contrast and other forced-colour modes drop box-shadow and remap colours,

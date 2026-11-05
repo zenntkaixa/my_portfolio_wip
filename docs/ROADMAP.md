@@ -23,7 +23,7 @@ Agent hints in brackets.
 - [x] Case study tiles x3 [ui-builder]
 - [x] Experience, Stack, Certifications, Contact tiles [ui-builder]
 - [x] Load animation with reduced-motion support [ui-builder]
-- [ ] `/visual-check` pass at 390 / 1024 / 1440, light and dark; fix findings [qa-tester]
+- [x] `/visual-check` pass at 390 / 1024 / 1440, light and dark; fix findings [qa-tester]
 
 ## M2 — Estimator UI
 - [ ] Form: textarea with counter, example chips, team slider, seniority segmented control [ui-builder]

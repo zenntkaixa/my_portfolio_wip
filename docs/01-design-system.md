@@ -73,7 +73,8 @@ Per-tile layout rules live in `docs/01b-tiles.md`. Read only the section for the
   the Now tile has nothing focusable, and moving the DOM would need explicit desktop grid placement.
 
 ## Focus
-- `:focus-visible`: 2px `--accent` outline, 2px offset, plus a 4px `--accent-soft` halo (the only shadow).
+- `:focus-visible`: 2px `--accent` outline, 2px offset, plus a 4px `--accent-soft` halo outside the outline
+  (`box-shadow` spread 8px, since the offset and outline cover the first 4px). The only shadow.
 - `forced-colors: active`: 2px `Highlight` outline, no halo.
 
 ## Form controls

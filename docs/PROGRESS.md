@@ -5,6 +5,29 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-05 — Session 11: M1 visual-check pass (closes M1); token-budget setup
+
+**Done**
+- `chore: cut per-session token use` (Izzat's instruction): trimmed CLAUDE.md, PROGRESS archive,
+  docs/01b-tiles.md split, Sonnet subagents, crop-first `/visual-check`, `/ship` confirms not re-runs.
+- Visual-check fixes: focus halo spread 8px so 4px shows outside the outline; Turnstile renders
+  `compact` when its container is under 300px (no sideways scroll at 320px).
+
+**Verified**
+- `npm run check` passes; Playwright 40/40. 320 and 390: scrollWidth equals clientWidth; halo crop
+  checked. Few-line diff, so no code-reviewer run (CLAUDE.md section 4).
+
+**Next up**
+- M2: estimator form. Estimator styling also covers the deferred visual findings (plain controls,
+  dark-mode fieldset border, cramped example buttons, radio wrapping at 320).
+
+**Waiting on Izzat**
+- Certifications empty space at 1024 (comparison image in the session). Now tile stat label wraps to
+  5 lines at 1440: shorter copy or earlier row layout. M2 tile-hover roadmap line. Session 8 copy
+  points, radiozk live URL, Anthropic key, `AGENTS.md`.
+
+---
+
 ## 2026-11-04 — Session 10: M1 load animation with reduced-motion support
 
 **Done**
@@ -35,42 +58,6 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 - Copy points from Session 8. radiozk live URL. Optional: a shorter PR stat label. M2 needs the
   Anthropic key in `.env.local`. Decide on untracked `AGENTS.md`. Whether to fix the 1024 empty space
   under Certifications.
-
----
-
-## 2026-11-04 — Session 9: M1 Experience, Stack, Certifications, Contact tiles
-
-**Done**
-- Experience: `ol.timeline` with the period in a tabular-nums `--muted` column, org and role, a
-  `--line` rule; container query stacks the period above each entry under 420px. Education under an h3.
-- Stack: h3 per group; each chips list is named by its heading (`aria-labelledby`).
-- Certifications: name left, year right in tabular-nums with `--line` dividers; empty year renders
-  nothing.
-- Contact: email as the primary mailto button (`--accent-ink` on `--accent`, 5.9:1 light, 7.1:1
-  dark); LinkedIn and GitHub as new-tab links. No phone number. Note moved to `profile.contactNote`.
-- Cross-tile: new `components/ExternalLink.tsx` (used by Project and Contact); `role="list"` on every
-  bullet-less list; shared `lib/slug.ts` (with a unit test) replaces two copies.
-- e2e (content only): the four tiles' content in order, mailto href, external link attributes, and
-  a page-wide check that every bullet-less list has `role="list"`.
-- docs/01: Experience, Stack, Certifications, Contact, Lists and external links sections.
-
-**Verified**
-- `npm run check` passes; Playwright 36/36 (home spec also 3x repeat, no flakes). Checked at
-  390/1024/1440, light and dark.
-- code-reviewer: no blockers. Fixed: stale CSS list comment, duplicated `slug()`, brittle empty-year
-  guard, redundant hand-maintained list test, unused `className` prop, Experience key, container
-  query wording.
-
-**Found, not fixed**
-- At 1024 Certifications stretches to Stack's height and has empty space at the bottom.
-- Labels "Education", "LinkedIn", "GitHub" are UI chrome in components (allowed, like tile titles).
-
-**Next up**
-- M1: load animation with reduced-motion support.
-
-**Waiting on Izzat**
-- Copy points from Session 8. radiozk live URL. Optional: a shorter PR stat label. M2 needs the
-  Anthropic key in `.env.local`. Decide on untracked `AGENTS.md`. Whether to fix the 1024 empty space.
 
 ---
 
