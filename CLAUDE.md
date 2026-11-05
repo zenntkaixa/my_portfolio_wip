@@ -1,126 +1,95 @@
 # CLAUDE.md — Izzat Fahmi Portfolio
 
-You are continuing development of Izzat Fahmi's personal portfolio website. Izzat is a backend-first
-full-stack software engineer (Java, Spring Boot, React, TypeScript) moving into AI-integrated software
-engineering. The site exists to win **senior full-stack roles in Malaysia**.
+Personal portfolio for Izzat Fahmi, a backend-first full-stack engineer (Java, Spring Boot, React,
+TypeScript) moving into AI-integrated software engineering. Goal: win **senior full-stack roles in
+Malaysia**. Signature feature: a **live AI demo** where a visitor describes a feature, picks team size and
+seniority, and Claude returns a delivery plan with effort and calendar estimates.
 
-The signature feature is a **live AI demo**: a visitor describes a software feature, picks a team size
-and seniority, and Claude returns an end-to-end delivery plan with effort and calendar estimates.
+## 1. Start of every session
 
-## 1. Start of every session (do this first, in order)
+1. `git switch develop && git pull`.
+2. Read only the **latest** entry of `docs/PROGRESS.md` (everything above the first `---` after it).
+   Older entries are in `docs/progress-archive.md`; don't read it unless needed.
+3. Find the first unchecked task in `docs/ROADMAP.md`.
+4. Read only the docs that task needs (map below). Propose a short plan and wait for Izzat's approval.
 
-1. Read `docs/PROGRESS.md`, especially the latest entry and "Next up".
-2. Read `docs/ROADMAP.md` and find the first unchecked task.
-3. Read only the docs that task needs (see the doc map below). Don't load everything.
-4. Enter plan mode, propose a short plan to Izzat, and wait for approval before editing.
-
-If Izzat gives a different instruction, follow it instead and log that in PROGRESS.md.
+If Izzat gives a different instruction, follow it and log that in PROGRESS.md.
 
 ## 2. Doc map
 
 | Need | Read |
 |---|---|
 | Goals, audience, decisions already made | `docs/00-brief.md` |
-| Colours, type, spacing, bento layout | `docs/01-design-system.md` |
-| How the pieces fit, file responsibilities | `docs/02-architecture.md` |
+| Tokens, type, bento grid, focus, motion | `docs/01-design-system.md` |
+| Per-tile layout rules (read only the tile you touch) | `docs/01b-tiles.md` |
+| How the pieces fit | `docs/02-architecture.md` |
 | Estimator API contract, prompt, UI states | `docs/03-estimator-spec.md` |
-| Site copy rules, what may and may not be published | `docs/04-content.md` |
+| Copy rules, what may be published | `docs/04-content.md` |
 | Vercel, Turnstile, env vars, spend limit | `docs/05-deployment.md` |
 | Why things are the way they are | `docs/decisions/` |
-| Moving between Windows and Ubuntu | `docs/WINDOWS-TO-UBUNTU.md` |
+| Windows and Ubuntu setup | `docs/WINDOWS-TO-UBUNTU.md` |
 
 ## 3. Commands
 
-```bash
-npm install            # first run after clone
-npm run dev            # http://localhost:3000
-npm run typecheck      # tsc --noEmit
-npm run build          # production build (needs network for Google Fonts)
-npm run test           # Vitest unit tests
-npm run test:e2e       # Playwright (run `npx playwright install chromium` once)
-npm run check          # typecheck + unit tests + build: the pre-commit gate
-```
+Node 26 via nvm. In a fresh shell: `export NVM_DIR=$HOME/.nvm; . $NVM_DIR/nvm.sh; nvm use`
+(system node is older). Scripts are in `package.json`; the two that matter:
 
-## 4. Stack
+- `npm run check`: typecheck, unit tests and build. The pre-commit gate.
+- `npm run test:e2e`: Playwright, starts its own dev server.
 
-Next.js 16 (App Router) · React 19 · TypeScript strict · plain CSS with design tokens (no Tailwind)
-· Vercel hosting · Anthropic Messages API via `fetch` · Cloudflare Turnstile · Vitest · Playwright.
+Kill dev servers by PID (including the child `next-server`), never with `pkill -f`.
 
-## 5. Session loop
+## 4. Session loop and token budget
 
 ```
-/next-task  → plan (plan mode) → Izzat approves
-            → delegate to the right subagent(s)
-            → verify: npm run check, plus /visual-check for any UI change
-            → code-reviewer subagent on the diff
-            → /ship  (tick ROADMAP, log PROGRESS, commit, push to develop)
+/next-task → plan → Izzat approves → build → verify once → code-reviewer → /ship → /clear
 ```
 
-One roadmap task per commit where practical. Keep diffs small and reviewable.
+- **One task per session.** `/clear` after each `/ship` push; ROADMAP and PROGRESS carry the state.
+- **Small tasks** (one tile, a few lines): one subagent does the code and its tests. Docs-only or
+  few-line diffs skip `code-reviewer`; the main agent fixes small review findings inline.
+- **Verify once.** Whoever edited last runs `npm run check` and e2e. Don't re-run unless you edited since.
+- **Screenshots:** one agent inspects them, never two. See `/visual-check` for crop-first rules.
+- **Reports** from subagents: 15 lines or fewer.
+- Run `security-reviewer` before anything touching `app/api/**`, env vars or deployment.
+- Model choice: Sonnet for UI, tests, review of small diffs, content and bookkeeping. Opus for the
+  estimator prompt, security reviews, hard bugs and architecture decisions.
 
 ### Branches
 
-- **`develop`** is the working branch. All task commits go here and are pushed to `origin/develop`.
-- **`main`** is the release branch and holds only released versions. The site deploys to production from it.
-  Don't commit to it directly.
-- **Releasing** means merging `develop` into `main` and pushing `main`. Do it only when Izzat asks, and only
-  after `npm run check` and `npm run test:e2e` pass on `develop`.
-- Start each session with `git switch develop && git pull`.
+- **`develop`** is the working branch; commit and push task work here.
+- **`main`** holds released versions only; production deploys from it. Never commit to it directly.
+- **Releasing** = merge `develop` into `main` and push, only when Izzat asks, and only after
+  `npm run check` and `npm run test:e2e` pass on `develop`.
 
-## 6. Subagents (`.claude/agents/`)
+## 5. Coding standards
 
-| Agent | Use for | Can edit? |
-|---|---|---|
-| `ui-builder` | Tiles, layout, theming, responsive CSS, motion | Yes |
-| `api-engineer` | `app/api/**`, `lib/rateLimit.ts`, Turnstile verification | Yes |
-| `prompt-engineer` | Estimator system prompt, JSON schema, `lib/estimate.ts` | Yes |
-| `qa-tester` | Vitest and Playwright tests, fixing failing tests | Yes |
-| `security-reviewer` | Secrets, injection, abuse and cost paths | No (read-only) |
-| `code-reviewer` | Review any diff against this file before commit | No (read-only) |
-
-Run `security-reviewer` before anything touching `app/api/**`, env vars, or deployment.
-
-## 7. Skills (slash workflows in `.claude/skills/`)
-
-- `/next-task` — pick and plan the next roadmap item
-- `/visual-check` — Playwright screenshots: mobile and desktop, light and dark
-- `/ship` — verify, review, tick roadmap, log progress, commit and push
-- `/update-content` — change CV-driven copy safely in `lib/content.ts`
-
-## 8. Coding standards
-
-- **Server Components by default.** Add `"use client"` only to components that need state or browser APIs
-  (currently `Estimator`, `ThemeToggle`, `Turnstile`).
+- **Server Components by default.** `"use client"` only where state or browser APIs are needed.
 - **All site copy lives in `lib/content.ts`.** Components never hard-code biography text.
-- **Styling uses CSS variables from `app/globals.css` only.** No raw hex values in components, no inline
-  colour styles, no Tailwind, no CSS-in-JS libraries.
-- **TypeScript strict, no `any`.** Validate all external input (request bodies, model output) at the boundary.
+- **Styling uses CSS variables from `app/globals.css` only.** No raw hex in components, no inline
+  colour styles, no Tailwind, no CSS-in-JS.
+- **TypeScript strict, no `any`.** Validate external input (request bodies, model output) at the boundary.
 - **No new dependencies without an ADR** in `docs/decisions/`. Prefer the platform.
-- **Accessibility:** semantic HTML, visible focus, labelled form controls, colour contrast AA, respect
-  `prefers-reduced-motion`.
-- Keep components small: one tile per file in `components/tiles/`.
+- **Accessibility:** semantic HTML, visible focus, labelled controls, AA contrast,
+  `prefers-reduced-motion`, `role="list"` on any list with bullets removed.
+- One tile per file in `components/tiles/`.
 
-## 9. Guardrails (never break these)
+## 6. Guardrails (never break these)
 
-- **Never read, print or commit `.env`, `.env.local` or any real key.** Use `.env.example` for shape only.
+- **Never read, print or commit `.env`, `.env.local` or any real key.** `.env.example` is for shape only.
 - **Never call the real Anthropic API in tests.** Mock `fetch`. Real calls cost Izzat money.
 - **Never publish Izzat's phone number.** Contact is email and LinkedIn only.
 - **Client names stay anonymised in case studies** (e.g. "a US insurer"). Employer names are fine.
 - **Never weaken abuse protection** (Turnstile, rate limit, daily cap, input length limits) without asking.
 - Don't change roadmap scope or design direction without asking Izzat first.
 - Never `git push --force` and never rewrite published history.
-- Never commit to or merge into `main` unless Izzat asks for a release (see §5 Branches).
+- Never commit to or merge into `main` unless Izzat asks for a release.
+- Don't commit `.claude/settings.json` or `AGENTS.md` unless Izzat asks; stage explicit paths.
 
-## 10. Definition of done (per task)
+## 7. Definition of done (per task)
 
-- [ ] `npm run check` passes
-- [ ] UI changes pass `/visual-check` at 390px and 1440px, light and dark
-- [ ] `code-reviewer` has no blocking findings
-- [ ] Roadmap item ticked and a PROGRESS.md entry written
-- [ ] Committed with a conventional message: `feat(ui): ...`, `fix(api): ...`, `docs: ...`, `test: ...`
-
-## 11. Environment notes
-
-- Developed on Windows (`C:\my_projects\my_portfolio`) and Ubuntu with Claude Code. Line endings are forced
-  to LF by `.gitattributes`.
-- Node 26 LTS (see `.nvmrc`).
+- [ ] `npm run check` passes (and e2e for UI or behaviour changes)
+- [ ] UI changes pass `/visual-check`
+- [ ] `code-reviewer` has no blocking findings (unless skipped as a small diff, per section 4)
+- [ ] Roadmap item ticked and a PROGRESS.md entry written (12 lines or fewer)
+- [ ] Conventional commit: `feat(ui): ...`, `fix(api): ...`, `docs: ...`, `test: ...`, `chore: ...`

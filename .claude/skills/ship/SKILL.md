@@ -6,16 +6,16 @@ disable-model-invocation: true
 
 # /ship
 
-Stop at the first failure and report it. Don't skip steps.
+Stop at the first failure and report it. Don't re-run work this task already did.
 
-1. `npm run check` (typecheck, unit tests, build). Must pass.
-2. If UI files changed (`components/`, `app/`, `*.css`), run `/visual-check` and fix blocking issues.
-3. If `app/api/`, `lib/rateLimit.ts`, env handling or `next.config.ts` changed, run the
-   `security-reviewer` subagent. Blockers must be fixed.
-4. Run the `code-reviewer` subagent on the diff. Blockers must be fixed.
-5. Tick the finished item(s) in `docs/ROADMAP.md`.
-6. Add a new entry at the top of `docs/PROGRESS.md`: date, what changed, what was verified, next up,
-   anything waiting on Izzat.
-7. `git add -A` and commit with a conventional message, e.g. `feat(ui): add hero and now tiles`.
-   Show Izzat the message first.
-8. Ask Izzat before `git push`.
+1. Confirm, from this session, that `npm run check` (and e2e for UI or behaviour changes) passed
+   after the last edit. Re-run only if files changed since.
+2. Confirm `/visual-check` ran for UI changes and `code-reviewer` ran (unless skipped as a small diff,
+   CLAUDE.md section 4), with blockers fixed. For `app/api/`, `lib/rateLimit.ts`, env handling or
+   `next.config.ts` changes, confirm `security-reviewer` ran. Run any that are missing.
+3. Tick the finished item(s) in `docs/ROADMAP.md`.
+4. Add a new entry at the top of `docs/PROGRESS.md` (12 lines or fewer). If there are now more than
+   two entries, move the oldest to the top of `docs/progress-archive.md`.
+5. Stage **explicit paths** only (never `git add -A`; `.claude/settings.json` and `AGENTS.md` stay
+   out unless Izzat asks). Show Izzat the conventional commit message first.
+6. Ask Izzat before `git push`. After pushing, run `sync` and `git fsck`, then suggest `/clear`.
