@@ -14,13 +14,15 @@ description: Pick the next unchecked item from docs/ROADMAP.md and produce a sho
    that task is blocked, and say so if you do.
 3. Read only the docs that task needs (doc map in CLAUDE.md section 2), and only the relevant
    sections of long docs. Use targeted reads (`grep -n`, `sed -n`), not broad searches.
-4. Present a plan in this shape, then stop and wait for approval:
+4. If the task has a real design choice, first list 2 or 3 options, ranked, one line each with the
+   trade-off, and recommend one. Skip this when there's an obvious way. Then present a plan in this
+   shape, stop and wait for approval:
 
 ```
 Next task: <roadmap line>
 Milestone: <M#>
 Branch: <type>/<milestone>-<slug>, off develop
-Agent(s): <subagent names>
+Agent(s): <builder subagent(s)>, then reviewer (unless a small diff)
 Files: <files to create or change>
 Steps:
   1. ...

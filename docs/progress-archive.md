@@ -4,6 +4,26 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-05 — Session 14: M2 submit flow and error states
+
+**Done**
+- `feat(ui)`: idle → submitting → success | error. Disabled fieldset, skeleton + polite "Planning phases…",
+  `aria-busy`. 400 inline (textarea focused); 403/422/503 banners; 429 warn banner + Retry-After countdown
+  on the button; 502/504/network Retry gated on a fresh token. Non-JSON bodies, `isPlan` guard, abort on
+  unmount, focus to banner/results heading, footer note. Copy in `estimatorCopy`.
+- New `lib/estimatorClient.ts` (+10 unit tests) and `tests/e2e/estimator-submit.spec.ts` (10 tests).
+
+**Verified**
+- `npm run check` passes; Playwright 58/58. 12 estimator crops clean. code-reviewer: no blockers, fixes applied.
+
+**Next up**
+- M2: `lib/timeline.ts` implemented; unit tests green [prompt-engineer or qa-tester].
+
+**Waiting on Izzat**
+- Backlog (unchanged): siteverify `hostname` check in `route.ts`; per-instance rate limit.
+
+---
+
 ## 2026-11-05 — Session 13: M2 Turnstile component
 
 **Done**

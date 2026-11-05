@@ -43,13 +43,13 @@ Kill dev servers by PID (including the child `next-server`), never with `pkill -
 ## 4. Session loop and token budget
 
 ```
-/next-task → plan → Izzat approves → task branch → build → verify once → code-reviewer
-  → /ship (push + PR into develop) → /clear → Izzat merges the PR
+/next-task → plan (ranked options when there's a real choice) → Izzat approves → task branch → build
+  → verify once → reviewer → /ship (push + PR into develop) → /clear → Izzat merges → "PR merged"
 ```
 
 - **One task per session, one branch and one PR per task.** `/clear` after `/ship` opens the PR; ROADMAP and PROGRESS carry the state.
 - **Small tasks** (one tile, a few lines): one subagent does the code and its tests. Docs-only or
-  few-line diffs skip `code-reviewer`; the main agent fixes small review findings inline.
+  few-line diffs skip `reviewer`; the main agent fixes small review findings inline.
 - **Verify once.** Whoever edited last runs `npm run check` and e2e. Don't re-run unless you edited since.
 - **Screenshots:** one agent inspects them, never two. See `/visual-check` for crop-first rules.
 - **Reports** from subagents: 15 lines or fewer.
@@ -69,6 +69,37 @@ Kill dev servers by PID (including the child `next-server`), never with `pkill -
   and merges it on GitHub; Claude never merges task PRs.
 - **Releasing** = a PR from `develop` into `main`, opened only when Izzat asks and only after
   `npm run check` and `npm run test:e2e` pass on `develop`. Izzat merges it with a merge commit.
+
+## Agent contract
+
+Read first by the sub-agents: project ones in `.claude/agents/` (builders: `ui-builder`, `api-engineer`,
+`prompt-engineer`, `qa-tester`; `security-reviewer`) and generic ones from `~/claude-team` in
+`~/.claude/agents/` (`reviewer`, `verifier`, `debugger`, `security-engineer`, `release-engineer`,
+`docs-auditor`). ADR-005 explains the split. Points at the sections above rather than repeating them.
+
+- **Commands:** section 3. Every shell starts with `export NVM_DIR=$HOME/.nvm; . $NVM_DIR/nvm.sh; nvm use`.
+  One unit test: `npx vitest run <file>`; one e2e: `npx playwright test <file>`. No CI yet (M3), so
+  `npm run check` + `npm run test:e2e` locally are "green".
+- **Never touch:** `.env`, `.env.local` or any key (names in `.env.example` only); the real Anthropic
+  API (mock `fetch`); `main`; the phone number; real client names. Section 6 has the full list.
+- **Security tooling:** `npm audit`; no CodeQL, Dependabot or image scans yet. Abuse and spend review of
+  `app/api/**`, `lib/rateLimit.ts`, env, Turnstile and headers is `security-reviewer`'s job.
+- **Accepted risks (do not re-report):** the rate limit is per-instance memory (Turnstile and the daily
+  cap are the real gate; Upstash is the ADR-002 upgrade, M5); `.vercel.app` uses Turnstile test keys
+  until M4.
+- **Gotchas agents must check:** copy only in `lib/content.ts`; colours only via `app/globals.css`
+  variables; `role="list"` on unstyled lists and `prefers-reduced-motion`; review UI against
+  `docs/01-design-system.md` and the estimator against `docs/03-estimator-spec.md`; Playwright reuses
+  any server on port 3000, so stale dev servers give stale results (kill by PID, section 3).
+- **Git conventions:** section 4, *Branches and PRs* (ADR-004): task branches off `develop`, PRs into
+  `develop`, release PRs `develop` → `main`, merge commits, commit trailer from the session. Izzat
+  merges; pushes need Izzat's go-ahead each time. Sub-agents never commit or push; the main session
+  commits through `/ship`.
+- **When to run which agent (cost):** `reviewer` (Sonnet; `model: opus` for large or risky diffs) on
+  code PRs, not docs-only or few-line ones; `security-reviewer` before anything in `app/api/**`, env or
+  deployment; `security-engineer` for `npm audit` triage and before releases; `verifier` only for
+  repeated or flaky-suspect runs; `debugger` when a failure isn't obvious after one look; `docs-auditor`
+  and `release-engineer` once per release. Give each a base ref (`develop`) and the changed files.
 
 ## 5. Coding standards
 
@@ -99,7 +130,7 @@ Kill dev servers by PID (including the child `next-server`), never with `pkill -
 
 - [ ] `npm run check` passes (and e2e for UI or behaviour changes)
 - [ ] UI changes pass `/visual-check`
-- [ ] `code-reviewer` has no blocking findings (unless skipped as a small diff, per section 4)
+- [ ] `reviewer` has no blocking findings (unless skipped as a small diff, per section 4)
 - [ ] Roadmap item ticked and a PROGRESS.md entry written (12 lines or fewer)
 - [ ] Conventional commit: `feat(ui): ...`, `fix(api): ...`, `docs: ...`, `test: ...`, `chore: ...`
 - [ ] Task branch pushed and a PR open into `develop` (title = the commit subject)
