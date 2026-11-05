@@ -1,7 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 import plan from "../fixtures/plan.json";
 import { estimatorCopy } from "../../lib/content";
-import { toBars } from "../../lib/timeline";
+import { roleTotals, toBars } from "../../lib/timeline";
 
 // The real API is never called: /api/estimate is intercepted.
 
@@ -64,4 +64,87 @@ test("repeated phase names render every bar and card without duplicate-key warni
   await expect(page.getByTestId("phase-card")).toHaveCount(2);
   await expect(page.getByRole("region", { name: estimatorCopy.risksHeading }).getByRole("listitem")).toHaveCount(2);
   expect(logs.filter((l) => /same key|unique "key"/i.test(l))).toEqual([]);
+});
+
+async function openTab2(page: Page) {
+  await page.getByRole("tab", { name: "Task table" }).click();
+  await expect(page.getByRole("region", { name: estimatorCopy.tasks.regionLabel })).toBeVisible();
+}
+
+test("tab 2 shows role chips, phase subtotals and the grand total", async ({ page }) => {
+  await showResults(page);
+  await openTab2(page);
+  const p = plan.plan;
+  const c = estimatorCopy.tasks;
+
+  const expected = roleTotals(p.phases.flatMap((ph) => ph.tasks)).map((r) => c.chip(r.role, r.hours));
+  const chips = page.getByRole("list", { name: c.roleChipsLabel }).getByRole("listitem");
+  await expect(chips).toHaveText(expected);
+
+  const bodies = page.getByTestId("phase-body");
+  await expect(bodies).toHaveCount(p.phases.length);
+  for (const [i, ph] of p.phases.entries()) {
+    const body = bodies.nth(i);
+    await expect(body.getByRole("rowheader", { name: ph.name })).toBeVisible();
+    await expect(body.locator("tr")).toHaveCount(ph.tasks.length + 2);
+    const sum = ph.tasks.reduce((n, t) => n + t.hours, 0);
+    await expect(body.getByRole("row", { name: new RegExp(`^${c.subtotal}`) }).getByRole("cell")).toHaveText(String(sum));
+  }
+  await expect(
+    page.getByRole("table").getByRole("row", { name: new RegExp(`^${c.total}`) }).getByRole("cell"),
+  ).toHaveText(String(p.totalHours));
+});
+
+test("tab 2 does not scroll the page at 320px and its region is focusable", async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 800 });
+  await showResults(page);
+  await openTab2(page);
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+  expect(overflow).toBeLessThanOrEqual(0);
+  const region = page.getByRole("region", { name: estimatorCopy.tasks.regionLabel });
+  const scrolls = await region.evaluate((el) => el.scrollWidth > el.clientWidth);
+  expect(scrolls).toBe(true);
+  await region.focus();
+  await expect(region).toBeFocused();
+});
+
+test("repeated phase names render two tab 2 groups without key warnings", async ({ page }) => {
+  const logs: string[] = [];
+  page.on("console", (m) => logs.push(m.text()));
+  const [a, b] = plan.plan.phases;
+  const dup = { ...plan, plan: { ...plan.plan, title: "Duplicate names", phases: [a, { ...b, name: a.name, startDay: 2 }] } };
+  await showResults(page, dup, "Duplicate names");
+  await openTab2(page);
+  await expect(page.getByTestId("phase-body")).toHaveCount(2);
+  expect(logs.filter((l) => /same key|unique "key"/i.test(l))).toEqual([]);
+});
+
+test("tab 2 keeps half-hour totals consistent", async ({ page }) => {
+  const [a, b] = plan.plan.phases;
+  const half = {
+    ...plan,
+    plan: {
+      ...plan.plan,
+      title: "Half hours",
+      totalHours: 18.5,
+      phases: [
+        { ...a, tasks: [{ task: "One", role: "Backend", hours: 6 }, { task: "Two", role: "QA", hours: 4.5 }] },
+        { ...b, tasks: [{ task: "Three", role: "Backend", hours: 3.5 }, { task: "Four", role: "QA", hours: 4.5 }] },
+      ],
+    },
+  };
+  await showResults(page, half, "Half hours");
+  await openTab2(page);
+  const c = estimatorCopy.tasks;
+  const num = async (loc: ReturnType<Page["locator"]>) => parseFloat((await loc.innerText()).trim());
+  const subs = page.getByTestId("phase-body").getByRole("row", { name: new RegExp(`^${c.subtotal}`) }).getByRole("cell");
+  const s1 = await num(subs.nth(0));
+  const s2 = await num(subs.nth(1));
+  expect([s1, s2]).toEqual([10.5, 8]);
+  const foot = await num(page.getByRole("table").getByRole("row", { name: new RegExp(`^${c.total}`) }).getByRole("cell"));
+  expect(foot).toBe(s1 + s2);
+  expect(foot).toBe(18.5);
+  const chipTexts = await page.getByRole("list", { name: c.roleChipsLabel }).getByRole("listitem").allInnerTexts();
+  const chipSum = chipTexts.reduce((n, t) => n + parseFloat(/([\d.]+) h$/.exec(t)![1]), 0);
+  expect(chipSum).toBe(foot);
 });

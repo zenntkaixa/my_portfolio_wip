@@ -91,7 +91,9 @@ export function normalisePlan(raw: unknown): Plan | null {
     phases,
     risks: strList(r.risks, 6),
     confidence,
-    totalHours: Math.round(totalHours),
+    // Task hours are in 0.5 steps, so the sum is exact. Not rounded, so it always equals the
+    // phase subtotals and role totals the UI shows.
+    totalHours,
     totalDays,
     calendarWeeks: Math.max(1, Math.round((totalDays / 5) * 10) / 10),
   };

@@ -5,6 +5,22 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-05 — Session 19: M2 results Tab 2
+
+**Done**
+- `feat(ui)`: role chips from `roleTotals`; task table with one `<tbody>` per phase (rowgroup header,
+  subtotal row), total footer, focusable scroll region on mobile. `fix`: `normalisePlan` keeps exact
+  half-hour `totalHours` (was rounded, so footer and summary could disagree with subtotals).
+- ROADMAP: M3 CI item gets the agreed follow-up (branch protection, auto-delete head branches).
+
+**Verified**
+- `npm run check` passes (42 unit); Playwright 65/65 (develop had 61, not 65 as PR #4 said). Tab 2 crops clean.
+
+**Next up**
+- M2: Accessible tabs with keyboard support [ui-builder].
+
+---
+
 ## 2026-11-05 — Session 18: M2 results Tab 1
 
 **Done**
@@ -18,24 +34,6 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 **Next up**
 - M2: Tab 2: role total chips and grouped task table [ui-builder].
-
-**Waiting on Izzat**
-- Merge the PR, then say "PR merged".
-
----
-
-## 2026-11-05 — Session 17: M2 timeline maths
-
-**Done**
-- `feat`: `lib/timeline.ts` — `toBars` (percent positions clamped to 0..100, whole-day labels "Day 3 to
-  7" / "Day 3", half-day starts floored), `weekMarkers` (every 5 days, excludes 0 and 100),
-  `roleTotals` (hours desc, ties by name). 16 unit tests replace the `it.todo` stubs.
-
-**Verified**
-- `npm run check` passes (41 unit tests). No e2e: no caller until Tab 1. reviewer skipped (small diff).
-
-**Next up**
-- M2: Tab 1: summary row, timeline chart, phase cards, assumptions and risks [ui-builder].
 
 **Waiting on Izzat**
 - Merge the PR, then say "PR merged".

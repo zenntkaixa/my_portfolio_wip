@@ -4,6 +4,24 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-05 — Session 17: M2 timeline maths
+
+**Done**
+- `feat`: `lib/timeline.ts` — `toBars` (percent positions clamped to 0..100, whole-day labels "Day 3 to
+  7" / "Day 3", half-day starts floored), `weekMarkers` (every 5 days, excludes 0 and 100),
+  `roleTotals` (hours desc, ties by name). 16 unit tests replace the `it.todo` stubs.
+
+**Verified**
+- `npm run check` passes (41 unit tests). No e2e: no caller until Tab 1. reviewer skipped (small diff).
+
+**Next up**
+- M2: Tab 1: summary row, timeline chart, phase cards, assumptions and risks [ui-builder].
+
+**Waiting on Izzat**
+- Merge the PR, then say "PR merged".
+
+---
+
 ## 2026-11-05 — Session 16: adopt claude-team agents and skills (Izzat's instruction)
 
 **Done**

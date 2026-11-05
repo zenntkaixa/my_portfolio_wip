@@ -1178,6 +1178,75 @@ p {
   border: 0;
 }
 
+/* Results tab 2: role chips and grouped task table (reuses .chips) */
+.tab2 {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  min-width: 0;
+}
+
+.tab2-chips {
+  margin: 0;
+}
+
+.tab2-chips > li {
+  font-variant-numeric: tabular-nums;
+}
+
+.tab2-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+}
+
+.tab2-table {
+  width: 100%;
+  min-width: 28rem;
+  border-collapse: collapse;
+  font-size: var(--fs-sm);
+}
+
+.tab2-table th,
+.tab2-table td {
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+  border-top: 1px solid var(--line);
+}
+
+.tab2-table thead th {
+  border-top: 0;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.tab2-table th:last-child,
+.tab2-table td:last-child {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.tab2-table .tab2-phase th {
+  text-align: left;
+  background: var(--surface-2);
+  font-weight: 600;
+}
+
+.tab2-table .tab2-sub th,
+.tab2-table .tab2-sub td,
+.tab2-table tfoot th,
+.tab2-table tfoot td {
+  font-weight: 600;
+}
+
+.tab2-table tfoot th,
+.tab2-table tfoot td {
+  border-top-width: 2px;
+}
+
 /* Results tab 1: summary, timeline, phase cards, lists */
 .results-phases {
   display: flex;
