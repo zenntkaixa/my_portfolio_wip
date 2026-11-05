@@ -18,6 +18,7 @@ import { estimatorCopy, estimatorExamples } from "@/lib/content";
 import { Turnstile, type TurnstileHandle } from "./Turnstile";
 import { PhaseTimeline } from "./PhaseTimeline";
 import { TaskTable } from "./TaskTable";
+import { ResultTabs } from "./ResultTabs";
 
 type Status =
   | { kind: "idle" }
@@ -29,7 +30,6 @@ type Tab = "phases" | "tasks";
 
 /**
  * The live AI demo. Spec: docs/03-estimator-spec.md.
- * TODO(M2, ui-builder): accessible tabs with arrow-key support, timeline bars and task table styling.
  */
 export function Estimator() {
   const [feature, setFeature] = useState("");
@@ -300,44 +300,28 @@ export function Estimator() {
               {status.plan.title}
             </h3>
             <p>{status.plan.summary}</p>
-            <div role="tablist" aria-label="Plan views">
-              <button
-                type="button"
-                role="tab"
-                id="tab-phases"
-                aria-controls="panel-phases"
-                aria-selected={tab === "phases"}
-                onClick={() => setTab("phases")}
-              >
-                Phases and timeline
-              </button>
-              <button
-                type="button"
-                role="tab"
-                id="tab-tasks"
-                aria-controls="panel-tasks"
-                aria-selected={tab === "tasks"}
-                onClick={() => setTab("tasks")}
-              >
-                Task table
-              </button>
-            </div>
-            <div
-              role="tabpanel"
-              id="panel-phases"
-              aria-labelledby="tab-phases"
-              hidden={tab !== "phases"}
-            >
-              <PhaseTimeline plan={status.plan} teamLabel={status.teamLabel} />
-            </div>
-            <div
-              role="tabpanel"
-              id="panel-tasks"
-              aria-labelledby="tab-tasks"
-              hidden={tab !== "tasks"}
-            >
-              <TaskTable plan={status.plan} />
-            </div>
+            <ResultTabs
+              label={estimatorCopy.tabsLabel}
+              value={tab}
+              onChange={setTab}
+              tabs={[
+                {
+                  key: "phases",
+                  label: estimatorCopy.tabPhases,
+                  content: (
+                    <PhaseTimeline
+                      plan={status.plan}
+                      teamLabel={status.teamLabel}
+                    />
+                  ),
+                },
+                {
+                  key: "tasks",
+                  label: estimatorCopy.tabTasks,
+                  content: <TaskTable plan={status.plan} />,
+                },
+              ]}
+            />
             <p className="estimator__note">{estimatorCopy.footerNote}</p>
           </>
         )}
