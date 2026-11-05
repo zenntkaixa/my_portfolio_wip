@@ -5,6 +5,25 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-05 — Session 18: M2 results Tab 1
+
+**Done**
+- `feat(ui)`: summary `<dl>` (hours, weeks, team, confidence badge: ink text, tone on border + dot),
+  timeline rows (label above a bar placed by `toBars`, week gridlines), phase cards, assumptions and
+  risks sections. `fix(ui)`: index keys in TaskTable for repeated phase names.
+- New `tests/e2e/estimator-results.spec.ts` (fixture geometry, summary, counts, 320 overflow, dup names).
+
+**Verified**
+- `npm run check` passes; Playwright 65/65. Tab 1 crops 320/1440 light+dark clean. reviewer fixes applied.
+
+**Next up**
+- M2: Tab 2: role total chips and grouped task table [ui-builder].
+
+**Waiting on Izzat**
+- Merge the PR, then say "PR merged".
+
+---
+
 ## 2026-11-05 — Session 17: M2 timeline maths
 
 **Done**
@@ -20,24 +39,6 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 **Waiting on Izzat**
 - Merge the PR, then say "PR merged".
-
----
-
-## 2026-11-05 — Session 16: adopt claude-team agents and skills (Izzat's instruction)
-
-**Done**
-- `chore`: Agent contract in CLAUDE.md for the generic `~/claude-team` agents; `code-reviewer`
-  retired for `reviewer`; `/ship` follows `ship-pr` for git and PRs; `/next-task` offers ranked
-  options when there's a real choice. ADR-005.
-
-**Verified**
-- Docs and config only; no code changed. No leftover `code-reviewer` references.
-
-**Next up**
-- M2: `lib/timeline.ts` implemented; unit tests green [prompt-engineer or qa-tester].
-
-**Waiting on Izzat**
-- Merge this PR, then say "PR merged".
 
 ---
 

@@ -4,6 +4,24 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-05 — Session 16: adopt claude-team agents and skills (Izzat's instruction)
+
+**Done**
+- `chore`: Agent contract in CLAUDE.md for the generic `~/claude-team` agents; `code-reviewer`
+  retired for `reviewer`; `/ship` follows `ship-pr` for git and PRs; `/next-task` offers ranked
+  options when there's a real choice. ADR-005.
+
+**Verified**
+- Docs and config only; no code changed. No leftover `code-reviewer` references.
+
+**Next up**
+- M2: `lib/timeline.ts` implemented; unit tests green [prompt-engineer or qa-tester].
+
+**Waiting on Izzat**
+- Merge this PR, then say "PR merged".
+
+---
+
 ## 2026-11-05 — Session 15: branch strategy change (Izzat's instruction)
 
 **Done**

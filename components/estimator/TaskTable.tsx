@@ -19,9 +19,9 @@ export function TaskTable({ plan }: { plan: Plan }) {
           </tr>
         </thead>
         <tbody>
-          {plan.phases.flatMap((ph) =>
+          {plan.phases.flatMap((ph, pi) =>
             ph.tasks.map((t, i) => (
-              <tr key={`${ph.name}-${i}`}>
+              <tr key={`${pi}-${i}`}>
                 <td>
                   {ph.name}: {t.task}
                 </td>
