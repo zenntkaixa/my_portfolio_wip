@@ -4,6 +4,22 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-05 — Session 19: M2 results Tab 2
+
+**Done**
+- `feat(ui)`: role chips from `roleTotals`; task table with one `<tbody>` per phase (rowgroup header,
+  subtotal row), total footer, focusable scroll region on mobile. `fix`: `normalisePlan` keeps exact
+  half-hour `totalHours` (was rounded, so footer and summary could disagree with subtotals).
+- ROADMAP: M3 CI item gets the agreed follow-up (branch protection, auto-delete head branches).
+
+**Verified**
+- `npm run check` passes (42 unit); Playwright 65/65 (develop had 61, not 65 as PR #4 said). Tab 2 crops clean.
+
+**Next up**
+- M2: Accessible tabs with keyboard support [ui-builder].
+
+---
+
 ## 2026-11-05 — Session 18: M2 results Tab 1
 
 **Done**
