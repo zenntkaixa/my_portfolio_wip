@@ -62,6 +62,7 @@ export const Turnstile = forwardRef<TurnstileHandle, Props>(function Turnstile(
     try {
       widgetId.current = window.turnstile.render(container.current, {
         sitekey: siteKey,
+        action: "estimate",
         theme:
           document.documentElement.dataset.theme === "dark" ? "dark" : "light",
         // "flexible" has a 300px minimum width, which overflows the tile on ~320px phones.

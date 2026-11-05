@@ -9,8 +9,8 @@ Every estimate costs Izzat money. The endpoint is public.
 Layered, cheapest first:
 1. Input limits (20–1500 chars, team 1–12) in `validateRequest`.
 2. In-memory per-IP rate limit (default 5/hour) and global daily cap (default 150) in `lib/rateLimit.ts`.
-3. Cloudflare Turnstile token verified server-side before the paid call.
-4. Haiku as the default model and `max_tokens: 2500`.
+3. Cloudflare Turnstile token verified server-side (action `estimate`, optional hostname) before the rate limit and the paid call, so failed tokens never consume quota.
+4. Haiku as the default model and `max_tokens` via `maxTokensFor` (8000 for Haiku, 4000 for others).
 5. Monthly spend limit in the Anthropic Console as the hard backstop.
 
 ## Consequences

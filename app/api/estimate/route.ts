@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { maxTokensFor, normalisePlan, validateRequest, ROLES, type EstimateRequest } from "@/lib/estimate";
+import { maxTokensFor, stripFeatureTags, normalisePlan, str, validateRequest, ROLES, type EstimateRequest } from "@/lib/estimate";
 import { checkLimits } from "@/lib/rateLimit";
 
 export const runtime = "nodejs";
@@ -45,6 +45,7 @@ type AnthropicResponse = {
   usage?: { input_tokens?: number; output_tokens?: number };
 };
 
+// x-forwarded-for is only trustworthy behind Vercel's edge, which sets it. Elsewhere a client can spoof it.
 function clientIp(req: Request) {
   const fwd = req.headers.get("x-forwarded-for");
   return (fwd?.split(",")[0] ?? req.headers.get("x-real-ip") ?? "unknown").trim();
@@ -53,6 +54,10 @@ function clientIp(req: Request) {
 function fail(error: string, status: number, headers?: Record<string, string>) {
   return NextResponse.json({ error }, { status, headers });
 }
+
+const TURNSTILE_ACTION = "estimate";
+const MAX_BODY = 8192;
+const MODEL_ERROR_MAX = 200;
 
 async function verifyTurnstile(token: string, ip: string) {
   const secret = process.env.TURNSTILE_SECRET_KEY;
@@ -64,8 +69,15 @@ async function verifyTurnstile(token: string, ip: string) {
       body: form,
       signal: AbortSignal.timeout(8000),
     });
-    const data = (await res.json()) as { success?: boolean };
-    return data.success === true;
+    const data = (await res.json()) as { success?: boolean; action?: string; hostname?: string };
+    if (data.success !== true) return false;
+    // Cloudflare's documented test secrets (1x/2x/3x + zeros) return dummy action/hostname values, so the
+    // binding checks apply to real secrets only.
+    if (/^[123]x0{20,}/.test(secret)) return true;
+    if (data.action !== TURNSTILE_ACTION) return false;
+    const host = process.env.TURNSTILE_HOSTNAME;
+    if (host && data.hostname !== host) return false;
+    return true;
   } catch {
     return false;
   }
@@ -74,9 +86,18 @@ async function verifyTurnstile(token: string, ip: string) {
 export async function POST(req: Request) {
   const ip = clientIp(req);
 
+  const contentType = req.headers.get("content-type") ?? "";
+  if (!contentType.toLowerCase().startsWith("application/json")) {
+    return fail("Send the request as application/json.", 415);
+  }
+  const declared = Number(req.headers.get("content-length") ?? 0);
+  if (declared > MAX_BODY) return fail("The request is too large.", 413);
+
   let body: unknown;
   try {
-    body = await req.json();
+    const raw = await req.text();
+    if (raw.length > MAX_BODY) return fail("The request is too large.", 413);
+    body = JSON.parse(raw);
   } catch {
     return fail("The request body must be JSON.", 400);
   }
@@ -85,20 +106,24 @@ export async function POST(req: Request) {
   if (!parsed.ok) return fail(parsed.error, 400);
   const { feature, teamSize, seniority, token } = parsed.value;
 
-  const limit = checkLimits(ip);
-  if (!limit.ok) return fail(limit.reason, 429, { "Retry-After": String(limit.retryAfter) });
-
+  // Verify the human check before spending a rate-limit slot, so fake tokens never burn the quota.
   if (!(await verifyTurnstile(token, ip))) {
     return fail("The human check didn't pass. Refresh the page and try again.", 403);
   }
 
+  const limit = checkLimits(ip);
+  if (!limit.ok) return fail(limit.reason, 429, { "Retry-After": String(limit.retryAfter) });
+
   const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) return fail("The estimator isn't configured yet. Add ANTHROPIC_API_KEY in Vercel.", 503);
+  if (!apiKey) {
+    console.error("Estimator not configured: missing API key");
+    return fail("The estimator is unavailable right now. Please try again later.", 503);
+  }
 
   const userMessage = `Team: ${teamSize} ${teamSize === 1 ? "person" : "people"}, ${SENIORITY_TEXT[seniority]}.
 
 <feature>
-${feature}
+${stripFeatureTags(feature)}
 </feature>`;
 
   let text = "";
@@ -164,7 +189,8 @@ ${feature}
   }
 
   if (raw && typeof raw === "object" && "error" in raw && typeof (raw as { error: unknown }).error === "string") {
-    return fail((raw as { error: string }).error, 422);
+    const sentence = str((raw as { error: string }).error, MODEL_ERROR_MAX);
+    return fail(sentence || "The AI couldn't plan this request. Describe a software feature instead.", 422);
   }
 
   const plan = normalisePlan(raw);
