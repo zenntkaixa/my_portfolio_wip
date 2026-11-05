@@ -45,6 +45,17 @@ describe("normalisePlan", () => {
     expect(plan.calendarWeeks).toBe(1.4);
   });
 
+  it("keeps half-hour totals exact so they match the subtotals", () => {
+    const plan = normalisePlan({
+      ...raw,
+      phases: [
+        { ...raw.phases[0], tasks: [{ task: "API", role: "Backend", hours: 10.5 }] },
+        { ...raw.phases[1], tasks: [{ task: "E2E", role: "QA", hours: 8 }] },
+      ],
+    })!;
+    expect(plan.totalHours).toBe(18.5);
+  });
+
   it("clamps silly numbers and defaults bad confidence", () => {
     const plan = normalisePlan({
       ...raw,
