@@ -5,6 +5,23 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-05 — Session 15: branch strategy change (Izzat's instruction)
+
+**Done**
+- `chore`: task branches off `develop`, one PR per task into `develop`; Izzat merges. Releases are PRs
+  `develop` → `main`. ADR-004; CLAUDE.md section 1/4/6/7, `/next-task` and `/ship` updated.
+
+**Verified**
+- Docs-only; no code changed.
+
+**Next up**
+- M2: `lib/timeline.ts` implemented; unit tests green [prompt-engineer or qa-tester].
+
+**Waiting on Izzat**
+- Merge this PR. Optional: protect `develop` and `main` on GitHub (require PR before merge).
+
+---
+
 ## 2026-11-05 — Session 14: M2 submit flow and error states
 
 **Done**
@@ -22,27 +39,6 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 **Waiting on Izzat**
 - Backlog (unchanged): siteverify `hostname` check in `route.ts`; per-instance rate limit.
-
----
-
-## 2026-11-05 — Session 13: M2 Turnstile component
-
-**Done**
-- `feat(ui)`: Turnstile renders from `Script onReady` (no polling; survives StrictMode re-runs),
-  `onToken` held in a ref, re-renders on `data-theme` change, try/catch around render, failure message
-  in a persistent polite live region; `reset()` clears token then widget. Copy moved to `lib/content.ts`.
-- New `tests/e2e/turnstile.spec.ts` (render, reset after request, blocked script, theme change).
-
-**Verified**
-- `npm run check` passes; Playwright 48/48; dev mode widget loads. Estimator crops 320/1440 light+dark
-  clean. code-reviewer findings fixed; security-reviewer: safe to ship.
-
-**Next up**
-- M2: submit flow and all error states from 03-estimator-spec [ui-builder].
-
-**Waiting on Izzat**
-- Backlog (security advisories, existing code): check siteverify `hostname` in `route.ts`; rate limit is
-  per-instance memory, so Turnstile is the real gate.
 
 ---
 

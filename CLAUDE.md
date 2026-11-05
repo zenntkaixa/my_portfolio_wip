@@ -7,7 +7,8 @@ seniority, and Claude returns a delivery plan with effort and calendar estimates
 
 ## 1. Start of every session
 
-1. `git switch develop && git pull`.
+1. `git switch develop && git pull`, then `gh pr list` to see open PRs. If the previous task's PR
+   is still open, say so: its ROADMAP tick isn't on `develop` yet, so wait for Izzat to merge it.
 2. Read only the **latest** entry of `docs/PROGRESS.md` (everything above the first `---` after it).
    Older entries are in `docs/progress-archive.md`; don't read it unless needed.
 3. Find the first unchecked task in `docs/ROADMAP.md`.
@@ -42,10 +43,11 @@ Kill dev servers by PID (including the child `next-server`), never with `pkill -
 ## 4. Session loop and token budget
 
 ```
-/next-task → plan → Izzat approves → build → verify once → code-reviewer → /ship → /clear
+/next-task → plan → Izzat approves → task branch → build → verify once → code-reviewer
+  → /ship (push + PR into develop) → /clear → Izzat merges the PR
 ```
 
-- **One task per session.** `/clear` after each `/ship` push; ROADMAP and PROGRESS carry the state.
+- **One task per session, one branch and one PR per task.** `/clear` after `/ship` opens the PR; ROADMAP and PROGRESS carry the state.
 - **Small tasks** (one tile, a few lines): one subagent does the code and its tests. Docs-only or
   few-line diffs skip `code-reviewer`; the main agent fixes small review findings inline.
 - **Verify once.** Whoever edited last runs `npm run check` and e2e. Don't re-run unless you edited since.
@@ -55,12 +57,18 @@ Kill dev servers by PID (including the child `next-server`), never with `pkill -
 - Model choice: Sonnet for UI, tests, review of small diffs, content and bookkeeping. Opus for the
   estimator prompt, security reviews, hard bugs and architecture decisions.
 
-### Branches
+### Branches and PRs (ADR-004)
 
-- **`develop`** is the working branch; commit and push task work here.
 - **`main`** holds released versions only; production deploys from it. Never commit to it directly.
-- **Releasing** = merge `develop` into `main` and push, only when Izzat asks, and only after
-  `npm run check` and `npm run test:e2e` pass on `develop`.
+- **`develop`** is the release in development. Nothing is committed to it directly; it changes only
+  through merged PRs.
+- **Task branches** come off an up-to-date `develop`, one per roadmap task, named
+  `<type>/<milestone>-<slug>` with the conventional-commit type (e.g. `feat/m2-timeline`,
+  `docs/m4-readme`, `chore/branch-workflow` when there's no milestone).
+- **`/ship`** pushes the task branch and opens a PR into `develop` with `gh pr create`. Izzat reviews
+  and merges it on GitHub; Claude never merges task PRs.
+- **Releasing** = a PR from `develop` into `main`, opened only when Izzat asks and only after
+  `npm run check` and `npm run test:e2e` pass on `develop`. Izzat merges it with a merge commit.
 
 ## 5. Coding standards
 
@@ -83,7 +91,8 @@ Kill dev servers by PID (including the child `next-server`), never with `pkill -
 - **Never weaken abuse protection** (Turnstile, rate limit, daily cap, input length limits) without asking.
 - Don't change roadmap scope or design direction without asking Izzat first.
 - Never `git push --force` and never rewrite published history.
-- Never commit to or merge into `main` unless Izzat asks for a release.
+- Never commit directly to `main` or `develop`, and never merge PRs; Izzat merges. Release PRs into
+  `main` only when Izzat asks.
 - Don't commit `.claude/settings.json` or `AGENTS.md` unless Izzat asks; stage explicit paths.
 
 ## 7. Definition of done (per task)
@@ -93,3 +102,4 @@ Kill dev servers by PID (including the child `next-server`), never with `pkill -
 - [ ] `code-reviewer` has no blocking findings (unless skipped as a small diff, per section 4)
 - [ ] Roadmap item ticked and a PROGRESS.md entry written (12 lines or fewer)
 - [ ] Conventional commit: `feat(ui): ...`, `fix(api): ...`, `docs: ...`, `test: ...`, `chore: ...`
+- [ ] Task branch pushed and a PR open into `develop` (title = the commit subject)
