@@ -6,6 +6,14 @@ export const ROLES = ["BA", "Architect", "Backend", "Frontend", "QA", "DevOps", 
 export const FEATURE_MIN = 20;
 export const FEATURE_MAX = 1500;
 
+/**
+ * Output cap per model request. Haiku is cheap enough to give thinking plus a long plan room (8000);
+ * pricier models get a lower cap so the worst case under the daily cap stays bounded.
+ */
+export function maxTokensFor(model: string) {
+  return model.includes("haiku") ? 8000 : 4000;
+}
+
 export type EstimateRequest = {
   feature: string;
   teamSize: number;
