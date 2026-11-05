@@ -32,7 +32,7 @@ Agent hints in brackets.
 - [x] `lib/timeline.ts` implemented; unit tests green [prompt-engineer or qa-tester]
 - [x] Tab 1: summary row, timeline chart, phase cards, assumptions and risks [ui-builder]
 - [x] Tab 2: role total chips and grouped task table [ui-builder]
-- [ ] Accessible tabs with keyboard support [ui-builder]
+- [x] Accessible tabs with keyboard support [ui-builder]
 - [ ] Manual test with real API key locally (Izzat runs it), tune prompt if plans look off [prompt-engineer]
 - [ ] Security review of the whole estimator path [security-reviewer]
 

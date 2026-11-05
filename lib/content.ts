@@ -108,6 +108,9 @@ export const estimatorExamples = [
 ];
 
 export const estimatorCopy = {
+  tabsLabel: "Plan views",
+  tabPhases: "Phases and timeline",
+  tabTasks: "Task table",
   submit: "Estimate this feature",
   people: (n: number) => `${n} ${n === 1 ? "person" : "people"}`,
   atLeast: (min: number) => ` (at least ${min} characters)`,

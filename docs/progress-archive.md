@@ -4,6 +4,25 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-05 — Session 18: M2 results Tab 1
+
+**Done**
+- `feat(ui)`: summary `<dl>` (hours, weeks, team, confidence badge: ink text, tone on border + dot),
+  timeline rows (label above a bar placed by `toBars`, week gridlines), phase cards, assumptions and
+  risks sections. `fix(ui)`: index keys in TaskTable for repeated phase names.
+- New `tests/e2e/estimator-results.spec.ts` (fixture geometry, summary, counts, 320 overflow, dup names).
+
+**Verified**
+- `npm run check` passes; Playwright 65/65. Tab 1 crops 320/1440 light+dark clean. reviewer fixes applied.
+
+**Next up**
+- M2: Tab 2: role total chips and grouped task table [ui-builder].
+
+**Waiting on Izzat**
+- Merge the PR, then say "PR merged".
+
+---
+
 ## 2026-11-05 — Session 17: M2 timeline maths
 
 **Done**
