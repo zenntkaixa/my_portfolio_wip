@@ -29,7 +29,7 @@ Agent hints in brackets.
 - [x] Form: textarea with counter, example chips, team slider, seniority segmented control [ui-builder]
 - [x] Turnstile component (explicit render, reset after each request) [api-engineer]
 - [x] Submit flow and all error states from 03-estimator-spec [ui-builder]
-- [ ] `lib/timeline.ts` implemented; unit tests green [prompt-engineer or qa-tester]
+- [x] `lib/timeline.ts` implemented; unit tests green [prompt-engineer or qa-tester]
 - [ ] Tab 1: summary row, timeline chart, phase cards, assumptions and risks [ui-builder]
 - [ ] Tab 2: role total chips and grouped task table [ui-builder]
 - [ ] Accessible tabs with keyboard support [ui-builder]

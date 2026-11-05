@@ -4,6 +4,23 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-05 — Session 15: branch strategy change (Izzat's instruction)
+
+**Done**
+- `chore`: task branches off `develop`, one PR per task into `develop`; Izzat merges. Releases are PRs
+  `develop` → `main`. ADR-004; CLAUDE.md section 1/4/6/7, `/next-task` and `/ship` updated.
+
+**Verified**
+- Docs-only; no code changed.
+
+**Next up**
+- M2: `lib/timeline.ts` implemented; unit tests green [prompt-engineer or qa-tester].
+
+**Waiting on Izzat**
+- Merge this PR. Optional: protect `develop` and `main` on GitHub (require PR before merge).
+
+---
+
 ## 2026-11-05 — Session 14: M2 submit flow and error states
 
 **Done**
