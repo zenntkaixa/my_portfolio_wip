@@ -816,8 +816,238 @@ p {
   border-radius: var(--r-sm);
 }
 
-/* TODO(M2, ui-builder): estimator tile with blueprint grid background (var(--grid)), form controls,
-   tabs, timeline bars and task table. See docs/03-estimator-spec.md. */
+/* ---- Estimator form ---- */
+
+.estimator__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.estimator__examples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--gap) / 2);
+}
+
+.estimator__chip {
+  padding: 0.3em 0.9em;
+  font-size: var(--fs-sm);
+  line-height: 1.4;
+  text-align: left;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+}
+
+.estimator__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.estimator__label {
+  padding: 0;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.estimator__textarea {
+  width: 100%;
+  min-height: 6rem;
+}
+
+.estimator__count {
+  margin: 0;
+  font-size: var(--fs-sm);
+  text-align: right;
+  color: var(--muted);
+}
+
+.estimator__count[data-warn="true"] {
+  color: var(--warn);
+}
+
+.estimator__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--gap);
+}
+
+.estimator__readout {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.estimator__slider {
+  width: 100%;
+  height: 1.5rem;
+  margin: 0;
+  background: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.estimator__slider::-webkit-slider-runnable-track {
+  height: 6px;
+  background: var(--surface-2);
+  border: 1px solid var(--muted);
+  border-radius: 999px;
+}
+
+.estimator__slider::-moz-range-track {
+  height: 6px;
+  background: var(--surface-2);
+  border: 1px solid var(--muted);
+  border-radius: 999px;
+}
+
+.estimator__slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: calc((6px - 1.25rem) / 2 - 1px);
+  background: var(--accent);
+  border: 2px solid var(--surface);
+  border-radius: 50%;
+}
+
+.estimator__slider::-moz-range-thumb {
+  width: 1.25rem;
+  height: 1.25rem;
+  background: var(--accent);
+  border: 2px solid var(--surface);
+  border-radius: 50%;
+}
+
+.estimator__slider:disabled {
+  cursor: not-allowed;
+}
+
+.estimator__slider:disabled::-webkit-slider-thumb {
+  background: var(--muted);
+}
+
+.estimator__slider:disabled::-moz-range-thumb {
+  background: var(--muted);
+}
+
+.estimator__seniority {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.estimator__seniority legend {
+  margin-bottom: 0.35rem;
+}
+
+.estimator__segments {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 1px solid var(--muted);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.estimator__segment {
+  position: relative;
+  display: block;
+  cursor: pointer;
+}
+
+.estimator__segment input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+}
+
+.estimator__segment span {
+  display: block;
+  padding: 0.5em 0.5em;
+  text-align: center;
+  text-transform: capitalize;
+  color: var(--ink);
+}
+
+.estimator__segment + .estimator__segment span {
+  border-left: 1px solid var(--line);
+}
+
+.estimator__segment:has(input:checked) span {
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
+.estimator__segment:has(input:focus-visible) {
+  z-index: 1;
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  box-shadow: inset 0 0 0 4px var(--accent-soft);
+}
+
+.estimator__seniority:disabled .estimator__segment {
+  cursor: not-allowed;
+}
+
+.estimator__seniority:disabled .estimator__segment span {
+  color: var(--muted);
+}
+
+.estimator__seniority:disabled .estimator__segment:has(input:checked) span {
+  background: var(--surface-2);
+  color: var(--ink);
+}
+
+@media (max-width: 360px) {
+  .estimator__segments {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .estimator__segment + .estimator__segment span {
+    border-left: 0;
+  }
+
+  .estimator__segment:nth-child(even) span {
+    border-left: 1px solid var(--line);
+  }
+
+  .estimator__segment:nth-child(n + 3) span {
+    border-top: 1px solid var(--line);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .estimator__chip,
+  .estimator__segment span {
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+  }
+}
+
+@media (forced-colors: active) {
+  .estimator__segment:has(input:focus-visible) {
+    outline-color: Highlight;
+    box-shadow: none;
+  }
+
+  .estimator__segment:has(input:checked) span {
+    outline: 2px solid Highlight;
+    outline-offset: -4px;
+  }
+}
+
+/* TODO(M2, ui-builder): estimator tabs, timeline bars, task table, results and skeleton states.
+   See docs/03-estimator-spec.md. */
 
 .sr-only {
   position: absolute;

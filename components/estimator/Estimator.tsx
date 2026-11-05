@@ -2,15 +2,10 @@
 
 import { useCallback, useRef, useState } from "react";
 import { FEATURE_MAX, FEATURE_MIN, SENIORITY, type Plan, type Seniority } from "@/lib/estimate";
+import { estimatorExamples } from "@/lib/content";
 import { Turnstile, type TurnstileHandle } from "./Turnstile";
 import { PhaseTimeline } from "./PhaseTimeline";
 import { TaskTable } from "./TaskTable";
-
-const EXAMPLES = [
-  "Let policyholders log in with a one-time code sent by SMS",
-  "Customers upload claim photos and OCR fills in the claim form",
-  "Email each customer a monthly PDF billing statement",
-];
 
 type Status =
   | { kind: "idle" }
@@ -73,47 +68,65 @@ export function Estimator() {
     <div className="estimator">
       <form onSubmit={submit} className="estimator__form">
         <div className="estimator__examples" role="group" aria-label="Example features">
-          {EXAMPLES.map((ex) => (
-            <button key={ex} type="button" onClick={() => setFeature(ex)} disabled={submitting}>
+          {estimatorExamples.map((ex) => (
+            <button key={ex} type="button" className="estimator__chip" onClick={() => setFeature(ex)} disabled={submitting}>
               {ex}
             </button>
           ))}
         </div>
 
-        <label htmlFor="feature">Feature description</label>
-        <textarea
-          id="feature"
-          value={feature}
-          onChange={(e) => setFeature(e.target.value)}
-          maxLength={FEATURE_MAX}
-          rows={4}
-          disabled={submitting}
-          aria-describedby="feature-count"
-        />
-        <p id="feature-count">
-          {length} / {FEATURE_MAX}
-          {tooShort && length > 0 ? ` (at least ${FEATURE_MIN})` : ""}
-        </p>
+        <div className="estimator__field">
+          <label htmlFor="feature" className="estimator__label">
+            Feature description
+          </label>
+          <textarea
+            id="feature"
+            className="estimator__textarea"
+            value={feature}
+            onChange={(e) => setFeature(e.target.value)}
+            maxLength={FEATURE_MAX}
+            rows={4}
+            disabled={submitting}
+            aria-describedby="feature-count"
+          />
+          <p id="feature-count" className="estimator__count" data-warn={length > 0 && tooShort}>
+            {length} / {FEATURE_MAX}
+            <span aria-live="polite">{tooShort && length > 0 ? ` (at least ${FEATURE_MIN})` : ""}</span>
+          </p>
+        </div>
 
-        <label htmlFor="team-size">Team size: {teamSize}</label>
-        <input
-          id="team-size"
-          type="range"
-          min={1}
-          max={12}
-          value={teamSize}
-          onChange={(e) => setTeamSize(Number(e.target.value))}
-          disabled={submitting}
-        />
-
-        <fieldset disabled={submitting}>
-          <legend>Seniority</legend>
-          {SENIORITY.map((s) => (
-            <label key={s}>
-              <input type="radio" name="seniority" value={s} checked={seniority === s} onChange={() => setSeniority(s)} />
-              {s}
+        <div className="estimator__field">
+          <div className="estimator__row">
+            <label htmlFor="team-size" className="estimator__label">
+              Team size
             </label>
-          ))}
+            <output htmlFor="team-size" className="estimator__readout">
+              {teamSize}
+            </output>
+          </div>
+          <input
+            id="team-size"
+            className="estimator__slider"
+            type="range"
+            min={1}
+            max={12}
+            value={teamSize}
+            onChange={(e) => setTeamSize(Number(e.target.value))}
+            disabled={submitting}
+            aria-valuetext={`${teamSize} ${teamSize === 1 ? "person" : "people"}`}
+          />
+        </div>
+
+        <fieldset className="estimator__seniority" disabled={submitting}>
+          <legend className="estimator__label">Seniority</legend>
+          <div className="estimator__segments">
+            {SENIORITY.map((s) => (
+              <label key={s} className="estimator__segment">
+                <input type="radio" name="seniority" value={s} checked={seniority === s} onChange={() => setSeniority(s)} />
+                <span>{s}</span>
+              </label>
+            ))}
+          </div>
         </fieldset>
 
         <Turnstile ref={turnstile} onToken={onToken} />

@@ -4,6 +4,39 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-04 — Session 10: M1 load animation with reduced-motion support
+
+**Done**
+- CSS-only `tile-in` (fade and rise 8px, 400ms ease-out), staggered 40ms per tile in DOM order via
+  `nth-child`, capped at 440ms. All inside `prefers-reduced-motion: no-preference`; no JS, so tiles
+  appear without hydration.
+- Fill mode `backwards`, not `both`: a forwards fill leaves an identity transform on every tile, making
+  it a containing block for `position: fixed` children (would trap M2 overlays).
+- Visual spec emulates reduced motion, so screenshots never catch a mid-fade.
+- New `tests/e2e/motion.spec.ts`: reduced motion means no animation; stagger delays in DOM order;
+  no lingering transform after finish (shown to fail with `both`); works with JS blocked.
+- docs/01: Motion section rewritten. Tile hover deferred to M2 with the estimator tile.
+
+**Verified**
+- `npm run check` passes; Playwright 40/40; motion spec 5x repeat, no flakes. Screenshots at
+  390/1024/1440, light and dark, unchanged.
+- code-reviewer: no blockers. Fixed: duplicated style reader in the spec, cap comment, mobile
+  trade-off wording in docs.
+
+**Found, not fixed**
+- The hero paints at opacity 0 for its first frame, so LCP lands about a frame later. Negligible;
+  exempt `.tile--hero` if Lighthouse ever flags it.
+
+**Next up**
+- M1: `/visual-check` pass at 390 / 1024 / 1440, light and dark; fix findings.
+
+**Waiting on Izzat**
+- Copy points from Session 8. radiozk live URL. Optional: a shorter PR stat label. M2 needs the
+  Anthropic key in `.env.local`. Decide on untracked `AGENTS.md`. Whether to fix the 1024 empty space
+  under Certifications.
+
+---
+
 ## 2026-11-04 — Session 9: M1 Experience, Stack, Certifications, Contact tiles
 
 **Done**

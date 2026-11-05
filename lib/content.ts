@@ -95,3 +95,9 @@ export const certifications = [
 ];
 
 export const education = "BSc Computer Science (Software Engineering), Universiti Tun Hussein Onn Malaysia";
+
+export const estimatorExamples = [
+  "Let policyholders log in with a one-time code sent by SMS",
+  "Customers upload claim photos and OCR fills in the claim form",
+  "Email each customer a monthly PDF billing statement",
+];

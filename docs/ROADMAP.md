@@ -26,7 +26,7 @@ Agent hints in brackets.
 - [x] `/visual-check` pass at 390 / 1024 / 1440, light and dark; fix findings [qa-tester]
 
 ## M2 — Estimator UI
-- [ ] Form: textarea with counter, example chips, team slider, seniority segmented control [ui-builder]
+- [x] Form: textarea with counter, example chips, team slider, seniority segmented control [ui-builder]
 - [ ] Turnstile component (explicit render, reset after each request) [api-engineer]
 - [ ] Submit flow and all error states from 03-estimator-spec [ui-builder]
 - [ ] `lib/timeline.ts` implemented; unit tests green [prompt-engineer or qa-tester]
