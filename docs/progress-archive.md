@@ -4,6 +4,27 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-05 — Session 13: M2 Turnstile component
+
+**Done**
+- `feat(ui)`: Turnstile renders from `Script onReady` (no polling; survives StrictMode re-runs),
+  `onToken` held in a ref, re-renders on `data-theme` change, try/catch around render, failure message
+  in a persistent polite live region; `reset()` clears token then widget. Copy moved to `lib/content.ts`.
+- New `tests/e2e/turnstile.spec.ts` (render, reset after request, blocked script, theme change).
+
+**Verified**
+- `npm run check` passes; Playwright 48/48; dev mode widget loads. Estimator crops 320/1440 light+dark
+  clean. code-reviewer findings fixed; security-reviewer: safe to ship.
+
+**Next up**
+- M2: submit flow and all error states from 03-estimator-spec [ui-builder].
+
+**Waiting on Izzat**
+- Backlog (security advisories, existing code): check siteverify `hostname` in `route.ts`; rate limit is
+  per-instance memory, so Turnstile is the real gate.
+
+---
+
 ## 2026-11-05 — Session 12: M2 estimator form controls
 
 **Done**
