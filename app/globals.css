@@ -869,6 +869,12 @@ p {
   color: var(--warn);
 }
 
+.turnstile__error {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--warn);
+}
+
 .estimator__row {
   display: flex;
   align-items: baseline;

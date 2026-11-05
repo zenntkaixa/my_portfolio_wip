@@ -96,6 +96,11 @@ export const certifications = [
 
 export const education = "BSc Computer Science (Software Engineering), Universiti Tun Hussein Onn Malaysia";
 
+export const turnstileFailedMessage =
+  "The human check couldn't load. Disable content blockers for this site or refresh the page.";
+export const turnstileNotConfiguredNote =
+  "Human check not configured. Set NEXT_PUBLIC_TURNSTILE_SITE_KEY (see .env.example).";
+
 export const estimatorExamples = [
   "Let policyholders log in with a one-time code sent by SMS",
   "Customers upload claim photos and OCR fills in the claim form",
