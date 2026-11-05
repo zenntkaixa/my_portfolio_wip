@@ -5,6 +5,26 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-05 — Session 14: M2 submit flow and error states
+
+**Done**
+- `feat(ui)`: idle → submitting → success | error. Disabled fieldset, skeleton + polite "Planning phases…",
+  `aria-busy`. 400 inline (textarea focused); 403/422/503 banners; 429 warn banner + Retry-After countdown
+  on the button; 502/504/network Retry gated on a fresh token. Non-JSON bodies, `isPlan` guard, abort on
+  unmount, focus to banner/results heading, footer note. Copy in `estimatorCopy`.
+- New `lib/estimatorClient.ts` (+10 unit tests) and `tests/e2e/estimator-submit.spec.ts` (10 tests).
+
+**Verified**
+- `npm run check` passes; Playwright 58/58. 12 estimator crops clean. code-reviewer: no blockers, fixes applied.
+
+**Next up**
+- M2: `lib/timeline.ts` implemented; unit tests green [prompt-engineer or qa-tester].
+
+**Waiting on Izzat**
+- Backlog (unchanged): siteverify `hostname` check in `route.ts`; per-instance rate limit.
+
+---
+
 ## 2026-11-05 — Session 13: M2 Turnstile component
 
 **Done**
@@ -26,23 +46,3 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
-## 2026-11-05 — Session 12: M2 estimator form controls
-
-**Done**
-- `feat(ui)`: example chips (strings moved to `lib/content.ts`), textarea with right-aligned counter
-  (warn colour under 20, hint in a polite live region), styled team slider with `<output>` readout and
-  `aria-valuetext`, seniority as a native-radio segmented pill (2x2 under 360px). Dark fieldset border fixed.
-- New `tests/e2e/estimator-form.spec.ts` (chips, counter, slider, arrow keys, no scroll at 320).
-
-**Verified**
-- `npm run check` passes; Playwright 44/44. Estimator crops at 320/1440 checked; code-reviewer: no blockers.
-
-**Next up**
-- M2: Turnstile component (explicit render, reset after each request) [api-engineer].
-
-**Waiting on Izzat**
-- Unchanged from Session 11. Open nit: estimator UI labels stay in the component (not `content.ts`).
-
----
-
-Older entries: `docs/progress-archive.md`.

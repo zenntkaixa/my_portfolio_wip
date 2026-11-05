@@ -1052,8 +1052,119 @@ p {
   }
 }
 
-/* TODO(M2, ui-builder): estimator tabs, timeline bars, task table, results and skeleton states.
-   See docs/03-estimator-spec.md. */
+/* ---- Estimator submit states ---- */
+
+.estimator__lock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.estimator__error {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--warn);
+}
+
+.estimator__textarea[aria-invalid="true"] {
+  border-color: var(--warn);
+}
+
+.estimator__results {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--gap) / 2);
+  margin-top: var(--gap);
+}
+
+.estimator__status {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+
+.estimator__status:empty {
+  display: none;
+}
+
+.estimator__skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.estimator__bone {
+  display: block;
+  height: 0.9rem;
+  background: var(--surface-2);
+  border-radius: var(--r-sm);
+}
+
+.estimator__bone--title {
+  width: 55%;
+  height: 1.4rem;
+}
+
+.estimator__bone--short {
+  width: 70%;
+}
+
+.estimator__bone--block {
+  height: 5rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .estimator__bone {
+    background: linear-gradient(
+      90deg,
+      var(--surface-2) 0%,
+      var(--line) 50%,
+      var(--surface-2) 100%
+    );
+    background-size: 200% 100%;
+    animation: bone-shimmer 1.6s ease-in-out infinite;
+  }
+
+  @keyframes bone-shimmer {
+    from { background-position: 100% 0; }
+    to { background-position: -100% 0; }
+  }
+}
+
+.estimator__banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(var(--gap) / 2) var(--gap);
+  padding: 0.75rem 1rem;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--ink);
+  border-radius: var(--r-sm);
+}
+
+.estimator__banner[data-tone="warn"] {
+  border-color: var(--warn);
+  border-left-color: var(--warn);
+}
+
+.estimator__banner p {
+  flex: 1 1 14rem;
+  margin: 0;
+  font-size: var(--fs-sm);
+}
+
+.estimator__note {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+
+/* TODO(M2, ui-builder): estimator tabs, timeline bars and task table styling. */
 
 .sr-only {
   position: absolute;

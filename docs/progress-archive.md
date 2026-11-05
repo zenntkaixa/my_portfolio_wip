@@ -4,6 +4,25 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-05 — Session 12: M2 estimator form controls
+
+**Done**
+- `feat(ui)`: example chips (strings moved to `lib/content.ts`), textarea with right-aligned counter
+  (warn colour under 20, hint in a polite live region), styled team slider with `<output>` readout and
+  `aria-valuetext`, seniority as a native-radio segmented pill (2x2 under 360px). Dark fieldset border fixed.
+- New `tests/e2e/estimator-form.spec.ts` (chips, counter, slider, arrow keys, no scroll at 320).
+
+**Verified**
+- `npm run check` passes; Playwright 44/44. Estimator crops at 320/1440 checked; code-reviewer: no blockers.
+
+**Next up**
+- M2: Turnstile component (explicit render, reset after each request) [api-engineer].
+
+**Waiting on Izzat**
+- Unchanged from Session 11. Open nit: estimator UI labels stay in the component (not `content.ts`).
+
+---
+
 ## 2026-11-05 — Session 11: M1 visual-check pass (closes M1); token-budget setup
 
 **Done**
