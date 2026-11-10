@@ -5,6 +5,22 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-10 — Session 27: M3 release, M4 repo ready to go public
+
+**Done**
+- M3 released (PR #14 into `main`). Pre-public audit of all history and PRs: safe to publish.
+- README for public visitors (CI badge, "What's worth a look", PR workflow); ROADMAP header fixes;
+  413/415 rows in the estimator spec (docs-auditor). Repo description and topics set via `gh`.
+
+**Verified**
+- docs-auditor: README claims match code. Release: local + CI check/e2e green, `npm audit` clean.
+
+**Waiting on Izzat**
+- After merge: flip the repo public; then branch protection, auto-delete, secret scanning and push
+  protection (Claude can apply via `gh api` with an OK). `.claude/settings.json` still local.
+
+---
+
 ## 2026-11-10 — Session 26: M3 GitHub Actions CI
 
 **Done**
@@ -18,22 +34,5 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 **Waiting on Izzat**
 - Auto-delete head branches (Settings). Branch protection is blocked while the repo is private on
   the free plan: do it when public (M4). `.claude/settings.json` still local.
-
----
-
-## 2026-11-10 — Session 25: M3 accessibility pass
-
-**Done**
-- ADR-006: `@axe-core/playwright` 4.14.0 (dev, exact pin). `a11y.spec.ts`: axe WCAG 2.2 AA on home,
-  results tabs 1/2, 403 banner, 429 countdown, light + dark. No violations.
-- `keyboard.spec.ts`: full Tab order, focus ring on every stop, no trap, Shift+Tab, keyboard submit +
-  tab arrows. `contrast.test.ts`: token pairs in both themes. Skip link "Skip to the estimator" added.
-
-**Verified**
-- `npm run check` 174 unit; e2e 86/86; visual check of the focused skip link clean; reviewer: no blockers.
-
-**Waiting on Izzat**
-- Turnstile test widget adds 3 Tab stops before Submit (third-party); recheck with the real widget in M4.
-- `.claude/settings.json` still has local edits (not committed).
 
 ---
