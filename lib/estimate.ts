@@ -3,6 +3,36 @@ export type Seniority = (typeof SENIORITY)[number];
 
 export const ROLES = ["BA", "Architect", "Backend", "Frontend", "QA", "DevOps", "PM"] as const;
 
+export type Role = (typeof ROLES)[number];
+
+const roleKey = (v: string) => v.toLowerCase().replace(/[\s_-]+/g, "");
+
+const ROLE_ALIASES: Record<string, Role> = {
+  ...Object.fromEntries(ROLES.map((r) => [roleKey(r), r])),
+  tester: "QA",
+  qaengineer: "QA",
+  qualityassurance: "QA",
+  businessanalyst: "BA",
+  analyst: "BA",
+  solutionarchitect: "Architect",
+  projectmanager: "PM",
+  productmanager: "PM",
+  frontenddeveloper: "Frontend",
+  ui: "Frontend",
+  backenddeveloper: "Backend",
+  api: "Backend",
+  ops: "DevOps",
+  sre: "DevOps",
+  infrastructure: "DevOps",
+};
+
+/** Map the model's free-text role onto the fixed ROLES list; unknown or empty becomes Backend. */
+export function normaliseRole(v: unknown): Role {
+  const key = roleKey(str(v, 60));
+  // Own keys only, so "constructor" or "__proto__" can't return an Object.prototype member.
+  return Object.hasOwn(ROLE_ALIASES, key) ? ROLE_ALIASES[key] : "Backend";
+}
+
 export const FEATURE_MIN = 20;
 export const FEATURE_MAX = 1500;
 
@@ -61,8 +91,8 @@ export function validateRequest(body: unknown): { ok: true; value: EstimateReque
   const feature = typeof b.feature === "string" ? b.feature.trim() : "";
   if (feature.length < FEATURE_MIN) return { ok: false, error: `Describe the feature in at least ${FEATURE_MIN} characters.` };
   if (feature.length > FEATURE_MAX) return { ok: false, error: `Keep the description under ${FEATURE_MAX} characters.` };
-  const teamSize = Number(b.teamSize);
-  if (!Number.isInteger(teamSize) || teamSize < 1 || teamSize > 12) return { ok: false, error: "Team size must be between 1 and 12." };
+  const teamSize = b.teamSize;
+  if (typeof teamSize !== "number" || !Number.isInteger(teamSize) || teamSize < 1 || teamSize > 12) return { ok: false, error: "Team size must be between 1 and 12." };
   const seniority = b.seniority as Seniority;
   if (!SENIORITY.includes(seniority)) return { ok: false, error: "Pick a seniority level." };
   const token = typeof b.token === "string" ? b.token : "";
@@ -90,7 +120,7 @@ export function normalisePlan(raw: unknown): Plan | null {
     const tasks = Array.isArray(ph.tasks)
       ? ph.tasks.slice(0, 12).map((t) => {
           const tk = (t ?? {}) as Record<string, unknown>;
-          return { task: str(tk.task, 200), role: str(tk.role, 30) || "Backend", hours: num(tk.hours, 0.5, 400) };
+          return { task: str(tk.task, 200), role: normaliseRole(tk.role), hours: num(tk.hours, 0.5, 400) };
         }).filter((t) => t.task)
       : [];
     return {

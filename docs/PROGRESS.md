@@ -5,6 +5,23 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-10 — Session 23: M3 unit tests
+
+**Done**
+- Unit tests for `validateRequest` edges, `normalisePlan` caps/clamps/totals/fallbacks, `rateLimit`
+  window, `retryAfter`, day rollover, per-IP isolation (fake timers); `timeline` already covered (16).
+- Fixes: `normaliseRole` maps model roles onto the 7 spec roles (aliases, unknown → Backend, own keys
+  only after reviewers caught a `"constructor"` prototype hit); rate limiter sweeps stale IPs hourly;
+  `teamSize` must be a JSON number now (Izzat: strict), so `"4"` is a 400.
+
+**Verified**
+- `npm run check` 135 unit (was 62). reviewer + security-reviewer: no blockers after the fix.
+
+**Waiting on Izzat**
+- `.claude/settings.json` still has local edits (not committed).
+
+---
+
 ## 2026-11-05 — Session 22: M2 estimator security review (closes M2)
 
 **Done**
@@ -21,21 +38,3 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 - `.claude/settings.json` has empty deny/ask lists locally: restore or keep on purpose (not committed).
 
 ---
-
-## 2026-11-05 — Session 21: M2 real-key test and estimator tuning
-
-**Done**
-- Izzat ran 5 real cases (Haiku 5.5). Run 1: larger feature 502'd (thinking ate `max_tokens` 2500);
-  "mixed" made the model invent 3 people for a team of 2. Injection and non-software 422 were fine.
-- `fix(api)`: `maxTokensFor` (8000 Haiku / 4000 others), `effort: "low"`, `stop_reason` handling
-  (cut off 502, refusal 422), metadata-only logging, neutral "mixed" wording + team-size rule.
-- Run 2: all 4 cases 200; senior team of 6 = 4 wk vs 6.4 wk for juniors. 7 route tests (mocked).
-
-**Verified**
-- `npm run check` 50 unit; e2e 71/71. security-reviewer and reviewer: no blockers, fixes applied.
-
-**Next up**
-- M2: Security review of the whole estimator path [security-reviewer].
-
----
-
