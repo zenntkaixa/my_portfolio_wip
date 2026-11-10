@@ -27,6 +27,10 @@ test("home page renders every tile", async ({ page }) => {
   ]) {
     await expect(page.getByRole("region", { name, exact: true })).toBeVisible();
   }
+  // Case-study tiles are named by their title; iterating the data keeps this in sync with content.
+  for (const study of caseStudies) {
+    await expect(page.getByRole("region", { name: study.title, exact: true })).toBeVisible();
+  }
 });
 
 test("hero owns the page's only h1 and shows role, location and availability", async ({ page }) => {
