@@ -1,5 +1,7 @@
 # Izzat Fahmi — Portfolio
 
+[![CI](https://github.com/zenntkaixa/my_portfolio_wip/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/zenntkaixa/my_portfolio_wip/actions/workflows/ci.yml)
+
 Personal portfolio of **Izzat Fahmi**, a backend-first full-stack software engineer (Java, Spring Boot,
 React, TypeScript) working on AI-integrated software engineering.
 
@@ -9,6 +11,21 @@ Claude returns an end-to-end delivery plan with effort and calendar estimates.
 **Live:** _coming soon_ · **Built with:** Next.js 16, React 19, TypeScript, Anthropic Claude, Cloudflare Turnstile, Vercel
 
 ---
+
+## What's worth a look
+
+- **The estimator path** (`app/api/estimate/route.ts`, `lib/estimate.ts`). Requests are checked in a
+  fixed order: content type and size, then schema validation, then Cloudflare Turnstile, then
+  per-visitor and daily limits, and only then the Claude call. The model's JSON is never trusted:
+  `normalisePlan` caps, clamps and re-totals it before the UI sees it.
+- **Spend and abuse controls**: input limits, rate limit, daily cap, a small default model, metadata-only
+  error logging. Reasoning in `docs/decisions/ADR-002-abuse-protection.md` and
+  `docs/security-review-m2.md`.
+- **Accessibility**: WCAG 2.2 AA axe scans of every estimator state in light and dark, a keyboard-only
+  walkthrough, a design-token contrast test, and a skip link (`tests/e2e/a11y.spec.ts`,
+  `tests/e2e/keyboard.spec.ts`, `tests/unit/contrast.test.ts`).
+- **Quality gate**: GitHub Actions runs typecheck, unit tests, build and Playwright e2e on every PR. Tests
+  never call the real API.
 
 ## Quick start
 
@@ -39,7 +56,10 @@ This project is built with **Claude Code** using a documented workflow:
 - `CLAUDE.md` — project rules and the session loop Claude follows
 - `docs/` — brief, design system, architecture, estimator spec, content rules, deployment, ADRs
 - `docs/ROADMAP.md` and `docs/PROGRESS.md` — what's next and what happened
-- `.claude/agents/` — specialist subagents (UI, API, prompt, QA, security review, code review)
+- One branch and one pull request per roadmap task into `develop`; releases are PRs from `develop` into
+  `main` (`docs/decisions/ADR-004-pr-branch-workflow.md`)
+- `.claude/agents/` — project builders (UI, API, prompt, QA) and a security reviewer; generic reviewer,
+  verifier and release agents come from a shared team setup (`docs/decisions/ADR-005-claude-team-agents.md`)
 - `.claude/skills/` — workflows: `/next-task`, `/visual-check`, `/ship`, `/update-content`
 - `.claude/settings.json` — permissions (secrets unreadable, pushes need approval) and a typecheck hook
 
