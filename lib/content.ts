@@ -17,6 +17,8 @@ export const profile = {
   github: "https://github.com/zenntkaixa",
 };
 
+export const skipLink = "Skip to the estimator";
+
 export const now = {
   title: "Senior Associate, Full-Stack Developer",
   org: "PwC Acceleration Centers, Kuala Lumpur",

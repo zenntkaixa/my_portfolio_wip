@@ -10,12 +10,15 @@ import { ExperienceTile } from "@/components/tiles/ExperienceTile";
 import { StackTile } from "@/components/tiles/StackTile";
 import { CertificationsTile } from "@/components/tiles/CertificationsTile";
 import { ContactTile } from "@/components/tiles/ContactTile";
-import { caseStudies } from "@/lib/content";
+import { caseStudies, skipLink } from "@/lib/content";
 
 // Tile order and desktop spans follow the bento table in docs/01-design-system.md.
 export default function Home() {
   return (
     <main className="page">
+      <a className="skip-link" href="#estimator">
+        {skipLink}
+      </a>
       <div className="topbar">
         <ThemeToggle />
       </div>
