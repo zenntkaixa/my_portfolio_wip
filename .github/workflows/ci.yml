@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [develop, main]
+  push:
+    branches: [develop, main]
+
+# Read-only token: CI never writes to the repo.
+permissions:
+  contents: read
+
+# A newer push to the same branch or PR cancels the run it supersedes.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Job id `ci` is the required status check for branch protection on develop and main.
+  ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      # Third-party actions are pinned to full commit SHAs (release tag in the comment).
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      # Typecheck, unit tests and build. No secrets: every test mocks fetch.
+      - run: npm run check
+
+      - run: npx playwright install --with-deps chromium
+
+      # Starts its own dev server; the API is mocked and Turnstile uses the always-pass test key.
+      - run: npm run test:e2e
+
+      - name: Upload Playwright traces
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: playwright-traces
+          path: test-results/
+          retention-days: 7
+          if-no-files-found: ignore
