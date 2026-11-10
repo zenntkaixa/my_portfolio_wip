@@ -37,7 +37,7 @@ Agent hints in brackets.
 - [x] Security review of the whole estimator path [security-reviewer]
 
 ## M3 — Quality
-- [ ] Unit tests: `validateRequest`, `normalisePlan`, `timeline`, `rateLimit` [qa-tester]
+- [x] Unit tests: `validateRequest`, `normalisePlan`, `timeline`, `rateLimit` [qa-tester]
 - [ ] E2E: page renders all tiles; estimator happy path and 429 path with mocked API [qa-tester]
 - [ ] Accessibility pass: keyboard-only walkthrough, contrast check, labels [qa-tester]
 - [ ] GitHub Actions CI: typecheck, unit tests, build, e2e [qa-tester]
