@@ -130,3 +130,18 @@ test("a malformed plan is treated as a 502-style error", async ({ page }) => {
   await submit.click();
   await expect(banner(page, estimatorCopy.badPlan)).toBeVisible();
 });
+
+test("no console errors or page errors on load and a mocked happy-path submit", async ({ page }) => {
+  const errors: string[] = [];
+  page.on("console", (msg) => {
+    if (msg.type() === "error") errors.push(`console: ${msg.text()}`);
+  });
+  page.on("pageerror", (err) => errors.push(`pageerror: ${err.message}`));
+
+  await page.route("**/api/estimate", (route) => route.fulfill({ json: plan }));
+  const submit = await prepare(page);
+  await submit.click();
+  await expect(page.getByRole("heading", { name: plan.plan.title })).toBeFocused();
+
+  expect(errors).toEqual([]);
+});
