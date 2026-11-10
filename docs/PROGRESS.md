@@ -5,6 +5,23 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-10 — Session 25: M3 accessibility pass
+
+**Done**
+- ADR-006: `@axe-core/playwright` 4.14.0 (dev, exact pin). `a11y.spec.ts`: axe WCAG 2.2 AA on home,
+  results tabs 1/2, 403 banner, 429 countdown, light + dark. No violations.
+- `keyboard.spec.ts`: full Tab order, focus ring on every stop, no trap, Shift+Tab, keyboard submit +
+  tab arrows. `contrast.test.ts`: token pairs in both themes. Skip link "Skip to the estimator" added.
+
+**Verified**
+- `npm run check` 174 unit; e2e 86/86; visual check of the focused skip link clean; reviewer: no blockers.
+
+**Waiting on Izzat**
+- Turnstile test widget adds 3 Tab stops before Submit (third-party); recheck with the real widget in M4.
+- `.claude/settings.json` still has local edits (not committed).
+
+---
+
 ## 2026-11-10 — Session 24: M3 e2e coverage
 
 **Done**
@@ -16,22 +33,5 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 **Verified**
 - `npm run check` 137 unit; e2e 73/73. Reviewer skipped (few-line test diff).
-
----
-
-## 2026-11-10 — Session 23: M3 unit tests
-
-**Done**
-- Unit tests for `validateRequest` edges, `normalisePlan` caps/clamps/totals/fallbacks, `rateLimit`
-  window, `retryAfter`, day rollover, per-IP isolation (fake timers); `timeline` already covered (16).
-- Fixes: `normaliseRole` maps model roles onto the 7 spec roles (aliases, unknown → Backend, own keys
-  only after reviewers caught a `"constructor"` prototype hit); rate limiter sweeps stale IPs hourly;
-  `teamSize` must be a JSON number now (Izzat: strict), so `"4"` is a 400.
-
-**Verified**
-- `npm run check` 135 unit (was 62). reviewer + security-reviewer: no blockers after the fix.
-
-**Waiting on Izzat**
-- `.claude/settings.json` still has local edits (not committed).
 
 ---

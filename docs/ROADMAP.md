@@ -39,7 +39,7 @@ Agent hints in brackets.
 ## M3 — Quality
 - [x] Unit tests: `validateRequest`, `normalisePlan`, `timeline`, `rateLimit` [qa-tester]
 - [x] E2E: page renders all tiles; estimator happy path and 429 path with mocked API [qa-tester]
-- [ ] Accessibility pass: keyboard-only walkthrough, contrast check, labels [qa-tester]
+- [x] Accessibility pass: keyboard-only walkthrough, contrast check, labels [qa-tester]
 - [ ] GitHub Actions CI: typecheck, unit tests, build, e2e [qa-tester]
   - then (Izzat): branch protection on `develop` and `main` (PR + required `ci` check) and
     auto-delete head branches

@@ -4,6 +4,23 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-10 — Session 23: M3 unit tests
+
+**Done**
+- Unit tests for `validateRequest` edges, `normalisePlan` caps/clamps/totals/fallbacks, `rateLimit`
+  window, `retryAfter`, day rollover, per-IP isolation (fake timers); `timeline` already covered (16).
+- Fixes: `normaliseRole` maps model roles onto the 7 spec roles (aliases, unknown → Backend, own keys
+  only after reviewers caught a `"constructor"` prototype hit); rate limiter sweeps stale IPs hourly;
+  `teamSize` must be a JSON number now (Izzat: strict), so `"4"` is a 400.
+
+**Verified**
+- `npm run check` 135 unit (was 62). reviewer + security-reviewer: no blockers after the fix.
+
+**Waiting on Izzat**
+- `.claude/settings.json` still has local edits (not committed).
+
+---
+
 ## 2026-11-05 — Session 22: M2 estimator security review (closes M2)
 
 **Done**
