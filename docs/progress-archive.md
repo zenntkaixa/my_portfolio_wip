@@ -4,6 +4,22 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-10 — Session 26: M3 GitHub Actions CI
+
+**Done**
+- `.github/workflows/ci.yml`: one `ci` job on PRs/pushes to `develop` and `main` (npm ci, check,
+  Playwright chromium, e2e); read-only token, SHA-pinned actions, no secrets, traces on failure.
+- CLAUDE.md "green" = `ci` passed on the PR; `/ship` now watches CI; CI section in 05-deployment.
+
+**Verified**
+- security-reviewer: no blockers; SHAs match tags; no path to the real API. First real run is this PR.
+
+**Waiting on Izzat**
+- Auto-delete head branches (Settings). Branch protection is blocked while the repo is private on
+  the free plan: do it when public (M4). `.claude/settings.json` still local.
+
+---
+
 ## 2026-11-10 — Session 25: M3 accessibility pass
 
 **Done**

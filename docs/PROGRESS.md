@@ -5,6 +5,22 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-10 — Session 28: M4 first Vercel deploy
+
+**Done**
+- Repo public (README release #16); branch protection on `develop`/`main` (PR + `ci`, admins too),
+  auto-delete, secret scanning + push protection; merged branches deleted.
+- Vercel: https://my-portfolio-wip.vercel.app (sin1, prod branch `main`), Turnstile test keys only,
+  no `ANTHROPIC_API_KEY` by design. 05-deployment rewritten for that order.
+
+**Verified**
+- Live: home 200, CSP/HSTS/nosniff/DENY headers, 415/400/413, valid request → 503 (no spend).
+
+**Waiting on Izzat**
+- Real Turnstile widget next, then spend limit, then the API key. `.claude/settings.json` still local.
+
+---
+
 ## 2026-11-10 — Session 27: M3 release, M4 repo ready to go public
 
 **Done**
@@ -18,21 +34,5 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 **Waiting on Izzat**
 - After merge: flip the repo public; then branch protection, auto-delete, secret scanning and push
   protection (Claude can apply via `gh api` with an OK). `.claude/settings.json` still local.
-
----
-
-## 2026-11-10 — Session 26: M3 GitHub Actions CI
-
-**Done**
-- `.github/workflows/ci.yml`: one `ci` job on PRs/pushes to `develop` and `main` (npm ci, check,
-  Playwright chromium, e2e); read-only token, SHA-pinned actions, no secrets, traces on failure.
-- CLAUDE.md "green" = `ci` passed on the PR; `/ship` now watches CI; CI section in 05-deployment.
-
-**Verified**
-- security-reviewer: no blockers; SHAs match tags; no path to the real API. First real run is this PR.
-
-**Waiting on Izzat**
-- Auto-delete head branches (Settings). Branch protection is blocked while the repo is private on
-  the free plan: do it when public (M4). `.claude/settings.json` still local.
 
 ---
