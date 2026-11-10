@@ -4,6 +4,71 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-10 — Session 24: M3 e2e coverage
+
+**Done**
+- Roadmap item was mostly covered by M2 specs (all tiles, happy path, 429, browser-mocked API;
+  `route.test.ts` runs the real route with Anthropic `fetch` mocked). Topped up: the "every tile"
+  test now includes case-study tiles from content; new no-console-error check on load + mocked submit.
+- Skipped a full-stack e2e against a fake Anthropic server: it needs a base-URL env var that could
+  send the key elsewhere if misset in production.
+
+**Verified**
+- `npm run check` 137 unit; e2e 73/73. Reviewer skipped (few-line test diff).
+
+---
+
+## 2026-11-10 — Session 23: M3 unit tests
+
+**Done**
+- Unit tests for `validateRequest` edges, `normalisePlan` caps/clamps/totals/fallbacks, `rateLimit`
+  window, `retryAfter`, day rollover, per-IP isolation (fake timers); `timeline` already covered (16).
+- Fixes: `normaliseRole` maps model roles onto the 7 spec roles (aliases, unknown → Backend, own keys
+  only after reviewers caught a `"constructor"` prototype hit); rate limiter sweeps stale IPs hourly;
+  `teamSize` must be a JSON number now (Izzat: strict), so `"4"` is a 400.
+
+**Verified**
+- `npm run check` 135 unit (was 62). reviewer + security-reviewer: no blockers after the fix.
+
+**Waiting on Izzat**
+- `.claude/settings.json` still has local edits (not committed).
+
+---
+
+## 2026-11-05 — Session 22: M2 estimator security review (closes M2)
+
+**Done**
+- security-reviewer: 1 High, 2 Medium, 6 Low, 3 Info; `npm audit` clean. All fixed: Turnstile before
+  limits, action + optional hostname check, CSP + HSTS, 415/413 limits, capped model error, safe env
+  limits, `stripFeatureTags`, generic 503, `.env*` ignored. `docs/security-review-m2.md` records it all.
+- ROADMAP: new M4 item for production guards (dummy Turnstile keys, missing `TURNSTILE_HOSTNAME`).
+
+**Verified**
+- `npm run check` 62 unit; e2e 72/72; CSP/Turnstile/theme 13/13 on a production build. reviewer and
+  security-reviewer re-check: no blockers.
+
+**Waiting on Izzat**
+- `.claude/settings.json` has empty deny/ask lists locally: restore or keep on purpose (not committed).
+
+---
+
+## 2026-11-05 — Session 21: M2 real-key test and estimator tuning
+
+**Done**
+- Izzat ran 5 real cases (Haiku 5.5). Run 1: larger feature 502'd (thinking ate `max_tokens` 2500);
+  "mixed" made the model invent 3 people for a team of 2. Injection and non-software 422 were fine.
+- `fix(api)`: `maxTokensFor` (8000 Haiku / 4000 others), `effort: "low"`, `stop_reason` handling
+  (cut off 502, refusal 422), metadata-only logging, neutral "mixed" wording + team-size rule.
+- Run 2: all 4 cases 200; senior team of 6 = 4 wk vs 6.4 wk for juniors. 7 route tests (mocked).
+
+**Verified**
+- `npm run check` 50 unit; e2e 71/71. security-reviewer and reviewer: no blockers, fixes applied.
+
+**Next up**
+- M2: Security review of the whole estimator path [security-reviewer].
+
+---
+
 ## 2026-11-05 — Session 20: M2 accessible result tabs
 
 **Done**

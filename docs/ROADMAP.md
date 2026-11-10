@@ -37,12 +37,12 @@ Agent hints in brackets.
 - [x] Security review of the whole estimator path [security-reviewer]
 
 ## M3 — Quality
-- [ ] Unit tests: `validateRequest`, `normalisePlan`, `timeline`, `rateLimit` [qa-tester]
-- [ ] E2E: page renders all tiles; estimator happy path and 429 path with mocked API [qa-tester]
-- [ ] Accessibility pass: keyboard-only walkthrough, contrast check, labels [qa-tester]
-- [ ] GitHub Actions CI: typecheck, unit tests, build, e2e [qa-tester]
-  - then (Izzat): branch protection on `develop` and `main` (PR + required `ci` check) and
-    auto-delete head branches
+- [x] Unit tests: `validateRequest`, `normalisePlan`, `timeline`, `rateLimit` [qa-tester]
+- [x] E2E: page renders all tiles; estimator happy path and 429 path with mocked API [qa-tester]
+- [x] Accessibility pass: keyboard-only walkthrough, contrast check, labels [qa-tester]
+- [x] GitHub Actions CI: typecheck, unit tests, build, e2e [qa-tester]
+  - then (Izzat): auto-delete head branches now; branch protection on `develop` and `main`
+    (PR + required `ci` check) once the repo is public (M4) or on GitHub Pro
 
 ## M4 — Go live
 - [ ] Push to GitHub; repo description and topics set (Izzat)

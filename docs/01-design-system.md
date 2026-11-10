@@ -76,6 +76,9 @@ Per-tile layout rules live in `docs/01b-tiles.md`. Read only the section for the
 - `:focus-visible`: 2px `--accent` outline, 2px offset, plus a 4px `--accent-soft` halo outside the outline
   (`box-shadow` spread 8px, since the offset and outline cover the first 4px). The only shadow.
 - `forced-colors: active`: 2px `Highlight` outline, no halo.
+- Skip link "Skip to the estimator" is the first focusable element: clipped until focused, then shown
+  top-left (`--surface`, `--ink`, `--line`, `--r-sm`). The estimator section takes `tabIndex={-1}`
+  so focus lands in it; the section itself shows no ring for that programmatic focus.
 
 ## Form controls
 - Text inputs, textareas and selects: `--surface` fill, 1px `--muted` border (3:1 non-text contrast;

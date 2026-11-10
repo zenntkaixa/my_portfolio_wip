@@ -20,6 +20,8 @@ type TileProps = {
   /** Extra class on the heading, e.g. to restyle the hero name. */
   titleClassName?: string;
   id?: string;
+  /** Programmatic focus target (tabIndex -1), e.g. for a skip link. */
+  focusTarget?: boolean;
   className?: string;
   children: ReactNode;
 };
@@ -33,6 +35,7 @@ export function Tile({
   headingLevel = 2,
   titleClassName,
   id,
+  focusTarget,
   className,
   children,
 }: TileProps) {
@@ -43,7 +46,7 @@ export function Tile({
   const headingClasses = ["tile__title", titleClassName ?? ""].filter(Boolean).join(" ");
 
   return (
-    <section id={id} className={classes} style={style} aria-labelledby={headingId}>
+    <section id={id} tabIndex={focusTarget ? -1 : undefined} className={classes} style={style} aria-labelledby={headingId}>
       <Heading id={headingId} className={headingClasses}>
         {title}
       </Heading>

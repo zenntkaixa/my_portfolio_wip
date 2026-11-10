@@ -14,6 +14,13 @@ const PER_DAY = envLimit(process.env.DAILY_LIMIT, 150);
 const visitors = new Map<string, number[]>();
 let day = new Date().toISOString().slice(0, 10);
 let dayCount = 0;
+let lastSweep = 0;
+const WINDOW_MS = 3_600_000;
+
+/** Test helper: number of IPs currently tracked. */
+export function visitorCountForTests() {
+  return visitors.size;
+}
 
 export type LimitResult = { ok: true } | { ok: false; reason: string; retryAfter: number };
 
@@ -39,8 +46,9 @@ export function checkLimits(ip: string): LimitResult {
   visitors.set(ip, hits);
   dayCount += 1;
 
-  // Keep the map from growing without bound.
-  if (visitors.size > 5000) {
+  // Drop IPs whose hits are all outside the window, at most once per window.
+  if (now - lastSweep >= WINDOW_MS) {
+    lastSweep = now;
     for (const [key, times] of visitors) if (!times.some((t) => t > hourAgo)) visitors.delete(key);
   }
   return { ok: true };

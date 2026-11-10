@@ -26,7 +26,8 @@ section 4).
    - PR: `gh pr create --base develop`, title = the commit subject. Body: Summary (3 to 5 bullets),
      Roadmap item, Test plan (check, e2e counts, visual-check, reviewers), Not included, Deploy
      impact, then the PR attribution line.
-   - No CI yet (M3), so skip `ship-pr`'s CI-watch step until `.github/workflows/` exists.
+   - After opening the PR, follow `ship-pr`'s CI-watch step: wait for the `ci` job
+     (`gh pr checks <n> --watch`) and report the result; fix a red run before handing over.
 6. Run `sync` and `git fsck`, give Izzat the PR URL, and suggest `/clear`. Never merge the PR.
    When Izzat says "PR merged": `git switch develop && git pull`, delete the local task branch, then
    `/next-task`.

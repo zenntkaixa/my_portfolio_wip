@@ -1219,6 +1219,36 @@ p {
   display: none;
 }
 
+.skip-link {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.skip-link:focus {
+  top: 8px;
+  left: 8px;
+  z-index: 10;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip: auto;
+  padding: 8px 14px;
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+}
+
+/* Skip-link target gets focus programmatically; the ring is for keyboard users of controls. */
+.tile[tabindex="-1"]:focus {
+  outline: none;
+  box-shadow: none;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;

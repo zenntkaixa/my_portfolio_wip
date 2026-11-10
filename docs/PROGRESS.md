@@ -5,37 +5,35 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
-## 2026-11-05 — Session 22: M2 estimator security review (closes M2)
+## 2026-11-10 — Session 26: M3 GitHub Actions CI
 
 **Done**
-- security-reviewer: 1 High, 2 Medium, 6 Low, 3 Info; `npm audit` clean. All fixed: Turnstile before
-  limits, action + optional hostname check, CSP + HSTS, 415/413 limits, capped model error, safe env
-  limits, `stripFeatureTags`, generic 503, `.env*` ignored. `docs/security-review-m2.md` records it all.
-- ROADMAP: new M4 item for production guards (dummy Turnstile keys, missing `TURNSTILE_HOSTNAME`).
+- `.github/workflows/ci.yml`: one `ci` job on PRs/pushes to `develop` and `main` (npm ci, check,
+  Playwright chromium, e2e); read-only token, SHA-pinned actions, no secrets, traces on failure.
+- CLAUDE.md "green" = `ci` passed on the PR; `/ship` now watches CI; CI section in 05-deployment.
 
 **Verified**
-- `npm run check` 62 unit; e2e 72/72; CSP/Turnstile/theme 13/13 on a production build. reviewer and
-  security-reviewer re-check: no blockers.
+- security-reviewer: no blockers; SHAs match tags; no path to the real API. First real run is this PR.
 
 **Waiting on Izzat**
-- `.claude/settings.json` has empty deny/ask lists locally: restore or keep on purpose (not committed).
+- Auto-delete head branches (Settings). Branch protection is blocked while the repo is private on
+  the free plan: do it when public (M4). `.claude/settings.json` still local.
 
 ---
 
-## 2026-11-05 — Session 21: M2 real-key test and estimator tuning
+## 2026-11-10 — Session 25: M3 accessibility pass
 
 **Done**
-- Izzat ran 5 real cases (Haiku 5.5). Run 1: larger feature 502'd (thinking ate `max_tokens` 2500);
-  "mixed" made the model invent 3 people for a team of 2. Injection and non-software 422 were fine.
-- `fix(api)`: `maxTokensFor` (8000 Haiku / 4000 others), `effort: "low"`, `stop_reason` handling
-  (cut off 502, refusal 422), metadata-only logging, neutral "mixed" wording + team-size rule.
-- Run 2: all 4 cases 200; senior team of 6 = 4 wk vs 6.4 wk for juniors. 7 route tests (mocked).
+- ADR-006: `@axe-core/playwright` 4.14.0 (dev, exact pin). `a11y.spec.ts`: axe WCAG 2.2 AA on home,
+  results tabs 1/2, 403 banner, 429 countdown, light + dark. No violations.
+- `keyboard.spec.ts`: full Tab order, focus ring on every stop, no trap, Shift+Tab, keyboard submit +
+  tab arrows. `contrast.test.ts`: token pairs in both themes. Skip link "Skip to the estimator" added.
 
 **Verified**
-- `npm run check` 50 unit; e2e 71/71. security-reviewer and reviewer: no blockers, fixes applied.
+- `npm run check` 174 unit; e2e 86/86; visual check of the focused skip link clean; reviewer: no blockers.
 
-**Next up**
-- M2: Security review of the whole estimator path [security-reviewer].
+**Waiting on Izzat**
+- Turnstile test widget adds 3 Tab stops before Submit (third-party); recheck with the real widget in M4.
+- `.claude/settings.json` still has local edits (not committed).
 
 ---
-
