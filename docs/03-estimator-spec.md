@@ -53,6 +53,7 @@ Errors, always `{ "error": "human-readable sentence" }`:
 | Status | When | UI treatment |
 |---|---|---|
 | 400 | Invalid body or input rules broken | Inline under the field |
+| 413 / 415 | Body over 8 KB, or content type is not `application/json` | Not reachable from the UI (generic banner) |
 | 403 | Turnstile failed | Banner, reset widget |
 | 422 | Model says input isn't a software feature, or refuses (`stop_reason: refusal`) | Banner with the model's sentence (generic sentence on refusal) |
 | 429 | Rate limit or daily cap (`Retry-After` header) | Warn-coloured banner, disable button |

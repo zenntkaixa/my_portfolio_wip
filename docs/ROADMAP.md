@@ -1,10 +1,10 @@
 # Roadmap
 
-Work top to bottom. One task ≈ one commit. Tick `[x]` only when the definition of done in CLAUDE.md is met.
+Work top to bottom. One task = one branch and one PR into `develop`. Tick `[x]` only when the definition of done in CLAUDE.md is met.
 Agent hints in brackets.
 
 ## M0 — Foundations
-- [x] Next.js 15 + TypeScript scaffold, security headers, `.env.example`
+- [x] Next.js 16 + TypeScript scaffold, security headers, `.env.example`
 - [x] Site content from CV in `lib/content.ts`
 - [x] Estimator types, validation and normalisation in `lib/estimate.ts`
 - [x] In-memory rate limit and daily cap in `lib/rateLimit.ts`
@@ -45,7 +45,7 @@ Agent hints in brackets.
     (PR + required `ci` check) once the repo is public (M4) or on GitHub Pro
 
 ## M4 — Go live
-- [ ] Push to GitHub; repo description and topics set (Izzat)
+- [x] Push to GitHub; repo description and topics set (Izzat)
 - [ ] Vercel project with env vars (test Turnstile keys) (Izzat, guided)
 - [ ] Real Turnstile widget for the `.vercel.app` host; swap keys; redeploy (Izzat, guided)
 - [ ] Production guards: refuse dummy Turnstile keys and a missing `TURNSTILE_HOSTNAME` when
