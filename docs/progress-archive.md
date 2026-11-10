@@ -4,6 +4,23 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-05 — Session 22: M2 estimator security review (closes M2)
+
+**Done**
+- security-reviewer: 1 High, 2 Medium, 6 Low, 3 Info; `npm audit` clean. All fixed: Turnstile before
+  limits, action + optional hostname check, CSP + HSTS, 415/413 limits, capped model error, safe env
+  limits, `stripFeatureTags`, generic 503, `.env*` ignored. `docs/security-review-m2.md` records it all.
+- ROADMAP: new M4 item for production guards (dummy Turnstile keys, missing `TURNSTILE_HOSTNAME`).
+
+**Verified**
+- `npm run check` 62 unit; e2e 72/72; CSP/Turnstile/theme 13/13 on a production build. reviewer and
+  security-reviewer re-check: no blockers.
+
+**Waiting on Izzat**
+- `.claude/settings.json` has empty deny/ask lists locally: restore or keep on purpose (not committed).
+
+---
+
 ## 2026-11-05 — Session 21: M2 real-key test and estimator tuning
 
 **Done**

@@ -5,6 +5,20 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-10 — Session 24: M3 e2e coverage
+
+**Done**
+- Roadmap item was mostly covered by M2 specs (all tiles, happy path, 429, browser-mocked API;
+  `route.test.ts` runs the real route with Anthropic `fetch` mocked). Topped up: the "every tile"
+  test now includes case-study tiles from content; new no-console-error check on load + mocked submit.
+- Skipped a full-stack e2e against a fake Anthropic server: it needs a base-URL env var that could
+  send the key elsewhere if misset in production.
+
+**Verified**
+- `npm run check` 137 unit; e2e 73/73. Reviewer skipped (few-line test diff).
+
+---
+
 ## 2026-11-10 — Session 23: M3 unit tests
 
 **Done**
@@ -19,22 +33,5 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 **Waiting on Izzat**
 - `.claude/settings.json` still has local edits (not committed).
-
----
-
-## 2026-11-05 — Session 22: M2 estimator security review (closes M2)
-
-**Done**
-- security-reviewer: 1 High, 2 Medium, 6 Low, 3 Info; `npm audit` clean. All fixed: Turnstile before
-  limits, action + optional hostname check, CSP + HSTS, 415/413 limits, capped model error, safe env
-  limits, `stripFeatureTags`, generic 503, `.env*` ignored. `docs/security-review-m2.md` records it all.
-- ROADMAP: new M4 item for production guards (dummy Turnstile keys, missing `TURNSTILE_HOSTNAME`).
-
-**Verified**
-- `npm run check` 62 unit; e2e 72/72; CSP/Turnstile/theme 13/13 on a production build. reviewer and
-  security-reviewer re-check: no blockers.
-
-**Waiting on Izzat**
-- `.claude/settings.json` has empty deny/ask lists locally: restore or keep on purpose (not committed).
 
 ---
