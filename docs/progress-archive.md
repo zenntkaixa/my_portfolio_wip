@@ -4,6 +4,20 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-10 — Session 24: M3 e2e coverage
+
+**Done**
+- Roadmap item was mostly covered by M2 specs (all tiles, happy path, 429, browser-mocked API;
+  `route.test.ts` runs the real route with Anthropic `fetch` mocked). Topped up: the "every tile"
+  test now includes case-study tiles from content; new no-console-error check on load + mocked submit.
+- Skipped a full-stack e2e against a fake Anthropic server: it needs a base-URL env var that could
+  send the key elsewhere if misset in production.
+
+**Verified**
+- `npm run check` 137 unit; e2e 73/73. Reviewer skipped (few-line test diff).
+
+---
+
 ## 2026-11-10 — Session 23: M3 unit tests
 
 **Done**

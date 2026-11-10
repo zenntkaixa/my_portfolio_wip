@@ -5,6 +5,22 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-10 — Session 26: M3 GitHub Actions CI
+
+**Done**
+- `.github/workflows/ci.yml`: one `ci` job on PRs/pushes to `develop` and `main` (npm ci, check,
+  Playwright chromium, e2e); read-only token, SHA-pinned actions, no secrets, traces on failure.
+- CLAUDE.md "green" = `ci` passed on the PR; `/ship` now watches CI; CI section in 05-deployment.
+
+**Verified**
+- security-reviewer: no blockers; SHAs match tags; no path to the real API. First real run is this PR.
+
+**Waiting on Izzat**
+- Auto-delete head branches (Settings). Branch protection is blocked while the repo is private on
+  the free plan: do it when public (M4). `.claude/settings.json` still local.
+
+---
+
 ## 2026-11-10 — Session 25: M3 accessibility pass
 
 **Done**
@@ -19,19 +35,5 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 **Waiting on Izzat**
 - Turnstile test widget adds 3 Tab stops before Submit (third-party); recheck with the real widget in M4.
 - `.claude/settings.json` still has local edits (not committed).
-
----
-
-## 2026-11-10 — Session 24: M3 e2e coverage
-
-**Done**
-- Roadmap item was mostly covered by M2 specs (all tiles, happy path, 429, browser-mocked API;
-  `route.test.ts` runs the real route with Anthropic `fetch` mocked). Topped up: the "every tile"
-  test now includes case-study tiles from content; new no-console-error check on load + mocked submit.
-- Skipped a full-stack e2e against a fake Anthropic server: it needs a base-URL env var that could
-  send the key elsewhere if misset in production.
-
-**Verified**
-- `npm run check` 137 unit; e2e 73/73. Reviewer skipped (few-line test diff).
 
 ---

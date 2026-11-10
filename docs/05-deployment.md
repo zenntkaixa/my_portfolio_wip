@@ -24,6 +24,15 @@ Local development uses Cloudflare's official **test keys** (already in `.env.exa
 6. Replace both Turnstile env vars in Vercel with the real keys. Redeploy.
 7. In the Anthropic Console: set a **monthly spend limit** (start low, e.g. USD 10).
 
+## CI
+
+`.github/workflows/ci.yml` runs one job, `ci`, on every PR into and push to `develop` and `main`:
+`npm ci`, `npm run check`, Playwright chromium, `npm run test:e2e`. It needs no secrets (fetch is mocked,
+Turnstile uses the test key). Actions are pinned to commit SHAs; bump them only to releases at least two
+weeks old. Failed runs upload `test-results/` (traces) for 7 days. Branch protection (a PR plus the `ci`
+check on `develop` and `main`) needs the repo to be public or on GitHub Pro; until then the PR rule is
+followed by convention.
+
 ## Every later deploy
 Push to `main` (a release, see CLAUDE.md section 4, Branches) → Vercel builds and deploys to production. Pushes to
 `develop` and pull requests get preview URLs.
