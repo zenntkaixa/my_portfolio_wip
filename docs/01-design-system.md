@@ -91,6 +91,8 @@ Per-tile layout rules live in `docs/01b-tiles.md`. Read only the section for the
 ## Motion
 - Tiles fade and rise 8px on first load (`@keyframes tile-in`, 400ms ease-out), ending at
   `transform: none`. Pure CSS, so tiles appear without hydration or with JS blocked.
+- The hero and Now tiles (first row) use `@keyframes tile-rise`: the same 8px rise but no opacity
+  fade, so the LCP text (`.hero__summary`) is fully opaque at first paint. All other tiles fade.
 - Fill mode is `backwards` (holds the first frame during the stagger delay). Not `both`: a forwards
   fill keeps each tile a stacking context and a containing block for `position: fixed` children
   after the animation ends, which would trap any M2 overlay inside a tile.
