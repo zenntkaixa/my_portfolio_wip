@@ -10,7 +10,7 @@ type AnthropicStub = { text?: string; stop_reason?: string };
 
 type TurnstileStub = { success: boolean; action?: string; hostname?: string };
 
-function mockFetch(reply: AnthropicStub, turnstile: TurnstileStub | ((token: string) => TurnstileStub) = { success: true, action: "estimate" }) {
+function mockFetch(reply: AnthropicStub, turnstile: TurnstileStub | ((token: string) => TurnstileStub) = { success: true, action: "estimate", hostname: "mysite.dev" }) {
   const calls: { url: string; body: unknown }[] = [];
   const fn = vi.fn(async (input: string | URL | Request, init?: RequestInit) => {
     const url = String(input);
@@ -53,7 +53,7 @@ describe("POST /api/estimate", () => {
   beforeEach(() => {
     vi.stubEnv("TURNSTILE_SECRET_KEY", "test-secret");
     vi.stubEnv("ANTHROPIC_API_KEY", "test-key");
-    vi.stubEnv("TURNSTILE_HOSTNAME", "");
+    vi.stubEnv("TURNSTILE_HOSTNAME", "mysite.dev");
     vi.spyOn(console, "error").mockImplementation(() => {});
   });
   afterEach(() => {
@@ -100,7 +100,7 @@ describe("POST /api/estimate", () => {
       "fetch",
       vi.fn(async (input: string | URL | Request) =>
         String(input).includes("turnstile")
-          ? Response.json({ success: true, action: "estimate" })
+          ? Response.json({ success: true, action: "estimate", hostname: "mysite.dev" })
           : Response.json(
               { type: "error", error: { type: "overloaded_error", message: "secret-ish detail" } },
               { status: 529 },
@@ -145,7 +145,7 @@ describe("POST /api/estimate", () => {
 
   it("does not consume quota on failed Turnstile tokens", async () => {
     vi.stubEnv("TURNSTILE_SECRET_KEY", "0xrealsecret");
-    mockFetch({ text: modelPlan }, (t) => ({ success: t === "good", action: "estimate" }));
+    mockFetch({ text: modelPlan }, (t) => ({ success: t === "good", action: "estimate", hostname: "mysite.dev" }));
     const ip = "9.9.9.9";
     for (let i = 0; i < 12; i++) {
       const res = await POST(request("mixed", { token: "bad", ip }));
@@ -161,12 +161,11 @@ describe("POST /api/estimate", () => {
     expect((await POST(request())).status).toBe(403);
   });
 
-  it("checks the hostname only when TURNSTILE_HOSTNAME is set", async () => {
+  it("checks the siteverify hostname against the trimmed TURNSTILE_HOSTNAME", async () => {
     vi.stubEnv("TURNSTILE_SECRET_KEY", "0xrealsecret");
     mockFetch({ text: modelPlan }, { success: true, action: "estimate", hostname: "evil.example" });
-    expect((await POST(request())).status).toBe(200);
-    vi.stubEnv("TURNSTILE_HOSTNAME", "mysite.dev");
     expect((await POST(request())).status).toBe(403);
+    vi.stubEnv("TURNSTILE_HOSTNAME", "mysite.dev ");
     mockFetch({ text: modelPlan }, { success: true, action: "estimate", hostname: "mysite.dev" });
     expect((await POST(request())).status).toBe(200);
   });
@@ -209,5 +208,50 @@ describe("POST /api/estimate", () => {
     const res = await POST(request());
     expect(res.status).toBe(503);
     expect(((await res.json()) as { error: string }).error).not.toMatch(/ANTHROPIC|Vercel/i);
+  });
+
+  describe("production config guard", () => {
+    it("returns 503 on dummy keys in production without any fetch", async () => {
+      vi.stubEnv("VERCEL_ENV", "production");
+      vi.stubEnv("TURNSTILE_SECRET_KEY", "1x0000000000000000000000000000000AA");
+      vi.stubEnv("NEXT_PUBLIC_TURNSTILE_SITE_KEY", "1x00000000000000000000AA");
+      const calls = mockFetch({ text: modelPlan });
+      const res = await POST(request());
+      expect(res.status).toBe(503);
+      expect(((await res.json()) as { error: string }).error).toMatch(/unavailable right now/);
+      expect(vi.mocked(fetch)).not.toHaveBeenCalled();
+      expect(calls).toHaveLength(0);
+      const logged = JSON.stringify(vi.mocked(console.error).mock.calls);
+      expect(logged).toContain("misconfigured");
+      expect(logged).not.toContain("1x000000");
+    });
+
+    it("returns 503 in production with real-looking keys but an empty hostname", async () => {
+      vi.stubEnv("VERCEL_ENV", "production");
+      vi.stubEnv("TURNSTILE_SECRET_KEY", "0xrealsecret");
+      vi.stubEnv("NEXT_PUBLIC_TURNSTILE_SITE_KEY", "0xrealsite");
+      vi.stubEnv("TURNSTILE_HOSTNAME", "");
+      mockFetch({ text: modelPlan });
+      expect((await POST(request())).status).toBe(503);
+      expect(vi.mocked(fetch)).not.toHaveBeenCalled();
+    });
+
+    it("proceeds in production with real-looking keys and a hostname", async () => {
+      vi.stubEnv("VERCEL_ENV", "production");
+      vi.stubEnv("TURNSTILE_SECRET_KEY", "0xrealsecret");
+      vi.stubEnv("NEXT_PUBLIC_TURNSTILE_SITE_KEY", "0xrealsite");
+      vi.stubEnv("TURNSTILE_HOSTNAME", "mysite.dev");
+      const calls = mockFetch({ text: modelPlan }, { success: true, action: "estimate", hostname: "mysite.dev" });
+      expect((await POST(request())).status).toBe(200);
+      expect(calls).toHaveLength(1);
+    });
+
+    it("leaves preview with dummy keys unchanged", async () => {
+      vi.stubEnv("VERCEL_ENV", "preview");
+      vi.stubEnv("TURNSTILE_SECRET_KEY", "1x0000000000000000000000000000000AA");
+      vi.stubEnv("TURNSTILE_HOSTNAME", "");
+      mockFetch({ text: modelPlan });
+      expect((await POST(request())).status).toBe(200);
+    });
   });
 });
