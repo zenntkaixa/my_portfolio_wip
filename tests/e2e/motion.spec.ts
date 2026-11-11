@@ -44,7 +44,7 @@ const stylesAfterTileIn = async (page: Page) => {
       els.flatMap((el) =>
         el
           .getAnimations()
-          .filter((a) => a instanceof CSSAnimation && a.animationName === "tile-in")
+          .filter((a) => a instanceof CSSAnimation && (a.animationName === "tile-in" || a.animationName === "tile-rise"))
           .map((a) => a.finished),
       ),
     ),
@@ -75,10 +75,26 @@ test("no preference: tiles run tile-in with delays staggered in DOM order", asyn
   await expect(page.locator(".bento > *")).toHaveCount(tileCount);
 
   const styles = await tileStyles(page);
-  expect(styles.map((s) => s.name)).toEqual(Array.from({ length: tileCount }, () => "tile-in"));
+  // Hero and Now (first row, LCP) rise without a fade; every other tile fades and rises.
+  const classes = await page
+    .locator(TILES)
+    .evaluateAll((els) => els.map((el) => /\btile--(hero|now)\b/.test(el.className)));
+  expect(classes.some(Boolean)).toBe(true);
+  expect(styles.map((s) => s.name)).toEqual(classes.map((first) => (first ? "tile-rise" : "tile-in")));
   expect(styles.map((s) => toMs(s.delay))).toEqual(
     Array.from({ length: tileCount }, (_, i) => expectedDelayMs(i)),
   );
+});
+
+test("no preference: hero and Now are fully opaque from the first frame", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/");
+  for (const cls of [".tile--hero", ".tile--now"]) {
+    const el = page.locator(`.bento > ${cls}`);
+    expect(await el.evaluate((e) => getComputedStyle(e).animationName)).toBe("tile-rise");
+    // Sampled while the (delayed) rise may still be running: opacity is never animated.
+    expect(await el.evaluate((e) => getComputedStyle(e).opacity)).toBe("1");
+  }
 });
 
 test("no preference: finished tiles are opaque with no lingering transform", async ({ page }) => {
@@ -103,7 +119,7 @@ test("JS blocked: tiles still animate in to full opacity without hydration", asy
   const styles = await stylesAfterTileIn(page);
   expect(styles.length).toBeGreaterThanOrEqual(2);
   for (const [i, s] of styles.entries()) {
-    expect(s.name, `tile ${i + 1} animation-name`).toBe("tile-in");
+    expect(s.name, `tile ${i + 1} animation-name`).toMatch(/^tile-(in|rise)$/);
     expect(s.opacity, `tile ${i + 1} opacity`).toBe("1");
   }
   // Proof React did not run: ThemeToggle only sets aria-pressed after mount.

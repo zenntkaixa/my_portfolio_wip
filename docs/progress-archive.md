@@ -4,6 +4,23 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-11 — Session 33: M5 Open Graph and metadata
+
+**Done**
+- `app/opengraph-image.tsx` (1200×630, static), `icon.tsx`, `apple-icon.tsx`; Bricolage Bold TTF + OFL
+  in `app/fonts/`; colours from `lib/tokens.ts` (parses globals.css; contrast test reuses it).
+- Full metadata in `layout.tsx` (metadataBase, canonical, openGraph, twitter large image, robots);
+  `siteUrl` and OG copy in `content.ts`. e2e `metadata.spec.ts`.
+
+**Verified**
+- `npm run check` 191 unit; e2e 88/88. Production build head: absolute https og/twitter images; image
+  routes 200 PNG; card and icons inspected. reviewer: no blockers, nits fixed.
+
+**Waiting on Izzat**
+- After release: LinkedIn Post Inspector to refresh the card. `.claude/settings.json` still local.
+
+---
+
 ## 2026-11-11 — Session 32: M4 live URL (closes M4)
 
 **Done**
