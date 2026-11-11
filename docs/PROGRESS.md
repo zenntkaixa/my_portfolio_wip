@@ -5,6 +5,23 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-11 — Session 33: M5 Open Graph and metadata
+
+**Done**
+- `app/opengraph-image.tsx` (1200×630, static), `icon.tsx`, `apple-icon.tsx`; Bricolage Bold TTF + OFL
+  in `app/fonts/`; colours from `lib/tokens.ts` (parses globals.css; contrast test reuses it).
+- Full metadata in `layout.tsx` (metadataBase, canonical, openGraph, twitter large image, robots);
+  `siteUrl` and OG copy in `content.ts`. e2e `metadata.spec.ts`.
+
+**Verified**
+- `npm run check` 191 unit; e2e 88/88. Production build head: absolute https og/twitter images; image
+  routes 200 PNG; card and icons inspected. reviewer: no blockers, nits fixed.
+
+**Waiting on Izzat**
+- After release: LinkedIn Post Inspector to refresh the card. `.claude/settings.json` still local.
+
+---
+
 ## 2026-11-11 — Session 32: M4 live URL (closes M4)
 
 **Done**
@@ -17,21 +34,5 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 **Waiting on Izzat**
 - M4 release to `main` when wanted (README link). Next: M5 polish (OG image, Lighthouse Performance 71
   → 90, analytics ADR). `.claude/settings.json` still local.
-
----
-
-## 2026-11-11 — Session 31: M4 go-live
-
-**Done**
-- M4 guards released (#20). Spend limit USD 10; `ANTHROPIC_API_KEY` on Production only; redeployed.
-  The estimator is live at https://my-portfolio-wip.vercel.app.
-
-**Verified**
-- Vercel env names/targets as intended (values not read). Live: real plan with both tabs; 6th
-  submit → 429 "Try again in 55 minutes"; `{}` → 400; fake token → 403.
-- PageSpeed mobile: Performance 71 (below 90, moved to the M5 item), A11y/BP/SEO 100.
-
-**Waiting on Izzat**
-- Last M4 item: live URL in README and LinkedIn. `.claude/settings.json` still local.
 
 ---
