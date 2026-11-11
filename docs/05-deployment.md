@@ -37,7 +37,9 @@ public endpoint can't spend money while Turnstile still uses always-pass test ke
 ## CI
 
 `.github/workflows/ci.yml` runs one job, `ci`, on every PR into and push to `develop` and `main`:
-`npm ci`, `npm run check`, Playwright chromium, `npm run test:e2e`. It needs no secrets (fetch is mocked,
+`npm ci`, `npm run check`, `npm run test:e2e`, inside the official Playwright container pinned by digest
+(ADR-007: browsers and their Linux packages are preinstalled, so no apt or browser download; bump the
+image together with `@playwright/test`). It needs no secrets (fetch is mocked,
 Turnstile uses the test key). Actions are pinned to commit SHAs; bump them only to releases at least two
 weeks old. Failed runs upload `test-results/` (traces) for 7 days. The repo is public. Branch protection on `develop`
 and `main`: a PR is required (0 approvals), the `ci` check must pass on an up-to-date branch, admins
