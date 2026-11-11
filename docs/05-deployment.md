@@ -6,9 +6,9 @@
 |---|---|---|
 | `ANTHROPIC_API_KEY` | Vercel (Production + Preview), `.env.local` | Server only. Never prefix with `NEXT_PUBLIC_`. |
 | `ANTHROPIC_MODEL` | Optional | Default `claude-haiku-5-5` |
-| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Vercel, `.env.local` | Public by design |
-| `TURNSTILE_SECRET_KEY` | Vercel, `.env.local` | Server only |
-| `TURNSTILE_HOSTNAME` | Optional, Vercel | Production domain; when set, siteverify must report this hostname |
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Vercel, `.env.local` | Public by design; Vercel type **Config** (it rejects Sensitive for `NEXT_PUBLIC_`). Production: real key. Preview: test key |
+| `TURNSTILE_SECRET_KEY` | Vercel, `.env.local` | Server only, type Sensitive. Production: real secret. Preview: test secret |
+| `TURNSTILE_HOSTNAME` | Optional, Vercel Production | `my-portfolio-wip.vercel.app`; when set, siteverify must report this hostname |
 | `RATE_LIMIT_PER_HOUR` | Optional | Default 5 |
 | `DAILY_LIMIT` | Optional | Default 150 |
 
@@ -23,9 +23,11 @@ public endpoint can't spend money while Turnstile still uses always-pass test ke
 
 1. Done (2026-11-10): Vercel **Add New → Project → Import** the repo, defaults for Next.js. Env vars
    for Production + Preview: only the two Turnstile **test** keys from `.env.example`. Deployed.
-2. In Cloudflare: **Turnstile → Add widget**, hostname = `my-portfolio-wip.vercel.app` (add `localhost`
-   too). Mode: Managed. Copy the real site key and secret.
-3. Replace both Turnstile env vars in Vercel with the real keys, set `TURNSTILE_HOSTNAME`, redeploy.
+2. Done (2026-11-11): Cloudflare **Turnstile → Add widget** `portfolio`, hostname
+   `my-portfolio-wip.vercel.app` only (local dev keeps the test keys), Managed, no pre-clearance.
+3. Done (2026-11-11): real keys and `TURNSTILE_HOSTNAME` on **Production** only; Preview keeps the test
+   keys (preview hostnames change per deploy, so a real widget would fail there, and previews sit
+   behind Vercel login with no API key). Redeployed without build cache (the site key is built in).
 4. In the Anthropic Console: set a **monthly spend limit** (start low, e.g. USD 10).
 5. Only then add `ANTHROPIC_API_KEY` (Production; Preview only if wanted) and redeploy.
 

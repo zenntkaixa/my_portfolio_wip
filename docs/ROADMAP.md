@@ -49,7 +49,7 @@ Agent hints in brackets.
 - [x] Vercel project with env vars (test Turnstile keys) (Izzat, guided)
   - deployed without `ANTHROPIC_API_KEY` (estimator answers 503); the key goes in only after real
     Turnstile keys and the spend limit (order in `docs/05-deployment.md`)
-- [ ] Real Turnstile widget for the `.vercel.app` host; swap keys; redeploy (Izzat, guided)
+- [x] Real Turnstile widget for the `.vercel.app` host; swap keys; redeploy (Izzat, guided)
 - [ ] Production guards: refuse dummy Turnstile keys and a missing `TURNSTILE_HOSTNAME` when
   `VERCEL_ENV=production` (see `docs/security-review-m2.md`) [api-engineer]
 - [ ] Anthropic monthly spend limit set (Izzat)
