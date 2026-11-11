@@ -313,8 +313,23 @@ p {
     }
   }
 
+  /* First row (hero text is the LCP element): rise only, no opacity fade, so it paints at first paint. */
+  @keyframes tile-rise {
+    from {
+      transform: translateY(8px);
+    }
+    to {
+      transform: none;
+    }
+  }
+
   .bento > .tile {
     animation: tile-in 400ms ease-out var(--tile-delay, 0ms) backwards;
+  }
+
+  .bento > .tile--hero,
+  .bento > .tile--now {
+    animation-name: tile-rise;
   }
 
   .bento > .tile:nth-child(2) { --tile-delay: 40ms; }
