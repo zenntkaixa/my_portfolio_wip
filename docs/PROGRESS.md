@@ -5,6 +5,23 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-11 — Session 30: M4 production guards
+
+**Done**
+- `lib/turnstileConfig.ts`: on production (or Vercel without an explicit preview/dev `VERCEL_ENV`), test or
+  missing Turnstile keys or a missing `TURNSTILE_HOSTNAME` → 503 before siteverify, limits and model; a
+  real secret needs a hostname everywhere. Hostname compare trimmed. Docs + CLAUDE.md accepted risks.
+
+**Verified**
+- `npm run check` 191 unit; e2e 86/86. security-reviewer: fail-closed fix applied as prescribed;
+  reviewer: no blockers, nits fixed. Live production already passes the guard.
+
+**Waiting on Izzat**
+- Release to `main` when ready; confirm Vercel "Automatically expose System Environment Variables" is on.
+  Then the spend limit, then `ANTHROPIC_API_KEY`. `.claude/settings.json` still local.
+
+---
+
 ## 2026-11-11 — Session 29: M4 real Turnstile
 
 **Done**
@@ -19,21 +36,5 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 **Waiting on Izzat**
 - Next: production guards (code), then the spend limit, then `ANTHROPIC_API_KEY`.
   `.claude/settings.json` still local.
-
----
-
-## 2026-11-10 — Session 28: M4 first Vercel deploy
-
-**Done**
-- Repo public (README release #16); branch protection on `develop`/`main` (PR + `ci`, admins too),
-  auto-delete, secret scanning + push protection; merged branches deleted.
-- Vercel: https://my-portfolio-wip.vercel.app (sin1, prod branch `main`), Turnstile test keys only,
-  no `ANTHROPIC_API_KEY` by design. 05-deployment rewritten for that order.
-
-**Verified**
-- Live: home 200, CSP/HSTS/nosniff/DENY headers, 415/400/413, valid request → 503 (no spend).
-
-**Waiting on Izzat**
-- Real Turnstile widget next, then spend limit, then the API key. `.claude/settings.json` still local.
 
 ---
