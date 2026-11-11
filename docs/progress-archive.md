@@ -4,6 +4,22 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-10 — Session 27: M3 release, M4 repo ready to go public
+
+**Done**
+- M3 released (PR #14 into `main`). Pre-public audit of all history and PRs: safe to publish.
+- README for public visitors (CI badge, "What's worth a look", PR workflow); ROADMAP header fixes;
+  413/415 rows in the estimator spec (docs-auditor). Repo description and topics set via `gh`.
+
+**Verified**
+- docs-auditor: README claims match code. Release: local + CI check/e2e green, `npm audit` clean.
+
+**Waiting on Izzat**
+- After merge: flip the repo public; then branch protection, auto-delete, secret scanning and push
+  protection (Claude can apply via `gh api` with an OK). `.claude/settings.json` still local.
+
+---
+
 ## 2026-11-10 — Session 26: M3 GitHub Actions CI
 
 **Done**
