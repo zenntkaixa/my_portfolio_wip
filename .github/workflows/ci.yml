@@ -20,6 +20,10 @@ jobs:
   ci:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    # Official Playwright image: Chromium and its Linux packages preinstalled, so CI makes no apt calls and
+    # downloads no browser (ADR-007). Tag and digest must match @playwright/test in package-lock.json.
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
     steps:
       # Third-party actions are pinned to full commit SHAs (release tag in the comment).
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -32,14 +36,20 @@ jobs:
           cache: npm
 
       - run: npm ci
+        timeout-minutes: 5
+
+      # The browsers in the image only work with the same Playwright version as the lockfile.
+      - name: Check Playwright matches the container image
+        run: |
+          installed=$(node -p "require('@playwright/test/package.json').version")
+          test "$installed" = "1.64.1" || { echo "::error::@playwright/test is $installed but the CI image is v1.64.1; bump both (ADR-007)"; exit 1; }
 
       # Typecheck, unit tests and build. No secrets: every test mocks fetch.
       - run: npm run check
 
-      - run: npx playwright install --with-deps chromium
-
       # Starts its own dev server; the API is mocked and Turnstile uses the always-pass test key.
       - run: npm run test:e2e
+        timeout-minutes: 10
 
       - name: Upload Playwright traces
         if: failure()
