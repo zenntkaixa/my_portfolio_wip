@@ -58,7 +58,7 @@ Agent hints in brackets.
 - [x] Add live URL to README and LinkedIn (Izzat)
 
 ## M5 — Polish
-- [ ] Open Graph image with `next/og` and full metadata [ui-builder]
+- [x] Open Graph image with `next/og` and full metadata [ui-builder]
 - [x] CI: run in the pinned Playwright container instead of installing browsers each run (ADR-007)
 - [ ] Lighthouse targets met on mobile; fix findings (Performance 71 at go-live; others 100) [qa-tester]
 - [ ] Vercel Web Analytics (ADR first) [api-engineer]

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, IBM_Plex_Sans } from "next/font/google";
-import { profile } from "@/lib/content";
+import { profile, seo, siteUrl } from "@/lib/content";
 import "./globals.css";
 
 const display = Bricolage_Grotesque({
@@ -17,10 +17,24 @@ const body = IBM_Plex_Sans({
   display: "swap",
 });
 
+const title = `${profile.name} — ${profile.role}`;
+
 export const metadata: Metadata = {
-  title: `${profile.name} — ${profile.role}`,
+  metadataBase: new URL(siteUrl),
+  title,
   description: profile.headline,
-  // TODO(M5, ui-builder): openGraph + twitter metadata and an OG image via next/og.
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    url: "/",
+    siteName: seo.siteName,
+    title,
+    description: profile.headline,
+    locale: "en",
+  },
+  twitter: { card: "summary_large_image", title, description: profile.headline },
+  authors: [{ name: profile.name, url: siteUrl }],
+  robots: { index: true, follow: true },
 };
 
 // Sets data-theme before first paint so there is no light/dark flash.

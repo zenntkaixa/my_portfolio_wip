@@ -4,6 +4,21 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-11 — Session 32: M4 live URL (closes M4)
+
+**Done**
+- README links https://my-portfolio-wip.vercel.app; repo "Website" set via `gh repo edit`; Izzat added
+  the URL to LinkedIn. M4 complete on `develop`.
+
+**Verified**
+- Repo homepage reads back as the live URL. Docs only; CI on the PR.
+
+**Waiting on Izzat**
+- M4 release to `main` when wanted (README link). Next: M5 polish (OG image, Lighthouse Performance 71
+  → 90, analytics ADR). `.claude/settings.json` still local.
+
+---
+
 ## 2026-11-11 — Session 31: M4 go-live
 
 **Done**
