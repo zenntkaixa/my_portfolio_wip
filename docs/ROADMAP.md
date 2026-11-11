@@ -52,13 +52,14 @@ Agent hints in brackets.
 - [x] Real Turnstile widget for the `.vercel.app` host; swap keys; redeploy (Izzat, guided)
 - [x] Production guards: refuse dummy Turnstile keys and a missing `TURNSTILE_HOSTNAME` when
   `VERCEL_ENV=production` (see `docs/security-review-m2.md`) [api-engineer]
-- [ ] Anthropic monthly spend limit set (Izzat)
-- [ ] Post-deploy checks from 05-deployment pass
-- [ ] Add live URL to README and LinkedIn (Izzat)
+- [x] Anthropic monthly spend limit set (Izzat)
+- [x] Post-deploy checks from 05-deployment pass
+  - all pass except Lighthouse mobile Performance 71 (target 90): carried to the M5 Lighthouse item
+- [x] Add live URL to README and LinkedIn (Izzat)
 
 ## M5 — Polish
 - [ ] Open Graph image with `next/og` and full metadata [ui-builder]
-- [ ] Lighthouse targets met on mobile; fix findings [qa-tester]
+- [ ] Lighthouse targets met on mobile; fix findings (Performance 71 at go-live; others 100) [qa-tester]
 - [ ] Vercel Web Analytics (ADR first) [api-engineer]
 - [ ] radiozk live URL added (needs Izzat)
 - [ ] Optional: Upstash Redis rate limit (ADR-002 upgrade path) [api-engineer]

@@ -8,7 +8,7 @@ React, TypeScript) working on AI-integrated software engineering.
 The centrepiece is a live AI demo: describe a software feature, choose a team size and seniority, and
 Claude returns an end-to-end delivery plan with effort and calendar estimates.
 
-**Live:** _coming soon_ · **Built with:** Next.js 16, React 19, TypeScript, Anthropic Claude, Cloudflare Turnstile, Vercel
+**Live:** [my-portfolio-wip.vercel.app](https://my-portfolio-wip.vercel.app) · **Built with:** Next.js 16, React 19, TypeScript, Anthropic Claude, Cloudflare Turnstile, Vercel
 
 ---
 
