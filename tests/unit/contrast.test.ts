@@ -1,28 +1,11 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { readCss, readThemes, tokensOf } from "@/lib/tokens";
 
 // WCAG contrast of the design tokens in app/globals.css (docs/01-design-system.md).
-// Tokens are parsed from the CSS, so a palette change that breaks contrast fails here.
+// Tokens are parsed from the CSS (lib/tokens.ts), so a palette change that breaks contrast fails here.
 
-const css = readFileSync(join(__dirname, "../../app/globals.css"), "utf8");
-
-type Tokens = Record<string, string>;
-
-/** Returns the custom properties declared in the first rule whose selector matches `selector`. */
-function tokensOf(selector: RegExp): Tokens {
-  const m = selector.exec(css);
-  if (!m) throw new Error(`selector not found: ${selector}`);
-  const body = css.slice(m.index + m[0].length, css.indexOf("}", m.index + m[0].length));
-  const out: Tokens = {};
-  for (const d of body.matchAll(/(--[\w-]+)\s*:\s*([^;]+);/g)) out[d[1]] = d[2].trim();
-  return out;
-}
-
-const themes: Record<"light" | "dark", Tokens> = {
-  light: tokensOf(/:root,\s*:root\[data-theme="light"\]\s*\{/),
-  dark: tokensOf(/:root\[data-theme="dark"\]\s*\{/),
-};
+const css = readCss();
+const themes = readThemes(css);
 
 function rgb(hex: string): [number, number, number] {
   const m = /^#([0-9a-f]{6})$/i.exec(hex);
@@ -80,7 +63,7 @@ describe("design token contrast", () => {
   });
 
   it("the prefers-color-scheme fallback repeats the dark tokens", () => {
-    const fallback = tokensOf(/:root:not\(\[data-theme\]\)\s*\{/);
+    const fallback = tokensOf(css, /:root:not\(\[data-theme\]\)\s*\{/);
     expect(fallback).toEqual(themes.dark);
   });
 

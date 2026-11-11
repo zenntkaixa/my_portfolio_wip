@@ -17,6 +17,14 @@ export const profile = {
   github: "https://github.com/zenntkaixa",
 };
 
+export const siteUrl = "https://my-portfolio-wip.vercel.app";
+
+export const seo = {
+  siteName: "Izzat Fahmi, portfolio",
+  ogTagline: "Live AI demo: describe a feature, get a delivery plan",
+  ogAlt: "Izzat Fahmi, full-stack software engineer. Live AI demo: describe a feature, get a delivery plan.",
+};
+
 export const skipLink = "Skip to the estimator";
 
 export const now = {

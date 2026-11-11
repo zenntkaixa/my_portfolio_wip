@@ -5,33 +5,35 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
-## 2026-11-11 — Session 32: M4 live URL (closes M4)
+## 2026-11-11 — Session 34: CI in the Playwright container
 
 **Done**
-- README links https://my-portfolio-wip.vercel.app; repo "Website" set via `gh repo edit`; Izzat added
-  the URL to LinkedIn. M4 complete on `develop`.
+- Izzat asked why PR #24's CI took 10+ min: `playwright install --with-deps` hung on apt (runners
+  couldn't resolve `security.ubuntu.com`) and failed twice; normally 22–34 s. Not our code.
+- `ci` job now runs in `mcr.microsoft.com/playwright:v1.64.1-noble` (digest-pinned): no apt, no
+  browser download; Playwright version guard; step timeouts. ADR-007; 05-deployment CI section.
 
 **Verified**
-- Repo homepage reads back as the live URL. Docs only; CI on the PR.
+- security-reviewer: safe to ship (digest is the multi-arch index). Real test: this PR's CI run.
 
 **Waiting on Izzat**
-- M4 release to `main` when wanted (README link). Next: M5 polish (OG image, Lighthouse Performance 71
-  → 90, analytics ADR). `.claude/settings.json` still local.
+- PR #24 (OG metadata) updated from `develop` after this merged; its CI now runs in the container. `.claude/settings.json` still local.
 
 ---
 
-## 2026-11-11 — Session 31: M4 go-live
+## 2026-11-11 — Session 33: M5 Open Graph and metadata
 
 **Done**
-- M4 guards released (#20). Spend limit USD 10; `ANTHROPIC_API_KEY` on Production only; redeployed.
-  The estimator is live at https://my-portfolio-wip.vercel.app.
+- `app/opengraph-image.tsx` (1200×630, static), `icon.tsx`, `apple-icon.tsx`; Bricolage Bold TTF + OFL
+  in `app/fonts/`; colours from `lib/tokens.ts` (parses globals.css; contrast test reuses it).
+- Full metadata in `layout.tsx` (metadataBase, canonical, openGraph, twitter large image, robots);
+  `siteUrl` and OG copy in `content.ts`. e2e `metadata.spec.ts`.
 
 **Verified**
-- Vercel env names/targets as intended (values not read). Live: real plan with both tabs; 6th
-  submit → 429 "Try again in 55 minutes"; `{}` → 400; fake token → 403.
-- PageSpeed mobile: Performance 71 (below 90, moved to the M5 item), A11y/BP/SEO 100.
+- `npm run check` 191 unit; e2e 88/88. Production build head: absolute https og/twitter images; image
+  routes 200 PNG; card and icons inspected. reviewer: no blockers, nits fixed.
 
 **Waiting on Izzat**
-- Last M4 item: live URL in README and LinkedIn. `.claude/settings.json` still local.
+- After release: LinkedIn Post Inspector to refresh the card. `.claude/settings.json` still local.
 
 ---
