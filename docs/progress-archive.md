@@ -4,6 +4,23 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-11 — Session 29: M4 real Turnstile
+
+**Done**
+- Cloudflare widget `portfolio` (Managed) for `my-portfolio-wip.vercel.app`. Vercel Production: real
+  keys + `TURNSTILE_HOSTNAME`; Preview keeps test keys. Site key must be type Config (Vercel rejects
+  Sensitive for `NEXT_PUBLIC_`). 05-deployment updated.
+
+**Verified**
+- Live build carries the real site key (test key absent); fake token → 403; 400/415 unchanged.
+- Izzat's browser: widget tick, submit → 503 "unavailable" (real token passed; no API key, no spend).
+
+**Waiting on Izzat**
+- Next: production guards (code), then the spend limit, then `ANTHROPIC_API_KEY`.
+  `.claude/settings.json` still local.
+
+---
+
 ## 2026-11-10 — Session 28: M4 first Vercel deploy
 
 **Done**

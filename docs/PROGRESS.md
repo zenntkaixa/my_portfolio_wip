@@ -5,6 +5,22 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-11 — Session 31: M4 go-live
+
+**Done**
+- M4 guards released (#20). Spend limit USD 10; `ANTHROPIC_API_KEY` on Production only; redeployed.
+  The estimator is live at https://my-portfolio-wip.vercel.app.
+
+**Verified**
+- Vercel env names/targets as intended (values not read). Live: real plan with both tabs; 6th
+  submit → 429 "Try again in 55 minutes"; `{}` → 400; fake token → 403.
+- PageSpeed mobile: Performance 71 (below 90, moved to the M5 item), A11y/BP/SEO 100.
+
+**Waiting on Izzat**
+- Last M4 item: live URL in README and LinkedIn. `.claude/settings.json` still local.
+
+---
+
 ## 2026-11-11 — Session 30: M4 production guards
 
 **Done**
@@ -19,22 +35,5 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 **Waiting on Izzat**
 - Release to `main` when ready; confirm Vercel "Automatically expose System Environment Variables" is on.
   Then the spend limit, then `ANTHROPIC_API_KEY`. `.claude/settings.json` still local.
-
----
-
-## 2026-11-11 — Session 29: M4 real Turnstile
-
-**Done**
-- Cloudflare widget `portfolio` (Managed) for `my-portfolio-wip.vercel.app`. Vercel Production: real
-  keys + `TURNSTILE_HOSTNAME`; Preview keeps test keys. Site key must be type Config (Vercel rejects
-  Sensitive for `NEXT_PUBLIC_`). 05-deployment updated.
-
-**Verified**
-- Live build carries the real site key (test key absent); fake token → 403; 400/415 unchanged.
-- Izzat's browser: widget tick, submit → 503 "unavailable" (real token passed; no API key, no spend).
-
-**Waiting on Izzat**
-- Next: production guards (code), then the spend limit, then `ANTHROPIC_API_KEY`.
-  `.claude/settings.json` still local.
 
 ---
