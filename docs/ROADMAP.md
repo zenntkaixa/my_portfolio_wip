@@ -55,7 +55,7 @@ Agent hints in brackets.
 - [x] Anthropic monthly spend limit set (Izzat)
 - [x] Post-deploy checks from 05-deployment pass
   - all pass except Lighthouse mobile Performance 71 (target 90): carried to the M5 Lighthouse item
-- [ ] Add live URL to README and LinkedIn (Izzat)
+- [x] Add live URL to README and LinkedIn (Izzat)
 
 ## M5 — Polish
 - [ ] Open Graph image with `next/og` and full metadata [ui-builder]

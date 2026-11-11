@@ -5,6 +5,21 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-11 — Session 32: M4 live URL (closes M4)
+
+**Done**
+- README links https://my-portfolio-wip.vercel.app; repo "Website" set via `gh repo edit`; Izzat added
+  the URL to LinkedIn. M4 complete on `develop`.
+
+**Verified**
+- Repo homepage reads back as the live URL. Docs only; CI on the PR.
+
+**Waiting on Izzat**
+- M4 release to `main` when wanted (README link). Next: M5 polish (OG image, Lighthouse Performance 71
+  → 90, analytics ADR). `.claude/settings.json` still local.
+
+---
+
 ## 2026-11-11 — Session 31: M4 go-live
 
 **Done**
@@ -18,22 +33,5 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 **Waiting on Izzat**
 - Last M4 item: live URL in README and LinkedIn. `.claude/settings.json` still local.
-
----
-
-## 2026-11-11 — Session 30: M4 production guards
-
-**Done**
-- `lib/turnstileConfig.ts`: on production (or Vercel without an explicit preview/dev `VERCEL_ENV`), test or
-  missing Turnstile keys or a missing `TURNSTILE_HOSTNAME` → 503 before siteverify, limits and model; a
-  real secret needs a hostname everywhere. Hostname compare trimmed. Docs + CLAUDE.md accepted risks.
-
-**Verified**
-- `npm run check` 191 unit; e2e 86/86. security-reviewer: fail-closed fix applied as prescribed;
-  reviewer: no blockers, nits fixed. Live production already passes the guard.
-
-**Waiting on Izzat**
-- Release to `main` when ready; confirm Vercel "Automatically expose System Environment Variables" is on.
-  Then the spend limit, then `ANTHROPIC_API_KEY`. `.claude/settings.json` still local.
 
 ---
