@@ -86,9 +86,10 @@ Read first by the sub-agents: project ones in `.claude/agents/` (builders: `ui-b
 - **Security tooling:** `npm audit`; no CodeQL, Dependabot or image scans yet. Abuse and spend review of
   `app/api/**`, `lib/rateLimit.ts`, env, Turnstile and headers is `security-reviewer`'s job.
 - **Accepted risks (do not re-report):** the rate limit is per-instance memory (Turnstile and the daily
-  cap are the real gate; Upstash is the ADR-002 upgrade, M5); `.vercel.app` uses Turnstile test keys
-  until M4; plus the decisions in `docs/security-review-m2.md` (dummy-secret skip,
-  optional `TURNSTILE_HOSTNAME`, `'unsafe-inline'` scripts, HSTS without subdomains).
+  cap are the real gate; Upstash is the ADR-002 upgrade, M5); Vercel Preview uses Turnstile test keys (previews
+  sit behind Vercel login with no API key; production refuses test keys, see `lib/turnstileConfig.ts`);
+  plus the decisions in `docs/security-review-m2.md` (dummy-secret skip outside production,
+  `'unsafe-inline'` scripts, HSTS without subdomains).
 - **Gotchas agents must check:** copy only in `lib/content.ts`; colours only via `app/globals.css`
   variables; `role="list"` on unstyled lists and `prefers-reduced-motion`; review UI against
   `docs/01-design-system.md` and the estimator against `docs/03-estimator-spec.md`; Playwright reuses

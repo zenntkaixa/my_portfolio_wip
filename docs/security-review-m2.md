@@ -36,10 +36,14 @@ Reviewed by `security-reviewer` (Opus), dependencies by `security-engineer` (`np
 - Still accepted (from the Agent contract): the per-instance in-memory rate limit, and Turnstile test keys
   until M4.
 
-## Deferred to M4 (roadmap item)
+## Resolved in M4
 
-When `VERCEL_ENV=production`, refuse requests if Turnstile is still on dummy keys, or if a real secret is set
-but `TURNSTILE_HOSTNAME` isn't.
+**Fixed**: when `VERCEL_ENV=production`, `turnstileConfigProblem` in `lib/turnstileConfig.ts` makes the route
+return 503 (logging a short reason, no values) if the Turnstile secret or site key is missing or a Cloudflare
+test key, or if `TURNSTILE_HOSTNAME` is missing. It runs before siteverify, the rate limit and the model call.
+It fails closed: it also applies when `VERCEL=1` and `VERCEL_ENV` is missing, and in every environment a real
+(non-test) secret requires `TURNSTILE_HOSTNAME`. The "optional `TURNSTILE_HOSTNAME`" and "test keys until M4"
+notes above now apply to test-key setups (preview, local) only.
 
 ## Deploy-time checklist (M4)
 

@@ -58,7 +58,7 @@ Errors, always `{ "error": "human-readable sentence" }`:
 | 422 | Model says input isn't a software feature, or refuses (`stop_reason: refusal`) | Banner with the model's sentence (generic sentence on refusal) |
 | 429 | Rate limit or daily cap (`Retry-After` header) | Warn-coloured banner, disable button |
 | 502 / 504 | Model error, bad JSON, reply cut off (`stop_reason: max_tokens`), timeout | Banner with retry button |
-| 503 | `ANTHROPIC_API_KEY` missing | Banner (shows during local setup only) |
+| 503 | `ANTHROPIC_API_KEY` missing, (local setup), or production misconfiguration | Banner (shows during local setup only) |
 
 ## Prompt
 Lives in `app/api/estimate/route.ts` as `SYSTEM_PROMPT`. Owned by the `prompt-engineer` subagent.

@@ -8,9 +8,11 @@
 | `ANTHROPIC_MODEL` | Optional | Default `claude-haiku-5-5` |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Vercel, `.env.local` | Public by design; Vercel type **Config** (it rejects Sensitive for `NEXT_PUBLIC_`). Production: real key. Preview: test key |
 | `TURNSTILE_SECRET_KEY` | Vercel, `.env.local` | Server only, type Sensitive. Production: real secret. Preview: test secret |
-| `TURNSTILE_HOSTNAME` | Optional, Vercel Production | `my-portfolio-wip.vercel.app`; when set, siteverify must report this hostname |
+| `TURNSTILE_HOSTNAME` | Required with a real secret, Vercel Production | `my-portfolio-wip.vercel.app`; when set, siteverify must report this hostname |
 | `RATE_LIMIT_PER_HOUR` | Optional | Default 5 |
 | `DAILY_LIMIT` | Optional | Default 150 |
+
+On Production the estimator refuses (503) Cloudflare test keys or a missing `TURNSTILE_HOSTNAME`; the guard also runs when `VERCEL=1` without `VERCEL_ENV`, and a real secret always needs `TURNSTILE_HOSTNAME`. Preview and local test-key setups are unaffected. Changing any Turnstile env var needs a redeploy (the site key is inlined at build time).
 
 Local development uses Cloudflare's official **test keys** (already in `.env.example`), which always pass.
 
