@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { maxTokensFor, stripFeatureTags, normalisePlan, str, validateRequest, ROLES, type EstimateRequest } from "@/lib/estimate";
 import { checkLimits } from "@/lib/rateLimit";
+import { isDummyTurnstileKey, turnstileConfigProblem } from "@/lib/turnstileConfig";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -73,9 +74,9 @@ async function verifyTurnstile(token: string, ip: string) {
     if (data.success !== true) return false;
     // Cloudflare's documented test secrets (1x/2x/3x + zeros) return dummy action/hostname values, so the
     // binding checks apply to real secrets only.
-    if (/^[123]x0{20,}/.test(secret)) return true;
+    if (isDummyTurnstileKey(secret)) return true;
     if (data.action !== TURNSTILE_ACTION) return false;
-    const host = process.env.TURNSTILE_HOSTNAME;
+    const host = process.env.TURNSTILE_HOSTNAME?.trim();
     if (host && data.hostname !== host) return false;
     return true;
   } catch {
@@ -105,6 +106,14 @@ export async function POST(req: Request) {
   const parsed = validateRequest(body);
   if (!parsed.ok) return fail(parsed.error, 400);
   const { feature, teamSize, seniority, token } = parsed.value;
+
+  // Production (or any real secret) refuses to run on test keys or without a hostname binding: no siteverify call,
+  // no rate-limit slot, no model call.
+  const problem = turnstileConfigProblem(process.env);
+  if (problem) {
+    console.error(`Estimator misconfigured: ${problem}`);
+    return fail("The estimator is unavailable right now. Please try again later.", 503);
+  }
 
   // Verify the human check before spending a rate-limit slot, so fake tokens never burn the quota.
   if (!(await verifyTurnstile(token, ip))) {

@@ -6,32 +6,42 @@
 |---|---|---|
 | `ANTHROPIC_API_KEY` | Vercel (Production + Preview), `.env.local` | Server only. Never prefix with `NEXT_PUBLIC_`. |
 | `ANTHROPIC_MODEL` | Optional | Default `claude-haiku-5-5` |
-| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Vercel, `.env.local` | Public by design |
-| `TURNSTILE_SECRET_KEY` | Vercel, `.env.local` | Server only |
-| `TURNSTILE_HOSTNAME` | Optional, Vercel | Production domain; when set, siteverify must report this hostname |
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Vercel, `.env.local` | Public by design; Vercel type **Config** (it rejects Sensitive for `NEXT_PUBLIC_`). Production: real key. Preview: test key |
+| `TURNSTILE_SECRET_KEY` | Vercel, `.env.local` | Server only, type Sensitive. Production: real secret. Preview: test secret |
+| `TURNSTILE_HOSTNAME` | Required with a real secret, Vercel Production | `my-portfolio-wip.vercel.app`; when set, siteverify must report this hostname |
 | `RATE_LIMIT_PER_HOUR` | Optional | Default 5 |
 | `DAILY_LIMIT` | Optional | Default 150 |
+
+On Production the estimator refuses (503) Cloudflare test keys or a missing `TURNSTILE_HOSTNAME`; the guard also runs when `VERCEL=1` without `VERCEL_ENV`, and a real secret always needs `TURNSTILE_HOSTNAME`. Preview and local test-key setups are unaffected. Changing any Turnstile env var needs a redeploy (the site key is inlined at build time).
 
 Local development uses Cloudflare's official **test keys** (already in `.env.example`), which always pass.
 
 ## First deploy (Izzat does the account steps; Claude Code can guide)
-1. Push the repo to GitHub (`gh repo create my_portfolio --private --source . --push`, or public when ready).
-2. In Vercel: **Add New → Project → Import** the repo. Framework is detected as Next.js.
-3. Add the env vars above. Use the Turnstile **test** keys for the very first deploy.
-4. Deploy. Note the `.vercel.app` URL.
-5. In Cloudflare: **Turnstile → Add widget**, hostname = the `.vercel.app` URL (add `localhost` too).
-   Mode: Managed. Copy the real site key and secret.
-6. Replace both Turnstile env vars in Vercel with the real keys. Redeploy.
-7. In the Anthropic Console: set a **monthly spend limit** (start low, e.g. USD 10).
+
+Production is **https://my-portfolio-wip.vercel.app** (Vercel project imported from
+`zenntkaixa/my_portfolio_wip`, production branch `main`, region `sin1`). The order below keeps the
+estimator **off** (no `ANTHROPIC_API_KEY`, so it answers 503) until human verification is real, so the
+public endpoint can't spend money while Turnstile still uses always-pass test keys.
+
+1. Done (2026-11-10): Vercel **Add New → Project → Import** the repo, defaults for Next.js. Env vars
+   for Production + Preview: only the two Turnstile **test** keys from `.env.example`. Deployed.
+2. Done (2026-11-11): Cloudflare **Turnstile → Add widget** `portfolio`, hostname
+   `my-portfolio-wip.vercel.app` only (local dev keeps the test keys), Managed, no pre-clearance.
+3. Done (2026-11-11): real keys and `TURNSTILE_HOSTNAME` on **Production** only; Preview keeps the test
+   keys (preview hostnames change per deploy, so a real widget would fail there, and previews sit
+   behind Vercel login with no API key). Redeployed without build cache (the site key is built in).
+4. In the Anthropic Console: set a **monthly spend limit** (start low, e.g. USD 10).
+5. Only then add `ANTHROPIC_API_KEY` (Production; Preview only if wanted) and redeploy.
 
 ## CI
 
 `.github/workflows/ci.yml` runs one job, `ci`, on every PR into and push to `develop` and `main`:
 `npm ci`, `npm run check`, Playwright chromium, `npm run test:e2e`. It needs no secrets (fetch is mocked,
 Turnstile uses the test key). Actions are pinned to commit SHAs; bump them only to releases at least two
-weeks old. Failed runs upload `test-results/` (traces) for 7 days. Branch protection (a PR plus the `ci`
-check on `develop` and `main`) needs the repo to be public or on GitHub Pro; until then the PR rule is
-followed by convention.
+weeks old. Failed runs upload `test-results/` (traces) for 7 days. The repo is public. Branch protection on `develop`
+and `main`: a PR is required (0 approvals), the `ci` check must pass on an up-to-date branch, admins
+included, no force pushes or deletion. Head branches auto-delete on merge; secret scanning and push
+protection are on.
 
 ## Every later deploy
 Push to `main` (a release, see CLAUDE.md section 4, Branches) → Vercel builds and deploys to production. Pushes to
