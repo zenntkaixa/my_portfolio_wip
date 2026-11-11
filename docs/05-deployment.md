@@ -30,8 +30,9 @@ public endpoint can't spend money while Turnstile still uses always-pass test ke
 3. Done (2026-11-11): real keys and `TURNSTILE_HOSTNAME` on **Production** only; Preview keeps the test
    keys (preview hostnames change per deploy, so a real widget would fail there, and previews sit
    behind Vercel login with no API key). Redeployed without build cache (the site key is built in).
-4. In the Anthropic Console: set a **monthly spend limit** (start low, e.g. USD 10).
-5. Only then add `ANTHROPIC_API_KEY` (Production; Preview only if wanted) and redeploy.
+4. Done (2026-11-11): Anthropic Console **monthly spend limit** USD 10.
+5. Done (2026-11-11): `ANTHROPIC_API_KEY` added (Production only, Sensitive) and redeployed. The
+   estimator is live.
 
 ## CI
 
@@ -52,6 +53,11 @@ Push to `main` (a release, see CLAUDE.md section 4, Branches) → Vercel builds 
 - Submitting 6 times in an hour returns the 429 message.
 - `curl -X POST <url>/api/estimate -d '{}'` returns 400, not 500.
 - Lighthouse mobile run meets the targets in `00-brief.md`.
+
+First run (2026-11-11, production): plan returned with both tabs; the 6th submission in the hour showed
+"You've used 5 estimates this hour. Try again in 55 minutes."; `{}` → 400; a fake token → 403.
+PageSpeed Insights mobile: Performance **71** (target 90, tracked in the M5 Lighthouse item),
+Accessibility 100, Best Practices 100, SEO 100.
 
 ## Custom domain (later)
 Vercel → Project → Settings → Domains. Then add the new hostname to the Turnstile widget.
