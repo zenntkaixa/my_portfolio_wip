@@ -5,6 +5,23 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-12 — Session 39: M5 shared rate limit in Upstash
+
+**Done**
+- ADR-009: visitor limit and daily cap run as one atomic Lua script in Upstash over REST (`fetch`, no
+  dependency) when both env vars are set; IPs sent as hashes. Never looser than before: failures fall
+  back to memory, a block is always honoured, an allow must also pass memory (security-reviewer fixes).
+
+**Verified**
+- `npm run check` 236 unit; e2e 93/93 (first run: 2 browser start-up timeouts under load; rerun clean).
+- Lua script correct on real Redis 7 (Docker). Not verified: Upstash's REST wrapper, until a database exists.
+
+**Waiting on Izzat**
+- Upstash database (Singapore) + `UPSTASH_REDIS_REST_URL` / `_TOKEN` in Vercel Production; then check the
+  6th estimate gives 429. CLAUDE.md "Accepted risks" rate-limit wording is stale (Izzat's call).
+
+---
+
 ## 2026-11-12 — Session 38: M5 radiozk live URL
 
 **Done**
@@ -17,21 +34,5 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 **Waiting on Izzat**
 - If radiozk is on Render's free tier it sleeps when idle; first load can take close to a minute.
 - Page view in the Analytics dashboard; LinkedIn Post Inspector. `.claude/settings.json` still local.
-
----
-
-## 2026-11-12 — Session 37: Analytics released; Lighthouse re-measured
-
-**Done**
-- Released Web Analytics (PR #32). Closed Vercel's bot PR #29 (package-based duplicate, targeted `main`).
-- Production: script 200, no console or CSP errors. VM Lighthouse read 86–88 after release; an A/B with
-  the tracker blocked (84–88) vs allowed (87–89) showed analytics is not the cause, only run variance.
-- Profile: the long startup task is React/Next boot (229 KB + 187 KB), not our ~48 KB. No code change.
-
-**Verified**
-- PageSpeed Insights mobile Performance 100 (Izzat, 2026-11-12). Izzat's call: keep analytics.
-
-**Waiting on Izzat**
-- Confirm a page view shows in the Analytics dashboard. LinkedIn Post Inspector. `.claude/settings.json` still local.
 
 ---
