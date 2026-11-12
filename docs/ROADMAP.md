@@ -66,5 +66,5 @@ Agent hints in brackets.
   - ADR-008: same-origin script, production only, no dependency; Izzat enables it in the dashboard
 - [x] radiozk live URL added (needs Izzat)
 - [x] Optional: Upstash Redis rate limit (ADR-002 upgrade path) [api-engineer]
-  - ADR-009: REST over fetch, no dependency, in-memory fallback; active once Izzat adds the two env vars
+  - ADR-009: REST over fetch, no dependency, in-memory fallback; active and verified on production 2026-11-12
 - [ ] Optional: custom domain
