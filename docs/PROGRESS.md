@@ -5,6 +5,23 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-12 — Session 41: Shared rate limit verified; roadmap parked
+
+**Done**
+- Released PR #38 (Upstash limiter, audit fixes). Upstash database `portfolio-ratelimit` created
+  (Singapore, free); Izzat added both env vars to Vercel Production and redeployed.
+- Hallmark design audit run; Izzat parked the polish/redesign choice. Custom domain deferred (remind Izzat).
+
+**Verified**
+- Limit script run on the real database (test keys, deleted). After 6 estimates on production the 6th
+  was refused; day counter 5, one hashed visitor key with 5 hits, expiries set.
+
+**Waiting on Izzat**
+- Custom domain (only open roadmap item). Open audit items, not on the roadmap: e2e on the production
+  build, Dependabot alerts, refund a slot on AI errors. CLAUDE.md "Accepted risks" rate-limit wording is stale.
+
+---
+
 ## 2026-11-12 — Session 40: Repo audit fixes
 
 **Done**
@@ -18,22 +35,5 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 **Waiting on Izzat**
 - Open audit items: e2e on the production build, Dependabot alerts, real-Upstash check, refund slot on AI errors.
-
----
-
-## 2026-11-12 — Session 39: M5 shared rate limit in Upstash
-
-**Done**
-- ADR-009: visitor limit and daily cap run as one atomic Lua script in Upstash over REST (`fetch`, no
-  dependency) when both env vars are set; IPs sent as hashes. Never looser than before: failures fall
-  back to memory, a block is always honoured, an allow must also pass memory (security-reviewer fixes).
-
-**Verified**
-- `npm run check` 236 unit; e2e 93/93 (first run: 2 browser start-up timeouts under load; rerun clean).
-- Lua script correct on real Redis 7 (Docker). Not verified: Upstash's REST wrapper, until a database exists.
-
-**Waiting on Izzat**
-- Upstash database (Singapore) + `UPSTASH_REDIS_REST_URL` / `_TOKEN` in Vercel Production; then check the
-  6th estimate gives 429. CLAUDE.md "Accepted risks" rate-limit wording is stale (Izzat's call).
 
 ---
