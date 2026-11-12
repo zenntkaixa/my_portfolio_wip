@@ -34,7 +34,8 @@ Reviewed by `security-reviewer` (Opus), dependencies by `security-engineer` (`np
 - **The body-size check counts characters, not bytes.** A multibyte body can reach about 24 KB before the 413;
   the 1,500-character feature limit still applies after it.
 - Still accepted (from the Agent contract): the per-instance in-memory rate limit, and Turnstile test keys
-  until M4.
+  until M4. (Since ADR-009 the limit is shared through Upstash when configured; per-instance memory is
+  the fallback.)
 
 ## Resolved in M4
 

@@ -120,7 +120,8 @@ export async function POST(req: Request) {
     return fail("The human check didn't pass. Refresh the page and try again.", 403);
   }
 
-  const limit = checkLimits(ip);
+  // Shared limits in Upstash when configured, else (or on any Upstash failure) the in-memory limiter.
+  const limit = await checkLimits(ip);
   if (!limit.ok) return fail(limit.reason, 429, { "Retry-After": String(limit.retryAfter) });
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
