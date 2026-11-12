@@ -5,6 +5,23 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-12 — Session 36: M5 Vercel Web Analytics
+
+**Done**
+- Session 35 follow-up: production mobile Lighthouse after release is 93, 90, 90 (was 64); fake token still 403.
+- ADR-008: one deferred same-origin `<script>` in `layout.tsx`, only when `VERCEL_ENV=production`
+  (`lib/analytics.ts`). No dependency, no CSP change, page views only.
+- Izzat ran `npm i @vercel/analytics` from the dashboard prompt; removed again at Izzat's request (option 1 kept).
+
+**Verified**
+- `npm run check` 197 unit; e2e 93/93. security-reviewer: safe to ship; ADR privacy wording tightened.
+
+**Waiting on Izzat**
+- Enable Analytics in the Vercel dashboard. After release: script 200, a page view in the dashboard,
+  no CSP errors, Lighthouse still ≥ 90. LinkedIn Post Inspector. `.claude/settings.json` still local.
+
+---
+
 ## 2026-11-11 — Session 35: M5 Lighthouse (mobile)
 
 **Done**
@@ -18,21 +35,5 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 **Waiting on Izzat**
 - After release: Lighthouse rerun on production; LinkedIn Post Inspector. `.claude/settings.json` still local.
-
----
-
-## 2026-11-11 — Session 34: CI in the Playwright container
-
-**Done**
-- Izzat asked why PR #24's CI took 10+ min: `playwright install --with-deps` hung on apt (runners
-  couldn't resolve `security.ubuntu.com`) and failed twice; normally 22–34 s. Not our code.
-- `ci` job now runs in `mcr.microsoft.com/playwright:v1.64.1-noble` (digest-pinned): no apt, no
-  browser download; Playwright version guard; step timeouts. ADR-007; 05-deployment CI section.
-
-**Verified**
-- security-reviewer: safe to ship (digest is the multi-arch index). Real test: this PR's CI run.
-
-**Waiting on Izzat**
-- PR #24 (OG metadata) updated from `develop` after this merged; its CI now runs in the container. `.claude/settings.json` still local.
 
 ---
