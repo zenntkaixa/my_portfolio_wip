@@ -50,8 +50,7 @@ export const featuredProject = {
   ],
   stack: ["React 19", "TypeScript", "Node.js", "Express", "PostgreSQL", "nginx", "Docker"],
   repo: "https://github.com/zenntkaixa/radiozk",
-  // Add the live Render URL here once you have it, e.g. "https://radiozk.onrender.com"
-  live: "",
+  live: "https://zenntkaixa-radiozk.onrender.com/",
 };
 
 export const aiWorkflow = [
