@@ -5,6 +5,22 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-12 — Session 40: Repo audit fixes
+
+**Done**
+- Izzat ran a repo audit (7 findings, none must-fix) and picked three to fix.
+- `normalisePlan` returns null when no phase has a usable task (was shown as a 0-hour plan).
+- Missing `ANTHROPIC_API_KEY` now answers 503 before the human check and the rate limit, so it costs no slot.
+- Deleted the unused `lightToken` helper.
+
+**Verified**
+- `npm run check` 238 unit; e2e 93/93 on the rerun (first run: 2 timeouts, slow page load and Turnstile test widget).
+
+**Waiting on Izzat**
+- Open audit items: e2e on the production build, Dependabot alerts, real-Upstash check, refund slot on AI errors.
+
+---
+
 ## 2026-11-12 — Session 39: M5 shared rate limit in Upstash
 
 **Done**
@@ -19,20 +35,5 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 **Waiting on Izzat**
 - Upstash database (Singapore) + `UPSTASH_REDIS_REST_URL` / `_TOKEN` in Vercel Production; then check the
   6th estimate gives 429. CLAUDE.md "Accepted risks" rate-limit wording is stale (Izzat's call).
-
----
-
-## 2026-11-12 — Session 38: M5 radiozk live URL
-
-**Done**
-- `featuredProject.live` in `lib/content.ts` set to https://zenntkaixa-radiozk.onrender.com/ (from Izzat).
-  The project tile already renders "Live demo" when it is set; no component change.
-
-**Verified**
-- URL returned 200. `npm run check` 197 unit; e2e 93/93 (the existing live-link test now checks the href).
-
-**Waiting on Izzat**
-- If radiozk is on Render's free tier it sleeps when idle; first load can take close to a minute.
-- Page view in the Analytics dashboard; LinkedIn Post Inspector. `.claude/settings.json` still local.
 
 ---
