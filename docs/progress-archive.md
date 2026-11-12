@@ -4,6 +4,22 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-11 — Session 34: CI in the Playwright container
+
+**Done**
+- Izzat asked why PR #24's CI took 10+ min: `playwright install --with-deps` hung on apt (runners
+  couldn't resolve `security.ubuntu.com`) and failed twice; normally 22–34 s. Not our code.
+- `ci` job now runs in `mcr.microsoft.com/playwright:v1.64.1-noble` (digest-pinned): no apt, no
+  browser download; Playwright version guard; step timeouts. ADR-007; 05-deployment CI section.
+
+**Verified**
+- security-reviewer: safe to ship (digest is the multi-arch index). Real test: this PR's CI run.
+
+**Waiting on Izzat**
+- PR #24 (OG metadata) updated from `develop` after this merged; its CI now runs in the container. `.claude/settings.json` still local.
+
+---
+
 ## 2026-11-11 — Session 33: M5 Open Graph and metadata
 
 **Done**
