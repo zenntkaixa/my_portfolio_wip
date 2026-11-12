@@ -11,6 +11,8 @@
 | `TURNSTILE_HOSTNAME` | Required with a real secret, Vercel Production | `my-portfolio-wip.vercel.app`; when set, siteverify must report this hostname |
 | `RATE_LIMIT_PER_HOUR` | Optional | Default 5 |
 | `DAILY_LIMIT` | Optional | Default 150 |
+| `UPSTASH_REDIS_REST_URL` | Optional, Vercel Production | `https://` REST URL of the Upstash database; shares the limits across instances (ADR-009) |
+| `UPSTASH_REDIS_REST_TOKEN` | Optional, Vercel Production | Server only, type Sensitive. Without both vars, or when Upstash fails or takes over 1 s, the in-memory limiter is used |
 
 On Production the estimator refuses (503) Cloudflare test keys or a missing `TURNSTILE_HOSTNAME`; the guard also runs when `VERCEL=1` without `VERCEL_ENV`, and a real secret always needs `TURNSTILE_HOSTNAME`. Preview and local test-key setups are unaffected. Changing any Turnstile env var needs a redeploy (the site key is inlined at build time).
 
@@ -33,6 +35,15 @@ public endpoint can't spend money while Turnstile still uses always-pass test ke
 4. Done (2026-11-11): Anthropic Console **monthly spend limit** USD 10.
 5. Done (2026-11-11): `ANTHROPIC_API_KEY` added (Production only, Sensitive) and redeployed. The
    estimator is live.
+
+## Shared rate limit (ADR-009, optional)
+
+1. Upstash console: create a free **Redis** database in the Singapore region (`ap-southeast-1`, next to
+   Vercel `sin1`), eviction off.
+2. Copy its REST URL and REST token into Vercel **Production** as `UPSTASH_REDIS_REST_URL` and
+   `UPSTASH_REDIS_REST_TOKEN`, both type Sensitive, then redeploy.
+3. Check: the 6th estimate in an hour still returns 429, and the function logs show no
+   "Shared rate limit unavailable" line. Without the vars the site keeps the in-memory limiter.
 
 ## Web analytics (ADR-008)
 

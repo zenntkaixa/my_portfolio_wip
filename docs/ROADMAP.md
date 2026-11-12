@@ -65,5 +65,6 @@ Agent hints in brackets.
 - [x] Vercel Web Analytics (ADR first) [api-engineer]
   - ADR-008: same-origin script, production only, no dependency; Izzat enables it in the dashboard
 - [x] radiozk live URL added (needs Izzat)
-- [ ] Optional: Upstash Redis rate limit (ADR-002 upgrade path) [api-engineer]
+- [x] Optional: Upstash Redis rate limit (ADR-002 upgrade path) [api-engineer]
+  - ADR-009: REST over fetch, no dependency, in-memory fallback; active once Izzat adds the two env vars
 - [ ] Optional: custom domain
