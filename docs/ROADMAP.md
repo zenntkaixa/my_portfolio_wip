@@ -64,6 +64,6 @@ Agent hints in brackets.
   - local production build 79 → 93/94 (Turnstile out of the critical path, no fade on first-row tiles); production: PageSpeed Insights mobile 100 (2026-11-12, with analytics); VM Lighthouse runs vary 84–93
 - [x] Vercel Web Analytics (ADR first) [api-engineer]
   - ADR-008: same-origin script, production only, no dependency; Izzat enables it in the dashboard
-- [ ] radiozk live URL added (needs Izzat)
+- [x] radiozk live URL added (needs Izzat)
 - [ ] Optional: Upstash Redis rate limit (ADR-002 upgrade path) [api-engineer]
 - [ ] Optional: custom domain

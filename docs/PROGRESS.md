@@ -5,6 +5,21 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-12 — Session 38: M5 radiozk live URL
+
+**Done**
+- `featuredProject.live` in `lib/content.ts` set to https://zenntkaixa-radiozk.onrender.com/ (from Izzat).
+  The project tile already renders "Live demo" when it is set; no component change.
+
+**Verified**
+- URL returned 200. `npm run check` 197 unit; e2e 93/93 (the existing live-link test now checks the href).
+
+**Waiting on Izzat**
+- If radiozk is on Render's free tier it sleeps when idle; first load can take close to a minute.
+- Page view in the Analytics dashboard; LinkedIn Post Inspector. `.claude/settings.json` still local.
+
+---
+
 ## 2026-11-12 — Session 37: Analytics released; Lighthouse re-measured
 
 **Done**
@@ -18,22 +33,5 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 **Waiting on Izzat**
 - Confirm a page view shows in the Analytics dashboard. LinkedIn Post Inspector. `.claude/settings.json` still local.
-
----
-
-## 2026-11-12 — Session 36: M5 Vercel Web Analytics
-
-**Done**
-- Session 35 follow-up: production mobile Lighthouse after release is 93, 90, 90 (was 64); fake token still 403.
-- ADR-008: one deferred same-origin `<script>` in `layout.tsx`, only when `VERCEL_ENV=production`
-  (`lib/analytics.ts`). No dependency, no CSP change, page views only.
-- Izzat ran `npm i @vercel/analytics` from the dashboard prompt; removed again at Izzat's request (option 1 kept).
-
-**Verified**
-- `npm run check` 197 unit; e2e 93/93. security-reviewer: safe to ship; ADR privacy wording tightened.
-
-**Waiting on Izzat**
-- Enable Analytics in the Vercel dashboard. After release: script 200, a page view in the dashboard,
-  no CSP errors, Lighthouse still ≥ 90. LinkedIn Post Inspector. `.claude/settings.json` still local.
 
 ---
