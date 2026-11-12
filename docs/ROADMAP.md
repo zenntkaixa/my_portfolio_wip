@@ -61,7 +61,7 @@ Agent hints in brackets.
 - [x] Open Graph image with `next/og` and full metadata [ui-builder]
 - [x] CI: run in the pinned Playwright container instead of installing browsers each run (ADR-007)
 - [x] Lighthouse targets met on mobile; fix findings (Performance 71 at go-live; others 100) [qa-tester]
-  - local production build 79 → 93/94 (Turnstile out of the critical path, no fade on first-row tiles); production after release: 93, 90, 90
+  - local production build 79 → 93/94 (Turnstile out of the critical path, no fade on first-row tiles); production: PageSpeed Insights mobile 100 (2026-11-12, with analytics); VM Lighthouse runs vary 84–93
 - [x] Vercel Web Analytics (ADR first) [api-engineer]
   - ADR-008: same-origin script, production only, no dependency; Izzat enables it in the dashboard
 - [ ] radiozk live URL added (needs Izzat)
