@@ -51,4 +51,4 @@ Order matters: cheap checks run before the paid call. Never move the Claude call
 ## Runtime notes
 - Route handler runs on the Node.js runtime with `maxDuration = 60`.
 - `lib/rateLimit.ts` is per serverless instance (best effort). Upgrade path: ADR-002.
-- No database. No auth. No analytics until M5.
+- No database. No auth. Page-view analytics only: Vercel Web Analytics via a same-origin script, rendered on production builds only (ADR-008).

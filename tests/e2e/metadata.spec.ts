@@ -30,3 +30,8 @@ test("og image, icon and apple icon are served as PNG", async ({ page, request }
     expect(res.headers()["content-type"], path).toContain("image/png");
   }
 });
+
+test("local page does not load the Vercel analytics script", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator('script[src*="/_vercel/insights"]')).toHaveCount(0);
+});
