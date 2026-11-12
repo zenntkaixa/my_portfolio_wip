@@ -5,6 +5,22 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-12 — Session 37: Analytics released; Lighthouse re-measured
+
+**Done**
+- Released Web Analytics (PR #32). Closed Vercel's bot PR #29 (package-based duplicate, targeted `main`).
+- Production: script 200, no console or CSP errors. VM Lighthouse read 86–88 after release; an A/B with
+  the tracker blocked (84–88) vs allowed (87–89) showed analytics is not the cause, only run variance.
+- Profile: the long startup task is React/Next boot (229 KB + 187 KB), not our ~48 KB. No code change.
+
+**Verified**
+- PageSpeed Insights mobile Performance 100 (Izzat, 2026-11-12). Izzat's call: keep analytics.
+
+**Waiting on Izzat**
+- Confirm a page view shows in the Analytics dashboard. LinkedIn Post Inspector. `.claude/settings.json` still local.
+
+---
+
 ## 2026-11-12 — Session 36: M5 Vercel Web Analytics
 
 **Done**
@@ -19,21 +35,5 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 **Waiting on Izzat**
 - Enable Analytics in the Vercel dashboard. After release: script 200, a page view in the dashboard,
   no CSP errors, Lighthouse still ≥ 90. LinkedIn Post Inspector. `.claude/settings.json` still local.
-
----
-
-## 2026-11-11 — Session 35: M5 Lighthouse (mobile)
-
-**Done**
-- Cause: Turnstile preloaded in the critical path (~1.9 MB + CPU). Prod baseline 64, LCP 4.0 s, TBT 1150 ms.
-- `Turnstile.tsx` injects `api.js` itself when the estimator nears the viewport or the form gets focus;
-  rejects if `window.turnstile` is missing. Hero and Now rise without fading (`tile-rise`), so LCP text is opaque.
-- Portrait phones still load it right after hydration (estimator is in view); tests say so honestly.
-
-**Verified**
-- Local production build 79 → 93/94 (LCP 2.6 s, TBT ~215 ms). `npm run check` 191 unit; e2e 92/92. reviewer: no blockers, nits fixed.
-
-**Waiting on Izzat**
-- After release: Lighthouse rerun on production; LinkedIn Post Inspector. `.claude/settings.json` still local.
 
 ---
