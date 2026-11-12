@@ -45,6 +45,10 @@ public endpoint can't spend money while Turnstile still uses always-pass test ke
 3. Check: the 6th estimate in an hour still returns 429, and the function logs show no
    "Shared rate limit unavailable" line. Without the vars the site keeps the in-memory limiter.
 
+Done 2026-11-12: database `portfolio-ratelimit` (free, `ap-southeast-1`, eviction off). After Izzat's
+6 estimates the 6th was refused; Upstash held `est:{rl}:d:2026-11-12` = 5 and one hashed visitor key
+with 5 hits, both with their expiries. Function logs not checked.
+
 ## Web analytics (ADR-008)
 
 Izzat enables it once: Vercel **Project → Analytics → Enable**. The site then loads

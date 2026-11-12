@@ -4,6 +4,23 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-12 — Session 39: M5 shared rate limit in Upstash
+
+**Done**
+- ADR-009: visitor limit and daily cap run as one atomic Lua script in Upstash over REST (`fetch`, no
+  dependency) when both env vars are set; IPs sent as hashes. Never looser than before: failures fall
+  back to memory, a block is always honoured, an allow must also pass memory (security-reviewer fixes).
+
+**Verified**
+- `npm run check` 236 unit; e2e 93/93 (first run: 2 browser start-up timeouts under load; rerun clean).
+- Lua script correct on real Redis 7 (Docker). Not verified: Upstash's REST wrapper, until a database exists.
+
+**Waiting on Izzat**
+- Upstash database (Singapore) + `UPSTASH_REDIS_REST_URL` / `_TOKEN` in Vercel Production; then check the
+  6th estimate gives 429. CLAUDE.md "Accepted risks" rate-limit wording is stale (Izzat's call).
+
+---
+
 ## 2026-11-12 — Session 38: M5 radiozk live URL
 
 **Done**
