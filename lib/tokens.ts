@@ -28,13 +28,6 @@ export function readThemes(css: string = readCss()): { light: Tokens; dark: Toke
   return { light: tokensOf(css, LIGHT_SELECTOR), dark: tokensOf(css, DARK_SELECTOR) };
 }
 
-/** A light-theme token by name; throws if it is missing. */
-export function lightToken(name: string): string {
-  const v = readThemes().light[name];
-  if (!v) throw new Error(`token ${name} missing from the light theme in app/globals.css`);
-  return v;
-}
-
 export function lightTokens<K extends string>(names: readonly K[]): Record<K, string> {
   const light = readThemes().light;
   const out = {} as Record<K, string>;

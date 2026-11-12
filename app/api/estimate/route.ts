@@ -115,6 +115,13 @@ export async function POST(req: Request) {
     return fail("The estimator is unavailable right now. Please try again later.", 503);
   }
 
+  // Checked before the human check and the rate limit, so a missing key never costs a visitor a slot.
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    console.error("Estimator not configured: missing API key");
+    return fail("The estimator is unavailable right now. Please try again later.", 503);
+  }
+
   // Verify the human check before spending a rate-limit slot, so fake tokens never burn the quota.
   if (!(await verifyTurnstile(token, ip))) {
     return fail("The human check didn't pass. Refresh the page and try again.", 403);
@@ -123,12 +130,6 @@ export async function POST(req: Request) {
   // Shared limits in Upstash when configured, else (or on any Upstash failure) the in-memory limiter.
   const limit = await checkLimits(ip);
   if (!limit.ok) return fail(limit.reason, 429, { "Retry-After": String(limit.retryAfter) });
-
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    console.error("Estimator not configured: missing API key");
-    return fail("The estimator is unavailable right now. Please try again later.", 503);
-  }
 
   const userMessage = `Team: ${teamSize} ${teamSize === 1 ? "person" : "people"}, ${SENIORITY_TEXT[seniority]}.
 

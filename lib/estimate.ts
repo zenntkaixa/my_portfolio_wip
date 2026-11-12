@@ -133,6 +133,8 @@ export function normalisePlan(raw: unknown): Plan | null {
   });
 
   const totalHours = phases.reduce((s, p) => s + p.tasks.reduce((a, t) => a + t.hours, 0), 0);
+  // No usable task anywhere (e.g. the model used another key for task names): not a plan.
+  if (totalHours === 0) return null;
   const totalDays = Math.max(...phases.map((p) => p.startDay + p.durationDays));
   const confidence = r.confidence === "low" || r.confidence === "high" ? r.confidence : "medium";
 
