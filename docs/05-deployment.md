@@ -34,6 +34,12 @@ public endpoint can't spend money while Turnstile still uses always-pass test ke
 5. Done (2026-11-11): `ANTHROPIC_API_KEY` added (Production only, Sensitive) and redeployed. The
    estimator is live.
 
+## Web analytics (ADR-008)
+
+Izzat enables it once: Vercel **Project → Analytics → Enable**. The site then loads
+`/_vercel/insights/script.js` on production builds only (`VERCEL_ENV=production`); previews and local
+runs do not. Page views only, cookieless; no env vars and no CSP change.
+
 ## CI
 
 `.github/workflows/ci.yml` runs one job, `ci`, on every PR into and push to `develop` and `main`:
@@ -54,6 +60,8 @@ Push to `main` (a release, see CLAUDE.md section 4, Branches) → Vercel builds 
 - Estimator works on the live URL and the Turnstile widget appears.
 - Submitting 6 times in an hour returns the 429 message.
 - `curl -X POST <url>/api/estimate -d '{}'` returns 400, not 500.
+- `curl -I <url>/_vercel/insights/script.js` returns 200 on production, and a page view shows in the
+  Analytics dashboard.
 - Lighthouse mobile run meets the targets in `00-brief.md`.
 
 First run (2026-11-11, production): plan returned with both tabs; the 6th submission in the hour showed
