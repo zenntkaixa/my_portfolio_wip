@@ -21,7 +21,7 @@ flowchart LR
    viewport or the form gets focus (on portrait phones that is right after hydration, since the
    estimator is in the first viewport).
 2. Browser POSTs `{ feature, teamSize, seniority, token }` to `/api/estimate`.
-3. Route handler, in this order: check content-type/size → parse JSON → `validateRequest` → Turnstile config guard (503 on production test keys / real secret without hostname) → verify Turnstile → `checkLimits(ip)`
+3. Route handler, in this order: check content-type/size → parse JSON → `validateRequest` → Turnstile config guard (503 on production test keys / real secret without hostname) → API key present (503) → verify Turnstile → `checkLimits(ip)`
    → call Claude → parse JSON → `normalisePlan` (recomputes totals) → respond.
 4. Browser renders the plan in two tabs and resets the Turnstile widget (tokens are single-use).
 

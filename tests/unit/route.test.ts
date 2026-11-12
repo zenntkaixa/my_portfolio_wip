@@ -213,6 +213,13 @@ describe("POST /api/estimate", () => {
     expect(((await res.json()) as { error: string }).error).not.toMatch(/ANTHROPIC|Vercel/i);
   });
 
+  it("answers 503 for a missing API key before the human check or the rate limit", async () => {
+    vi.stubEnv("ANTHROPIC_API_KEY", "");
+    mockFetch({ text: modelPlan });
+    for (let i = 0; i < 8; i++) expect((await POST(request())).status).toBe(503); // never 429
+    expect(vi.mocked(fetch)).not.toHaveBeenCalled(); // no siteverify, no Upstash, no model call
+  });
+
   describe("with Upstash configured (fetch mocked)", () => {
     function mockAll(upstashResult: unknown, turnstileOk = true) {
       const hits = { upstash: 0, anthropic: 0 };
