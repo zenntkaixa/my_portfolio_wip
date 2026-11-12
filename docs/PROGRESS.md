@@ -5,33 +5,35 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
-## 2026-11-12 — Session 38: M5 radiozk live URL
+## 2026-11-12 — Session 40: Repo audit fixes
 
 **Done**
-- `featuredProject.live` in `lib/content.ts` set to https://zenntkaixa-radiozk.onrender.com/ (from Izzat).
-  The project tile already renders "Live demo" when it is set; no component change.
+- Izzat ran a repo audit (7 findings, none must-fix) and picked three to fix.
+- `normalisePlan` returns null when no phase has a usable task (was shown as a 0-hour plan).
+- Missing `ANTHROPIC_API_KEY` now answers 503 before the human check and the rate limit, so it costs no slot.
+- Deleted the unused `lightToken` helper.
 
 **Verified**
-- URL returned 200. `npm run check` 197 unit; e2e 93/93 (the existing live-link test now checks the href).
+- `npm run check` 238 unit; e2e 93/93 on the rerun (first run: 2 timeouts, slow page load and Turnstile test widget).
 
 **Waiting on Izzat**
-- If radiozk is on Render's free tier it sleeps when idle; first load can take close to a minute.
-- Page view in the Analytics dashboard; LinkedIn Post Inspector. `.claude/settings.json` still local.
+- Open audit items: e2e on the production build, Dependabot alerts, real-Upstash check, refund slot on AI errors.
 
 ---
 
-## 2026-11-12 — Session 37: Analytics released; Lighthouse re-measured
+## 2026-11-12 — Session 39: M5 shared rate limit in Upstash
 
 **Done**
-- Released Web Analytics (PR #32). Closed Vercel's bot PR #29 (package-based duplicate, targeted `main`).
-- Production: script 200, no console or CSP errors. VM Lighthouse read 86–88 after release; an A/B with
-  the tracker blocked (84–88) vs allowed (87–89) showed analytics is not the cause, only run variance.
-- Profile: the long startup task is React/Next boot (229 KB + 187 KB), not our ~48 KB. No code change.
+- ADR-009: visitor limit and daily cap run as one atomic Lua script in Upstash over REST (`fetch`, no
+  dependency) when both env vars are set; IPs sent as hashes. Never looser than before: failures fall
+  back to memory, a block is always honoured, an allow must also pass memory (security-reviewer fixes).
 
 **Verified**
-- PageSpeed Insights mobile Performance 100 (Izzat, 2026-11-12). Izzat's call: keep analytics.
+- `npm run check` 236 unit; e2e 93/93 (first run: 2 browser start-up timeouts under load; rerun clean).
+- Lua script correct on real Redis 7 (Docker). Not verified: Upstash's REST wrapper, until a database exists.
 
 **Waiting on Izzat**
-- Confirm a page view shows in the Analytics dashboard. LinkedIn Post Inspector. `.claude/settings.json` still local.
+- Upstash database (Singapore) + `UPSTASH_REDIS_REST_URL` / `_TOKEN` in Vercel Production; then check the
+  6th estimate gives 429. CLAUDE.md "Accepted risks" rate-limit wording is stale (Izzat's call).
 
 ---

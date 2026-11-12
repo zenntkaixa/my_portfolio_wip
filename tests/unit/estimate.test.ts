@@ -191,9 +191,13 @@ describe("normalisePlan limits and normalisation", () => {
     expect(p.phases[0].tasks.map((t) => t.task)).toEqual(["keep"]);
   });
 
+  it("returns null when no phase has a usable task", () => {
+    expect(normalisePlan({ phases: [phase({ tasks: [{ name: "wrong key", role: "QA", hours: 8 }] }), phase({ tasks: [] })] })).toBeNull();
+  });
+
   it("tolerates a phase with no tasks array or a null phase", () => {
-    const p = plan({ phases: [null, phase({ tasks: "x" })] });
-    expect(p.phases).toHaveLength(2);
+    const p = plan({ phases: [null, phase({ tasks: "x" }), phase()] });
+    expect(p.phases).toHaveLength(3);
     expect(p.phases[0].name).toBe("Phase");
     expect(p.phases[0].tasks).toEqual([]);
   });

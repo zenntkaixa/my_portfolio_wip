@@ -54,6 +54,9 @@ describe("POST /api/estimate", () => {
     vi.stubEnv("TURNSTILE_SECRET_KEY", "test-secret");
     vi.stubEnv("ANTHROPIC_API_KEY", "test-key");
     vi.stubEnv("TURNSTILE_HOSTNAME", "mysite.dev");
+    // In-memory limiter unless a test opts into Upstash.
+    vi.stubEnv("UPSTASH_REDIS_REST_URL", "");
+    vi.stubEnv("UPSTASH_REDIS_REST_TOKEN", "");
     vi.spyOn(console, "error").mockImplementation(() => {});
   });
   afterEach(() => {
@@ -208,6 +211,68 @@ describe("POST /api/estimate", () => {
     const res = await POST(request());
     expect(res.status).toBe(503);
     expect(((await res.json()) as { error: string }).error).not.toMatch(/ANTHROPIC|Vercel/i);
+  });
+
+  it("answers 503 for a missing API key before the human check or the rate limit", async () => {
+    vi.stubEnv("ANTHROPIC_API_KEY", "");
+    mockFetch({ text: modelPlan });
+    for (let i = 0; i < 8; i++) expect((await POST(request())).status).toBe(503); // never 429
+    expect(vi.mocked(fetch)).not.toHaveBeenCalled(); // no siteverify, no Upstash, no model call
+  });
+
+  describe("with Upstash configured (fetch mocked)", () => {
+    function mockAll(upstashResult: unknown, turnstileOk = true) {
+      const hits = { upstash: 0, anthropic: 0 };
+      vi.stubGlobal(
+        "fetch",
+        vi.fn(async (input: string | URL | Request) => {
+          const url = String(input);
+          if (url.includes("turnstile")) return Response.json({ success: turnstileOk, action: "estimate", hostname: "mysite.dev" });
+          if (url.includes("upstash")) {
+            hits.upstash += 1;
+            return Response.json({ result: upstashResult });
+          }
+          hits.anthropic += 1;
+          return Response.json({ content: [{ type: "text", text: modelPlan }], stop_reason: "end_turn", usage: {} });
+        }),
+      );
+      return hits;
+    }
+
+    beforeEach(() => {
+      vi.stubEnv("UPSTASH_REDIS_REST_URL", "https://example-db.upstash.io");
+      vi.stubEnv("UPSTASH_REDIS_REST_TOKEN", "upstash-test-token");
+    });
+
+    it("returns 200 when the shared limiter allows", async () => {
+      const hits = mockAll([0, 0]);
+      expect((await POST(request())).status).toBe(200);
+      expect(hits).toEqual({ upstash: 1, anthropic: 1 });
+    });
+
+    it("returns 429 with Retry-After and never calls the model when the shared limiter blocks", async () => {
+      const hits = mockAll([2, String(Date.now() - 50 * 60_000)]);
+      const res = await POST(request());
+      expect(res.status).toBe(429);
+      expect(res.headers.get("Retry-After")).toBe(String(10 * 60));
+      expect(((await res.json()) as { error: string }).error).toContain("estimates this hour");
+      expect(hits.anthropic).toBe(0);
+    });
+
+    it("returns 429 on the shared daily cap", async () => {
+      const hits = mockAll([1, 0]);
+      const res = await POST(request());
+      expect(res.status).toBe(429);
+      expect(res.headers.get("Retry-After")).toBe("3600");
+      expect(hits.anthropic).toBe(0);
+    });
+
+    it("never reaches the shared limiter on a failed Turnstile check", async () => {
+      vi.stubEnv("TURNSTILE_SECRET_KEY", "0xrealsecret");
+      const hits = mockAll([0, 0], false);
+      expect((await POST(request())).status).toBe(403);
+      expect(hits).toEqual({ upstash: 0, anthropic: 0 });
+    });
   });
 
   describe("production config guard", () => {

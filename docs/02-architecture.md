@@ -21,7 +21,7 @@ flowchart LR
    viewport or the form gets focus (on portrait phones that is right after hydration, since the
    estimator is in the first viewport).
 2. Browser POSTs `{ feature, teamSize, seniority, token }` to `/api/estimate`.
-3. Route handler, in this order: check content-type/size → parse JSON → `validateRequest` → Turnstile config guard (503 on production test keys / real secret without hostname) → verify Turnstile → `checkLimits(ip)`
+3. Route handler, in this order: check content-type/size → parse JSON → `validateRequest` → Turnstile config guard (503 on production test keys / real secret without hostname) → API key present (503) → verify Turnstile → `checkLimits(ip)`
    → call Claude → parse JSON → `normalisePlan` (recomputes totals) → respond.
 4. Browser renders the plan in two tabs and resets the Turnstile widget (tokens are single-use).
 
@@ -39,7 +39,8 @@ Order matters: cheap checks run before the paid call. Never move the Claude call
 | `app/api/estimate/route.ts` | Estimator endpoint (see 03) | **Done** |
 | `lib/content.ts` | All site copy, from the CV | **Done** |
 | `lib/estimate.ts` | Types, request validation, plan normalisation | **Done** |
-| `lib/rateLimit.ts` | In-memory per-IP limit and daily cap | **Done** |
+| `lib/rateLimit.ts` | Per-IP limit and daily cap: Upstash when configured, in-memory fallback | **Done** |
+| `lib/upstash.ts` | Upstash REST config and one-command client (ADR-009) | **Done** |
 | `lib/timeline.ts` | Pure maths for the timeline chart and role totals | Skeleton + tests |
 | `components/Bento.tsx` | Grid wrapper and `Tile` primitive (span props, `headingLevel`, `titleClassName`) | **Done** |
 | `components/tiles/*` | One file per tile | Skeletons |
@@ -50,5 +51,5 @@ Order matters: cheap checks run before the paid call. Never move the Claude call
 
 ## Runtime notes
 - Route handler runs on the Node.js runtime with `maxDuration = 60`.
-- `lib/rateLimit.ts` is per serverless instance (best effort). Upgrade path: ADR-002.
+- `lib/rateLimit.ts` shares the limits across instances in Upstash Redis over REST (`lib/upstash.ts`, hashed IPs) when its two env vars are set; without them, or when Upstash fails or is slow, it uses the per-instance in-memory limiter (best effort, never fail-open). See ADR-009.
 - No database. No auth. Page-view analytics only: Vercel Web Analytics via a same-origin script, rendered on production builds only (ADR-008).

@@ -17,3 +17,5 @@ Layered, cheapest first:
 - In-memory limits are per serverless instance, so they're best effort.
 - **Upgrade path:** if abuse appears, move limits to Upstash Redis (`@upstash/ratelimit`), which works
   across instances. Requires a new ADR and two env vars.
+- **Update (2026-11-12):** done in ADR-009, over Upstash's REST API without the package. The in-memory
+  limiter stays as the fallback and when the two env vars are unset.
