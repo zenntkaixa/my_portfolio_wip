@@ -5,6 +5,21 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-13 — Session 48: Loose ends: refund script verified, keyboard flake measured, clean-up
+
+**Done**
+- Refund script run on the real Upstash database with throwaway `{rltest}` keys: refund lowers the day
+  counter once, keeps its expiry, is a no-op when repeated or when the counter is missing. Keys deleted.
+- Keyboard tab-order flake: 1 failure in the last 30 CI runs (passed on retry), 0 in 22 local runs, 12
+  alone and 10 under parallel load. Focus dropped to `body` at Turnstile's stop. No code change.
+- Removed a finished `TODO` in `estimator.spec.ts`; CLAUDE.md's CI line now mentions the docs-only skip.
+
+**Waiting on Izzat**
+- Release of #50, #51, #52. Open: the estimator tile's blueprint grid background (in the design system,
+  `--grid` token unused, `TODO` in `EstimatorTile.tsx`); full Hallmark redesign.
+
+---
+
 ## 2026-11-13 — Session 47: Hallmark re-audit; banner and stat label polish
 
 **Done**
@@ -18,24 +33,6 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 **Waiting on Izzat**
 - Release of #50, #51 and this PR. Undecided: full Hallmark redesign (cards, headings, word count).
-
----
-
-## 2026-11-13 — Session 46: Hero contact row, design polish, Dependabot alerts (Hallmark option 2)
-
-**Done**
-- Hero: summary cut from 41 to 23 words (wording approved by Izzat); "Email me" button and LinkedIn link.
-- Polish: `overflow-x: clip` on html and body, pressed states on buttons and chips, balanced heading and
-  example chip wraps, skip-link padding on the 4px scale.
-- Dependabot alerts switched on through the GitHub API at Izzat's request (0 open alerts); CLAUDE.md
-  "Security tooling" and `docs/05-deployment.md` say so.
-
-**Verified**
-- `npm run check` 247 unit; e2e 95/95; `reviewer`: no blocking findings; `/visual-check` of the hero and
-  estimator at 390 and 1440, light: no issues.
-
-**Waiting on Izzat**
-- Release of #50 and this PR. Parked: e2e against the production build; full Hallmark redesign.
 
 ---
 
