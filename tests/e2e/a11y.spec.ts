@@ -1,10 +1,10 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Page } from "./fakeTurnstile";
 import plan from "../fixtures/plan.json";
 import { estimatorCopy } from "../../lib/content";
 
 // axe-core scans (ADR-006) of the home page and the estimator states, in light and dark.
-// The real API is never called: /api/estimate is intercepted. Turnstile uses the always-pass test key.
+// The real API is never called: /api/estimate is intercepted. Turnstile is faked (fakeTurnstile.ts).
 
 const TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 const FEATURE = "Add one-time code login with email delivery and rate limiting";
@@ -12,8 +12,7 @@ const themes = ["light", "dark"] as const;
 type Theme = (typeof themes)[number];
 
 async function scan(page: Page) {
-  // axe does not look inside cross-origin iframes it cannot inject into (Turnstile), so no exclusion is
-  // needed; if that changes, exclude only the Turnstile iframe and say why here.
+  // The fake Turnstile renders nothing, so there is no widget iframe to exclude.
   const { violations } = await new AxeBuilder({ page }).withTags(TAGS).analyze();
   const summary = violations
     .flatMap((v) =>
