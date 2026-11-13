@@ -4,6 +4,25 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-13 — Session 43: Custom domain live; roadmap complete
+
+**Done**
+- Released PR #43. Izzat set `TURNSTILE_HOSTNAME=zenntkaixa.dev`, redeployed, removed the old hostname
+  from the Turnstile widget and refreshed LinkedIn's Post Inspector.
+- Every roadmap item is now ticked.
+
+**Verified**
+- https://zenntkaixa.dev: canonical, `og:url` and share image on the new domain; fake token 403;
+  Izzat's estimate worked; Upstash has today's day counter. The old `vercel.app` address redirects (308).
+
+**Waiting on Izzat**
+- Parked: Hallmark polish/redesign; audit items (e2e on the production build, Dependabot alerts, refund
+  a slot on AI errors). CLAUDE.md "Accepted risks" rate-limit wording is stale.
+
+---
+
+---
+
 ## 2026-11-13 — Session 42: M5 custom domain zenntkaixa.dev
 
 **Done**

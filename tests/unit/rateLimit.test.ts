@@ -24,6 +24,20 @@ describe("checkLimitsInMemory", () => {
     expect(checkLimitsInMemory("d").ok).toBe(false);
   });
 
+  it("refund gives back the visitor's slot and the daily count, once", async () => {
+    const { checkLimitsInMemory } = await import("@/lib/rateLimit");
+    const first = checkLimitsInMemory("x");
+    expect(checkLimitsInMemory("x").ok).toBe(true);
+    expect(checkLimitsInMemory("x").ok).toBe(false);
+    if (!first.ok) throw new Error("expected the first hit to be allowed");
+    await first.refund();
+    await first.refund(); // a second refund of the same hit must not free another slot
+    expect(checkLimitsInMemory("x").ok).toBe(true);
+    expect(checkLimitsInMemory("x").ok).toBe(false);
+    expect(checkLimitsInMemory("y").ok).toBe(true); // third counted hit of the day
+    expect(checkLimitsInMemory("z").ok).toBe(false); // daily cap of 3: only one count came back
+  });
+
   it("falls back to defaults for NaN, zero or negative env values", async () => {
     process.env.RATE_LIMIT_PER_HOUR = "abc";
     process.env.DAILY_LIMIT = "-1";
@@ -168,7 +182,7 @@ describe("checkLimits with Upstash (fetch mocked, never the real service)", () =
   it("allows when the script returns {0, 0} and sends one EVAL with hashed keys and the limits", async () => {
     const sent = mockUpstash(() => Response.json({ result: [0, 0] }));
     const { checkLimits, LIMIT_SCRIPT, visitorKey } = await import("@/lib/rateLimit");
-    expect(await checkLimits(IP)).toEqual({ ok: true });
+    expect(await checkLimits(IP)).toMatchObject({ ok: true });
     expect(sent).toHaveLength(1);
     const { url, headers, body } = sent[0];
     expect(url).toBe("https://example-db.upstash.io");
@@ -179,6 +193,32 @@ describe("checkLimits with Upstash (fetch mocked, never the real service)", () =
     expect(body[9]).toMatch(new RegExp(`^${NOW}-[0-9a-f]{12}$`));
     expect(JSON.stringify(body)).not.toContain(IP);
     expect(JSON.stringify(body)).not.toContain("upstash-test-token");
+  });
+
+  it("refund sends one EVAL of the refund script with the hit's keys and member, and frees the slot in memory", async () => {
+    const sent = mockUpstash(() => Response.json({ result: [0, 0] }));
+    const { checkLimits, checkLimitsInMemory, REFUND_SCRIPT } = await import("@/lib/rateLimit");
+    const first = await checkLimits(IP);
+    if (!first.ok) throw new Error("expected the hit to be allowed");
+    await first.refund();
+    expect(sent).toHaveLength(2);
+    expect(sent[1].body).toEqual(["EVAL", REFUND_SCRIPT, "2", sent[0].body[3], sent[0].body[4], sent[0].body[9]]);
+    // Memory limit is 2 an hour: two more hits fit only because the refunded one is gone.
+    expect(checkLimitsInMemory(IP).ok).toBe(true);
+    expect(checkLimitsInMemory(IP).ok).toBe(true);
+    expect(checkLimitsInMemory(IP).ok).toBe(false);
+  });
+
+  it("a refund that Upstash rejects does not throw and logs no token", async () => {
+    let calls = 0;
+    mockUpstash(() => (++calls === 1 ? Response.json({ result: [0, 0] }) : new Response("nope", { status: 500 })));
+    const { checkLimits } = await import("@/lib/rateLimit");
+    const first = await checkLimits(IP);
+    if (!first.ok) throw new Error("expected the hit to be allowed");
+    await expect(first.refund()).resolves.toBeUndefined();
+    const logged = JSON.stringify(vi.mocked(console.error).mock.calls);
+    expect(logged).toContain("refund failed");
+    expect(logged).not.toContain("upstash-test-token");
   });
 
   it("uses a unique member per hit", async () => {
