@@ -4,6 +4,25 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-13 — Session 45: Refund a slot on unbilled AI errors (parked audit item)
+
+**Done**
+- When the Anthropic API answers with an error status, the visitor's slot and the daily count are given
+  back, in memory and in Upstash (one atomic script). Timeouts, refusals and cut-off or unreadable
+  replies keep the slot (those calls can be billed). Izzat approved this loosening (option 1).
+- The feature text now rejects unpaired surrogates (400), from the security review.
+- Earlier today: CLAUDE.md "Accepted risks" wording updated for ADR-009 (#48, released in #49).
+
+**Verified**
+- `npm run check` 247 unit; e2e 93/93; `security-reviewer`: no blocking findings.
+
+**Waiting on Izzat**
+- Parked: Hallmark; Dependabot alerts; e2e against the production build.
+
+---
+
+---
+
 ## 2026-11-13 — Session 44: Faster CI (at Izzat's request, outside the roadmap)
 
 **Done**

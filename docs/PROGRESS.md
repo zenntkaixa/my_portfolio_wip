@@ -5,6 +5,22 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-13 — Session 47: Hallmark re-audit; banner and stat label polish
+
+**Done**
+- Re-audit after #51: linter 0 FAIL (was 1), 1 REFLEX (slider thumb calc, a false alarm), 4 WARN.
+- Estimator banner: one hairline all round (`--ink`, `--warn` for the rate limit), no side stripe.
+- Now tile: stats stack as rows under 440px of tile width (was 360px), so desktop uses rows and the
+  longest label takes two lines, not five; labels wrap evenly. `docs/01b-tiles.md` updated.
+
+**Verified**
+- `npm run check` 247 unit; e2e 95/95; Now tile at 390 and 1440 and both banner tones inspected.
+
+**Waiting on Izzat**
+- Release of #50, #51 and this PR. Undecided: full Hallmark redesign (cards, headings, word count).
+
+---
+
 ## 2026-11-13 — Session 46: Hero contact row, design polish, Dependabot alerts (Hallmark option 2)
 
 **Done**
@@ -20,23 +36,6 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 **Waiting on Izzat**
 - Release of #50 and this PR. Parked: e2e against the production build; full Hallmark redesign.
-
----
-
-## 2026-11-13 — Session 45: Refund a slot on unbilled AI errors (parked audit item)
-
-**Done**
-- When the Anthropic API answers with an error status, the visitor's slot and the daily count are given
-  back, in memory and in Upstash (one atomic script). Timeouts, refusals and cut-off or unreadable
-  replies keep the slot (those calls can be billed). Izzat approved this loosening (option 1).
-- The feature text now rejects unpaired surrogates (400), from the security review.
-- Earlier today: CLAUDE.md "Accepted risks" wording updated for ADR-009 (#48, released in #49).
-
-**Verified**
-- `npm run check` 247 unit; e2e 93/93; `security-reviewer`: no blocking findings.
-
-**Waiting on Izzat**
-- Parked: Hallmark; Dependabot alerts; e2e against the production build.
 
 ---
 
