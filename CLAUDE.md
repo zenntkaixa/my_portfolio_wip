@@ -83,7 +83,7 @@ Read first by the sub-agents: project ones in `.claude/agents/` (builders: `ui-b
   job passed on the PR, after `npm run check` + `npm run test:e2e` passed locally.
 - **Never touch:** `.env`, `.env.local` or any key (names in `.env.example` only); the real Anthropic
   API (mock `fetch`); `main`; the phone number; real client names. Section 6 has the full list.
-- **Security tooling:** `npm audit`; no CodeQL, Dependabot or image scans yet. Abuse and spend review of
+- **Security tooling:** `npm audit` and Dependabot alerts (on since 2026-11-13); no CodeQL or image scans yet. Abuse and spend review of
   `app/api/**`, `lib/rateLimit.ts`, env, Turnstile and headers is `security-reviewer`'s job.
 - **Accepted risks (do not re-report):** the rate limit and daily cap are shared through
   Upstash Redis (ADR-009) and fall back to per-instance memory when Upstash is unset or failing; visitor
