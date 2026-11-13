@@ -8,7 +8,7 @@
 | `ANTHROPIC_MODEL` | Optional | Default `claude-haiku-5-5` |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Vercel, `.env.local` | Public by design; Vercel type **Config** (it rejects Sensitive for `NEXT_PUBLIC_`). Production: real key. Preview: test key |
 | `TURNSTILE_SECRET_KEY` | Vercel, `.env.local` | Server only, type Sensitive. Production: real secret. Preview: test secret |
-| `TURNSTILE_HOSTNAME` | Required with a real secret, Vercel Production | `my-portfolio-wip.vercel.app`; when set, siteverify must report this hostname |
+| `TURNSTILE_HOSTNAME` | Required with a real secret, Vercel Production | `zenntkaixa.dev`; when set, siteverify must report this hostname |
 | `RATE_LIMIT_PER_HOUR` | Optional | Default 5 |
 | `DAILY_LIMIT` | Optional | Default 150 |
 | `UPSTASH_REDIS_REST_URL` | Optional, Vercel Production | `https://` REST URL of the Upstash database; shares the limits across instances (ADR-009) |
@@ -20,7 +20,7 @@ Local development uses Cloudflare's official **test keys** (already in `.env.exa
 
 ## First deploy (Izzat does the account steps; Claude Code can guide)
 
-Production is **https://my-portfolio-wip.vercel.app** (Vercel project imported from
+Production is **https://zenntkaixa.dev** (also `my-portfolio-wip.vercel.app`; Vercel project imported from
 `zenntkaixa/my_portfolio_wip`, production branch `main`, region `sin1`). The order below keeps the
 estimator **off** (no `ANTHROPIC_API_KEY`, so it answers 503) until human verification is real, so the
 public endpoint can't spend money while Turnstile still uses always-pass test keys.
@@ -84,5 +84,12 @@ First run (2026-11-11, production): plan returned with both tabs; the 6th submis
 PageSpeed Insights mobile: Performance **71** (target 90, tracked in the M5 Lighthouse item),
 Accessibility 100, Best Practices 100, SEO 100.
 
-## Custom domain (later)
-Vercel → Project → Settings → Domains. Then add the new hostname to the Turnstile widget.
+## Custom domain: zenntkaixa.dev (Cloudflare Registrar and DNS)
+`TURNSTILE_HOSTNAME` takes one hostname, so the estimator works on one address at a time. Order:
+
+1. Vercel → Project → Settings → **Domains**: add `zenntkaixa.dev` (and `www`, redirecting to the apex).
+2. Cloudflare DNS: add the records Vercel shows, **DNS only** (grey cloud), so Vercel issues the certificate.
+3. Cloudflare Turnstile widget `portfolio`: add hostname `zenntkaixa.dev`, keep the old one for now.
+4. Release the `siteUrl` change, then set `TURNSTILE_HOSTNAME=zenntkaixa.dev` in Vercel Production and redeploy.
+5. Check on the new domain: one estimate works, a fake token gets 403, canonical and `og:url` show it.
+   Then remove `my-portfolio-wip.vercel.app` from the Turnstile widget and make it redirect in Vercel.
