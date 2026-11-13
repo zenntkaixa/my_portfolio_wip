@@ -79,8 +79,8 @@ Read first by the sub-agents: project ones in `.claude/agents/` (builders: `ui-b
 
 - **Commands:** section 3. Every shell starts with `export NVM_DIR=$HOME/.nvm; . $NVM_DIR/nvm.sh; nvm use`.
   One unit test: `npx vitest run <file>`; one e2e: `npx playwright test <file>`. CI is the `ci` job in
-  `.github/workflows/ci.yml` (check + e2e on PRs and pushes to `develop`/`main`); "green" means that
-  job passed on the PR, after `npm run check` + `npm run test:e2e` passed locally.
+  `.github/workflows/ci.yml` (check + e2e on PRs and pushes to `develop`/`main`; PRs that change only `docs/` or root `*.md` files
+  skip e2e); "green" means that job passed on the PR, after `npm run check` + `npm run test:e2e` passed locally.
 - **Never touch:** `.env`, `.env.local` or any key (names in `.env.example` only); the real Anthropic
   API (mock `fetch`); `main`; the phone number; real client names. Section 6 has the full list.
 - **Security tooling:** `npm audit` and Dependabot alerts (on since 2026-11-13); no CodeQL or image scans yet. Abuse and spend review of
