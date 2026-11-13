@@ -4,6 +4,22 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-12 — Session 40: Repo audit fixes
+
+**Done**
+- Izzat ran a repo audit (7 findings, none must-fix) and picked three to fix.
+- `normalisePlan` returns null when no phase has a usable task (was shown as a 0-hour plan).
+- Missing `ANTHROPIC_API_KEY` now answers 503 before the human check and the rate limit, so it costs no slot.
+- Deleted the unused `lightToken` helper.
+
+**Verified**
+- `npm run check` 238 unit; e2e 93/93 on the rerun (first run: 2 timeouts, slow page load and Turnstile test widget).
+
+**Waiting on Izzat**
+- Open audit items: e2e on the production build, Dependabot alerts, real-Upstash check, refund slot on AI errors.
+
+---
+
 ## 2026-11-12 — Session 39: M5 shared rate limit in Upstash
 
 **Done**

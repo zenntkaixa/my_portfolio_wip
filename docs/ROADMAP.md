@@ -67,4 +67,5 @@ Agent hints in brackets.
 - [x] radiozk live URL added (needs Izzat)
 - [x] Optional: Upstash Redis rate limit (ADR-002 upgrade path) [api-engineer]
   - ADR-009: REST over fetch, no dependency, in-memory fallback; active and verified on production 2026-11-12
-- [ ] Optional: custom domain
+- [x] Optional: custom domain
+  - zenntkaixa.dev (Cloudflare Registrar); `www` redirects to it; `TURNSTILE_HOSTNAME` switches right after release
