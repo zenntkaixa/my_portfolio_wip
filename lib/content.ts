@@ -17,7 +17,7 @@ export const profile = {
   github: "https://github.com/zenntkaixa",
 };
 
-export const siteUrl = "https://my-portfolio-wip.vercel.app";
+export const siteUrl = "https://zenntkaixa.dev";
 
 export const seo = {
   siteName: "Izzat Fahmi, portfolio",
