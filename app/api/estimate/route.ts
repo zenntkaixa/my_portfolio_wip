@@ -164,6 +164,9 @@ ${stripFeatureTags(feature)}
         .then((b: { error?: { type?: unknown } }) => (typeof b?.error?.type === "string" ? b.error.type : "unknown"))
         .catch(() => "unparseable");
       console.error("Anthropic API error", res.status, errType);
+      // An error status means no reply was generated or charged, so the visitor gets the slot back.
+      // Timeouts and unusable replies below keep it: those calls can still cost money.
+      await limit.refund();
       return fail("The AI service is busy right now. Try again in a minute.", 502);
     }
     const data = (await res.json()) as AnthropicResponse;

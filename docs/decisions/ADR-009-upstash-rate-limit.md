@@ -26,11 +26,17 @@ than the package's approximated sliding window.
   1–3600 s). A request Upstash allows must also pass the in-memory limiter, which records it, so no
   instance is ever looser than the old per-instance limiter, during an outage or after it.
 
+- Refund (2026-11-13): when the Anthropic API answers with an error status, which is not billed, the
+  route gives the hit back. One more atomic script removes that hit's member and, only if it was still
+  there, lowers the day counter (never below zero); the in-memory hit is removed too. Timeouts, refusals
+  and cut-off or unreadable replies are not refunded, since those calls can be billed. A failed refund
+  is logged and ignored.
+
 ## Consequences
 - One extra network call per estimate that passes Turnstile (about 1 s worst case, then fallback).
 - IPs are hashed before they leave the server. This is pseudonymisation, not anonymisation: an unsalted
   hash of an IPv4 address can be brute-forced. Keys expire on their own, so no clean-up job.
-- At most one Upstash command per attempt, so the free tier's request allowance covers the 150-a-day cap.
+- At most one Upstash command per attempt (two when a hit is refunded), so the free tier's request allowance covers the 150-a-day cap.
 - Replaces the `@upstash/ratelimit` upgrade path in ADR-002.
 - Turnstile and the Anthropic monthly spend limit remain the real gates; this narrows the gap between
   instances, it does not replace them.

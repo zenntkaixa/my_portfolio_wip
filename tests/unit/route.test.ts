@@ -117,6 +117,49 @@ describe("POST /api/estimate", () => {
     expect(logged).not.toContain("secret-ish detail");
   });
 
+  it("gives the slot back when the Anthropic API answers with an error status", async () => {
+    const anthropicStatus = { value: 529 };
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (input: string | URL | Request) =>
+        String(input).includes("turnstile")
+          ? Response.json({ success: true, action: "estimate", hostname: "mysite.dev" })
+          : anthropicStatus.value === 200
+            ? Response.json({ content: [{ type: "text", text: modelPlan }], stop_reason: "end_turn", usage: {} })
+            : Response.json({ type: "error", error: { type: "overloaded_error" } }, { status: anthropicStatus.value }),
+      ),
+    );
+    const ip = "10.9.0.1";
+    for (let i = 0; i < 6; i++) expect((await POST(request("mixed", { ip }))).status).toBe(502); // more than the 5 an hour
+    anthropicStatus.value = 200;
+    expect((await POST(request("mixed", { ip }))).status).toBe(200);
+  });
+
+  it("keeps the slot used when the reply is unreadable, cut off or refused (those calls are charged)", async () => {
+    const ip = "10.9.0.2";
+    mockFetch({ text: modelPlan.slice(0, 300) });
+    for (let i = 0; i < 2; i++) expect((await POST(request("mixed", { ip }))).status).toBe(502);
+    mockFetch({ text: modelPlan.slice(0, 300), stop_reason: "max_tokens" });
+    for (let i = 0; i < 2; i++) expect((await POST(request("mixed", { ip }))).status).toBe(502);
+    mockFetch({ text: "", stop_reason: "refusal" });
+    expect((await POST(request("mixed", { ip }))).status).toBe(422);
+    mockFetch({ text: modelPlan });
+    expect((await POST(request("mixed", { ip }))).status).toBe(429);
+  });
+
+  it("keeps the slot used when the model call times out or the network fails", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (input: string | URL | Request) => {
+        if (String(input).includes("turnstile")) return Response.json({ success: true, action: "estimate", hostname: "mysite.dev" });
+        throw new DOMException("timed out", "TimeoutError");
+      }),
+    );
+    const ip = "10.9.0.3";
+    for (let i = 0; i < 5; i++) expect((await POST(request("mixed", { ip }))).status).toBe(504);
+    expect((await POST(request("mixed", { ip }))).status).toBe(429);
+  });
+
   it("returns 502 on truncated JSON without a max_tokens stop", async () => {
     mockFetch({ text: modelPlan.slice(0, 300) });
     const res = await POST(request());
@@ -221,7 +264,7 @@ describe("POST /api/estimate", () => {
   });
 
   describe("with Upstash configured (fetch mocked)", () => {
-    function mockAll(upstashResult: unknown, turnstileOk = true) {
+    function mockAll(upstashResult: unknown, turnstileOk = true, anthropic: "ok" | "error" | "timeout" = "ok") {
       const hits = { upstash: 0, anthropic: 0 };
       vi.stubGlobal(
         "fetch",
@@ -233,6 +276,8 @@ describe("POST /api/estimate", () => {
             return Response.json({ result: upstashResult });
           }
           hits.anthropic += 1;
+          if (anthropic === "timeout") throw new DOMException("timed out", "TimeoutError");
+          if (anthropic === "error") return Response.json({ type: "error", error: { type: "overloaded_error" } }, { status: 529 });
           return Response.json({ content: [{ type: "text", text: modelPlan }], stop_reason: "end_turn", usage: {} });
         }),
       );
@@ -265,6 +310,18 @@ describe("POST /api/estimate", () => {
       expect(res.status).toBe(429);
       expect(res.headers.get("Retry-After")).toBe("3600");
       expect(hits.anthropic).toBe(0);
+    });
+
+    it("sends a second Upstash command (the refund) when the Anthropic API answers with an error status", async () => {
+      const hits = mockAll([0, 0], true, "error");
+      expect((await POST(request())).status).toBe(502);
+      expect(hits).toEqual({ upstash: 2, anthropic: 1 });
+    });
+
+    it("sends no refund when the model call times out", async () => {
+      const hits = mockAll([0, 0], true, "timeout");
+      expect((await POST(request())).status).toBe(504);
+      expect(hits).toEqual({ upstash: 1, anthropic: 1 });
     });
 
     it("never reaches the shared limiter on a failed Turnstile check", async () => {

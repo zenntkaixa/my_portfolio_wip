@@ -32,6 +32,12 @@ describe("validateRequest edge cases", () => {
     expect(r.ok).toBe(false);
   });
 
+  it("rejects unpaired surrogates but accepts emoji (paired surrogates)", () => {
+    expect(validateRequest({ ...valid, feature: `${f(20)}\uD83D` }).ok).toBe(false);
+    expect(validateRequest({ ...valid, feature: `${f(20)}\uDE00 tail` }).ok).toBe(false);
+    expect(validateRequest({ ...valid, feature: `${f(20)} \u{1F600}` }).ok).toBe(true);
+  });
+
   it("trims the feature and counts length after trimming", () => {
     const r = validateRequest({ ...valid, feature: `   ${f(20)}\n  ` });
     expect(r.ok && r.value.feature).toBe(f(20));

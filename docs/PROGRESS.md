@@ -5,6 +5,23 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-13 — Session 45: Refund a slot on unbilled AI errors (parked audit item)
+
+**Done**
+- When the Anthropic API answers with an error status, the visitor's slot and the daily count are given
+  back, in memory and in Upstash (one atomic script). Timeouts, refusals and cut-off or unreadable
+  replies keep the slot (those calls can be billed). Izzat approved this loosening (option 1).
+- The feature text now rejects unpaired surrogates (400), from the security review.
+- Earlier today: CLAUDE.md "Accepted risks" wording updated for ADR-009 (#48, released in #49).
+
+**Verified**
+- `npm run check` 247 unit; e2e 93/93; `security-reviewer`: no blocking findings.
+
+**Waiting on Izzat**
+- Parked: Hallmark; Dependabot alerts; e2e against the production build.
+
+---
+
 ## 2026-11-13 — Session 44: Faster CI (at Izzat's request, outside the roadmap)
 
 **Done**
@@ -17,23 +34,6 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 **Waiting on Izzat**
 - Unchanged parked items: Hallmark; three audit items; stale CLAUDE.md "Accepted risks" wording.
-
----
-
-## 2026-11-13 — Session 43: Custom domain live; roadmap complete
-
-**Done**
-- Released PR #43. Izzat set `TURNSTILE_HOSTNAME=zenntkaixa.dev`, redeployed, removed the old hostname
-  from the Turnstile widget and refreshed LinkedIn's Post Inspector.
-- Every roadmap item is now ticked.
-
-**Verified**
-- https://zenntkaixa.dev: canonical, `og:url` and share image on the new domain; fake token 403;
-  Izzat's estimate worked; Upstash has today's day counter. The old `vercel.app` address redirects (308).
-
-**Waiting on Izzat**
-- Parked: Hallmark polish/redesign; audit items (e2e on the production build, Dependabot alerts, refund
-  a slot on AI errors). CLAUDE.md "Accepted risks" rate-limit wording is stale.
 
 ---
 
