@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fakeTurnstile";
 import plan from "../fixtures/plan.json";
 
 // The real API is never called: /api/estimate is intercepted in every test.
@@ -8,7 +8,7 @@ test("happy path shows both tabs", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: /one-time code/ }).click();
   const submit = page.getByRole("button", { name: "Estimate this feature" });
-  await expect(submit).toBeEnabled({ timeout: 15_000 }); // waits for the Turnstile test token
+  await expect(submit).toBeEnabled(); // enabled once the fake Turnstile token arrives
   await submit.click();
 
   await expect(page.getByRole("heading", { name: plan.plan.title })).toBeVisible();

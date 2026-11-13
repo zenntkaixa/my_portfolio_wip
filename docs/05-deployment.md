@@ -61,7 +61,10 @@ runs do not. Page views only, cookieless; no env vars and no CSP change.
 `npm ci`, `npm run check`, `npm run test:e2e`, inside the official Playwright container pinned by digest
 (ADR-007: browsers and their Linux packages are preinstalled, so no apt or browser download; bump the
 image together with `@playwright/test`). It needs no secrets (fetch is mocked,
-Turnstile uses the test key). Actions are pinned to commit SHAs; bump them only to releases at least two
+Turnstile uses the test key). To keep runs short, browser tests that are not about Turnstile load a fake
+widget (`tests/e2e/fakeTurnstile.ts`) that issues a token at once; `turnstile`, `csp`, `keyboard` and
+`visual` specs keep the real one. A PR that changes only `docs/` or root `*.md` files skips the browser
+tests (the `ci` check still runs and passes); pushes to `develop` and `main` always run them. Actions are pinned to commit SHAs; bump them only to releases at least two
 weeks old. Failed runs upload `test-results/` (traces) for 7 days. The repo is public. Branch protection on `develop`
 and `main`: a PR is required (0 approvals), the `ci` check must pass on an up-to-date branch, admins
 included, no force pushes or deletion. Head branches auto-delete on merge; secret scanning and push

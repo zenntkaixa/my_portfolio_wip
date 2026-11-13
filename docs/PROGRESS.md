@@ -5,6 +5,21 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-13 — Session 44: Faster CI (at Izzat's request, outside the roadmap)
+
+**Done**
+- Browser tests that are not about Turnstile now load a fake widget (`tests/e2e/fakeTurnstile.ts`): five
+  specs (a11y, estimator, estimator-submit, -results, -tabs). Real widget stays in four specs.
+- CI skips the browser tests on PRs that change only `docs/` or root `*.md` files.
+
+**Verified**
+- `npm run check` 238 unit; e2e 93/93 in 70 s locally (CI step was 82 to 98 s; compare on this PR).
+
+**Waiting on Izzat**
+- Unchanged parked items: Hallmark; three audit items; stale CLAUDE.md "Accepted risks" wording.
+
+---
+
 ## 2026-11-13 — Session 43: Custom domain live; roadmap complete
 
 **Done**
@@ -22,20 +37,3 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
-## 2026-11-13 — Session 42: M5 custom domain zenntkaixa.dev
-
-**Done**
-- Izzat bought zenntkaixa.dev (Cloudflare), added it and `www` in Vercel, DNS only, and added the
-  hostname to the Turnstile widget. The bare domain is primary; `www` redirects to it.
-- `siteUrl` in `lib/content.ts` is now https://zenntkaixa.dev (canonical, `og:url`, share image); README
-  and the switch-over order in `docs/05-deployment.md`.
-
-**Verified**
-- https://zenntkaixa.dev returns 200 with a valid certificate; `www` and http redirect to it.
-- `npm run check` 238 unit; e2e 93/93.
-
-**Waiting on Izzat**
-- After release: set `TURNSTILE_HOSTNAME=zenntkaixa.dev` in Vercel Production and redeploy; then check an
-  estimate on the new domain and remove the old hostname from the Turnstile widget.
-
----
