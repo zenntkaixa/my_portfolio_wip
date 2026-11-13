@@ -55,6 +55,27 @@ test("hero owns the page's only h1 and shows role, location and availability", a
   expect(snapshot).not.toMatch(new RegExp(`\\b${profile.initials}\\b`));
 });
 
+test("hero offers email and LinkedIn on the first screen", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  const hero = page.getByRole("region", { name: profile.name, exact: true });
+  const email = hero.getByRole("link", { name: profile.emailCta, exact: true });
+  await expect(email).toHaveAttribute("href", `mailto:${profile.email}`);
+  await expect(email).toBeInViewport({ ratio: 1 });
+  const linkedin = hero.getByRole("link", { name: /^LinkedIn/ });
+  await expect(linkedin).toHaveAttribute("href", profile.linkedin);
+  await expect(linkedin).toHaveAttribute("rel", /noopener/);
+});
+
+test("every tile fits a 320px screen, so nothing is cut off or scrolls sideways", async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 700 });
+  await page.goto("/");
+  // Measures the tiles themselves: overflow-x: clip on html and body would hide a too-wide child from scrollWidth.
+  const widest = await page.locator(".tile").evaluateAll((els) => Math.max(...els.map((el) => el.getBoundingClientRect().right)));
+  expect(widest).toBeGreaterThan(0);
+  expect(widest).toBeLessThanOrEqual(320);
+});
+
 test("never shows a phone number", async ({ page }) => {
   await page.goto("/");
   const text = await page.locator("body").innerText();

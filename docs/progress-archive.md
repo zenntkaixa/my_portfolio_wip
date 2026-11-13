@@ -4,6 +4,23 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-13 — Session 44: Faster CI (at Izzat's request, outside the roadmap)
+
+**Done**
+- Browser tests that are not about Turnstile now load a fake widget (`tests/e2e/fakeTurnstile.ts`): five
+  specs (a11y, estimator, estimator-submit, -results, -tabs). Real widget stays in four specs.
+- CI skips the browser tests on PRs that change only `docs/` or root `*.md` files.
+
+**Verified**
+- `npm run check` 238 unit; e2e 93/93 in 70 s locally (CI step was 82 to 98 s; compare on this PR).
+
+**Waiting on Izzat**
+- Unchanged parked items: Hallmark; three audit items; stale CLAUDE.md "Accepted risks" wording.
+
+---
+
+---
+
 ## 2026-11-13 — Session 43: Custom domain live; roadmap complete
 
 **Done**

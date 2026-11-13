@@ -6,6 +6,8 @@ Read only the section for the tile you are changing.
 ## Hero
 - The name is the page's only `<h1>` (display font, `--fs-2xl`) and names the hero section.
 - A 72px initials avatar (`--accent` on `--accent-soft`, `--r-md`) sits beside the name and role.
+- Under the summary, a contact row: "Email me" as the primary button (`.button-link`, mailto) and a LinkedIn
+  text link, so a visitor can reach Izzat without scrolling. Email and LinkedIn only, never a phone number.
 - The meta line is the location, then the availability text with a small `--ok` dot before it.
 
 ## Now
