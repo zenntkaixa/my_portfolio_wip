@@ -5,6 +5,23 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-13 — Session 43: Custom domain live; roadmap complete
+
+**Done**
+- Released PR #43. Izzat set `TURNSTILE_HOSTNAME=zenntkaixa.dev`, redeployed, removed the old hostname
+  from the Turnstile widget and refreshed LinkedIn's Post Inspector.
+- Every roadmap item is now ticked.
+
+**Verified**
+- https://zenntkaixa.dev: canonical, `og:url` and share image on the new domain; fake token 403;
+  Izzat's estimate worked; Upstash has today's day counter. The old `vercel.app` address redirects (308).
+
+**Waiting on Izzat**
+- Parked: Hallmark polish/redesign; audit items (e2e on the production build, Dependabot alerts, refund
+  a slot on AI errors). CLAUDE.md "Accepted risks" rate-limit wording is stale.
+
+---
+
 ## 2026-11-13 — Session 42: M5 custom domain zenntkaixa.dev
 
 **Done**
@@ -20,22 +37,5 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 **Waiting on Izzat**
 - After release: set `TURNSTILE_HOSTNAME=zenntkaixa.dev` in Vercel Production and redeploy; then check an
   estimate on the new domain and remove the old hostname from the Turnstile widget.
-
----
-
-## 2026-11-12 — Session 41: Shared rate limit verified; roadmap parked
-
-**Done**
-- Released PR #38 (Upstash limiter, audit fixes). Upstash database `portfolio-ratelimit` created
-  (Singapore, free); Izzat added both env vars to Vercel Production and redeployed.
-- Hallmark design audit run; Izzat parked the polish/redesign choice. Custom domain deferred (remind Izzat).
-
-**Verified**
-- Limit script run on the real database (test keys, deleted). After 6 estimates on production the 6th
-  was refused; day counter 5, one hashed visitor key with 5 hits, expiries set.
-
-**Waiting on Izzat**
-- Custom domain (only open roadmap item). Open audit items, not on the roadmap: e2e on the production
-  build, Dependabot alerts, refund a slot on AI errors. CLAUDE.md "Accepted risks" rate-limit wording is stale.
 
 ---
