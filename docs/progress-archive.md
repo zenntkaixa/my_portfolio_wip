@@ -4,6 +4,26 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-13 — Session 42: M5 custom domain zenntkaixa.dev
+
+**Done**
+- Izzat bought zenntkaixa.dev (Cloudflare), added it and `www` in Vercel, DNS only, and added the
+  hostname to the Turnstile widget. The bare domain is primary; `www` redirects to it.
+- `siteUrl` in `lib/content.ts` is now https://zenntkaixa.dev (canonical, `og:url`, share image); README
+  and the switch-over order in `docs/05-deployment.md`.
+
+**Verified**
+- https://zenntkaixa.dev returns 200 with a valid certificate; `www` and http redirect to it.
+- `npm run check` 238 unit; e2e 93/93.
+
+**Waiting on Izzat**
+- After release: set `TURNSTILE_HOSTNAME=zenntkaixa.dev` in Vercel Production and redeploy; then check an
+  estimate on the new domain and remove the old hostname from the Turnstile widget.
+
+---
+
+---
+
 ## 2026-11-12 — Session 41: Shared rate limit verified; roadmap parked
 
 **Done**

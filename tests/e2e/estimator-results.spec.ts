@@ -1,4 +1,4 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Page } from "./fakeTurnstile";
 import plan from "../fixtures/plan.json";
 import { estimatorCopy } from "../../lib/content";
 import { roleTotals, toBars } from "../../lib/timeline";

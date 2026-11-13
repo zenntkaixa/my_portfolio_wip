@@ -1,9 +1,9 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Page } from "./fakeTurnstile";
 import plan from "../fixtures/plan.json";
 import { estimatorCopy } from "../../lib/content";
 
 // The real API is never called: /api/estimate is intercepted in every test.
-// Turnstile uses Cloudflare's always-pass test key (see playwright.config.ts).
+// Turnstile is faked (fakeTurnstile.ts).
 
 const FEATURE = "Add one-time code login with email delivery and rate limiting";
 
@@ -98,7 +98,7 @@ test("502 shows Retry, which re-submits and succeeds", async ({ page }) => {
   await submit.click();
   await expect(banner(page, "unusable")).toBeVisible();
   const retry = page.getByRole("button", { name: estimatorCopy.retry });
-  await expect(retry).toBeEnabled({ timeout: 15_000 }); // needs a fresh Turnstile token
+  await expect(retry).toBeEnabled(); // needs a fresh Turnstile token
   await retry.click();
   await expect(page.getByRole("heading", { name: plan.plan.title })).toBeVisible();
   expect(calls).toBe(2);

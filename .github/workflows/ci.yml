@@ -29,6 +29,20 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          fetch-depth: 2 # the PR merge commit and its parents, for the docs-only check below
+
+      # Pull requests that change only Markdown or docs/ skip the browser tests: no test reads those files.
+      # Anything unexpected (a git error, an empty list) leaves docs_only unset, so the tests run.
+      - name: Check for a docs-only pull request
+        id: scope
+        if: github.event_name == 'pull_request'
+        run: |
+          files=$(git -c safe.directory="$GITHUB_WORKSPACE" diff --name-only HEAD^1 HEAD) || exit 0
+          echo "$files"
+          other=$(echo "$files" | grep -vE '^(docs/.*|[^/]+\.md)$' || true)
+          if [ -n "$files" ] && [ -z "$other" ]; then
+            echo "docs_only=true" >> "$GITHUB_OUTPUT"
+          fi
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
@@ -47,8 +61,10 @@ jobs:
       # Typecheck, unit tests and build. No secrets: every test mocks fetch.
       - run: npm run check
 
-      # Starts its own dev server; the API is mocked and Turnstile uses the always-pass test key.
+      # Starts its own dev server; the API is mocked. Turnstile is faked except in the specs about the widget,
+      # which use the always-pass test key.
       - run: npm run test:e2e
+        if: steps.scope.outputs.docs_only != 'true'
         timeout-minutes: 10
 
       - name: Upload Playwright traces
