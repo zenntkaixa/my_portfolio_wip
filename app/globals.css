@@ -78,6 +78,8 @@
 html,
 body {
   margin: 0;
+  /* A stray wide child must never make the page scroll sideways. */
+  overflow-x: clip;
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-body), system-ui, sans-serif;
@@ -92,6 +94,7 @@ h3 {
   font-family: var(--font-display), system-ui, sans-serif;
   line-height: 1.1;
   margin: 0;
+  text-wrap: balance;
 }
 
 p {
@@ -153,6 +156,10 @@ p {
 
   button:hover:not(:disabled) {
     border-color: var(--accent);
+  }
+
+  button:active:not(:disabled) {
+    background: var(--surface-2);
   }
 
   /* Disabled stays readable: muted ink on an inset surface, no opacity fade. */
@@ -264,6 +271,16 @@ p {
 
 .tile--lg {
   border-radius: var(--r-lg);
+}
+
+/* The one bold tile: a blueprint grid behind the estimator (docs/01-design-system.md). Thin --grid
+   lines over --surface, so text contrast is unchanged; forced-colour modes drop background images. */
+.tile--estimator {
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: -1px -1px;
 }
 
 @media (max-width: 1024px) {
@@ -443,6 +460,20 @@ p {
   line-height: 1.4;
 }
 
+.tile--hero > .hero__actions {
+  list-style: none;
+  padding: 0;
+  margin-top: 1.25em;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5em var(--gap);
+}
+
+.hero__actions > li {
+  margin: 0;
+}
+
 .hero__meta {
   display: flex;
   flex-wrap: wrap;
@@ -537,10 +568,13 @@ p {
   font-size: var(--fs-sm);
   line-height: 1.4;
   color: var(--muted);
+  /* No lone last word when a label takes two lines. */
+  text-wrap: balance;
 }
 
-/* Narrow tile: stacked rows, number beside its label, dividers become horizontal. */
-@container now (max-width: 360px) {
+/* Narrow tile: stacked rows, number beside its label, dividers become horizontal. Under 440px a column
+   is too narrow for the longest label (five lines at desktop width), so desktop uses rows too. */
+@container now (max-width: 440px) {
   .stats {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -792,6 +826,11 @@ p {
   text-decoration-thickness: 2px;
 }
 
+/* Pressed: a slightly darker fill. */
+.button-link:active {
+  filter: brightness(0.9);
+}
+
 .tile > .contact__links {
   list-style: none;
   padding: 0;
@@ -850,9 +889,15 @@ p {
   font-size: var(--fs-sm);
   line-height: 1.4;
   text-align: left;
+  /* The examples are full sentences, so they wrap on phones: keep the two lines even. */
+  text-wrap: balance;
   background: var(--surface-2);
   border: 1px solid var(--line);
   border-radius: var(--r-sm);
+}
+
+.estimator__chip:active:not(:disabled) {
+  background: var(--accent-soft);
 }
 
 .estimator__field {
@@ -1157,14 +1202,13 @@ p {
   gap: calc(var(--gap) / 2) var(--gap);
   padding: 0.75rem 1rem;
   background: var(--surface-2);
-  border: 1px solid var(--line);
-  border-left: 4px solid var(--ink);
+  /* One hairline all round: --ink for errors, --warn for the rate limit. */
+  border: 1px solid var(--ink);
   border-radius: var(--r-sm);
 }
 
 .estimator__banner[data-tone="warn"] {
   border-color: var(--warn);
-  border-left-color: var(--warn);
 }
 
 .estimator__banner p {
@@ -1251,7 +1295,7 @@ p {
   height: auto;
   overflow: visible;
   clip: auto;
-  padding: 8px 14px;
+  padding: 8px 16px;
   background: var(--surface);
   color: var(--ink);
   border: 1px solid var(--line);

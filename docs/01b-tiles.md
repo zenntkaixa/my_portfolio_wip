@@ -6,6 +6,8 @@ Read only the section for the tile you are changing.
 ## Hero
 - The name is the page's only `<h1>` (display font, `--fs-2xl`) and names the hero section.
 - A 72px initials avatar (`--accent` on `--accent-soft`, `--r-md`) sits beside the name and role.
+- Under the summary, a contact row: "Email me" as the primary button (`.button-link`, mailto) and a LinkedIn
+  text link, so a visitor can reach Izzat without scrolling. Email and LinkedIn only, never a phone number.
 - The meta line is the location, then the availability text with a small `--ok` dot before it.
 
 ## Now
@@ -13,8 +15,8 @@ Read only the section for the tile you are changing.
 - Stats: a `<dl>` of div groups, `<dt>` (label) before `<dd>` (value) in the DOM; CSS shows the value
   first. Value in the display font at `--fs-xl`; label at `--fs-sm` in `--muted`.
 - Three columns with 1px `--line` dividers between items only. The tile is a size container: under
-  360px wide (mobile, and desktop around 1025-1125px) the stats become rows, value beside label,
-  with horizontal dividers.
+  440px wide (mobile and desktop, where a column is too narrow for the longest label) the stats become
+  rows, value beside label, with horizontal dividers. Tablet widths keep the three columns.
 
 ## Featured project
 - Tagline is the lead line: `--fs-lg`, weight 600 (bolder than the hero headline because it sits

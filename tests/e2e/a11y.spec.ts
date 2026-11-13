@@ -12,7 +12,13 @@ const themes = ["light", "dark"] as const;
 type Theme = (typeof themes)[number];
 
 async function scan(page: Page) {
+  // Let tile and result entry animations finish, so axe sees final colours and not a half-faded tile.
+  await page.evaluate(() => Promise.all(document.getAnimations().map((a) => a.finished.catch(() => undefined))));
   // The fake Turnstile renders nothing, so there is no widget iframe to exclude.
+  // axe cannot compute contrast through a background image: with the estimator's blueprint grid on, 28
+  // text nodes there come back "incomplete" and go unchecked. The grid is 1px lines at under 10% alpha,
+  // so scan against the plain --surface underneath.
+  await page.addStyleTag({ content: ".tile--estimator { background-image: none !important; }" });
   const { violations } = await new AxeBuilder({ page }).withTags(TAGS).analyze();
   const summary = violations
     .flatMap((v) =>
@@ -40,16 +46,13 @@ async function showResults(page: Page, theme: Theme) {
   await open(page, theme);
   await submit(page);
   await expect(page.getByRole("heading", { name: plan.plan.title })).toBeVisible();
-  // Let tile/result entry animations finish so axe sees final colours.
-  await page.evaluate(() => Promise.all(document.getAnimations().map((a) => a.finished.catch(() => undefined))));
 }
 
 for (const theme of themes) {
   test.describe(`${theme} theme`, () => {
     test("home page on load", async ({ page }) => {
       await open(page, theme);
-      await page.evaluate(() => Promise.all(document.getAnimations().map((a) => a.finished.catch(() => undefined))));
-      await scan(page);
+          await scan(page);
     });
 
     test("estimator results, tab 1", async ({ page }) => {

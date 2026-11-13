@@ -8,7 +8,8 @@ export const profile = {
   headline:
     "Backend-first engineer. Eight years building the systems insurers and banks run on, now shipping them with AI coding agents.",
   summary:
-    "I work across Java, Spring Boot and REST APIs on the backend and React with TypeScript on the front. Lately I orchestrate AI coding agents to turn requirements into reviewed, production-ready changes, and I stay accountable for every line that merges.",
+    "Java, Spring Boot and REST APIs on the backend, React and TypeScript on the front. I stay accountable for every line that merges.",
+  emailCta: "Email me",
   location: "Petaling Jaya, Malaysia",
   availability: "Open to senior full-stack roles in Malaysia",
   contactNote: "The fastest way to reach me is email.",

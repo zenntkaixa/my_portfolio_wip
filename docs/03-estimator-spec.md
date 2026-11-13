@@ -60,6 +60,9 @@ Errors, always `{ "error": "human-readable sentence" }`:
 | 502 / 504 | Model error, bad JSON, reply cut off (`stop_reason: max_tokens`), timeout | Banner with retry button |
 | 503 | `ANTHROPIC_API_KEY` missing, (local setup), or production misconfiguration | Banner (shows during local setup only) |
 
+A 502 caused by an error status from the Anthropic API (nothing was generated or billed) gives the visitor's
+rate-limit slot and the daily count back. Timeouts, refusals and cut-off or unreadable replies keep the slot.
+
 ## Prompt
 Lives in `app/api/estimate/route.ts` as `SYSTEM_PROMPT`. Owned by the `prompt-engineer` subagent.
 - Roles allowed: `BA, Architect, Backend, Frontend, QA, DevOps, PM` (from `lib/estimate.ts`).

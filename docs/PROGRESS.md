@@ -5,35 +5,35 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
-## 2026-11-13 — Session 44: Faster CI (at Izzat's request, outside the roadmap)
+## 2026-11-13 — Session 49: Blueprint grid on the estimator tile
 
 **Done**
-- Browser tests that are not about Turnstile now load a fake widget (`tests/e2e/fakeTurnstile.ts`): five
-  specs (a11y, estimator, estimator-submit, -results, -tabs). Real widget stays in four specs.
-- CI skips the browser tests on PRs that change only `docs/` or root `*.md` files.
+- `.tile--estimator` draws the design system's blueprint grid (`--grid` lines, 24px) in both themes; the
+  old `TODO` in `EstimatorTile.tsx` is gone.
+- The axe scans switch the grid image off first: with it on, axe cannot compute contrast for 28 text
+  nodes on the tile and leaves them unchecked (measured: 36 checked with the grid, 64 without).
 
 **Verified**
-- `npm run check` 238 unit; e2e 93/93 in 70 s locally (CI step was 82 to 98 s; compare on this PR).
+- `npm run check` 247 unit; e2e 95/95; estimator inspected at 390 and 1440 light, 1440 dark, and with
+  results showing.
 
 **Waiting on Izzat**
-- Unchanged parked items: Hallmark; three audit items; stale CLAUDE.md "Accepted risks" wording.
+- Release of #50 to #53 and this PR. Undecided: full Hallmark redesign.
 
 ---
 
-## 2026-11-13 — Session 43: Custom domain live; roadmap complete
+## 2026-11-13 — Session 48: Loose ends: refund script verified, keyboard flake measured, clean-up
 
 **Done**
-- Released PR #43. Izzat set `TURNSTILE_HOSTNAME=zenntkaixa.dev`, redeployed, removed the old hostname
-  from the Turnstile widget and refreshed LinkedIn's Post Inspector.
-- Every roadmap item is now ticked.
-
-**Verified**
-- https://zenntkaixa.dev: canonical, `og:url` and share image on the new domain; fake token 403;
-  Izzat's estimate worked; Upstash has today's day counter. The old `vercel.app` address redirects (308).
+- Refund script run on the real Upstash database with throwaway `{rltest}` keys: refund lowers the day
+  counter once, keeps its expiry, is a no-op when repeated or when the counter is missing. Keys deleted.
+- Keyboard tab-order flake: 1 failure in the last 30 CI runs (passed on retry), 0 in 22 local runs, 12
+  alone and 10 under parallel load. Focus dropped to `body` at Turnstile's stop. No code change.
+- Removed a finished `TODO` in `estimator.spec.ts`; CLAUDE.md's CI line now mentions the docs-only skip.
 
 **Waiting on Izzat**
-- Parked: Hallmark polish/redesign; audit items (e2e on the production build, Dependabot alerts, refund
-  a slot on AI errors). CLAUDE.md "Accepted risks" rate-limit wording is stale.
+- Release of #50, #51, #52. Open: the estimator tile's blueprint grid background (in the design system,
+  `--grid` token unused, `TODO` in `EstimatorTile.tsx`); full Hallmark redesign.
 
 ---
 

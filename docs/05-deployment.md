@@ -67,8 +67,8 @@ widget (`tests/e2e/fakeTurnstile.ts`) that issues a token at once; `turnstile`, 
 tests (the `ci` check still runs and passes); pushes to `develop` and `main` always run them. Actions are pinned to commit SHAs; bump them only to releases at least two
 weeks old. Failed runs upload `test-results/` (traces) for 7 days. The repo is public. Branch protection on `develop`
 and `main`: a PR is required (0 approvals), the `ci` check must pass on an up-to-date branch, admins
-included, no force pushes or deletion. Head branches auto-delete on merge; secret scanning and push
-protection are on.
+included, no force pushes or deletion. Head branches auto-delete on merge; secret scanning, push
+protection and Dependabot alerts are on (alerts only: no automatic update PRs).
 
 ## Every later deploy
 Push to `main` (a release, see CLAUDE.md section 4, Branches) → Vercel builds and deploys to production. Pushes to

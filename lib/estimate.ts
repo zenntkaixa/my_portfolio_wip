@@ -91,6 +91,8 @@ export function validateRequest(body: unknown): { ok: true; value: EstimateReque
   const feature = typeof b.feature === "string" ? b.feature.trim() : "";
   if (feature.length < FEATURE_MIN) return { ok: false, error: `Describe the feature in at least ${FEATURE_MIN} characters.` };
   if (feature.length > FEATURE_MAX) return { ok: false, error: `Keep the description under ${FEATURE_MAX} characters.` };
+  // With the u flag this matches only unpaired surrogates: broken text the model API may reject.
+  if (/[\uD800-\uDFFF]/u.test(feature)) return { ok: false, error: "The description contains characters that can't be read. Retype it and try again." };
   const teamSize = b.teamSize;
   if (typeof teamSize !== "number" || !Number.isInteger(teamSize) || teamSize < 1 || teamSize > 12) return { ok: false, error: "Team size must be between 1 and 12." };
   const seniority = b.seniority as Seniority;
