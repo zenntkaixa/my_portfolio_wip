@@ -93,3 +93,7 @@ Accessibility 100, Best Practices 100, SEO 100.
 4. Release the `siteUrl` change, then set `TURNSTILE_HOSTNAME=zenntkaixa.dev` in Vercel Production and redeploy.
 5. Check on the new domain: one estimate works, a fake token gets 403, canonical and `og:url` show it.
    Then remove `my-portfolio-wip.vercel.app` from the Turnstile widget and make it redirect in Vercel.
+
+Done 2026-11-13, steps 1 to 5: canonical and `og:url` show the new domain, a fake token gets 403, Izzat's
+estimate worked there and reached the shared limiter, the old hostname is off the Turnstile widget, and
+`my-portfolio-wip.vercel.app` redirects (308) to the new domain.

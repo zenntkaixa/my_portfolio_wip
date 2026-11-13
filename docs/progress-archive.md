@@ -4,6 +4,23 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-12 — Session 41: Shared rate limit verified; roadmap parked
+
+**Done**
+- Released PR #38 (Upstash limiter, audit fixes). Upstash database `portfolio-ratelimit` created
+  (Singapore, free); Izzat added both env vars to Vercel Production and redeployed.
+- Hallmark design audit run; Izzat parked the polish/redesign choice. Custom domain deferred (remind Izzat).
+
+**Verified**
+- Limit script run on the real database (test keys, deleted). After 6 estimates on production the 6th
+  was refused; day counter 5, one hashed visitor key with 5 hits, expiries set.
+
+**Waiting on Izzat**
+- Custom domain (only open roadmap item). Open audit items, not on the roadmap: e2e on the production
+  build, Dependabot alerts, refund a slot on AI errors. CLAUDE.md "Accepted risks" rate-limit wording is stale.
+
+---
+
 ## 2026-11-12 — Session 40: Repo audit fixes
 
 **Done**
