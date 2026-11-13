@@ -5,6 +5,23 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-13 — Session 49: Blueprint grid on the estimator tile
+
+**Done**
+- `.tile--estimator` draws the design system's blueprint grid (`--grid` lines, 24px) in both themes; the
+  old `TODO` in `EstimatorTile.tsx` is gone.
+- The axe scans switch the grid image off first: with it on, axe cannot compute contrast for 28 text
+  nodes on the tile and leaves them unchecked (measured: 36 checked with the grid, 64 without).
+
+**Verified**
+- `npm run check` 247 unit; e2e 95/95; estimator inspected at 390 and 1440 light, 1440 dark, and with
+  results showing.
+
+**Waiting on Izzat**
+- Release of #50 to #53 and this PR. Undecided: full Hallmark redesign.
+
+---
+
 ## 2026-11-13 — Session 48: Loose ends: refund script verified, keyboard flake measured, clean-up
 
 **Done**
@@ -17,22 +34,6 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 **Waiting on Izzat**
 - Release of #50, #51, #52. Open: the estimator tile's blueprint grid background (in the design system,
   `--grid` token unused, `TODO` in `EstimatorTile.tsx`); full Hallmark redesign.
-
----
-
-## 2026-11-13 — Session 47: Hallmark re-audit; banner and stat label polish
-
-**Done**
-- Re-audit after #51: linter 0 FAIL (was 1), 1 REFLEX (slider thumb calc, a false alarm), 4 WARN.
-- Estimator banner: one hairline all round (`--ink`, `--warn` for the rate limit), no side stripe.
-- Now tile: stats stack as rows under 440px of tile width (was 360px), so desktop uses rows and the
-  longest label takes two lines, not five; labels wrap evenly. `docs/01b-tiles.md` updated.
-
-**Verified**
-- `npm run check` 247 unit; e2e 95/95; Now tile at 390 and 1440 and both banner tones inspected.
-
-**Waiting on Izzat**
-- Release of #50, #51 and this PR. Undecided: full Hallmark redesign (cards, headings, word count).
 
 ---
 
