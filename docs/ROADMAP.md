@@ -68,4 +68,4 @@ Agent hints in brackets.
 - [x] Optional: Upstash Redis rate limit (ADR-002 upgrade path) [api-engineer]
   - ADR-009: REST over fetch, no dependency, in-memory fallback; active and verified on production 2026-11-12
 - [x] Optional: custom domain
-  - zenntkaixa.dev (Cloudflare Registrar); `www` redirects to it; `TURNSTILE_HOSTNAME` switches right after release
+  - zenntkaixa.dev (Cloudflare Registrar); `www` redirects to it; `TURNSTILE_HOSTNAME` switched and verified 2026-11-13
