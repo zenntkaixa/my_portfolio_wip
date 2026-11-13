@@ -85,8 +85,10 @@ Read first by the sub-agents: project ones in `.claude/agents/` (builders: `ui-b
   API (mock `fetch`); `main`; the phone number; real client names. Section 6 has the full list.
 - **Security tooling:** `npm audit`; no CodeQL, Dependabot or image scans yet. Abuse and spend review of
   `app/api/**`, `lib/rateLimit.ts`, env, Turnstile and headers is `security-reviewer`'s job.
-- **Accepted risks (do not re-report):** the rate limit is per-instance memory (Turnstile and the daily
-  cap are the real gate; Upstash is the ADR-002 upgrade, M5); Vercel Preview uses Turnstile test keys (previews
+- **Accepted risks (do not re-report):** the rate limit and daily cap are shared through
+  Upstash Redis (ADR-009) and fall back to per-instance memory when Upstash is unset or failing; visitor
+  IPs go to Upstash as unsalted SHA-256 hashes (Turnstile and the Anthropic spend limit are the real
+  gates); Vercel Preview uses Turnstile test keys (previews
   sit behind Vercel login with no API key; production refuses test keys, see `lib/turnstileConfig.ts`);
   plus the decisions in `docs/security-review-m2.md` (dummy-secret skip outside production,
   `'unsafe-inline'` scripts, HSTS without subdomains).
