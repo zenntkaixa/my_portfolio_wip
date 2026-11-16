@@ -15,6 +15,7 @@ import {
   parseRetryAfter,
 } from "@/lib/estimatorClient";
 import { estimatorCopy, estimatorExamples } from "@/lib/content";
+import { sampleFeature, samplePlan, sampleTeam } from "@/lib/samplePlan";
 import { Turnstile, type TurnstileHandle } from "./Turnstile";
 import { PhaseTimeline } from "./PhaseTimeline";
 import { TaskTable } from "./TaskTable";
@@ -23,7 +24,7 @@ import { ResultTabs } from "./ResultTabs";
 type Status =
   | { kind: "idle" }
   | { kind: "submitting" }
-  | { kind: "success"; plan: Plan; teamLabel: string }
+  | { kind: "success"; plan: Plan; teamLabel: string; example?: true }
   | { kind: "error"; message: string; status: number };
 
 type Tab = "phases" | "tasks";
@@ -123,6 +124,13 @@ export function Estimator() {
     }
   }
 
+  /** Shows the stored example in the normal results view. Nothing is sent anywhere. */
+  function showExample() {
+    const teamLabel = `${estimatorCopy.people(sampleTeam.size)}, ${sampleTeam.seniority}`;
+    setStatus({ kind: "success", plan: samplePlan, teamLabel, example: true });
+    setTab("phases");
+  }
+
   function submit(e: React.FormEvent) {
     e.preventDefault();
     if (canSubmit) void run();
@@ -144,6 +152,14 @@ export function Estimator() {
         aria-busy={submitting}
       >
         <fieldset className="estimator__lock" disabled={submitting}>
+          <button
+            type="button"
+            className="estimator__example"
+            onClick={showExample}
+          >
+            {estimatorCopy.example.button}
+          </button>
+
           <div
             className="estimator__examples"
             role="group"
@@ -296,7 +312,17 @@ export function Estimator() {
 
         {status.kind === "success" && (
           <>
-            <h3 ref={heading} tabIndex={-1}>
+            {status.example && (
+              <p id="estimator-example-note" className="estimator__example-note">
+                {estimatorCopy.example.note(sampleFeature)}
+              </p>
+            )}
+            {/* Focus lands on the heading, so the example line above it is announced as its description. */}
+            <h3
+              ref={heading}
+              tabIndex={-1}
+              aria-describedby={status.example ? "estimator-example-note" : undefined}
+            >
               {status.plan.title}
             </h3>
             <p>{status.plan.summary}</p>
@@ -322,7 +348,11 @@ export function Estimator() {
                 },
               ]}
             />
-            <p className="estimator__note">{estimatorCopy.footerNote}</p>
+            <p className="estimator__note">
+              {status.example
+                ? estimatorCopy.example.footer
+                : estimatorCopy.footerNote}
+            </p>
           </>
         )}
       </section>

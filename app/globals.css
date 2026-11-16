@@ -217,8 +217,8 @@ p {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   padding: 0;
 }
 
@@ -809,6 +809,7 @@ p {
 .button-link {
   display: inline-block;
   max-width: 100%;
+  min-height: 44px;
   padding: 0.65em 1.25em;
   background: var(--accent);
   color: var(--accent-ink);
@@ -844,6 +845,22 @@ p {
   margin: 0;
 }
 
+/* Standalone text links are only a line of text tall: give them a 44px tap height. */
+.hero__actions a:not(.button-link),
+.project__links a,
+.contact__links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+/* Touch screens: single-line example chips reach the same height. */
+@media (pointer: coarse) {
+  .estimator__chip {
+    min-height: 44px;
+  }
+}
+
 @media (forced-colors: active) {
   .button-link {
     border-color: LinkText;
@@ -876,6 +893,19 @@ p {
   display: flex;
   flex-direction: column;
   gap: var(--gap);
+}
+
+/* The one-tap way to see what the tool produces; sized by its label, not the form's full width. */
+.estimator__example {
+  align-self: flex-start;
+  min-height: 44px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* Comfortable tap height for the submit button (its padding alone gives 43px). */
+.estimator__lock > button[type="submit"] {
+  min-height: 44px;
 }
 
 .estimator__examples {
