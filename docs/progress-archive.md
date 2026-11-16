@@ -4,6 +4,23 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-13 — Session 48: Loose ends: refund script verified, keyboard flake measured, clean-up
+
+**Done**
+- Refund script run on the real Upstash database with throwaway `{rltest}` keys: refund lowers the day
+  counter once, keeps its expiry, is a no-op when repeated or when the counter is missing. Keys deleted.
+- Keyboard tab-order flake: 1 failure in the last 30 CI runs (passed on retry), 0 in 22 local runs, 12
+  alone and 10 under parallel load. Focus dropped to `body` at Turnstile's stop. No code change.
+- Removed a finished `TODO` in `estimator.spec.ts`; CLAUDE.md's CI line now mentions the docs-only skip.
+
+**Waiting on Izzat**
+- Release of #50, #51, #52. Open: the estimator tile's blueprint grid background (in the design system,
+  `--grid` token unused, `TODO` in `EstimatorTile.tsx`); full Hallmark redesign.
+
+---
+
+---
+
 ## 2026-11-13 — Session 47: Hallmark re-audit; banner and stat label polish
 
 **Done**
