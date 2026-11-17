@@ -6,7 +6,7 @@ import plan from "../fixtures/plan.json";
 test("happy path shows both tabs", async ({ page }) => {
   await page.route("**/api/estimate", (route) => route.fulfill({ json: plan }));
   await page.goto("/");
-  await page.getByRole("button", { name: /one-time code/ }).click();
+  await page.getByRole("group", { name: "Example features" }).getByRole("button").first().click();
   const submit = page.getByRole("button", { name: "Estimate this feature" });
   await expect(submit).toBeEnabled(); // enabled once the fake Turnstile token arrives
   await submit.click();
@@ -21,7 +21,7 @@ test("rate limit shows the server message", async ({ page }) => {
     route.fulfill({ status: 429, json: { error: "You've used 5 estimates this hour. Try again in 40 minutes." } }),
   );
   await page.goto("/");
-  await page.getByRole("button", { name: /monthly PDF/ }).click();
+  await page.getByRole("group", { name: "Example features" }).getByRole("button").first().click();
   const submit = page.getByRole("button", { name: "Estimate this feature" });
   await expect(submit).toBeEnabled({ timeout: 15_000 });
   await submit.click();

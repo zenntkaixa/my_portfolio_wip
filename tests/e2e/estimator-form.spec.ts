@@ -3,12 +3,19 @@ import { estimatorCopy, estimatorExamples } from "../../lib/content";
 
 // The real API is never called: the form is only filled, never submitted.
 
-test("example chip fills the textarea and the counter updates", async ({ page }) => {
+test("three distinct example chips come from the pool; one fills the textarea", async ({ page }) => {
   await page.goto("/");
+  const group = page.getByRole("group", { name: "Example features" });
+  await expect(group).toHaveAttribute("data-ready", "");
+  const chips = await group.getByRole("button").allTextContents();
+  expect(chips).toHaveLength(3);
+  expect(new Set(chips).size).toBe(3);
+  for (const c of chips) expect(estimatorExamples).toContain(c);
+
   const box = page.getByLabel("Feature description");
-  await page.getByRole("button", { name: estimatorExamples[0] }).click();
-  await expect(box).toHaveValue(estimatorExamples[0]);
-  await expect(page.locator("#feature-count")).toContainText(`${estimatorExamples[0].length} /`);
+  await group.getByRole("button").first().click();
+  await expect(box).toHaveValue(chips[0]);
+  await expect(page.locator("#feature-count")).toContainText(`${chips[0].length} /`);
   await box.fill("short");
   await expect(page.locator("#feature-count")).toContainText("5 /");
   await expect(page.locator("#feature-count")).toContainText("at least");

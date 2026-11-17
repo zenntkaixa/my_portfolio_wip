@@ -14,10 +14,10 @@ The output must look like something a real delivery lead would hand a team.
 | Working style | Segmented control | `traditional` ("Traditional team", default), `ai-assisted` ("With AI agents") |
 | Human check | Cloudflare Turnstile widget | Required; reset after every request |
 
-**Example chips** above the textarea (click fills it), chosen to match Izzat's domain:
-- "Let policyholders log in with a one-time code sent by SMS"
-- "Customers upload claim photos and OCR fills in the claim form"
-- "Email each customer a monthly PDF billing statement"
+**Example chips** above the textarea (click fills it): three picked at random on each page load from
+`estimatorExamples` in `lib/content.ts` (35 features: insurance and billing, other industries, common building blocks and fun projects). The page is static, so
+the pick runs in the browser after hydration; the chips stay hidden, keeping their space, until then.
+The first entry, "Let policyholders log in with a one-time code sent by SMS", is also the example plan's feature.
 
 **"See an example plan"** button above the chips: one tap shows the stored plan in `lib/samplePlan.ts`
 (for the first example feature, 4 people, mixed) in the normal results view and moves focus to it.

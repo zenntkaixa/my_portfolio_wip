@@ -4,6 +4,17 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-17 — Session 52: Next.js 16.4.6
+
+**Done**
+- `next` 16.4.4 → 16.4.6 (GHSA-mfr8-8qww-v76h, moderate; the affected cache feature is not used here).
+  Asked for by Izzat. The notice that stopped `next build` and the dev server on alternate runs is gone.
+
+**Verified**
+- `npm audit`: 0 vulnerabilities; `npm run check` twice in a row, 256 unit; e2e 99/99.
+
+---
+
 ## 2026-11-17 — Session 51: "With AI agents" working style on the estimator
 
 **Done**
