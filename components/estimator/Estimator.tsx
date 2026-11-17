@@ -16,20 +16,30 @@ import {
   isPlan,
   parseRetryAfter,
 } from "@/lib/estimatorClient";
-import { estimatorCopy, estimatorExamples } from "@/lib/content";
+import { estimatorBriefs, estimatorCopy, estimatorExamples } from "@/lib/content";
 import { sampleFeature, samplePlan, sampleTeam } from "@/lib/samplePlan";
+import { pickRandom } from "@/lib/pick";
 import { Turnstile, type TurnstileHandle } from "./Turnstile";
 import { PhaseTimeline } from "./PhaseTimeline";
 import { TaskTable } from "./TaskTable";
 import { ResultTabs } from "./ResultTabs";
+import { BudgetView } from "./BudgetView";
+import type { Team } from "@/lib/budget";
 
 type Status =
   | { kind: "idle" }
   | { kind: "submitting" }
-  | { kind: "success"; plan: Plan; teamLabel: string; example?: true }
+  | { kind: "success"; plan: Plan; teamLabel: string; team: Team; example?: true }
   | { kind: "error"; message: string; status: number };
 
-type Tab = "phases" | "tasks";
+type Tab = "phases" | "tasks" | "budget";
+
+type Chip = { label: string; text: string };
+
+/** Two short examples, then one detailed brief that shows only its title. */
+function pickChips(short: string[], brief: { title: string; text: string }): Chip[] {
+  return [...short.map((text) => ({ label: text, text })), { label: estimatorCopy.briefChip(brief.title), text: brief.text }];
+}
 
 /**
  * The live AI demo. Spec: docs/03-estimator-spec.md.
@@ -39,6 +49,9 @@ export function Estimator() {
   const [teamSize, setTeamSize] = useState(4);
   const [seniority, setSeniority] = useState<Seniority>("mixed");
   const [mode, setMode] = useState<Mode>("traditional");
+  // The page is static, so the server always renders the first three; the shuffle happens after hydration.
+  const [examples, setExamples] = useState<Chip[] | null>(null);
+  useEffect(() => setExamples(pickChips(pickRandom(estimatorExamples, 2), pickRandom(estimatorBriefs, 1)[0])), []);
   const [token, setToken] = useState<string | null>(null);
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const [tab, setTab] = useState<Tab>("phases");
@@ -115,7 +128,7 @@ export function Estimator() {
         fail(502, estimatorCopy.badPlan);
       } else {
         const teamLabel = `${estimatorCopy.people(teamSize)}, ${seniority}${mode === "ai-assisted" ? estimatorCopy.mode.teamSuffix : ""}`;
-        setStatus({ kind: "success", plan: data.plan, teamLabel });
+        setStatus({ kind: "success", plan: data.plan, teamLabel, team: { size: teamSize, seniority, mode } });
         setTab("phases");
       }
     } catch (err) {
@@ -130,7 +143,7 @@ export function Estimator() {
   /** Shows the stored example in the normal results view. Nothing is sent anywhere. */
   function showExample() {
     const teamLabel = `${estimatorCopy.people(sampleTeam.size)}, ${sampleTeam.seniority}`;
-    setStatus({ kind: "success", plan: samplePlan, teamLabel, example: true });
+    setStatus({ kind: "success", plan: samplePlan, teamLabel, team: sampleTeam, example: true });
     setTab("phases");
   }
 
@@ -167,15 +180,16 @@ export function Estimator() {
             className="estimator__examples"
             role="group"
             aria-label="Example features"
+            data-ready={examples ? "" : undefined}
           >
-            {estimatorExamples.map((ex) => (
+            {(examples ?? pickChips(estimatorExamples.slice(0, 2), estimatorBriefs[0])).map((ex) => (
               <button
-                key={ex}
+                key={ex.text}
                 type="button"
                 className="estimator__chip"
-                onClick={() => setFeature(ex)}
+                onClick={() => setFeature(ex.text)}
               >
-                {ex}
+                {ex.label}
               </button>
             ))}
           </div>
@@ -288,6 +302,7 @@ export function Estimator() {
               ? estimatorCopy.waitLabel(formatWait(cooldown))
               : estimatorCopy.submit}
           </button>
+          <p className="estimator__model-note">{estimatorCopy.modelNote}</p>
         </fieldset>
       </form>
 
@@ -366,6 +381,11 @@ export function Estimator() {
                   key: "tasks",
                   label: estimatorCopy.tabTasks,
                   content: <TaskTable plan={status.plan} />,
+                },
+                {
+                  key: "budget",
+                  label: estimatorCopy.tabBudget,
+                  content: <BudgetView plan={status.plan} team={status.team} />,
                 },
               ]}
             />

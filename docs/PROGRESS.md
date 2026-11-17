@@ -5,35 +5,37 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
-## 2026-11-17 — Session 52: Next.js 16.4.6
+## 2026-11-17 — Session 56: Budget tab in MYR
 
 **Done**
-- `next` 16.4.4 → 16.4.6 (GHSA-mfr8-8qww-v76h, moderate; the affected cache feature is not used here).
-  Asked for by Izzat. The notice that stopped `next build` and the dev server on alternate runs is gone.
+- Third results tab "Budget": people cost = hours × rate (junior RM 40, mid 75, senior 120, mixed
+  80 per hour, including EPF and overheads); AI agent seats RM 80–400 per person per started month
+  in AI mode; the model lists 3–8 one-off and monthly tool costs as ranges (capped at RM 200,000
+  each). Build total and monthly running total; notes name the rates and say "planning only".
 
 **Verified**
-- `npm audit`: 0 vulnerabilities; `npm run check` twice in a row, 256 unit; e2e 99/99.
+- 6 real Haiku runs gave sensible items. `npm run check` 266 unit; e2e 102/102; no sideways scroll at
+  320 and 390; `security-reviewer` (Opus) and `reviewer`: no blocking findings.
+
+**Next / waiting on Izzat:** review the PR; release #61–#63 and this when ready.
 
 ---
 
-## 2026-11-17 — Session 51: "With AI agents" working style on the estimator
+## 2026-11-17 — Session 55: Confidence by counted facts; detailed brief chips
 
 **Done**
-- New "Working style" control (Traditional team, the default / With AI agents). The request gains an
-  optional `mode`; the prompt gets rules for AI-assisted plans (human review task per build phase,
-  hours stay human effort, no fixed productivity claim). Plan shape unchanged. Izzat's idea; default,
-  labels and prompt rules approved by him.
+- Confidence now counts six facts the description states (users, systems, data, integrations,
+  limits, out of scope): high at 4+, medium at 2-3, low at 0-1. Its hint changes with the level.
+- Each load shows two short examples and one of 8 detailed briefs ("Detailed brief: <title>"),
+  so visitors can compare. Izzat's idea.
 
 **Verified**
-- 14 real Haiku runs on a local server (both styles): all returned plans; one fix from them
-  (traditional plans no longer mention AI). `npm run check` 256 unit; e2e 99/99; `security-reviewer` (Opus): no findings; `reviewer`: no blocking
-  findings; screenshots of the form at 320, 390 and 1440.
-- `next build` stops on alternate local runs with a Next.js notice about 16.4.4 (GHSA-mfr8-8qww-v76h,
-  moderate; the affected cache feature is not used here). Upgrade to 16.4.6 is a separate task.
+- 12 real Haiku runs: 8/8 briefs "high"; one-liners "low" (3) or "medium" (1). `npm run check` 260
+  unit; e2e 99/100, the Tab-order test then passed 8/8 (known flake); screenshots at 390;
+  `security-reviewer` (Opus): no findings.
 
-**Waiting on Izzat**
-- Decided 2026-11-17: production stays on Haiku (Sonnet plans were more detailed in a 3-prompt
-  comparison, but about 20 times the cost). Undecided: Hallmark redesign.
+**Next up**
+- Cost budget (needs Izzat's currency, rates and which working styles).
 
 ---
 

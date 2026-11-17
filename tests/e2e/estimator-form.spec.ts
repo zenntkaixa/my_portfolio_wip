@@ -1,14 +1,25 @@
 import { expect, test } from "@playwright/test";
-import { estimatorExamples } from "../../lib/content";
+import { estimatorBriefs, estimatorCopy, estimatorExamples } from "../../lib/content";
 
 // The real API is never called: the form is only filled, never submitted.
 
-test("example chip fills the textarea and the counter updates", async ({ page }) => {
+test("two short examples and one detailed brief; the brief chip fills its full text", async ({ page }) => {
   await page.goto("/");
+  const group = page.getByRole("group", { name: "Example features" });
+  await expect(group).toHaveAttribute("data-ready", "");
+  const chips = await group.getByRole("button").allTextContents();
+  expect(chips).toHaveLength(3);
+  expect(chips[0]).not.toBe(chips[1]);
+  for (const c of chips.slice(0, 2)) expect(estimatorExamples).toContain(c);
+  const brief = estimatorBriefs.find((b) => estimatorCopy.briefChip(b.title) === chips[2]);
+  expect(brief, chips[2]).toBeDefined();
+  await group.getByRole("button").nth(2).click();
+  await expect(page.getByLabel("Feature description")).toHaveValue(brief!.text);
+
   const box = page.getByLabel("Feature description");
-  await page.getByRole("button", { name: estimatorExamples[0] }).click();
-  await expect(box).toHaveValue(estimatorExamples[0]);
-  await expect(page.locator("#feature-count")).toContainText(`${estimatorExamples[0].length} /`);
+  await group.getByRole("button").first().click();
+  await expect(box).toHaveValue(chips[0]);
+  await expect(page.locator("#feature-count")).toContainText(`${chips[0].length} /`);
   await box.fill("short");
   await expect(page.locator("#feature-count")).toContainText("5 /");
   await expect(page.locator("#feature-count")).toContainText("at least");
@@ -41,4 +52,9 @@ test("no horizontal scroll at 320px", async ({ page }) => {
   await page.goto("/");
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(overflow).toBeLessThanOrEqual(0);
+});
+
+test("the model note under submit sets expectations", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByText(estimatorCopy.modelNote)).toBeVisible();
 });

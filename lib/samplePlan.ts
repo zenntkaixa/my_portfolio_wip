@@ -1,11 +1,12 @@
-import type { Plan, Seniority } from "@/lib/estimate";
+import type { Plan } from "@/lib/estimate";
+import type { Team } from "@/lib/budget";
 import { estimatorExamples } from "@/lib/content";
 
 // The plan behind "See an example plan": shown without any request, so it costs no human check, no
 // rate-limit slot and no model call. Written by hand to show the format (the page says so); a real
 // reply for the same feature can replace it. tests/unit/samplePlan.test.ts keeps it a valid Plan.
 export const sampleFeature = estimatorExamples[0];
-export const sampleTeam: { size: number; seniority: Seniority } = { size: 4, seniority: "mixed" };
+export const sampleTeam: Team = { size: 4, seniority: "mixed", mode: "traditional" };
 
 export const samplePlan: Plan = {
   "title": "SMS one-time code login",
@@ -111,6 +112,12 @@ export const samplePlan: Plan = {
     "Brute-force attempts on codes"
   ],
   "confidence": "medium",
+  "costs": [
+    { "item": "SMS provider for one-time codes", "kind": "monthly", "low": 150, "high": 600 },
+    { "item": "Redis cache for codes and rate limits", "kind": "monthly", "low": 50, "high": 250 },
+    { "item": "Error monitoring and alerts", "kind": "monthly", "low": 0, "high": 200 },
+    { "item": "Security review of the login flow", "kind": "one-off", "low": 3000, "high": 8000 }
+  ],
   "totalHours": 112,
   "totalDays": 13,
   "calendarWeeks": 2.6

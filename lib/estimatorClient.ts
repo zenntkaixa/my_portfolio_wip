@@ -15,6 +15,12 @@ export function isPlan(v: unknown): v is Plan {
     return false;
   if (!isStrList(v.assumptions) || !isStrList(v.risks)) return false;
   if (
+    !Array.isArray(v.costs) ||
+    !v.costs.every((c) => isObj(c) && typeof c.item === "string" && typeof c.low === "number" && typeof c.high === "number")
+  ) {
+    return false;
+  }
+  if (
     typeof v.totalHours !== "number" ||
     typeof v.totalDays !== "number" ||
     typeof v.calendarWeeks !== "number"

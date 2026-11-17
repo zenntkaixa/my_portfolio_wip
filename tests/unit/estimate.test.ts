@@ -269,3 +269,32 @@ describe("normalisePlan limits and normalisation", () => {
     expect(p.phases[0].tasks[0].role).toBe(expected);
   });
 });
+
+describe("normalisePlan costs", () => {
+  const base = { phases: [{ name: "Build", tasks: [{ task: "Do it", role: "Backend", hours: 8 }] }] };
+
+  it("keeps valid items, orders each range, clamps and drops bad ones", () => {
+    const p = normalisePlan({
+      ...base,
+      costs: [
+        { item: "Hosting", kind: "monthly", low: 300, high: 100 },
+        { item: "Pen test", kind: "one-off", low: -50, high: 2e9 },
+        { item: "Odd kind", kind: "weekly", low: 1.4, high: 2.6 },
+        { item: "", kind: "monthly", low: 1, high: 2 },
+        { item: "No numbers", kind: "monthly", low: "a", high: 5 },
+        null,
+      ],
+    });
+    expect(p?.costs).toEqual([
+      { item: "Hosting", kind: "monthly", low: 100, high: 300 },
+      { item: "Pen test", kind: "one-off", low: 0, high: 200_000 },
+      { item: "Odd kind", kind: "monthly", low: 1, high: 3 },
+    ]);
+  });
+
+  it("caps the list at 8 and treats a missing list as empty", () => {
+    const many = Array.from({ length: 12 }, (_, i) => ({ item: `Item ${i}`, kind: "monthly", low: 1, high: 2 }));
+    expect(normalisePlan({ ...base, costs: many })?.costs).toHaveLength(8);
+    expect(normalisePlan(base)?.costs).toEqual([]);
+  });
+});
