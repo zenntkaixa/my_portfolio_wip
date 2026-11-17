@@ -131,6 +131,29 @@ test.describe("now tile", () => {
       await expect(group.getByRole("definition")).toHaveText(stat.value);
     }
   });
+
+  // The visible digits are a CSS counter driven by --stat-n; the accessible text is the real value.
+  const counted = (page: Page) =>
+    region(page).locator(".stats__count").evaluateAll((els) => els.map((e) => getComputedStyle(e).getPropertyValue("--stat-n").trim()));
+  const finals = now.stats.map((s) => String(parseInt(s.value, 10)));
+  const animations = (page: Page) =>
+    region(page).locator(".stats__count").evaluateAll((els) => els.map((e) => getComputedStyle(e).animationName));
+
+  test("stats count up to their real values, and the counting digits are hidden from screen readers", async ({ page }) => {
+    await page.goto("/");
+    expect(await animations(page)).toEqual(finals.map(() => "stat-count"));
+    await expect.poll(() => counted(page)).toEqual(finals);
+    for (const el of await region(page).locator(".stats__count").all()) await expect(el).toHaveAttribute("aria-hidden", "true");
+  });
+
+  test.describe("with reduced motion", () => {
+    test.use({ reducedMotion: "reduce" });
+    test("stats show their final values at once", async ({ page }) => {
+      await page.goto("/");
+      expect(await animations(page)).toEqual(finals.map(() => "none"));
+      expect(await counted(page)).toEqual(finals);
+    });
+  });
 });
 
 test.describe("featured project tile", () => {

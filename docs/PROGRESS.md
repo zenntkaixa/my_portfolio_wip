@@ -5,6 +5,22 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-17 — Session 59: Now stats count up (M7)
+
+**Done**
+- Release #69 (M6) confirmed live by Izzat: the human check passes silently, and a real "With AI
+  agents" estimate ran through the new layout and the Budget tab.
+- The Now stats count up from 0 once on load: a registered `--stat-n` integer through a CSS counter,
+  no JS. The real value is in an `.sr-only` span; reduced motion shows it at once.
+- Scope cut agreed with Izzat: no hover lift (no tile is clickable); timeline bars already animate.
+
+**Verified**
+- `npm run check`, e2e (new count-up and reduced-motion tests); sampled 5/66/9 → 8/100/13 in 0.9s.
+
+**Next:** M7 item 2, keyboard Tab-order test on the fake Turnstile.
+
+---
+
 ## 2026-11-17 — Session 58: Hero headline with a proof line (M6 done)
 
 **Done**
@@ -18,23 +34,6 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
   diff, so no `reviewer` run (CLAUDE.md section 4).
 
 **Next:** M6 is complete. Release #67 and this when Izzat asks.
-
----
-
-## 2026-11-17 — Session 57: Estimator shows its output first (M6)
-
-**Done**
-- Reviewed the 1,760 live sites in emmabostian/developer-portfolios; the best lead with an outcome
-  and proof and show a working demo first. Izzat added M6 from it (#66).
-- The estimator opens on the stored example plan (no request, no focus move); form and results sit
-  side by side from 1025px. The "See an example plan" button is gone. Turnstile is
-  `interaction-only`, with "Waiting for human check…" under submit while the token is pending.
-
-**Verified**
-- `npm run check`, e2e and screenshots at 390/1024/1440; `security-reviewer` (Opus): no blocking
-  findings; `reviewer` found a focus pull after a field error, fixed and covered by a test.
-
-**Next:** M6 item 2, hero headline with a proof line (Izzat approves the wording).
 
 ---
 
