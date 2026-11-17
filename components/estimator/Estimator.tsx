@@ -288,6 +288,7 @@ export function Estimator() {
               ? estimatorCopy.waitLabel(formatWait(cooldown))
               : estimatorCopy.submit}
           </button>
+          <p className="estimator__model-note">{estimatorCopy.modelNote}</p>
         </fieldset>
       </form>
 

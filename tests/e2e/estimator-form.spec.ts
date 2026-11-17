@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { estimatorExamples } from "../../lib/content";
+import { estimatorCopy, estimatorExamples } from "../../lib/content";
 
 // The real API is never called: the form is only filled, never submitted.
 
@@ -41,4 +41,9 @@ test("no horizontal scroll at 320px", async ({ page }) => {
   await page.goto("/");
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(overflow).toBeLessThanOrEqual(0);
+});
+
+test("the model note under submit sets expectations", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByText(estimatorCopy.modelNote)).toBeVisible();
 });
