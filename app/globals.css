@@ -1432,6 +1432,28 @@ p {
   border-top-width: 2px;
 }
 
+/* Results tab 3: budget (reuses the tab 2 table). Two columns fit a phone, so no sideways scroll. */
+.tab2-table.tab3-table {
+  min-width: 0;
+}
+
+.tab3-table td:last-child {
+  min-width: 5.5rem;
+}
+
+.tab3-detail {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+
+.tab3-note {
+  margin: 0;
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+
 /* Results tab 1: summary, timeline, phase cards, lists */
 .results-phases {
   display: flex;

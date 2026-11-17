@@ -198,6 +198,29 @@ export const estimatorCopy = {
   tabsLabel: "Plan views",
   tabPhases: "Phases and timeline",
   tabTasks: "Task table",
+  tabBudget: "Budget",
+  budget: {
+    caption: "Estimated budget in Malaysian ringgit",
+    regionLabel: "Budget table, scrolls sideways on small screens",
+    item: "Item",
+    cost: "Cost (MYR)",
+    buildGroup: "Build",
+    people: "People",
+    peopleDetail: (hours: number, rate: number, seniority: string) =>
+      `${hours} hours × RM ${rate} per hour (${seniority})`,
+    seats: "AI agent seats",
+    seatsDetail: (count: number, months: number, low: number, high: number) =>
+      `${count} ${count === 1 ? "seat" : "seats"} × ${months} ${months === 1 ? "month" : "months"} × RM ${low}–${high}`,
+    buildTotal: "Estimated build cost",
+    monthlyGroup: "Running costs after launch",
+    monthlyTotal: "Per month",
+    none: "None listed",
+    rateNote: (rates: Record<string, number>) =>
+      `People cost uses assumed in-house rates in Malaysia, including EPF, SOCSO, EIS and overheads: ${Object.entries(rates)
+        .map(([k, v]) => `${k} RM ${v}`)
+        .join(", ")} per hour.`,
+    note: "Tool and running costs are typical market ranges for planning only. Verify with vendors before you commit.",
+  },
   submit: "Estimate this feature",
   briefChip: (title: string) => `Detailed brief: ${title}`,
   modelNote: "Uses Claude Haiku for a fast answer in about 10 seconds. Treat the plan as a starting point, not a quote.",

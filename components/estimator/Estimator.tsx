@@ -23,14 +23,16 @@ import { Turnstile, type TurnstileHandle } from "./Turnstile";
 import { PhaseTimeline } from "./PhaseTimeline";
 import { TaskTable } from "./TaskTable";
 import { ResultTabs } from "./ResultTabs";
+import { BudgetView } from "./BudgetView";
+import type { Team } from "@/lib/budget";
 
 type Status =
   | { kind: "idle" }
   | { kind: "submitting" }
-  | { kind: "success"; plan: Plan; teamLabel: string; example?: true }
+  | { kind: "success"; plan: Plan; teamLabel: string; team: Team; example?: true }
   | { kind: "error"; message: string; status: number };
 
-type Tab = "phases" | "tasks";
+type Tab = "phases" | "tasks" | "budget";
 
 type Chip = { label: string; text: string };
 
@@ -126,7 +128,7 @@ export function Estimator() {
         fail(502, estimatorCopy.badPlan);
       } else {
         const teamLabel = `${estimatorCopy.people(teamSize)}, ${seniority}${mode === "ai-assisted" ? estimatorCopy.mode.teamSuffix : ""}`;
-        setStatus({ kind: "success", plan: data.plan, teamLabel });
+        setStatus({ kind: "success", plan: data.plan, teamLabel, team: { size: teamSize, seniority, mode } });
         setTab("phases");
       }
     } catch (err) {
@@ -141,7 +143,7 @@ export function Estimator() {
   /** Shows the stored example in the normal results view. Nothing is sent anywhere. */
   function showExample() {
     const teamLabel = `${estimatorCopy.people(sampleTeam.size)}, ${sampleTeam.seniority}`;
-    setStatus({ kind: "success", plan: samplePlan, teamLabel, example: true });
+    setStatus({ kind: "success", plan: samplePlan, teamLabel, team: sampleTeam, example: true });
     setTab("phases");
   }
 
@@ -379,6 +381,11 @@ export function Estimator() {
                   key: "tasks",
                   label: estimatorCopy.tabTasks,
                   content: <TaskTable plan={status.plan} />,
+                },
+                {
+                  key: "budget",
+                  label: estimatorCopy.tabBudget,
+                  content: <BudgetView plan={status.plan} team={status.team} />,
                 },
               ]}
             />

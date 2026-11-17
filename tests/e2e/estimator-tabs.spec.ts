@@ -20,6 +20,7 @@ async function showResults(page: Page) {
 
 const phases = (page: Page) => page.getByRole("tab", { name: estimatorCopy.tabPhases });
 const tasks = (page: Page) => page.getByRole("tab", { name: estimatorCopy.tabTasks });
+const budget = (page: Page) => page.getByRole("tab", { name: estimatorCopy.tabBudget });
 
 test("arrow keys move focus, selection and panel, wrapping both ways", async ({ page }) => {
   await showResults(page);
@@ -31,11 +32,15 @@ test("arrow keys move focus, selection and panel, wrapping both ways", async ({ 
   await expect(page.getByRole("tabpanel", { name: estimatorCopy.tabTasks })).toBeVisible();
   await expect(page.getByRole("tabpanel", { name: estimatorCopy.tabPhases })).toBeHidden();
   await page.keyboard.press("ArrowRight");
+  await expect(budget(page)).toBeFocused();
+  await page.keyboard.press("ArrowRight");
   await expect(phases(page)).toBeFocused();
   await expect(phases(page)).toHaveAttribute("aria-selected", "true");
   await page.keyboard.press("ArrowLeft");
+  await expect(budget(page)).toBeFocused();
+  await expect(budget(page)).toHaveAttribute("aria-selected", "true");
+  await page.keyboard.press("ArrowLeft");
   await expect(tasks(page)).toBeFocused();
-  await expect(tasks(page)).toHaveAttribute("aria-selected", "true");
   await page.keyboard.press("ArrowLeft");
   await expect(phases(page)).toBeFocused();
   await expect(page.getByRole("tabpanel", { name: estimatorCopy.tabPhases })).toBeVisible();
@@ -45,8 +50,8 @@ test("Home and End jump to the first and last tab", async ({ page }) => {
   await showResults(page);
   await phases(page).focus();
   await page.keyboard.press("End");
-  await expect(tasks(page)).toBeFocused();
-  await expect(tasks(page)).toHaveAttribute("aria-selected", "true");
+  await expect(budget(page)).toBeFocused();
+  await expect(budget(page)).toHaveAttribute("aria-selected", "true");
   await page.keyboard.press("Home");
   await expect(phases(page)).toBeFocused();
   await expect(phases(page)).toHaveAttribute("aria-selected", "true");
@@ -79,7 +84,7 @@ test("clicking a tab selects it", async ({ page }) => {
 test("ARIA wiring links tabs and panels both ways", async ({ page }) => {
   await showResults(page);
   await expect(page.getByRole("tablist", { name: estimatorCopy.tabsLabel })).toBeVisible();
-  for (const tab of [phases(page), tasks(page)]) {
+  for (const tab of [phases(page), tasks(page), budget(page)]) {
     const panelId = await tab.getAttribute("aria-controls");
     const tabId = await tab.getAttribute("id");
     expect(panelId).toBeTruthy();

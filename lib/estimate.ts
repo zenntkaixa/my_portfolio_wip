@@ -76,6 +76,7 @@ export type Phase = {
   durationDays: number;
   tasks: Task[];
 };
+export type CostItem = { item: string; kind: "one-off" | "monthly"; low: number; high: number };
 export type Plan = {
   title: string;
   summary: string;
@@ -83,6 +84,8 @@ export type Plan = {
   phases: Phase[];
   risks: string[];
   confidence: "low" | "medium" | "high";
+  /** Tools and running costs in MYR, as ranges. People cost is calculated in lib/budget.ts. */
+  costs: CostItem[];
   totalHours: number;
   totalDays: number;
   calendarWeeks: number;
@@ -116,6 +119,21 @@ const num = (v: unknown, min: number, max: number) => {
 };
 const strList = (v: unknown, limit: number) =>
   Array.isArray(v) ? v.map((x) => str(x, 300)).filter(Boolean).slice(0, limit) : [];
+
+const COST_MAX = 200_000;
+/** Up to 8 cost items; invalid ones are dropped, values clamped to 0..200,000 and ordered low to high. */
+function normaliseCosts(v: unknown): CostItem[] {
+  if (!Array.isArray(v)) return [];
+  return v.slice(0, 8).flatMap((c) => {
+    const o = (c ?? {}) as Record<string, unknown>;
+    const item = str(o.item, 80);
+    const a = Number(o.low);
+    const b = Number(o.high);
+    if (!item || !Number.isFinite(a) || !Number.isFinite(b)) return [];
+    const [low, high] = [a, b].map((n) => Math.round(Math.min(COST_MAX, Math.max(0, n)))).sort((x, y) => x - y);
+    return [{ item, kind: o.kind === "one-off" ? "one-off" : "monthly", low, high } as CostItem];
+  });
+}
 
 /** Turn whatever the model returned into a safe, consistent Plan. Totals are computed here, not trusted. */
 export function normalisePlan(raw: unknown): Plan | null {
@@ -153,6 +171,7 @@ export function normalisePlan(raw: unknown): Plan | null {
     phases,
     risks: strList(r.risks, 6),
     confidence,
+    costs: normaliseCosts(r.costs),
     // Task hours are in 0.5 steps, so the sum is exact. Not rounded, so it always equals the
     // phase subtotals and role totals the UI shows.
     totalHours,

@@ -33,8 +33,8 @@ test("tab 1 shows summary, timeline bars, cards, assumptions and risks", async (
     expect(parseFloat(/--width:\s*([\d.]+)%/.exec(style)![1])).toBeCloseTo(b.widthPct, 2);
   }
 
-  await expect(page.getByText(estimatorCopy.summary.hoursValue(p.totalHours))).toBeVisible();
-  await expect(page.getByText(estimatorCopy.summary.weeksValue(p.calendarWeeks))).toBeVisible();
+  await expect(page.getByTestId("summary").getByText(estimatorCopy.summary.hoursValue(p.totalHours))).toBeVisible();
+  await expect(page.getByTestId("summary").getByText(estimatorCopy.summary.weeksValue(p.calendarWeeks))).toBeVisible();
   await expect(page.getByTestId("summary").getByText(p.confidence, { exact: true })).toBeVisible();
   const { confidence, ...fixed } = estimatorCopy.summary.hints;
   for (const hint of Object.values(fixed)) {

@@ -149,9 +149,10 @@ test("keyboard-only submit moves focus to the results heading; arrows, Home and 
   await expect(phases).toBeFocused();
   await expect(phases).toHaveAttribute("aria-selected", "true");
   await page.keyboard.press("End");
-  await expect(tasks).toBeFocused();
-  await expect(tasks).toHaveAttribute("aria-selected", "true");
-  await page.keyboard.press("ArrowLeft");
+  const budgetTab = page.getByRole("tab", { name: estimatorCopy.tabBudget });
+  await expect(budgetTab).toBeFocused();
+  await expect(budgetTab).toHaveAttribute("aria-selected", "true");
+  await page.keyboard.press("ArrowRight");
   await expect(phases).toBeFocused();
 
   // The results stay keyboard-reachable: Tab from the tab goes to the panel, which shows a ring too.

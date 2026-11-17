@@ -5,6 +5,22 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-17 — Session 56: Budget tab in MYR
+
+**Done**
+- Third results tab "Budget": people cost = hours × rate (junior RM 40, mid 75, senior 120, mixed
+  80 per hour, including EPF and overheads); AI agent seats RM 80–400 per person per started month
+  in AI mode; the model lists 3–8 one-off and monthly tool costs as ranges (capped at RM 200,000
+  each). Build total and monthly running total; notes name the rates and say "planning only".
+
+**Verified**
+- 6 real Haiku runs gave sensible items. `npm run check` 266 unit; e2e 102/102; no sideways scroll at
+  320 and 390; `security-reviewer` (Opus) and `reviewer`: no blocking findings.
+
+**Next / waiting on Izzat:** review the PR; release #61–#63 and this when ready.
+
+---
+
 ## 2026-11-17 — Session 55: Confidence by counted facts; detailed brief chips
 
 **Done**
@@ -17,22 +33,6 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 - 12 real Haiku runs: 8/8 briefs "high"; one-liners "low" (3) or "medium" (1). `npm run check` 260
   unit; e2e 99/100, the Tab-order test then passed 8/8 (known flake); screenshots at 390;
   `security-reviewer` (Opus): no findings.
-
-**Next up**
-- Cost budget (needs Izzat's currency, rates and which working styles).
-
----
-
-## 2026-11-17 — Session 54: Shuffled example chips
-
-**Done**
-- The estimator shows 3 example features picked at random on each page load from 35 in
-  `estimatorExamples` (`lib/pick.ts`): insurance, other industries and fun projects. Chips stay hidden, keeping their space, until the pick runs.
-  Asked for by Izzat, who asked for the wider mix.
-
-**Verified**
-- `npm run check` 259 unit; e2e 100/100 (one earlier run: 2 a11y tests timed out on the first page
-  load, passed on rerun with no change); 6 loads at 390: different picks, same height, layout shift 0.
 
 **Next up**
 - Cost budget (needs Izzat's currency, rates and which working styles).
