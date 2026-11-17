@@ -78,3 +78,12 @@ lead with an outcome and proof, and the most memorable shows a working demo befo
   (`appearance: "interaction-only"`; verification unchanged) [ui-builder]
 - [x] Hero headline states an outcome with a proof line under it (e.g. merged PRs, years,
   certification); Izzat approves the wording before it ships [ui-builder]
+
+## M7 — Feel and reliability
+Added 2026-11-17. Release #69 (M6) confirmed live by Izzat: human check passes silently, and a real
+"With AI agents" estimate ran through the new layout and the Budget tab.
+- [ ] Gentle motion: tiles lift slightly on hover, the Now stats (8+, 100, 13) count up once, and plan
+  timeline bars grow in. All of it off under `prefers-reduced-motion`; no new dependency; no layout
+  shift [ui-builder]
+- [ ] Keyboard Tab-order test uses the fake Turnstile (`tests/e2e/fakeTurnstile.ts`) like the other
+  specs, so it no longer depends on Cloudflare's network (fails about 4 in 8 runs on the VM) [qa-tester]
