@@ -4,6 +4,24 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-16 — Session 50: Example plan button; 44px tap targets
+
+**Done**
+- "See an example plan" on the estimator shows the stored plan in `lib/samplePlan.ts` with no request
+  (no Turnstile, slot or model call). It is labelled as an example and as written by hand; a live
+  estimate replaces it. Wording approved by Izzat.
+- Tap targets: text links in the hero, project and contact tiles, both link buttons, submit and the
+  theme button are at least 44px tall; chips on touch screens too.
+
+**Verified**
+- `npm run check` 250 unit; e2e 98/98; `reviewer`: no blocking findings; `/visual-check` of the
+  estimator, contact and hero tiles; the example view at 390.
+
+**Waiting on Izzat**
+- Optional: paste a real Claude reply to replace the hand-written example. Undecided: Hallmark redesign.
+
+---
+
 ## 2026-11-13 — Session 49: Blueprint grid on the estimator tile
 
 **Done**
