@@ -27,6 +27,21 @@ test("success moves focus to the results heading and shows the footer note", asy
   await expect(page.getByText(estimatorCopy.footerNote)).toBeVisible();
 });
 
+test("working style defaults to traditional; choosing AI agents is sent and shown in the team line", async ({ page }) => {
+  let sent: { mode?: string } = {};
+  await page.route("**/api/estimate", (route) => {
+    sent = route.request().postDataJSON();
+    return route.fulfill({ json: plan });
+  });
+  const submit = await prepare(page);
+  const group = page.getByRole("group", { name: estimatorCopy.mode.legend });
+  await expect(group.getByRole("radio", { name: estimatorCopy.mode.options.traditional })).toBeChecked();
+  await group.getByRole("radio", { name: estimatorCopy.mode.options["ai-assisted"] }).check();
+  await submit.click();
+  await expect(page.getByText(`4 people, mixed${estimatorCopy.mode.teamSuffix}`)).toBeVisible();
+  expect(sent.mode).toBe("ai-assisted");
+});
+
 test("slow response shows the status line and disables the form", async ({ page }) => {
   await page.route("**/api/estimate", async (route) => {
     await new Promise((r) => setTimeout(r, 1500));

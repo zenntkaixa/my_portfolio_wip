@@ -94,11 +94,11 @@ test("Tab order, visible focus indicators, no trap, Shift+Tab goes back", async 
   // First stop is the skip link; it targets the estimator.
   expect(stops[0], listing).toMatchObject({ tag: "a", name: "Skip to the estimator" });
 
-  // Estimator controls come in the documented order: chips, textarea, slider, seniority, submit.
+  // Estimator controls come in the documented order: chips, textarea, slider, seniority, working style, submit.
   const est = stops.filter((s) => s.section === "estimator");
   const chips = est.filter((s) => s.tag === "button" && s.role === "").slice(0, -1);
   const kinds = est.map((s) => (s.tag === "textarea" ? "textarea" : s.role === "range" ? "range" : s.role === "radio" ? "radio" : "button"));
-  expect(kinds, listing).toEqual([...chips.map(() => "button"), "textarea", "range", "radio", "button"]);
+  expect(kinds, listing).toEqual([...chips.map(() => "button"), "textarea", "range", "radio", "radio", "button"]);
   expect(chips.length, listing).toBeGreaterThanOrEqual(1);
   expect(est.at(-1)?.name, listing).toBe(estimatorCopy.submit);
 

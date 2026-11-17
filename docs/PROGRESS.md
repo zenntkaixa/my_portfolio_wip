@@ -5,35 +5,35 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
-## 2026-11-13 — Session 49: Blueprint grid on the estimator tile
+## 2026-11-17 — Session 52: Next.js 16.4.6
 
 **Done**
-- `.tile--estimator` draws the design system's blueprint grid (`--grid` lines, 24px) in both themes; the
-  old `TODO` in `EstimatorTile.tsx` is gone.
-- The axe scans switch the grid image off first: with it on, axe cannot compute contrast for 28 text
-  nodes on the tile and leaves them unchecked (measured: 36 checked with the grid, 64 without).
+- `next` 16.4.4 → 16.4.6 (GHSA-mfr8-8qww-v76h, moderate; the affected cache feature is not used here).
+  Asked for by Izzat. The notice that stopped `next build` and the dev server on alternate runs is gone.
 
 **Verified**
-- `npm run check` 247 unit; e2e 95/95; estimator inspected at 390 and 1440 light, 1440 dark, and with
-  results showing.
-
-**Waiting on Izzat**
-- Release of #50 to #53 and this PR. Undecided: full Hallmark redesign.
+- `npm audit`: 0 vulnerabilities; `npm run check` twice in a row, 256 unit; e2e 99/99.
 
 ---
 
-## 2026-11-13 — Session 48: Loose ends: refund script verified, keyboard flake measured, clean-up
+## 2026-11-17 — Session 51: "With AI agents" working style on the estimator
 
 **Done**
-- Refund script run on the real Upstash database with throwaway `{rltest}` keys: refund lowers the day
-  counter once, keeps its expiry, is a no-op when repeated or when the counter is missing. Keys deleted.
-- Keyboard tab-order flake: 1 failure in the last 30 CI runs (passed on retry), 0 in 22 local runs, 12
-  alone and 10 under parallel load. Focus dropped to `body` at Turnstile's stop. No code change.
-- Removed a finished `TODO` in `estimator.spec.ts`; CLAUDE.md's CI line now mentions the docs-only skip.
+- New "Working style" control (Traditional team, the default / With AI agents). The request gains an
+  optional `mode`; the prompt gets rules for AI-assisted plans (human review task per build phase,
+  hours stay human effort, no fixed productivity claim). Plan shape unchanged. Izzat's idea; default,
+  labels and prompt rules approved by him.
+
+**Verified**
+- 14 real Haiku runs on a local server (both styles): all returned plans; one fix from them
+  (traditional plans no longer mention AI). `npm run check` 256 unit; e2e 99/99; `security-reviewer` (Opus): no findings; `reviewer`: no blocking
+  findings; screenshots of the form at 320, 390 and 1440.
+- `next build` stops on alternate local runs with a Next.js notice about 16.4.4 (GHSA-mfr8-8qww-v76h,
+  moderate; the affected cache feature is not used here). Upgrade to 16.4.6 is a separate task.
 
 **Waiting on Izzat**
-- Release of #50, #51, #52. Open: the estimator tile's blueprint grid background (in the design system,
-  `--grid` token unused, `TODO` in `EstimatorTile.tsx`); full Hallmark redesign.
+- Decided 2026-11-17: production stays on Haiku (Sonnet plans were more detailed in a 3-prompt
+  comparison, but about 20 times the cost). Undecided: Hallmark redesign.
 
 ---
 

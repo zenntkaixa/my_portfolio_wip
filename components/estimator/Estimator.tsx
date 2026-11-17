@@ -4,8 +4,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   FEATURE_MAX,
   FEATURE_MIN,
+  MODES,
   SENIORITY,
   type Plan,
+  type Mode,
   type Seniority,
 } from "@/lib/estimate";
 import {
@@ -15,6 +17,7 @@ import {
   parseRetryAfter,
 } from "@/lib/estimatorClient";
 import { estimatorCopy, estimatorExamples } from "@/lib/content";
+import { sampleFeature, samplePlan, sampleTeam } from "@/lib/samplePlan";
 import { Turnstile, type TurnstileHandle } from "./Turnstile";
 import { PhaseTimeline } from "./PhaseTimeline";
 import { TaskTable } from "./TaskTable";
@@ -23,7 +26,7 @@ import { ResultTabs } from "./ResultTabs";
 type Status =
   | { kind: "idle" }
   | { kind: "submitting" }
-  | { kind: "success"; plan: Plan; teamLabel: string }
+  | { kind: "success"; plan: Plan; teamLabel: string; example?: true }
   | { kind: "error"; message: string; status: number };
 
 type Tab = "phases" | "tasks";
@@ -35,6 +38,7 @@ export function Estimator() {
   const [feature, setFeature] = useState("");
   const [teamSize, setTeamSize] = useState(4);
   const [seniority, setSeniority] = useState<Seniority>("mixed");
+  const [mode, setMode] = useState<Mode>("traditional");
   const [token, setToken] = useState<string | null>(null);
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const [tab, setTab] = useState<Tab>("phases");
@@ -88,7 +92,7 @@ export function Estimator() {
       const res = await fetch("/api/estimate", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ feature, teamSize, seniority, token }),
+        body: JSON.stringify({ feature, teamSize, seniority, mode, token }),
         signal: controller.signal,
       });
       let data: unknown = null;
@@ -110,7 +114,7 @@ export function Estimator() {
       } else if (!isObj(data) || !isPlan(data.plan)) {
         fail(502, estimatorCopy.badPlan);
       } else {
-        const teamLabel = `${estimatorCopy.people(teamSize)}, ${seniority}`;
+        const teamLabel = `${estimatorCopy.people(teamSize)}, ${seniority}${mode === "ai-assisted" ? estimatorCopy.mode.teamSuffix : ""}`;
         setStatus({ kind: "success", plan: data.plan, teamLabel });
         setTab("phases");
       }
@@ -121,6 +125,13 @@ export function Estimator() {
       // Turnstile tokens are single-use.
       turnstile.current?.reset();
     }
+  }
+
+  /** Shows the stored example in the normal results view. Nothing is sent anywhere. */
+  function showExample() {
+    const teamLabel = `${estimatorCopy.people(sampleTeam.size)}, ${sampleTeam.seniority}`;
+    setStatus({ kind: "success", plan: samplePlan, teamLabel, example: true });
+    setTab("phases");
   }
 
   function submit(e: React.FormEvent) {
@@ -144,6 +155,14 @@ export function Estimator() {
         aria-busy={submitting}
       >
         <fieldset className="estimator__lock" disabled={submitting}>
+          <button
+            type="button"
+            className="estimator__example"
+            onClick={showExample}
+          >
+            {estimatorCopy.example.button}
+          </button>
+
           <div
             className="estimator__examples"
             role="group"
@@ -244,6 +263,24 @@ export function Estimator() {
             </div>
           </fieldset>
 
+          <fieldset className="estimator__seniority" disabled={submitting}>
+            <legend className="estimator__label">{estimatorCopy.mode.legend}</legend>
+            <div className="estimator__segments estimator__segments--two">
+              {MODES.map((m) => (
+                <label key={m} className="estimator__segment">
+                  <input
+                    type="radio"
+                    name="mode"
+                    value={m}
+                    checked={mode === m}
+                    onChange={() => setMode(m)}
+                  />
+                  <span>{estimatorCopy.mode.options[m]}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
           <Turnstile ref={turnstile} onToken={onToken} />
 
           <button type="submit" disabled={!canSubmit}>
@@ -296,7 +333,17 @@ export function Estimator() {
 
         {status.kind === "success" && (
           <>
-            <h3 ref={heading} tabIndex={-1}>
+            {status.example && (
+              <p id="estimator-example-note" className="estimator__example-note">
+                {estimatorCopy.example.note(sampleFeature)}
+              </p>
+            )}
+            {/* Focus lands on the heading, so the example line above it is announced as its description. */}
+            <h3
+              ref={heading}
+              tabIndex={-1}
+              aria-describedby={status.example ? "estimator-example-note" : undefined}
+            >
               {status.plan.title}
             </h3>
             <p>{status.plan.summary}</p>
@@ -322,7 +369,11 @@ export function Estimator() {
                 },
               ]}
             />
-            <p className="estimator__note">{estimatorCopy.footerNote}</p>
+            <p className="estimator__note">
+              {status.example
+                ? estimatorCopy.example.footer
+                : estimatorCopy.footerNote}
+            </p>
           </>
         )}
       </section>
