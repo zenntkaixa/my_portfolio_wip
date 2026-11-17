@@ -1,9 +1,10 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Page } from "./fakeTurnstile";
 import plan from "../fixtures/plan.json";
 import { estimatorCopy } from "../../lib/content";
 
 // Keyboard-only walkthrough. The real API is never called: /api/estimate is intercepted.
-// Turnstile uses the always-pass test key, so submit enables after a token arrives.
+// Turnstile is faked (./fakeTurnstile), so submit enables at once without waiting on Cloudflare;
+// the real widget's keyboard behaviour is Cloudflare's, and its stops were already excluded below.
 
 const FEATURE = "Add one-time code login with email delivery and rate limiting";
 const MAX_STOPS = 120;

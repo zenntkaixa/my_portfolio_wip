@@ -86,5 +86,5 @@ Added 2026-11-17. Release #69 (M6) confirmed live by Izzat: human check passes s
   `prefers-reduced-motion` [ui-builder]
   - Scope cut with Izzat 2026-11-17: timeline bars already grow in (M2); no hover lift, since no tile
     is clickable as a whole and the design system says no scale
-- [ ] Keyboard Tab-order test uses the fake Turnstile (`tests/e2e/fakeTurnstile.ts`) like the other
+- [x] Keyboard Tab-order test uses the fake Turnstile (`tests/e2e/fakeTurnstile.ts`) like the other
   specs, so it no longer depends on Cloudflare's network (fails about 4 in 8 runs on the VM) [qa-tester]

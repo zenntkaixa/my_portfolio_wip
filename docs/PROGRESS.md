@@ -5,19 +5,18 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
-## 2026-11-17 — Session 59: Now stats count up (M7)
+## 2026-11-17 — Session 59: Now stats count up; keyboard test on fake Turnstile (M7 done)
 
 **Done**
-- Release #69 (M6) confirmed live by Izzat: the human check passes silently, and a real "With AI
-  agents" estimate ran through the new layout and the Budget tab.
-- The Now stats count up from 0 once on load: a registered `--stat-n` integer through a CSS counter,
-  no JS. The real value is in an `.sr-only` span; reduced motion shows it at once.
-- Scope cut agreed with Izzat: no hover lift (no tile is clickable); timeline bars already animate.
+- Release #69 (M6) confirmed live by Izzat: human check passes silently; a real "With AI agents"
+  estimate ran through the new layout and the Budget tab.
+- Now stats count up once on load: CSS-only `--stat-n` counter, real value in `.sr-only`, off under
+  reduced motion. Scope cut with Izzat: no hover lift; timeline bars already animate.
+- Keyboard Tab-order test now uses `./fakeTurnstile`: 20/20 runs pass (was about 4 in 8 failing).
+- Izzat's instruction: batch tasks on one branch with fewer PRs (overrides one PR per task in
+  CLAUDE.md section 4). Both M7 items ship in one PR.
 
-**Verified**
-- `npm run check`, e2e (new count-up and reduced-motion tests); sampled 5/66/9 → 8/100/13 in 0.9s.
-
-**Next:** M7 item 2, keyboard Tab-order test on the fake Turnstile.
+**Verified:** `npm run check`, e2e; the count-up tests fail without the animation; `reviewer`: no blocking findings.
 
 ---
 
