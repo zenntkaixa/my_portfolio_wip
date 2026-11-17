@@ -32,7 +32,8 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
   moderate; the affected cache feature is not used here). Upgrade to 16.4.6 is a separate task.
 
 **Waiting on Izzat**
-- Undecided: Sonnet for visitors (about 20 times the cost per estimate); Hallmark redesign.
+- Decided 2026-11-17: production stays on Haiku (Sonnet plans were more detailed in a 3-prompt
+  comparison, but about 20 times the cost). Undecided: Hallmark redesign.
 
 ---
 
