@@ -73,7 +73,7 @@ Agent hints in brackets.
 ## M6 — First impression
 Added 2026-11-17 after reviewing the 1,760 live sites in emmabostian/developer-portfolios: the best
 lead with an outcome and proof, and the most memorable shows a working demo before any input.
-- [ ] Estimator shows its output first: the example plan sits beside the form (stacked on mobile)
+- [x] Estimator shows its output first: the example plan sits beside the form (stacked on mobile)
   before any input, and the Turnstile widget only appears when a challenge is needed
   (`appearance: "interaction-only"`; verification unchanged) [ui-builder]
 - [ ] Hero headline states an outcome with a proof line under it (e.g. merged PRs, years,

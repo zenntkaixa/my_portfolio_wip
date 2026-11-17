@@ -890,17 +890,10 @@ p {
 /* ---- Estimator form ---- */
 
 .estimator__form {
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: var(--gap);
-}
-
-/* The one-tap way to see what the tool produces; sized by its label, not the form's full width. */
-.estimator__example {
-  align-self: flex-start;
-  min-height: 44px;
-  font-weight: 600;
-  color: var(--accent);
 }
 
 /* Comfortable tap height for the submit button (its padding alone gives 43px). */
@@ -962,6 +955,11 @@ p {
 
 .estimator__count[data-warn="true"] {
   color: var(--warn);
+}
+
+/* An empty live region leaves the flex flow (no gap) but stays in the accessibility tree. */
+.turnstile__error:empty {
+  position: absolute;
 }
 
 .turnstile__error {
@@ -1182,6 +1180,20 @@ p {
   flex-direction: column;
   gap: calc(var(--gap) / 2);
   margin-top: var(--gap);
+  min-width: 0;
+}
+
+/* Form | results side by side once the bento is 12 columns wide (above 1024px); stacked below. */
+@media (min-width: 1025px) {
+  .estimator {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: calc(var(--gap) * 2);
+    align-items: start;
+  }
+  .estimator__results {
+    margin-top: 0;
+  }
 }
 
 .estimator__status {

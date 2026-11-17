@@ -12,7 +12,7 @@ The output must look like something a real delivery lead would hand a team.
 | Team size | Range slider plus number readout | Integer 1 to 12, default 4 |
 | Seniority | Segmented control | `junior`, `mid`, `senior`, `mixed` (default `mixed`) |
 | Working style | Segmented control | `traditional` ("Traditional team", default), `ai-assisted` ("With AI agents") |
-| Human check | Cloudflare Turnstile widget | Required; reset after every request |
+| Human check | Cloudflare Turnstile widget (`appearance: "interaction-only"`: visible only if a challenge is needed) | Required; reset after every request |
 
 **Example chips** above the textarea (click fills it), picked at random on each page load: two short
 examples from `estimatorExamples` (35: insurance and billing, other industries, common building blocks,
@@ -22,10 +22,11 @@ detailed description earns. The page is static, so the pick runs in the browser 
 chips stay hidden, keeping their space, until then. The first short example, "Let policyholders log in
 with a one-time code sent by SMS", is also the example plan's feature.
 
-**"See an example plan"** button above the chips: one tap shows the stored plan in `lib/samplePlan.ts`
-(for the first example feature, 4 people, mixed) in the normal results view and moves focus to it.
-Nothing is sent: no Turnstile token, no rate-limit slot, no model call. A line above it says it is an
-example and for which feature. A live estimate replaces it.
+**The results area starts as the example plan** (`lib/samplePlan.ts`: first example feature, 4 people,
+mixed), rendered on the server, so the page shows its output first. A line above the heading says it is an
+example and for which feature. On load nothing is fetched and focus does not move. Nothing is sent for it:
+no Turnstile token, no rate-limit slot, no model call. A live estimate replaces it, and focus moves to the
+results heading only after a submit. From 1025px the form and results sit in two columns; below that they stack.
 
 ## API contract
 

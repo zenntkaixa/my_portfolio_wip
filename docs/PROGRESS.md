@@ -5,6 +5,23 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-17 — Session 57: Estimator shows its output first (M6)
+
+**Done**
+- Reviewed the 1,760 live sites in emmabostian/developer-portfolios; the best lead with an outcome
+  and proof and show a working demo first. Izzat added M6 from it (#66).
+- The estimator opens on the stored example plan (no request, no focus move); form and results sit
+  side by side from 1025px. The "See an example plan" button is gone. Turnstile is
+  `interaction-only`, with "Waiting for human check…" under submit while the token is pending.
+
+**Verified**
+- `npm run check`, e2e and screenshots at 390/1024/1440; `security-reviewer` (Opus): no blocking
+  findings; `reviewer` found a focus pull after a field error, fixed and covered by a test.
+
+**Next:** M6 item 2, hero headline with a proof line (Izzat approves the wording).
+
+---
+
 ## 2026-11-17 — Session 56: Budget tab in MYR
 
 **Done**
@@ -18,24 +35,6 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
   320 and 390; `security-reviewer` (Opus) and `reviewer`: no blocking findings.
 
 **Next / waiting on Izzat:** review the PR; release #61–#63 and this when ready.
-
----
-
-## 2026-11-17 — Session 55: Confidence by counted facts; detailed brief chips
-
-**Done**
-- Confidence now counts six facts the description states (users, systems, data, integrations,
-  limits, out of scope): high at 4+, medium at 2-3, low at 0-1. Its hint changes with the level.
-- Each load shows two short examples and one of 8 detailed briefs ("Detailed brief: <title>"),
-  so visitors can compare. Izzat's idea.
-
-**Verified**
-- 12 real Haiku runs: 8/8 briefs "high"; one-liners "low" (3) or "medium" (1). `npm run check` 260
-  unit; e2e 99/100, the Tab-order test then passed 8/8 (known flake); screenshots at 390;
-  `security-reviewer` (Opus): no findings.
-
-**Next up**
-- Cost budget (needs Izzat's currency, rates and which working styles).
 
 ---
 

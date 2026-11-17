@@ -93,6 +93,8 @@ export const Turnstile = forwardRef<TurnstileHandle, Props>(function Turnstile(
       widgetId.current = window.turnstile.render(container.current, {
         sitekey: siteKey,
         action: "estimate",
+        // Show the widget only when Cloudflare needs a visible challenge; verification is unchanged.
+        appearance: "interaction-only",
         theme:
           document.documentElement.dataset.theme === "dark" ? "dark" : "light",
         // "flexible" has a 300px minimum width, which overflows the tile on ~320px phones.

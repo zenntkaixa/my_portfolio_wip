@@ -4,6 +4,24 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-17 — Session 55: Confidence by counted facts; detailed brief chips
+
+**Done**
+- Confidence now counts six facts the description states (users, systems, data, integrations,
+  limits, out of scope): high at 4+, medium at 2-3, low at 0-1. Its hint changes with the level.
+- Each load shows two short examples and one of 8 detailed briefs ("Detailed brief: <title>"),
+  so visitors can compare. Izzat's idea.
+
+**Verified**
+- 12 real Haiku runs: 8/8 briefs "high"; one-liners "low" (3) or "medium" (1). `npm run check` 260
+  unit; e2e 99/100, the Tab-order test then passed 8/8 (known flake); screenshots at 390;
+  `security-reviewer` (Opus): no findings.
+
+**Next up**
+- Cost budget (needs Izzat's currency, rates and which working styles).
+
+---
+
 ## 2026-11-17 — Session 54: Shuffled example chips
 
 **Done**
