@@ -15,6 +15,10 @@ describe("validateRequest", () => {
     [{ ...valid, teamSize: 0 }, "Team size"],
     [{ ...valid, teamSize: 2.5 }, "Team size"],
     [{ ...valid, seniority: "principal" }, "seniority"],
+    [{ ...valid, mode: "turbo" }, "working style"],
+    [{ ...valid, mode: null }, "working style"],
+    [{ ...valid, mode: "__proto__" }, "working style"],
+    [{ ...valid, mode: ["ai-assisted"] }, "working style"],
     [{ ...valid, token: "" }, "human check"],
     [null, "JSON body"],
   ])("rejects %j", (body, message) => {
@@ -65,9 +69,16 @@ describe("validateRequest edge cases", () => {
     expect(validateRequest({ ...valid, token: null }).ok).toBe(false);
   });
 
+  it("defaults a missing mode to traditional and accepts ai-assisted", () => {
+    const r = validateRequest(valid);
+    expect(r.ok && r.value.mode).toBe("traditional");
+    const ai = validateRequest({ ...valid, mode: "ai-assisted" });
+    expect(ai.ok && ai.value.mode).toBe("ai-assisted");
+  });
+
   it("ignores extra fields", () => {
     const r = validateRequest({ ...valid, admin: true, model: "x" });
-    expect(r.ok && Object.keys(r.value).sort()).toEqual(["feature", "seniority", "teamSize", "token"]);
+    expect(r.ok && Object.keys(r.value).sort()).toEqual(["feature", "mode", "seniority", "teamSize", "token"]);
   });
 });
 

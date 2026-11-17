@@ -29,7 +29,7 @@ function mockFetch(reply: AnthropicStub, turnstile: TurnstileStub | ((token: str
   return calls;
 }
 
-function request(seniority = "mixed", over: { token?: string; feature?: string; headers?: Record<string, string>; ip?: string; raw?: string } = {}) {
+function request(seniority = "mixed", over: { token?: string; feature?: string; headers?: Record<string, string>; ip?: string; raw?: string; mode?: string } = {}) {
   ipCounter += 1; // fresh IP per test so the in-memory hourly limit never trips
   return new Request("http://localhost/api/estimate", {
     method: "POST",
@@ -44,6 +44,7 @@ function request(seniority = "mixed", over: { token?: string; feature?: string; 
         feature: over.feature ?? "Let users reset their password by email link",
         teamSize: 2,
         seniority,
+        mode: over.mode,
         token: over.token ?? "t",
       }),
   });
@@ -174,6 +175,20 @@ describe("POST /api/estimate", () => {
     mockFetch({ text: '{"error": "Describe a software feature instead."}' });
     const res = await POST(request());
     expect(res.status).toBe(422);
+  });
+
+  it("sends the working style to the model and returns it", async () => {
+    const calls = mockFetch({ text: modelPlan });
+    const res = await POST(request("senior", { mode: "ai-assisted" }));
+    const sent = calls[0].body as { messages: { content: string }[]; system: string };
+    expect(sent.messages[0].content.split("\n")[1]).toBe("Working style: AI-assisted (every engineer works with AI coding agents).");
+    expect(sent.system).toContain("Never state or imply a fixed productivity gain");
+    expect(sent.system).toContain("human review task in every build phase");
+    expect((await res.json()).inputs.mode).toBe("ai-assisted");
+
+    await POST(request());
+    expect((calls[1].body as typeof sent).messages[0].content).toContain("Working style: traditional (no AI coding agents).");
+    expect((await POST(request("mixed", { mode: "turbo" }))).status).toBe(400);
   });
 
   it("describes mixed seniority without listing a headcount per level", async () => {
