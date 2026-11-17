@@ -35,7 +35,7 @@ export function PhaseTimeline({ plan, teamLabel }: { plan: Plan; teamLabel: stri
           <dd>
             <span className={`tab1-badge tab1-badge--${plan.confidence}`}>{plan.confidence}</span>
           </dd>
-          <dd className="tab1-hint">{copy.summary.hints.confidence}</dd>
+          <dd className="tab1-hint">{copy.summary.hints.confidence[plan.confidence]}</dd>
         </div>
       </dl>
 

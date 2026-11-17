@@ -1,16 +1,20 @@
 import { expect, test } from "@playwright/test";
-import { estimatorCopy, estimatorExamples } from "../../lib/content";
+import { estimatorBriefs, estimatorCopy, estimatorExamples } from "../../lib/content";
 
 // The real API is never called: the form is only filled, never submitted.
 
-test("three distinct example chips come from the pool; one fills the textarea", async ({ page }) => {
+test("two short examples and one detailed brief; the brief chip fills its full text", async ({ page }) => {
   await page.goto("/");
   const group = page.getByRole("group", { name: "Example features" });
   await expect(group).toHaveAttribute("data-ready", "");
   const chips = await group.getByRole("button").allTextContents();
   expect(chips).toHaveLength(3);
-  expect(new Set(chips).size).toBe(3);
-  for (const c of chips) expect(estimatorExamples).toContain(c);
+  expect(chips[0]).not.toBe(chips[1]);
+  for (const c of chips.slice(0, 2)) expect(estimatorExamples).toContain(c);
+  const brief = estimatorBriefs.find((b) => estimatorCopy.briefChip(b.title) === chips[2]);
+  expect(brief, chips[2]).toBeDefined();
+  await group.getByRole("button").nth(2).click();
+  await expect(page.getByLabel("Feature description")).toHaveValue(brief!.text);
 
   const box = page.getByLabel("Feature description");
   await group.getByRole("button").first().click();

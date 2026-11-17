@@ -4,6 +4,23 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-17 — Session 53: Result label hints, defined confidence, Haiku note
+
+**Done**
+- One-line hints under Effort, Calendar, Team and Confidence; a note under submit that the estimator
+  uses Claude Haiku and the plan is a starting point, not a quote. Wording approved by Izzat.
+- The prompt now defines "confidence" (how much of the plan rests on assumptions). Before, it was
+  undefined and every test plan came back "medium".
+
+**Verified**
+- `npm run check` 256 unit; e2e 100/100; `security-reviewer` (Opus): no findings; screenshots at 390
+  and 1440. 8 real Haiku runs: vague descriptions gave "low" (4/4), detailed ones "medium" (4/4).
+
+**Next up (approved ideas)**
+- Shuffled example chips from a larger list; cost budget (needs Izzat's currency and rates).
+
+---
+
 ## 2026-11-17 — Session 52: Next.js 16.4.6
 
 **Done**

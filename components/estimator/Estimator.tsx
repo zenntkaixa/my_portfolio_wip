@@ -16,7 +16,7 @@ import {
   isPlan,
   parseRetryAfter,
 } from "@/lib/estimatorClient";
-import { estimatorCopy, estimatorExamples } from "@/lib/content";
+import { estimatorBriefs, estimatorCopy, estimatorExamples } from "@/lib/content";
 import { sampleFeature, samplePlan, sampleTeam } from "@/lib/samplePlan";
 import { pickRandom } from "@/lib/pick";
 import { Turnstile, type TurnstileHandle } from "./Turnstile";
@@ -32,6 +32,13 @@ type Status =
 
 type Tab = "phases" | "tasks";
 
+type Chip = { label: string; text: string };
+
+/** Two short examples, then one detailed brief that shows only its title. */
+function pickChips(short: string[], brief: { title: string; text: string }): Chip[] {
+  return [...short.map((text) => ({ label: text, text })), { label: estimatorCopy.briefChip(brief.title), text: brief.text }];
+}
+
 /**
  * The live AI demo. Spec: docs/03-estimator-spec.md.
  */
@@ -41,8 +48,8 @@ export function Estimator() {
   const [seniority, setSeniority] = useState<Seniority>("mixed");
   const [mode, setMode] = useState<Mode>("traditional");
   // The page is static, so the server always renders the first three; the shuffle happens after hydration.
-  const [examples, setExamples] = useState<string[] | null>(null);
-  useEffect(() => setExamples(pickRandom(estimatorExamples, 3)), []);
+  const [examples, setExamples] = useState<Chip[] | null>(null);
+  useEffect(() => setExamples(pickChips(pickRandom(estimatorExamples, 2), pickRandom(estimatorBriefs, 1)[0])), []);
   const [token, setToken] = useState<string | null>(null);
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const [tab, setTab] = useState<Tab>("phases");
@@ -173,14 +180,14 @@ export function Estimator() {
             aria-label="Example features"
             data-ready={examples ? "" : undefined}
           >
-            {(examples ?? estimatorExamples.slice(0, 3)).map((ex) => (
+            {(examples ?? pickChips(estimatorExamples.slice(0, 2), estimatorBriefs[0])).map((ex) => (
               <button
-                key={ex}
+                key={ex.text}
                 type="button"
                 className="estimator__chip"
-                onClick={() => setFeature(ex)}
+                onClick={() => setFeature(ex.text)}
               >
-                {ex}
+                {ex.label}
               </button>
             ))}
           </div>

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { pickRandom } from "@/lib/pick";
-import { estimatorExamples } from "@/lib/content";
+import { estimatorBriefs, estimatorExamples } from "@/lib/content";
+import { FEATURE_MAX, validateRequest } from "@/lib/estimate";
 
 describe("pickRandom", () => {
   it("returns n distinct items from the pool", () => {
@@ -25,5 +26,16 @@ describe("estimatorExamples", () => {
     expect(estimatorExamples.length).toBeGreaterThanOrEqual(30);
     expect(new Set(estimatorExamples).size).toBe(estimatorExamples.length);
     for (const ex of estimatorExamples) expect(ex.length).toBeGreaterThanOrEqual(20);
+  });
+});
+
+describe("estimatorBriefs", () => {
+  it("has unique titles and texts that pass the request validation", () => {
+    expect(estimatorBriefs.length).toBeGreaterThanOrEqual(6);
+    expect(new Set(estimatorBriefs.map((b) => b.title)).size).toBe(estimatorBriefs.length);
+    for (const b of estimatorBriefs) {
+      expect(b.text.length).toBeLessThanOrEqual(FEATURE_MAX);
+      expect(validateRequest({ feature: b.text, teamSize: 3, seniority: "mixed", token: "t" }).ok).toBe(true);
+    }
   });
 });

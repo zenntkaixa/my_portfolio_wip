@@ -185,6 +185,7 @@ describe("POST /api/estimate", () => {
     expect(sent.system).toContain("Never state or imply a fixed productivity gain");
     expect(sent.system).toContain("human review task in every build phase");
     expect(sent.system).toContain('"confidence" rates how much of the plan rests on assumptions');
+    expect(sent.system).toContain('"high" when it states at least four');
     expect((await res.json()).inputs.mode).toBe("ai-assisted");
 
     await POST(request());
