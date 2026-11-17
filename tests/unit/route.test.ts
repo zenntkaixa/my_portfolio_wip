@@ -187,7 +187,8 @@ describe("POST /api/estimate", () => {
     expect((await res.json()).inputs.mode).toBe("ai-assisted");
 
     await POST(request());
-    expect((calls[1].body as typeof sent).messages[0].content).toContain("Working style: traditional (no AI coding agents).");
+    expect((calls[1].body as typeof sent).messages[0].content).toContain("Working style: traditional.");
+    expect(sent.system).toContain("do not mention AI, agents or the working style");
     expect((await POST(request("mixed", { mode: "turbo" }))).status).toBe(400);
   });
 

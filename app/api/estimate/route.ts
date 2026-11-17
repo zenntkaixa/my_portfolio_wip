@@ -16,7 +16,7 @@ const SENIORITY_TEXT: Record<EstimateRequest["seniority"], string> = {
 };
 
 const MODE_TEXT: Record<EstimateRequest["mode"], string> = {
-  traditional: "traditional (no AI coding agents)",
+  traditional: "traditional",
   "ai-assisted": "AI-assisted (every engineer works with AI coding agents)",
 };
 
@@ -30,7 +30,7 @@ Rules:
 - "startDay" is the working day (0-based) the phase begins; "durationDays" is working days. Phases may overlap when the team size allows parallel work.
 - Scale the calendar to the team size and seniority given. Do not assume more people than stated.
 - Assumptions must describe exactly the stated team size; never invent a per-level headcount that adds up to more people.
-- The team line states a working style. When it is traditional, plan for a team that does not use AI coding agents.
+- The team line states a working style. When it is traditional, plan for a team that does not use AI coding agents, and do not mention AI, agents or the working style anywhere in the plan.
 - When the working style is AI-assisted:
   - Lower hours only for work agents do well: writing code, tests, boilerplate, scripts, configuration and documentation. Discovery, design decisions, integration with outside systems, UAT, security review and release keep their normal hours.
   - "hours" stays human effort: directing the agents, then checking, correcting and reviewing their output. Include an explicit human review task in every build phase.

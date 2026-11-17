@@ -14,14 +14,14 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
   labels and prompt rules approved by him.
 
 **Verified**
-- `npm run check` 256 unit; e2e 99/99; `security-reviewer` (Opus): no findings; `reviewer`: no blocking
+- 14 real Haiku runs on a local server (both styles): all returned plans; one fix from them
+  (traditional plans no longer mention AI). `npm run check` 256 unit; e2e 99/99; `security-reviewer` (Opus): no findings; `reviewer`: no blocking
   findings; screenshots of the form at 320, 390 and 1440.
 - `next build` stops on alternate local runs with a Next.js notice about 16.4.4 (GHSA-mfr8-8qww-v76h,
   moderate; the affected cache feature is not used here). Upgrade to 16.4.6 is a separate task.
 
 **Waiting on Izzat**
-- The AI-assisted prompt has not been run against the real model (tests mock it): try one live
-  estimate after release. Undecided: Hallmark redesign.
+- Undecided: Sonnet for visitors (about 20 times the cost per estimate); Hallmark redesign.
 
 ---
 
