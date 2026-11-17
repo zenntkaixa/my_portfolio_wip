@@ -4,6 +4,23 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-13 — Session 49: Blueprint grid on the estimator tile
+
+**Done**
+- `.tile--estimator` draws the design system's blueprint grid (`--grid` lines, 24px) in both themes; the
+  old `TODO` in `EstimatorTile.tsx` is gone.
+- The axe scans switch the grid image off first: with it on, axe cannot compute contrast for 28 text
+  nodes on the tile and leaves them unchecked (measured: 36 checked with the grid, 64 without).
+
+**Verified**
+- `npm run check` 247 unit; e2e 95/95; estimator inspected at 390 and 1440 light, 1440 dark, and with
+  results showing.
+
+**Waiting on Izzat**
+- Release of #50 to #53 and this PR. Undecided: full Hallmark redesign.
+
+---
+
 ## 2026-11-13 — Session 48: Loose ends: refund script verified, keyboard flake measured, clean-up
 
 **Done**

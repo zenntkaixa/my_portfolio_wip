@@ -5,6 +5,26 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-17 — Session 51: "With AI agents" working style on the estimator
+
+**Done**
+- New "Working style" control (Traditional team, the default / With AI agents). The request gains an
+  optional `mode`; the prompt gets rules for AI-assisted plans (human review task per build phase,
+  hours stay human effort, no fixed productivity claim). Plan shape unchanged. Izzat's idea; default,
+  labels and prompt rules approved by him.
+
+**Verified**
+- 14 real Haiku runs on a local server (both styles): all returned plans; one fix from them
+  (traditional plans no longer mention AI). `npm run check` 256 unit; e2e 99/99; `security-reviewer` (Opus): no findings; `reviewer`: no blocking
+  findings; screenshots of the form at 320, 390 and 1440.
+- `next build` stops on alternate local runs with a Next.js notice about 16.4.4 (GHSA-mfr8-8qww-v76h,
+  moderate; the affected cache feature is not used here). Upgrade to 16.4.6 is a separate task.
+
+**Waiting on Izzat**
+- Undecided: Sonnet for visitors (about 20 times the cost per estimate); Hallmark redesign.
+
+---
+
 ## 2026-11-16 — Session 50: Example plan button; 44px tap targets
 
 **Done**
@@ -20,23 +40,6 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 **Waiting on Izzat**
 - Optional: paste a real Claude reply to replace the hand-written example. Undecided: Hallmark redesign.
-
----
-
-## 2026-11-13 — Session 49: Blueprint grid on the estimator tile
-
-**Done**
-- `.tile--estimator` draws the design system's blueprint grid (`--grid` lines, 24px) in both themes; the
-  old `TODO` in `EstimatorTile.tsx` is gone.
-- The axe scans switch the grid image off first: with it on, axe cannot compute contrast for 28 text
-  nodes on the tile and leaves them unchecked (measured: 36 checked with the grid, 64 without).
-
-**Verified**
-- `npm run check` 247 unit; e2e 95/95; estimator inspected at 390 and 1440 light, 1440 dark, and with
-  results showing.
-
-**Waiting on Izzat**
-- Release of #50 to #53 and this PR. Undecided: full Hallmark redesign.
 
 ---
 

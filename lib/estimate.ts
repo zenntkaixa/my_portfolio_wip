@@ -1,5 +1,7 @@
 export const SENIORITY = ["junior", "mid", "senior", "mixed"] as const;
 export type Seniority = (typeof SENIORITY)[number];
+export const MODES = ["traditional", "ai-assisted"] as const;
+export type Mode = (typeof MODES)[number];
 
 export const ROLES = ["BA", "Architect", "Backend", "Frontend", "QA", "DevOps", "PM"] as const;
 
@@ -62,6 +64,7 @@ export type EstimateRequest = {
   feature: string;
   teamSize: number;
   seniority: Seniority;
+  mode: Mode;
   token: string;
 };
 
@@ -97,9 +100,12 @@ export function validateRequest(body: unknown): { ok: true; value: EstimateReque
   if (typeof teamSize !== "number" || !Number.isInteger(teamSize) || teamSize < 1 || teamSize > 12) return { ok: false, error: "Team size must be between 1 and 12." };
   const seniority = b.seniority as Seniority;
   if (!SENIORITY.includes(seniority)) return { ok: false, error: "Pick a seniority level." };
+  // Missing means traditional, so older clients keep working.
+  const mode = (b.mode === undefined ? "traditional" : b.mode) as Mode;
+  if (!MODES.includes(mode)) return { ok: false, error: "Pick a working style." };
   const token = typeof b.token === "string" ? b.token : "";
   if (!token) return { ok: false, error: "Complete the human check, then try again." };
-  return { ok: true, value: { feature, teamSize, seniority, token } };
+  return { ok: true, value: { feature, teamSize, seniority, mode, token } };
 }
 
 export const str = (v: unknown, max = 400) => (typeof v === "string" ? v.trim().slice(0, max) : "");

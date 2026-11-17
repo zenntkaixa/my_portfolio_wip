@@ -4,8 +4,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   FEATURE_MAX,
   FEATURE_MIN,
+  MODES,
   SENIORITY,
   type Plan,
+  type Mode,
   type Seniority,
 } from "@/lib/estimate";
 import {
@@ -36,6 +38,7 @@ export function Estimator() {
   const [feature, setFeature] = useState("");
   const [teamSize, setTeamSize] = useState(4);
   const [seniority, setSeniority] = useState<Seniority>("mixed");
+  const [mode, setMode] = useState<Mode>("traditional");
   const [token, setToken] = useState<string | null>(null);
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const [tab, setTab] = useState<Tab>("phases");
@@ -89,7 +92,7 @@ export function Estimator() {
       const res = await fetch("/api/estimate", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ feature, teamSize, seniority, token }),
+        body: JSON.stringify({ feature, teamSize, seniority, mode, token }),
         signal: controller.signal,
       });
       let data: unknown = null;
@@ -111,7 +114,7 @@ export function Estimator() {
       } else if (!isObj(data) || !isPlan(data.plan)) {
         fail(502, estimatorCopy.badPlan);
       } else {
-        const teamLabel = `${estimatorCopy.people(teamSize)}, ${seniority}`;
+        const teamLabel = `${estimatorCopy.people(teamSize)}, ${seniority}${mode === "ai-assisted" ? estimatorCopy.mode.teamSuffix : ""}`;
         setStatus({ kind: "success", plan: data.plan, teamLabel });
         setTab("phases");
       }
@@ -255,6 +258,24 @@ export function Estimator() {
                     onChange={() => setSeniority(s)}
                   />
                   <span>{s}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <fieldset className="estimator__seniority" disabled={submitting}>
+            <legend className="estimator__label">{estimatorCopy.mode.legend}</legend>
+            <div className="estimator__segments estimator__segments--two">
+              {MODES.map((m) => (
+                <label key={m} className="estimator__segment">
+                  <input
+                    type="radio"
+                    name="mode"
+                    value={m}
+                    checked={mode === m}
+                    onChange={() => setMode(m)}
+                  />
+                  <span>{estimatorCopy.mode.options[m]}</span>
                 </label>
               ))}
             </div>

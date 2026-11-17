@@ -1051,6 +1051,14 @@ p {
   background: var(--surface);
 }
 
+.estimator__segments--two {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.estimator__segments--two .estimator__segment span {
+  text-transform: none;
+}
+
 .estimator__segment {
   position: relative;
   display: block;

@@ -11,6 +11,7 @@ The output must look like something a real delivery lead would hand a team.
 | Feature description | `<textarea>` with live character count | 20 to 1500 characters |
 | Team size | Range slider plus number readout | Integer 1 to 12, default 4 |
 | Seniority | Segmented control | `junior`, `mid`, `senior`, `mixed` (default `mixed`) |
+| Working style | Segmented control | `traditional` ("Traditional team", default), `ai-assisted` ("With AI agents") |
 | Human check | Cloudflare Turnstile widget | Required; reset after every request |
 
 **Example chips** above the textarea (click fills it), chosen to match Izzat's domain:
@@ -29,8 +30,9 @@ example and for which feature. A live estimate replaces it.
 
 Request:
 ```json
-{ "feature": "string", "teamSize": 4, "seniority": "mixed", "token": "turnstile-token" }
+{ "feature": "string", "teamSize": 4, "seniority": "mixed", "mode": "traditional", "token": "turnstile-token" }
 ```
+`mode` is optional (`traditional` when missing); any other value is a 400.
 
 Success `200`:
 ```json
@@ -49,7 +51,7 @@ Success `200`:
     "totalDays": 18,
     "calendarWeeks": 3.6
   },
-  "inputs": { "teamSize": 4, "seniority": "mixed" }
+  "inputs": { "teamSize": 4, "seniority": "mixed", "mode": "traditional" }
 }
 ```
 
@@ -70,6 +72,7 @@ rate-limit slot and the daily count back. Timeouts, refusals and cut-off or unre
 
 ## Prompt
 Lives in `app/api/estimate/route.ts` as `SYSTEM_PROMPT`. Owned by the `prompt-engineer` subagent.
+
 - Roles allowed: `BA, Architect, Backend, Frontend, QA, DevOps, PM` (from `lib/estimate.ts`).
 - Feature text is wrapped in `<feature>` tags and treated as untrusted data.
 - Model returns JSON only. Server strips fences, parses, then `normalisePlan` clamps numbers,
@@ -79,6 +82,12 @@ Lives in `app/api/estimate/route.ts` as `SYSTEM_PROMPT`. Owned by the `prompt-en
   `output_config: { effort: "low" }`, `thinking` omitted (adaptive by default; its tokens count
   against `max_tokens`). On failure the server logs only `stop_reason`,
   token usage and text length, never the feature or model text.
+
+**Working style.** The user message carries `Working style: …`. For `ai-assisted` the prompt lowers hours
+only for work agents do well (code, tests, boilerplate, scripts, configuration, docs), keeps hours as
+human effort, puts a human review task in every build phase, shrinks the calendar less than the effort,
+names the review bottleneck and separation of duties as risks, and never states a fixed productivity
+gain. The plan shape is the same in both modes; the team line reads e.g. "2 people, senior, with AI agents".
 
 ## UI states
 `idle → submitting → success | error`. While submitting: disable the form, show a skeleton of the
