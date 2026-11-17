@@ -37,6 +37,10 @@ describe("parseRetryAfter", () => {
 
 describe("isPlan", () => {
   it("accepts the fixture plan", () => expect(isPlan(plan.plan)).toBe(true));
+  it("rejects a plan without a costs list", () => {
+    const { costs: _costs, ...noCosts } = plan.plan;
+    expect(isPlan(noCosts)).toBe(false);
+  });
   it("rejects non-objects and missing fields", () => {
     expect(isPlan(null)).toBe(false);
     expect(isPlan("plan")).toBe(false);

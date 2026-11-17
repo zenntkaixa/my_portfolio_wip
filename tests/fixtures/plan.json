@@ -17,6 +17,11 @@
     ],
     "risks": ["SMS delivery delays in some regions", "Brute-force attempts on codes"],
     "confidence": "medium",
+    "costs": [
+      { "item": "SMS provider for one-time codes", "kind": "monthly", "low": 150, "high": 600 },
+      { "item": "Error monitoring", "kind": "monthly", "low": 0, "high": 200 },
+      { "item": "Security review of the login flow", "kind": "one-off", "low": 3000, "high": 8000 }
+    ],
     "totalHours": 112,
     "totalDays": 13,
     "calendarWeeks": 2.6

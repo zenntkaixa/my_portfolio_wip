@@ -4,6 +4,22 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-17 — Session 54: Shuffled example chips
+
+**Done**
+- The estimator shows 3 example features picked at random on each page load from 35 in
+  `estimatorExamples` (`lib/pick.ts`): insurance, other industries and fun projects. Chips stay hidden, keeping their space, until the pick runs.
+  Asked for by Izzat, who asked for the wider mix.
+
+**Verified**
+- `npm run check` 259 unit; e2e 100/100 (one earlier run: 2 a11y tests timed out on the first page
+  load, passed on rerun with no change); 6 loads at 390: different picks, same height, layout shift 0.
+
+**Next up**
+- Cost budget (needs Izzat's currency, rates and which working styles).
+
+---
+
 ## 2026-11-17 — Session 53: Result label hints, defined confidence, Haiku note
 
 **Done**
