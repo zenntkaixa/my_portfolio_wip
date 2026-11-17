@@ -454,10 +454,25 @@ p {
   color: var(--muted);
 }
 
+/* The headline is the outcome line: larger than the summary, in the display font. */
 .tile--hero > .hero__headline {
-  margin-top: 1.25em;
-  font-size: var(--fs-lg);
-  line-height: 1.4;
+  margin-top: 1em;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: var(--fs-xl);
+  font-weight: 600;
+  line-height: 1.25;
+  text-wrap: pretty;
+}
+
+.tile--hero > .hero__proof {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--fs-sm);
+  color: var(--muted);
 }
 
 .tile--hero > .hero__actions {

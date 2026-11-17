@@ -76,5 +76,5 @@ lead with an outcome and proof, and the most memorable shows a working demo befo
 - [x] Estimator shows its output first: the example plan sits beside the form (stacked on mobile)
   before any input, and the Turnstile widget only appears when a challenge is needed
   (`appearance: "interaction-only"`; verification unchanged) [ui-builder]
-- [ ] Hero headline states an outcome with a proof line under it (e.g. merged PRs, years,
+- [x] Hero headline states an outcome with a proof line under it (e.g. merged PRs, years,
   certification); Izzat approves the wording before it ships [ui-builder]
