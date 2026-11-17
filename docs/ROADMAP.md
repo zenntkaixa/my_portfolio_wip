@@ -88,3 +88,10 @@ Added 2026-11-17. Release #69 (M6) confirmed live by Izzat: human check passes s
     is clickable as a whole and the design system says no scale
 - [x] Keyboard Tab-order test uses the fake Turnstile (`tests/e2e/fakeTurnstile.ts`) like the other
   specs, so it no longer depends on Cloudflare's network (fails about 4 in 8 runs on the VM) [qa-tester]
+
+## M8 — Tidy-up
+Added 2026-11-17 from the audit's leftovers; batched on one branch with M7 (Izzat).
+- [x] Shorten the example chips that wrap to a third line at 320px, so the chip block stops changing
+  height between loads [ui-builder]
+- [x] Case studies show 3 tags each, not 4 (the Stack tile already lists everything) [ui-builder]
+- [x] One-line footer: © year, name, "Built with Next.js and Claude" [ui-builder]

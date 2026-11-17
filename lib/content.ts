@@ -33,6 +33,10 @@ export const seo = {
 
 export const skipLink = "Skip to the estimator";
 
+export const footer = {
+  text: (year: number) => `© ${year} ${profile.name}. Built with Next.js and Claude.`,
+};
+
 export const now = {
   title: "Senior Associate, Full-Stack Developer",
   org: "PwC Acceleration Centers, Kuala Lumpur",
@@ -71,19 +75,19 @@ export const caseStudies = [
     title: "Customer portal for a US insurer",
     context: "Guidewire Digital Portal program",
     body: "Built React and TypeScript features on Guidewire Jutro, wired to REST, composite and batch APIs with role-based access. Resolved 32 failed release-branch merges and cleared UAT defects in the driver, vehicle and authorization flows to keep releases on schedule.",
-    stack: ["React", "TypeScript", "Jutro", "REST APIs"],
+    stack: ["React", "TypeScript", "Jutro"],
   },
   {
     title: "OCR in insurance onboarding",
     context: "Regional life insurer, digital platform",
     body: "Built Spring Boot REST APIs that bring OCR results into insurance workflows, added anti-money-laundering checks, and kept quality gates green with unit tests, SonarQube and Jenkins on Azure.",
-    stack: ["Java", "Spring Boot", "Azure", "SonarQube"],
+    stack: ["Java", "Spring Boot", "Azure"],
   },
   {
     title: "Modernising a banking platform",
     context: "Regional bank, digital banking",
     body: "Helped move a monolithic Java codebase toward microservices, including data synchronisation between old and new services, and supported releases on GitLab, Jenkins and OpenShift.",
-    stack: ["Java", "Spring Boot", "OpenShift", "PostgreSQL"],
+    stack: ["Java", "Spring Boot", "OpenShift"],
   },
 ];
 
@@ -139,11 +143,11 @@ export const estimatorBriefs = [
     text: "Our 400 staff apply for annual and medical leave in our existing Angular HR portal (Java backend, Oracle database). Managers get an email and approve or reject in one click. Balances come from the current payroll tables, and approved leave appears in the team's Outlook calendar through Microsoft Graph. Public holidays differ by state. No mobile app.",
   },
   {
-    title: "Live delivery tracking",
+    title: "Delivery tracking",
     text: "Customers of our parcel service open a tracking link from an SMS and see the rider's live position on a map with an ETA. Riders already use our Android app, which can send GPS every 15 seconds to our Node.js backend. About 800 riders and 20,000 deliveries a day. The link expires an hour after delivery, and customer phone numbers are never shown to riders.",
   },
   {
-    title: "Badminton court booking",
+    title: "Badminton booking",
     text: "A web app for our badminton club's 4 courts. About 60 members log in with Google, book a 1-hour slot up to 7 days ahead, and invite up to 3 friends who each pay their share by DuitNow QR before the booking is confirmed. Unpaid bookings are released after 15 minutes. Built as a weekend project on Supabase and Next.js; no mobile app.",
   },
   {
@@ -163,7 +167,7 @@ export const estimatorExamples = [
   "Customers upload claim photos and OCR fills in the claim form",
   "Email each customer a monthly PDF billing statement",
   "Customers pay their premium online with FPX or a debit card",
-  "Customers track their claim status step by step on a mobile page",
+  "Customers track their claim status on their phone",
   "Flag claims that look like possible fraud for a manual review",
   // Other industries
   "Shoppers get an email alert when a sold-out item is back in stock",
@@ -175,28 +179,28 @@ export const estimatorExamples = [
   "Staff apply for leave online and managers approve it in one tap",
   "Tenants report a broken item with a photo and track the repair",
   "Residents report potholes on a map and vote on the worst ones",
-  "Users set a monthly budget and get warned before they overspend",
+  "Warn users before they go over their monthly budget",
   "Sell event tickets with a QR code that is scanned at the door",
-  "Factory machines send sensor readings and warn before a part fails",
+  "Machine sensors warn the factory before a part fails",
   "Gym members book a class and join a waitlist when it is full",
   "Send a WhatsApp reminder three days before a payment is due",
-  "A chatbot answers common customer questions and hands off to a human",
+  "A chatbot answers FAQs and hands off to a human",
   // Common building blocks
   "Admins manage user roles, with an audit log of every change",
   "Export any report table to Excel with the current filters applied",
   "Let users switch the app between English and Bahasa Malaysia",
-  "A public status page shows outages and planned maintenance",
+  "A public status page for outages and maintenance",
   // Fun projects
   "Friends split a group trip's costs and see who owes whom",
-  "Spin a wheel of nearby restaurants when friends can't decide where to eat",
+  "Spin a wheel to pick where friends eat tonight",
   "A daily word puzzle with a leaderboard for a group of friends",
   "Match people with shelter pets based on their home and lifestyle",
   "A plant-watering reminder app with a photo diary for each plant",
-  "Turn a family's handwritten recipes into a searchable cookbook",
-  "A karaoke night queue where guests add songs from their phones",
+  "Turn family recipe cards into a searchable cookbook",
+  "Guests queue karaoke songs from their phones",
   "Book a badminton court and split the fee between the players",
   "A running club leaderboard of each member's weekly distance",
-  "Plan a Raya open house with a guest list, RSVPs and a food sign-up",
+  "Plan a Raya open house with RSVPs and a food sign-up",
 ];
 
 export const estimatorCopy = {

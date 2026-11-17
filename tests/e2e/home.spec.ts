@@ -6,6 +6,7 @@ import {
   education,
   experience,
   featuredProject,
+  footer,
   now,
   profile,
   skipLink,
@@ -367,4 +368,9 @@ test("skip link is first in tab order and moves focus to the estimator", async (
   await expect(page).toHaveURL(/#estimator$/);
   const inside = await page.evaluate(() => document.getElementById("estimator")?.contains(document.activeElement));
   expect(inside).toBe(true);
+});
+
+test("the footer is a contentinfo landmark with the year, name and build line", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByRole("contentinfo")).toHaveText(footer.text(new Date().getFullYear()));
 });
