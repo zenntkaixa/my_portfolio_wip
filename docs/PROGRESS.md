@@ -5,6 +5,17 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-17 — Session 52: Next.js 16.4.6
+
+**Done**
+- `next` 16.4.4 → 16.4.6 (GHSA-mfr8-8qww-v76h, moderate; the affected cache feature is not used here).
+  Asked for by Izzat. The notice that stopped `next build` and the dev server on alternate runs is gone.
+
+**Verified**
+- `npm audit`: 0 vulnerabilities; `npm run check` twice in a row, 256 unit; e2e 99/99.
+
+---
+
 ## 2026-11-17 — Session 51: "With AI agents" working style on the estimator
 
 **Done**
@@ -21,25 +32,8 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
   moderate; the affected cache feature is not used here). Upgrade to 16.4.6 is a separate task.
 
 **Waiting on Izzat**
-- Undecided: Sonnet for visitors (about 20 times the cost per estimate); Hallmark redesign.
-
----
-
-## 2026-11-16 — Session 50: Example plan button; 44px tap targets
-
-**Done**
-- "See an example plan" on the estimator shows the stored plan in `lib/samplePlan.ts` with no request
-  (no Turnstile, slot or model call). It is labelled as an example and as written by hand; a live
-  estimate replaces it. Wording approved by Izzat.
-- Tap targets: text links in the hero, project and contact tiles, both link buttons, submit and the
-  theme button are at least 44px tall; chips on touch screens too.
-
-**Verified**
-- `npm run check` 250 unit; e2e 98/98; `reviewer`: no blocking findings; `/visual-check` of the
-  estimator, contact and hero tiles; the example view at 390.
-
-**Waiting on Izzat**
-- Optional: paste a real Claude reply to replace the hand-written example. Undecided: Hallmark redesign.
+- Decided 2026-11-17: production stays on Haiku (Sonnet plans were more detailed in a 3-prompt
+  comparison, but about 20 times the cost). Undecided: Hallmark redesign.
 
 ---
 
