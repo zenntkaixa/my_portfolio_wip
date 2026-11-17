@@ -23,17 +23,17 @@ const title = `${profile.name} — ${profile.role}`;
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title,
-  description: profile.headline,
+  description: seo.description,
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     url: "/",
     siteName: seo.siteName,
     title,
-    description: profile.headline,
+    description: seo.description,
     locale: "en",
   },
-  twitter: { card: "summary_large_image", title, description: profile.headline },
+  twitter: { card: "summary_large_image", title, description: seo.description },
   authors: [{ name: profile.name, url: siteUrl }],
   robots: { index: true, follow: true },
 };

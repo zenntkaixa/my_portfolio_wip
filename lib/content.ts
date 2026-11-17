@@ -5,10 +5,12 @@ export const profile = {
   fullName: "Mohamad Izzat Fahmi bin Suhaimi",
   initials: "IF",
   role: "Full-stack software engineer",
-  headline:
-    "Backend-first engineer. Eight years building the systems insurers and banks run on, now shipping them with AI coding agents.",
+  headline: "I build the systems insurers and banks run on.",
+  // Approved by Izzat 2026-11-17 (M6). Employers and the certification only: the Now tile already shows the numbers.
+  proof: ["Shipped at PwC · Allianz Technology · Hitachi", "AWS Certified Solutions Architect"],
+  proofLabel: "Track record",
   summary:
-    "Java, Spring Boot and REST APIs on the backend, React and TypeScript on the front. I stay accountable for every line that merges.",
+    "Eight years of Java, Spring Boot and React, now shipped with AI coding agents. I stay accountable for every line that merges.",
   emailCta: "Email me",
   location: "Petaling Jaya, Malaysia",
   availability: "Open to senior full-stack roles in Malaysia",
@@ -22,6 +24,9 @@ export const siteUrl = "https://zenntkaixa.dev";
 
 export const seo = {
   siteName: "Izzat Fahmi, portfolio",
+  /** Search and share description: fuller than the hero headline. */
+  description:
+    "Backend-first engineer. Eight years building the systems insurers and banks run on, now shipping them with AI coding agents.",
   ogTagline: "Live AI demo: describe a feature, get a delivery plan",
   ogAlt: "Izzat Fahmi, full-stack software engineer. Live AI demo: describe a feature, get a delivery plan.",
 };

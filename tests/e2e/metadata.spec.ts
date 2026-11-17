@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { profile, siteUrl } from "@/lib/content";
+import { profile, seo, siteUrl } from "@/lib/content";
 
 // Escape the dots so the canonical match is exact; an optional trailing slash is fine.
 const siteUrlPattern = new RegExp(`^${siteUrl.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}/?$`);
@@ -11,7 +11,7 @@ test("home head carries Open Graph, Twitter and canonical metadata", async ({ pa
     page.locator(`head meta[${attr}="${key}"]`).first().getAttribute("content");
 
   expect(await meta("property", "og:title")).toContain(profile.name);
-  expect(await meta("property", "og:description")).toBe(profile.headline);
+  expect(await meta("property", "og:description")).toBe(seo.description);
   expect(await meta("property", "og:url")).toMatch(siteUrlPattern);
   expect(await meta("name", "twitter:card")).toBe("summary_large_image");
   expect(await meta("name", "twitter:image")).toMatch(/^https?:\/\//);
