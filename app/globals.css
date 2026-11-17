@@ -908,6 +908,11 @@ p {
   min-height: 44px;
 }
 
+/* Hidden, but keeping its space, until the random pick replaces the server-rendered three. */
+.estimator__examples:not([data-ready]) {
+  visibility: hidden;
+}
+
 .estimator__examples {
   display: flex;
   flex-wrap: wrap;

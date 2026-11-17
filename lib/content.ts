@@ -111,10 +111,47 @@ export const turnstileFailedMessage =
 export const turnstileNotConfiguredNote =
   "Human check not configured. Set NEXT_PUBLIC_TURNSTILE_SITE_KEY (see .env.example).";
 
+/** Three are shown at random on each page load. The first one is also the stored example plan's feature. */
 export const estimatorExamples = [
+  // Insurance and billing
   "Let policyholders log in with a one-time code sent by SMS",
   "Customers upload claim photos and OCR fills in the claim form",
   "Email each customer a monthly PDF billing statement",
+  "Customers pay their premium online with FPX or a debit card",
+  "Customers track their claim status step by step on a mobile page",
+  "Flag claims that look like possible fraud for a manual review",
+  // Other industries
+  "Shoppers get an email alert when a sold-out item is back in stock",
+  "Diners order from their table by scanning a QR code on the menu",
+  "A cafe loyalty card that gives a free drink after nine stamps",
+  "Patients book clinic appointments online and get an SMS reminder",
+  "Track delivery riders live on a map with an ETA for each order",
+  "Teachers post homework and parents see what is due this week",
+  "Staff apply for leave online and managers approve it in one tap",
+  "Tenants report a broken item with a photo and track the repair",
+  "Residents report potholes on a map and vote on the worst ones",
+  "Users set a monthly budget and get warned before they overspend",
+  "Sell event tickets with a QR code that is scanned at the door",
+  "Factory machines send sensor readings and warn before a part fails",
+  "Gym members book a class and join a waitlist when it is full",
+  "Send a WhatsApp reminder three days before a payment is due",
+  "A chatbot answers common customer questions and hands off to a human",
+  // Common building blocks
+  "Admins manage user roles, with an audit log of every change",
+  "Export any report table to Excel with the current filters applied",
+  "Let users switch the app between English and Bahasa Malaysia",
+  "A public status page shows outages and planned maintenance",
+  // Fun projects
+  "Friends split a group trip's costs and see who owes whom",
+  "Spin a wheel of nearby restaurants when friends can't decide where to eat",
+  "A daily word puzzle with a leaderboard for a group of friends",
+  "Match people with shelter pets based on their home and lifestyle",
+  "A plant-watering reminder app with a photo diary for each plant",
+  "Turn a family's handwritten recipes into a searchable cookbook",
+  "A karaoke night queue where guests add songs from their phones",
+  "Book a badminton court and split the fee between the players",
+  "A running club leaderboard of each member's weekly distance",
+  "Plan a Raya open house with a guest list, RSVPs and a food sign-up",
 ];
 
 export const estimatorCopy = {

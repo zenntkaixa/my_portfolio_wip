@@ -5,6 +5,22 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-17 — Session 54: Shuffled example chips
+
+**Done**
+- The estimator shows 3 example features picked at random on each page load from 35 in
+  `estimatorExamples` (`lib/pick.ts`): insurance, other industries and fun projects. Chips stay hidden, keeping their space, until the pick runs.
+  Asked for by Izzat, who asked for the wider mix.
+
+**Verified**
+- `npm run check` 259 unit; e2e 100/100 (one earlier run: 2 a11y tests timed out on the first page
+  load, passed on rerun with no change); 6 loads at 390: different picks, same height, layout shift 0.
+
+**Next up**
+- Cost budget (needs Izzat's currency, rates and which working styles).
+
+---
+
 ## 2026-11-17 — Session 53: Result label hints, defined confidence, Haiku note
 
 **Done**
@@ -19,17 +35,6 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 **Next up (approved ideas)**
 - Shuffled example chips from a larger list; cost budget (needs Izzat's currency and rates).
-
----
-
-## 2026-11-17 — Session 52: Next.js 16.4.6
-
-**Done**
-- `next` 16.4.4 → 16.4.6 (GHSA-mfr8-8qww-v76h, moderate; the affected cache feature is not used here).
-  Asked for by Izzat. The notice that stopped `next build` and the dev server on alternate runs is gone.
-
-**Verified**
-- `npm audit`: 0 vulnerabilities; `npm run check` twice in a row, 256 unit; e2e 99/99.
 
 ---
 

@@ -18,6 +18,7 @@ import {
 } from "@/lib/estimatorClient";
 import { estimatorCopy, estimatorExamples } from "@/lib/content";
 import { sampleFeature, samplePlan, sampleTeam } from "@/lib/samplePlan";
+import { pickRandom } from "@/lib/pick";
 import { Turnstile, type TurnstileHandle } from "./Turnstile";
 import { PhaseTimeline } from "./PhaseTimeline";
 import { TaskTable } from "./TaskTable";
@@ -39,6 +40,9 @@ export function Estimator() {
   const [teamSize, setTeamSize] = useState(4);
   const [seniority, setSeniority] = useState<Seniority>("mixed");
   const [mode, setMode] = useState<Mode>("traditional");
+  // The page is static, so the server always renders the first three; the shuffle happens after hydration.
+  const [examples, setExamples] = useState<string[] | null>(null);
+  useEffect(() => setExamples(pickRandom(estimatorExamples, 3)), []);
   const [token, setToken] = useState<string | null>(null);
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const [tab, setTab] = useState<Tab>("phases");
@@ -167,8 +171,9 @@ export function Estimator() {
             className="estimator__examples"
             role="group"
             aria-label="Example features"
+            data-ready={examples ? "" : undefined}
           >
-            {estimatorExamples.map((ex) => (
+            {(examples ?? estimatorExamples.slice(0, 3)).map((ex) => (
               <button
                 key={ex}
                 type="button"
