@@ -121,7 +121,8 @@ Read first by the sub-agents: project ones in `.claude/agents/` (builders: `ui-b
 ## 6. Guardrails (never break these)
 
 - **Never read, print or commit `.env`, `.env.local` or any real key.** `.env.example` is for shape only.
-- **Never call the real Anthropic API in tests.** Mock `fetch`. Real calls cost Izzat money.
+- **Never call the real Anthropic API in automated tests.** Mock `fetch`. Real calls cost Izzat money.
+  Manual prompt checks on a local server are allowed only when Izzat asks, and only with Haiku.
 - **Never publish Izzat's phone number.** Contact is email and LinkedIn only.
 - **Client names stay anonymised in case studies** (e.g. "a US insurer"). Employer names are fine.
 - **Never weaken abuse protection** (Turnstile, rate limit, daily cap, input length limits) without asking.
