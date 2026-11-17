@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { Tile } from "@/components/Bento";
 import { now } from "@/lib/content";
 
@@ -15,7 +16,17 @@ export function NowTile() {
         {now.stats.map((s) => (
           <div key={s.label} className="stats__item">
             <dt className="stats__label">{s.label}</dt>
-            <dd className="stats__value">{s.value}</dd>
+            <dd className="stats__value">
+              {/* Real value for screen readers and no-CSS visitors; the counting digits are CSS-only.
+                  Values must start with a number ("8+", "100"): "Many" would count to 0 then show "0Many". */}
+              <span className="sr-only">{s.value}</span>
+              <span
+                className="stats__count"
+                aria-hidden="true"
+                data-suffix={s.value.replace(/^\d+/, "")}
+                style={{ "--to": parseInt(s.value, 10) } as CSSProperties}
+              />
+            </dd>
           </div>
         ))}
       </dl>

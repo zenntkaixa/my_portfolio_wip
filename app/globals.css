@@ -202,6 +202,18 @@ p {
   padding: var(--page-pad);
 }
 
+.footer {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 var(--page-pad) var(--page-pad);
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+
+.footer > p {
+  margin: 0;
+}
+
 .topbar {
   display: flex;
   justify-content: flex-end;
@@ -577,6 +589,35 @@ p {
   font-variant-numeric: tabular-nums;
   line-height: 1.1;
   color: var(--ink);
+}
+
+/* Count-up: a registered integer animates from 0 and is shown through a CSS counter. No JS, so the
+   final number is in the first paint for reduced-motion users and browsers without @property. */
+@property --stat-n {
+  syntax: "<integer>";
+  inherits: false;
+  initial-value: 0;
+}
+
+.stats__count {
+  --stat-n: var(--to);
+  counter-reset: stat var(--stat-n);
+}
+
+.stats__count::after {
+  content: counter(stat) attr(data-suffix);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .stats__count {
+    animation: stat-count 900ms ease-out;
+  }
+
+  @keyframes stat-count {
+    from {
+      --stat-n: 0;
+    }
+  }
 }
 
 .stats__label {

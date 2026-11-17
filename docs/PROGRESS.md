@@ -5,6 +5,26 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-17 — Session 59: Now stats count up; keyboard test on fake Turnstile (M7 done)
+
+**Done**
+- Release #69 (M6) confirmed live by Izzat: human check passes silently; a real "With AI agents"
+  estimate ran through the new layout and the Budget tab.
+- Now stats count up once on load: CSS-only `--stat-n` counter, real value in `.sr-only`, off under
+  reduced motion. Scope cut with Izzat: no hover lift; timeline bars already animate.
+- Keyboard Tab-order test now uses `./fakeTurnstile`: 20/20 runs pass (was about 4 in 8 failing).
+- Izzat's instruction: batch tasks on one branch with fewer PRs (overrides one PR per task in
+  CLAUDE.md section 4). Both M7 items ship in one PR.
+
+**Verified:** `npm run check`, e2e; the count-up tests fail without the animation; `reviewer`: no blocking findings.
+
+## M8 tidy-up, same branch
+- Nine example chips and two brief titles shortened: every short chip is 2 lines at 320px, and the chip
+  block is 149px on every load (was up to 40px of jump).
+- Case studies keep 3 tags each; new one-line footer (`components/Footer.tsx`, copy in `lib/content.ts`).
+
+---
+
 ## 2026-11-17 — Session 58: Hero headline with a proof line (M6 done)
 
 **Done**
@@ -18,23 +38,6 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
   diff, so no `reviewer` run (CLAUDE.md section 4).
 
 **Next:** M6 is complete. Release #67 and this when Izzat asks.
-
----
-
-## 2026-11-17 — Session 57: Estimator shows its output first (M6)
-
-**Done**
-- Reviewed the 1,760 live sites in emmabostian/developer-portfolios; the best lead with an outcome
-  and proof and show a working demo first. Izzat added M6 from it (#66).
-- The estimator opens on the stored example plan (no request, no focus move); form and results sit
-  side by side from 1025px. The "See an example plan" button is gone. Turnstile is
-  `interaction-only`, with "Waiting for human check…" under submit while the token is pending.
-
-**Verified**
-- `npm run check`, e2e and screenshots at 390/1024/1440; `security-reviewer` (Opus): no blocking
-  findings; `reviewer` found a focus pull after a field error, fixed and covered by a test.
-
-**Next:** M6 item 2, hero headline with a proof line (Izzat approves the wording).
 
 ---
 

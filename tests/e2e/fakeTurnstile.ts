@@ -18,7 +18,7 @@ const STUB = `(() => {
 /**
  * `test` with the Turnstile script faked, for specs that are not about Turnstile. Waiting for the real
  * widget's token costs about 3 s per test and depends on Cloudflare answering. The real widget stays
- * covered by turnstile.spec.ts, csp.spec.ts, keyboard.spec.ts and visual.spec.ts.
+ * covered by turnstile.spec.ts, csp.spec.ts and visual.spec.ts.
  */
 export const test = base.extend<{ fakeTurnstile: void }>({
   fakeTurnstile: [
