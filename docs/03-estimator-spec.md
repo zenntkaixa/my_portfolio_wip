@@ -97,6 +97,10 @@ results area and a calm status line ("Planning phases…"). No spinners longer t
 
 **Tab 1 — Phases & timeline** (default)
 - Summary row: total effort hours, calendar weeks, team (e.g. "4 people, mixed"), confidence badge.
+  Each item has a one-line hint under its value (`estimatorCopy.summary.hints`). Confidence is defined
+  in the prompt: how much of the plan rests on assumptions (high: few guesses; low: many).
+- Under the submit button, a note says the estimator uses Claude Haiku for speed and the plan is a
+  starting point, not a quote (`estimatorCopy.modelNote`).
 - Timeline: one horizontal bar per phase. `left = startDay / totalDays`, `width = durationDays / totalDays`.
   Week gridlines every 5 working days. Label "Day 3 to 7" on each bar. Maths lives in `lib/timeline.ts`.
 - Phase cards below: name, goal, duration, task count.

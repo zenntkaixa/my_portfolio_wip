@@ -1467,6 +1467,20 @@ p {
   overflow-wrap: anywhere;
 }
 
+.tab1-summary dd.tab1-hint {
+  margin-top: 0.35rem;
+  font-size: var(--fs-xs);
+  font-variant-numeric: normal;
+  color: var(--muted);
+  overflow-wrap: break-word;
+}
+
+.estimator__model-note {
+  margin: 0;
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+
 .tab1-badge {
   --tone: var(--muted);
   display: inline-flex;

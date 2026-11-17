@@ -18,20 +18,24 @@ export function PhaseTimeline({ plan, teamLabel }: { plan: Plan; teamLabel: stri
         <div>
           <dt>{copy.summary.hours}</dt>
           <dd>{copy.summary.hoursValue(plan.totalHours)}</dd>
+          <dd className="tab1-hint">{copy.summary.hints.hours}</dd>
         </div>
         <div>
           <dt>{copy.summary.weeks}</dt>
           <dd>{copy.summary.weeksValue(plan.calendarWeeks)}</dd>
+          <dd className="tab1-hint">{copy.summary.hints.weeks}</dd>
         </div>
         <div>
           <dt>{copy.summary.team}</dt>
           <dd>{teamLabel}</dd>
+          <dd className="tab1-hint">{copy.summary.hints.team}</dd>
         </div>
         <div>
           <dt>{copy.summary.confidence}</dt>
           <dd>
             <span className={`tab1-badge tab1-badge--${plan.confidence}`}>{plan.confidence}</span>
           </dd>
+          <dd className="tab1-hint">{copy.summary.hints.confidence}</dd>
         </div>
       </dl>
 

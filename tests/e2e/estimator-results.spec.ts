@@ -36,6 +36,9 @@ test("tab 1 shows summary, timeline bars, cards, assumptions and risks", async (
   await expect(page.getByText(estimatorCopy.summary.hoursValue(p.totalHours))).toBeVisible();
   await expect(page.getByText(estimatorCopy.summary.weeksValue(p.calendarWeeks))).toBeVisible();
   await expect(page.getByTestId("summary").getByText(p.confidence, { exact: true })).toBeVisible();
+  for (const hint of Object.values(estimatorCopy.summary.hints)) {
+    await expect(page.getByTestId("summary").getByText(hint)).toBeVisible();
+  }
   await expect(page.getByRole("heading", { level: 4, name: p.phases[0].name })).toBeVisible();
   const card = page.getByTestId("phase-card").first();
   await expect(card).toContainText(estimatorCopy.taskCount(p.phases[0].tasks.length));

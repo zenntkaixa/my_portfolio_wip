@@ -122,6 +122,7 @@ export const estimatorCopy = {
   tabPhases: "Phases and timeline",
   tabTasks: "Task table",
   submit: "Estimate this feature",
+  modelNote: "Uses Claude Haiku for a fast answer in about 10 seconds. Treat the plan as a starting point, not a quote.",
   example: {
     button: "See an example plan",
     note: (feature: string) => `Example plan for: ${feature}. Describe your own feature above for a live estimate.`,
@@ -140,6 +141,12 @@ export const estimatorCopy = {
     weeks: "Calendar",
     team: "Team",
     confidence: "Confidence",
+    hints: {
+      hours: "Total person-hours across all tasks",
+      weeks: "Working weeks from start to release with this team",
+      team: "The size, seniority and working style you picked",
+      confidence: "How much of the plan rests on guesses: high means few, low means many",
+    },
     hoursValue: (n: number) => `${n} hours`,
     weeksValue: (n: number) => `${n} ${n === 1 ? "week" : "weeks"}`,
   },
