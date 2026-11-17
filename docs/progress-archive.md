@@ -4,6 +4,23 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-17 — Session 57: Estimator shows its output first (M6)
+
+**Done**
+- Reviewed the 1,760 live sites in emmabostian/developer-portfolios; the best lead with an outcome
+  and proof and show a working demo first. Izzat added M6 from it (#66).
+- The estimator opens on the stored example plan (no request, no focus move); form and results sit
+  side by side from 1025px. The "See an example plan" button is gone. Turnstile is
+  `interaction-only`, with "Waiting for human check…" under submit while the token is pending.
+
+**Verified**
+- `npm run check`, e2e and screenshots at 390/1024/1440; `security-reviewer` (Opus): no blocking
+  findings; `reviewer` found a focus pull after a field error, fixed and covered by a test.
+
+**Next:** M6 item 2, hero headline with a proof line (Izzat approves the wording).
+
+---
+
 ## 2026-11-17 — Session 56: Budget tab in MYR
 
 **Done**
