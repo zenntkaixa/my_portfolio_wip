@@ -14,10 +14,13 @@ The output must look like something a real delivery lead would hand a team.
 | Working style | Segmented control | `traditional` ("Traditional team", default), `ai-assisted` ("With AI agents") |
 | Human check | Cloudflare Turnstile widget | Required; reset after every request |
 
-**Example chips** above the textarea (click fills it): three picked at random on each page load from
-`estimatorExamples` in `lib/content.ts` (35 features: insurance and billing, other industries, common building blocks and fun projects). The page is static, so
-the pick runs in the browser after hydration; the chips stay hidden, keeping their space, until then.
-The first entry, "Let policyholders log in with a one-time code sent by SMS", is also the example plan's feature.
+**Example chips** above the textarea (click fills it), picked at random on each page load: two short
+examples from `estimatorExamples` (35: insurance and billing, other industries, common building blocks,
+fun projects) and one detailed brief from `estimatorBriefs` (8, about 350 characters each). The brief's
+chip shows "Detailed brief: <title>" and fills the full text, so visitors can compare the confidence a
+detailed description earns. The page is static, so the pick runs in the browser after hydration; the
+chips stay hidden, keeping their space, until then. The first short example, "Let policyholders log in
+with a one-time code sent by SMS", is also the example plan's feature.
 
 **"See an example plan"** button above the chips: one tap shows the stored plan in `lib/samplePlan.ts`
 (for the first example feature, 4 people, mixed) in the normal results view and moves focus to it.
@@ -98,7 +101,9 @@ results area and a calm status line ("Planning phases…"). No spinners longer t
 **Tab 1 — Phases & timeline** (default)
 - Summary row: total effort hours, calendar weeks, team (e.g. "4 people, mixed"), confidence badge.
   Each item has a one-line hint under its value (`estimatorCopy.summary.hints`). Confidence is defined
-  in the prompt: how much of the plan rests on assumptions (high: few guesses; low: many).
+  in the prompt by counting six facts the description states (users, existing systems, data,
+  integrations, limits, out of scope): high at four or more, medium at two or three, low at one or
+  none. Its hint changes with the level (`hints.confidence.low|medium|high`).
 - Under the submit button, a note says the estimator uses Claude Haiku for speed and the plan is a
   starting point, not a quote (`estimatorCopy.modelNote`).
 - Timeline: one horizontal bar per phase. `left = startDay / totalDays`, `width = durationDays / totalDays`.

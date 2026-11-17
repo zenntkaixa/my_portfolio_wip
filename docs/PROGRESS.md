@@ -5,6 +5,24 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-17 — Session 55: Confidence by counted facts; detailed brief chips
+
+**Done**
+- Confidence now counts six facts the description states (users, systems, data, integrations,
+  limits, out of scope): high at 4+, medium at 2-3, low at 0-1. Its hint changes with the level.
+- Each load shows two short examples and one of 8 detailed briefs ("Detailed brief: <title>"),
+  so visitors can compare. Izzat's idea.
+
+**Verified**
+- 12 real Haiku runs: 8/8 briefs "high"; one-liners "low" (3) or "medium" (1). `npm run check` 260
+  unit; e2e 99/100, the Tab-order test then passed 8/8 (known flake); screenshots at 390;
+  `security-reviewer` (Opus): no findings.
+
+**Next up**
+- Cost budget (needs Izzat's currency, rates and which working styles).
+
+---
+
 ## 2026-11-17 — Session 54: Shuffled example chips
 
 **Done**
@@ -18,23 +36,6 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 **Next up**
 - Cost budget (needs Izzat's currency, rates and which working styles).
-
----
-
-## 2026-11-17 — Session 53: Result label hints, defined confidence, Haiku note
-
-**Done**
-- One-line hints under Effort, Calendar, Team and Confidence; a note under submit that the estimator
-  uses Claude Haiku and the plan is a starting point, not a quote. Wording approved by Izzat.
-- The prompt now defines "confidence" (how much of the plan rests on assumptions). Before, it was
-  undefined and every test plan came back "medium".
-
-**Verified**
-- `npm run check` 256 unit; e2e 100/100; `security-reviewer` (Opus): no findings; screenshots at 390
-  and 1440. 8 real Haiku runs: vague descriptions gave "low" (4/4), detailed ones "medium" (4/4).
-
-**Next up (approved ideas)**
-- Shuffled example chips from a larger list; cost budget (needs Izzat's currency and rates).
 
 ---
 

@@ -111,7 +111,47 @@ export const turnstileFailedMessage =
 export const turnstileNotConfiguredNote =
   "Human check not configured. Set NEXT_PUBLIC_TURNSTILE_SITE_KEY (see .env.example).";
 
-/** Three are shown at random on each page load. The first one is also the stored example plan's feature. */
+/**
+ * Detailed briefs: one is shown on each page load next to two short examples, so visitors can compare
+ * the confidence a detailed description earns. Each states the users, systems, data, integrations,
+ * limits and scope that the prompt's confidence rule counts.
+ */
+export const estimatorBriefs = [
+  {
+    title: "Claim photo upload",
+    text: "In our existing React and Spring Boot claims portal, let logged-in policyholders attach up to 5 JPEG or PNG photos (10 MB each) to an open claim. Store them encrypted in our current S3 bucket, read the repair invoice total and date with AWS Textract, and pre-fill those two fields for the customer to confirm. About 2,000 claims a month. Out of scope: video and the mobile apps.",
+  },
+  {
+    title: "Clinic booking",
+    text: "Patients of our 3 clinics book a 15-minute GP slot on our existing Next.js website. Doctors' schedules already live in our Postgres database. Send an SMS reminder 24 hours before through our current Twilio account, and let patients cancel from a link in the SMS. About 300 bookings a day. Staff keep the existing admin panel; no payments in this phase.",
+  },
+  {
+    title: "Table QR ordering",
+    text: "Diners at our 12 restaurants scan a QR code on the table, see the menu from our existing POS API, and send an order straight to the kitchen screens we already have. Payment stays at the counter for now. Menus in English and Bahasa Malaysia. Peak load is about 50 orders a minute across all outlets, and the web app must work on older Android phones.",
+  },
+  {
+    title: "Leave approval",
+    text: "Our 400 staff apply for annual and medical leave in our existing Angular HR portal (Java backend, Oracle database). Managers get an email and approve or reject in one click. Balances come from the current payroll tables, and approved leave appears in the team's Outlook calendar through Microsoft Graph. Public holidays differ by state. No mobile app.",
+  },
+  {
+    title: "Live delivery tracking",
+    text: "Customers of our parcel service open a tracking link from an SMS and see the rider's live position on a map with an ETA. Riders already use our Android app, which can send GPS every 15 seconds to our Node.js backend. About 800 riders and 20,000 deliveries a day. The link expires an hour after delivery, and customer phone numbers are never shown to riders.",
+  },
+  {
+    title: "Badminton court booking",
+    text: "A web app for our badminton club's 4 courts. About 60 members log in with Google, book a 1-hour slot up to 7 days ahead, and invite up to 3 friends who each pay their share by DuitNow QR before the booking is confirmed. Unpaid bookings are released after 15 minutes. Built as a weekend project on Supabase and Next.js; no mobile app.",
+  },
+  {
+    title: "Trip cost splitter",
+    text: "A mobile-friendly web app for group trips. One person creates a trip and shares a link; up to 15 friends join with just a name. Anyone adds an expense with the payer, the amount in MYR or another currency, and who shared it. The app shows who owes whom with the fewest transfers. Data is deleted after 90 days. No accounts and no payments inside the app.",
+  },
+  {
+    title: "Spending alerts",
+    text: "In our existing banking app (React Native, Java microservices), customers set a monthly limit per spending category. Card transactions already arrive on our Kafka topic within seconds. At 80% and 100% of a limit, send a push notification through our current Firebase setup. About 1 million active customers. Categories come from the merchant code; no changes to the card system.",
+  },
+];
+
+/** Two are shown at random on each page load. The first one is also the stored example plan's feature. */
 export const estimatorExamples = [
   // Insurance and billing
   "Let policyholders log in with a one-time code sent by SMS",
@@ -159,6 +199,7 @@ export const estimatorCopy = {
   tabPhases: "Phases and timeline",
   tabTasks: "Task table",
   submit: "Estimate this feature",
+  briefChip: (title: string) => `Detailed brief: ${title}`,
   modelNote: "Uses Claude Haiku for a fast answer in about 10 seconds. Treat the plan as a starting point, not a quote.",
   example: {
     button: "See an example plan",
@@ -182,7 +223,11 @@ export const estimatorCopy = {
       hours: "Total person-hours across all tasks",
       weeks: "Working weeks from start to release with this team",
       team: "The size, seniority and working style you picked",
-      confidence: "How much of the plan rests on guesses: high means few, low means many",
+      confidence: {
+        low: "Your description left a lot open. Name the users, systems and limits for a tighter plan.",
+        medium: "Some details were assumed. Check the Assumptions list below.",
+        high: "Your description was specific, so few guesses were needed.",
+      },
     },
     hoursValue: (n: number) => `${n} hours`,
     weeksValue: (n: number) => `${n} ${n === 1 ? "week" : "weeks"}`,
