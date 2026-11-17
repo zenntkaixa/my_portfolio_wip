@@ -5,6 +5,22 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-17 — Session 60: Estimator intro paints without the fade (M9)
+
+**Done**
+- Release #72 (M7 + M8) live and checked on production: count-up, footer, 3 tags, API 400 guard.
+- Re-check of production: desktop 100 in all four; mobile accessibility, best practices and SEO 100.
+  PageSpeed's keyless quota was used up, so mobile performance came from VM Lighthouse runs.
+- Cause found: since M6's shorter hero summary, the mobile LCP element is the estimator's intro
+  paragraph, and that tile faded in (render delay 3.3–4.6 s). It now uses `tile-rise` like hero and Now.
+
+**Verified:** local production build, 4 mobile runs each: perf 73/73/80/82 → 93/83/87/88, LCP 3.8 → 2.7 s;
+`npm run check`, e2e (motion spec now covers the estimator).
+
+**Next:** confirm on PageSpeed Insights once the quota resets; then photo, CV and Jutro year (need Izzat).
+
+---
+
 ## 2026-11-17 — Session 59: Now stats count up; keyboard test on fake Turnstile (M7 done)
 
 **Done**
@@ -22,22 +38,6 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 - Nine example chips and two brief titles shortened: every short chip is 2 lines at 320px, and the chip
   block is 149px on every load (was up to 40px of jump).
 - Case studies keep 3 tags each; new one-line footer (`components/Footer.tsx`, copy in `lib/content.ts`).
-
----
-
-## 2026-11-17 — Session 58: Hero headline with a proof line (M6 done)
-
-**Done**
-- Hero headline is now "I build the systems insurers and banks run on." (display font, `--fs-xl`),
-  with a proof line under it: "Shipped at PwC · Allianz Technology · Hitachi" and "AWS Certified
-  Solutions Architect". Wording picked by Izzat. The AI-agents angle moved into the summary.
-- Search and share descriptions keep the fuller sentence via `seo.description`.
-
-**Verified**
-- `npm run check`, e2e, hero screenshots at 390/1024/1440 (light and dark). Small copy and CSS
-  diff, so no `reviewer` run (CLAUDE.md section 4).
-
-**Next:** M6 is complete. Release #67 and this when Izzat asks.
 
 ---
 

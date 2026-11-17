@@ -4,6 +4,22 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-17 — Session 58: Hero headline with a proof line (M6 done)
+
+**Done**
+- Hero headline is now "I build the systems insurers and banks run on." (display font, `--fs-xl`),
+  with a proof line under it: "Shipped at PwC · Allianz Technology · Hitachi" and "AWS Certified
+  Solutions Architect". Wording picked by Izzat. The AI-agents angle moved into the summary.
+- Search and share descriptions keep the fuller sentence via `seo.description`.
+
+**Verified**
+- `npm run check`, e2e, hero screenshots at 390/1024/1440 (light and dark). Small copy and CSS
+  diff, so no `reviewer` run (CLAUDE.md section 4).
+
+**Next:** M6 is complete. Release #67 and this when Izzat asks.
+
+---
+
 ## 2026-11-17 — Session 57: Estimator shows its output first (M6)
 
 **Done**

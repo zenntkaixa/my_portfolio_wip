@@ -342,7 +342,8 @@ p {
     }
   }
 
-  /* First row (hero text is the LCP element): rise only, no opacity fade, so it paints at first paint. */
+  /* LCP candidates: rise only, no opacity fade, so they paint at first paint. On mobile the estimator
+     sits second and its intro paragraph is the LCP element; a fade there waited on the main thread. */
   @keyframes tile-rise {
     from {
       transform: translateY(8px);
@@ -357,7 +358,8 @@ p {
   }
 
   .bento > .tile--hero,
-  .bento > .tile--now {
+  .bento > .tile--now,
+  .bento > .tile--estimator {
     animation-name: tile-rise;
   }
 

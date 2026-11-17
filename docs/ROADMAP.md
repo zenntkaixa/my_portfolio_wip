@@ -95,3 +95,8 @@ Added 2026-11-17 from the audit's leftovers; batched on one branch with M7 (Izza
   height between loads [ui-builder]
 - [x] Case studies show 3 tags each, not 4 (the Stack tile already lists everything) [ui-builder]
 - [x] One-line footer: © year, name, "Built with Next.js and Claude" [ui-builder]
+
+## M9 — Speed check
+Added 2026-11-17 after a Lighthouse re-check of production (PageSpeed quota was used up; VM runs).
+- [x] Estimator intro paints without the fade: since M6 it is the mobile LCP element, and its fade-in
+  waited on the main thread (render delay 3.3–4.6 s) [ui-builder]
