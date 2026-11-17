@@ -69,3 +69,12 @@ Agent hints in brackets.
   - ADR-009: REST over fetch, no dependency, in-memory fallback; active and verified on production 2026-11-12
 - [x] Optional: custom domain
   - zenntkaixa.dev (Cloudflare Registrar); `www` redirects to it; `TURNSTILE_HOSTNAME` switched and verified 2026-11-13
+
+## M6 — First impression
+Added 2026-11-17 after reviewing the 1,760 live sites in emmabostian/developer-portfolios: the best
+lead with an outcome and proof, and the most memorable shows a working demo before any input.
+- [x] Estimator shows its output first: the example plan sits beside the form (stacked on mobile)
+  before any input, and the Turnstile widget only appears when a challenge is needed
+  (`appearance: "interaction-only"`; verification unchanged) [ui-builder]
+- [x] Hero headline states an outcome with a proof line under it (e.g. merged PRs, years,
+  certification); Izzat approves the wording before it ships [ui-builder]

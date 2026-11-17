@@ -2,7 +2,7 @@ import type { Plan } from "@/lib/estimate";
 import type { Team } from "@/lib/budget";
 import { estimatorExamples } from "@/lib/content";
 
-// The plan behind "See an example plan": shown without any request, so it costs no human check, no
+// The example the estimator shows on load: shown without any request, so it costs no human check, no
 // rate-limit slot and no model call. Written by hand to show the format (the page says so); a real
 // reply for the same feature can replace it. tests/unit/samplePlan.test.ts keeps it a valid Plan.
 export const sampleFeature = estimatorExamples[0];

@@ -5,17 +5,17 @@ import { samplePlan } from "../../lib/samplePlan";
 
 // The example plan is stored in the page: showing it must never call /api/estimate.
 
-test("the example button shows the stored plan, labelled as an example, without any request", async ({ page }) => {
+test("on load the stored example is shown, labelled, with no request and no focus move", async ({ page }) => {
   const calls: string[] = [];
   await page.route("**/api/estimate", (route) => {
     calls.push(route.request().url());
     return route.abort();
   });
   await page.goto("/");
-  await page.getByRole("button", { name: estimatorCopy.example.button }).click();
 
   const heading = page.getByRole("heading", { name: samplePlan.title });
-  await expect(heading).toBeFocused();
+  await expect(heading).toBeVisible();
+  await expect(heading).not.toBeFocused();
   await expect(page.getByText(estimatorCopy.example.note(estimatorExamples[0]))).toBeVisible();
   // Focus skips past the line above the heading, so a screen reader must get it as the description.
   await expect(heading).toHaveAccessibleDescription(estimatorCopy.example.note(estimatorExamples[0]));
@@ -32,7 +32,6 @@ test("a live estimate replaces the example and its labels", async ({ page }) => 
   const live = { plan: { ...plan.plan, title: "Live plan title" } };
   await page.route("**/api/estimate", (route) => route.fulfill({ json: live }));
   await page.goto("/");
-  await page.getByRole("button", { name: estimatorCopy.example.button }).click();
   await expect(page.getByText(estimatorCopy.example.footer)).toBeVisible();
 
   await page.getByLabel("Feature description").fill("Add one-time code login with email delivery and rate limiting");
@@ -53,7 +52,7 @@ test.describe("tap targets on a phone", () => {
   test("links and buttons a thumb must hit are at least 44px tall", async ({ page }) => {
     await page.goto("/");
     const short = await page
-      .locator(".hero__actions a, .project__links a, .contact__links a, .contact__primary a, .theme-toggle, .estimator__example, .estimator__chip, .estimator__lock > button[type=submit]")
+      .locator(".hero__actions a, .project__links a, .contact__links a, .contact__primary a, .theme-toggle, .estimator__chip, .estimator__lock > button[type=submit]")
       .evaluateAll((els) =>
         els
           .map((el) => ({ name: (el.textContent || el.getAttribute("aria-label") || "").trim().slice(0, 30), h: Math.round(el.getBoundingClientRect().height * 10) / 10 }))
@@ -61,4 +60,24 @@ test.describe("tap targets on a phone", () => {
       );
     expect(short).toEqual([]);
   });
+});
+
+test("after a field error, typing brings the example back instead of an empty results area", async ({ page }) => {
+  const message = "Describe the feature in at least 20 characters.";
+  await page.route("**/api/estimate", (route) => route.fulfill({ status: 400, json: { error: message } }));
+  await page.goto("/");
+  const field = page.getByLabel("Feature description");
+  await field.fill("Add one-time code login with email delivery and rate limiting");
+  const submit = page.getByRole("button", { name: estimatorCopy.submit });
+  await expect(submit).toBeEnabled();
+  await submit.click();
+  await expect(page.getByText(message)).toBeVisible();
+
+  await field.press("End");
+  await field.pressSequentially(" now");
+  await expect(page.getByText(message)).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: samplePlan.title })).toBeVisible();
+  // Focus stays in the field, so no typed character is lost.
+  await expect(field).toBeFocused();
+  await expect(field).toHaveValue("Add one-time code login with email delivery and rate limiting now");
 });

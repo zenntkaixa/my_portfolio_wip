@@ -21,6 +21,11 @@ export function HeroTile() {
       </div>
       <p className="hero__role">{profile.role}</p>
       <p className="hero__headline">{profile.headline}</p>
+      <ul className="hero__proof" role="list" aria-label={profile.proofLabel}>
+        {profile.proof.map((p) => (
+          <li key={p}>{p}</li>
+        ))}
+      </ul>
       <p className="hero__summary">{profile.summary}</p>
       <ul className="hero__actions" role="list">
         <li>

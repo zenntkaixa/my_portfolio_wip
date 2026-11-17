@@ -454,10 +454,25 @@ p {
   color: var(--muted);
 }
 
+/* The headline is the outcome line: larger than the summary, in the display font. */
 .tile--hero > .hero__headline {
-  margin-top: 1.25em;
-  font-size: var(--fs-lg);
-  line-height: 1.4;
+  margin-top: 1em;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: var(--fs-xl);
+  font-weight: 600;
+  line-height: 1.25;
+  text-wrap: pretty;
+}
+
+.tile--hero > .hero__proof {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--fs-sm);
+  color: var(--muted);
 }
 
 .tile--hero > .hero__actions {
@@ -890,17 +905,10 @@ p {
 /* ---- Estimator form ---- */
 
 .estimator__form {
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: var(--gap);
-}
-
-/* The one-tap way to see what the tool produces; sized by its label, not the form's full width. */
-.estimator__example {
-  align-self: flex-start;
-  min-height: 44px;
-  font-weight: 600;
-  color: var(--accent);
 }
 
 /* Comfortable tap height for the submit button (its padding alone gives 43px). */
@@ -962,6 +970,11 @@ p {
 
 .estimator__count[data-warn="true"] {
   color: var(--warn);
+}
+
+/* An empty live region leaves the flex flow (no gap) but stays in the accessibility tree. */
+.turnstile__error:empty {
+  position: absolute;
 }
 
 .turnstile__error {
@@ -1182,6 +1195,20 @@ p {
   flex-direction: column;
   gap: calc(var(--gap) / 2);
   margin-top: var(--gap);
+  min-width: 0;
+}
+
+/* Form | results side by side once the bento is 12 columns wide (above 1024px); stacked below. */
+@media (min-width: 1025px) {
+  .estimator {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: calc(var(--gap) * 2);
+    align-items: start;
+  }
+  .estimator__results {
+    margin-top: 0;
+  }
 }
 
 .estimator__status {

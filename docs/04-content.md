@@ -25,5 +25,5 @@ All biography, project and contact text is in `lib/content.ts`. Change copy ther
 
 ## SEO and metadata
 - Title: "Izzat Fahmi — Full-stack software engineer"
-- Description: one sentence from `profile.headline`.
+- Description: `seo.description` (the fuller sentence; the hero headline is shorter).
 - Open Graph image: generated in M5 with `next/og` (initials, name, role, on the blueprint grid).
