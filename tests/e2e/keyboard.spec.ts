@@ -95,7 +95,10 @@ test("Tab order, visible focus indicators, no trap, Shift+Tab goes back", async 
   expect(stops[0], listing).toMatchObject({ tag: "a", name: "Skip to the estimator" });
 
   // Estimator controls come in the documented order: chips, textarea, slider, seniority, working style, submit.
-  const est = stops.filter((s) => s.section === "estimator");
+  const estAll = stops.filter((s) => s.section === "estimator");
+  // The example results follow the form: the selected tab, then its panel.
+  const est = estAll.slice(0, estAll.findIndex((s) => s.name === estimatorCopy.submit) + 1);
+  expect(estAll.slice(est.length).map((s) => s.role), listing).toEqual(["tab", "tabpanel"]);
   const chips = est.filter((s) => s.tag === "button" && s.role === "").slice(0, -1);
   const kinds = est.map((s) => (s.tag === "textarea" ? "textarea" : s.role === "range" ? "range" : s.role === "radio" ? "radio" : "button"));
   expect(kinds, listing).toEqual([...chips.map(() => "button"), "textarea", "range", "radio", "radio", "button"]);

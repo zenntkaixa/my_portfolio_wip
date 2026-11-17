@@ -32,6 +32,14 @@ type Status =
   | { kind: "success"; plan: Plan; teamLabel: string; team: Team; example?: true }
   | { kind: "error"; message: string; status: number };
 
+const exampleStatus: Status = {
+  kind: "success",
+  plan: samplePlan,
+  teamLabel: `${estimatorCopy.people(sampleTeam.size)}, ${sampleTeam.seniority}`,
+  team: sampleTeam,
+  example: true,
+};
+
 type Tab = "phases" | "tasks" | "budget";
 
 type Chip = { label: string; text: string };
@@ -53,7 +61,7 @@ export function Estimator() {
   const [examples, setExamples] = useState<Chip[] | null>(null);
   useEffect(() => setExamples(pickChips(pickRandom(estimatorExamples, 2), pickRandom(estimatorBriefs, 1)[0])), []);
   const [token, setToken] = useState<string | null>(null);
-  const [status, setStatus] = useState<Status>({ kind: "idle" });
+  const [status, setStatus] = useState<Status>(exampleStatus);
   const [tab, setTab] = useState<Tab>("phases");
   const [cooldown, setCooldown] = useState(0);
   const turnstile = useRef<TurnstileHandle>(null);
@@ -61,6 +69,8 @@ export function Estimator() {
   const bannerEl = useRef<HTMLDivElement>(null);
   const textarea = useRef<HTMLTextAreaElement>(null);
   const abortRef = useRef<AbortController | null>(null);
+  // Focus moves to the results only after a user action, never for the example shown on load.
+  const acted = useRef(false);
 
   // Abort any in-flight request on unmount.
   useEffect(() => () => abortRef.current?.abort(), []);
@@ -75,7 +85,9 @@ export function Estimator() {
   }, [cooldown]);
 
   useEffect(() => {
-    if (status.kind === "success") heading.current?.focus();
+    if (!acted.current) return;
+    // Returning to the stored example (typing after a field error) must not pull focus out of the field.
+    if (status.kind === "success" && !status.example) heading.current?.focus();
     else if (status.kind === "error") {
       // 400 is shown inline: focus the field it describes. Other errors: the banner.
       if (status.status === 400) textarea.current?.focus();
@@ -98,6 +110,7 @@ export function Estimator() {
     abortRef.current?.abort();
     const controller = new AbortController();
     abortRef.current = controller;
+    acted.current = true;
     setStatus({ kind: "submitting" });
     const fail = (code: number, message: string) =>
       setStatus({ kind: "error", message, status: code });
@@ -140,13 +153,6 @@ export function Estimator() {
     }
   }
 
-  /** Shows the stored example in the normal results view. Nothing is sent anywhere. */
-  function showExample() {
-    const teamLabel = `${estimatorCopy.people(sampleTeam.size)}, ${sampleTeam.seniority}`;
-    setStatus({ kind: "success", plan: samplePlan, teamLabel, team: sampleTeam, example: true });
-    setTab("phases");
-  }
-
   function submit(e: React.FormEvent) {
     e.preventDefault();
     if (canSubmit) void run();
@@ -168,14 +174,6 @@ export function Estimator() {
         aria-busy={submitting}
       >
         <fieldset className="estimator__lock" disabled={submitting}>
-          <button
-            type="button"
-            className="estimator__example"
-            onClick={showExample}
-          >
-            {estimatorCopy.example.button}
-          </button>
-
           <div
             className="estimator__examples"
             role="group"
@@ -205,7 +203,7 @@ export function Estimator() {
               value={feature}
               onChange={(e) => {
                 setFeature(e.target.value);
-                if (fieldError) setStatus({ kind: "idle" });
+                if (fieldError) setStatus(exampleStatus);
               }}
               maxLength={FEATURE_MAX}
               rows={4}
@@ -302,6 +300,10 @@ export function Estimator() {
               ? estimatorCopy.waitLabel(formatWait(cooldown))
               : estimatorCopy.submit}
           </button>
+          {/* The human check runs hidden, so say why submit is still disabled once the text is ready. */}
+          {!tooShort && !token && !submitting && (
+            <p className="estimator__model-note">{estimatorCopy.retryWaiting}</p>
+          )}
           <p className="estimator__model-note">{estimatorCopy.modelNote}</p>
         </fieldset>
       </form>
