@@ -408,7 +408,9 @@ describe("POST /api/estimate", () => {
       );
       const res = await POST(request());
       expect(res.status).toBe(200);
-      expect(((await res.json()) as { plan: { title: string } }).plan.title).toBe("Cached");
+      const body = (await res.json()) as { plan: { title: string }; cached?: boolean };
+      expect(body.plan.title).toBe("Cached");
+      expect(body.cached).toBe(true);
       expect(hits).toEqual({ upstash: ["EVAL", "GET"], anthropic: 0 });
       const line = JSON.parse(String(vi.mocked(console.info).mock.calls[0][0])) as { outcome: string; cache_hit: boolean };
       expect(line).toMatchObject({ outcome: "ok", cache_hit: true });

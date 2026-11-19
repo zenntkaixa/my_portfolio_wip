@@ -16,10 +16,10 @@ export function HeroTile() {
       id="about"
       className="tile--hero"
     >
-      {/* Decorative: the h1 above already carries the name. Grid placement puts it beside the name. */}
-      <div className="hero__avatar" aria-hidden="true">
+      {/* Grid placement puts it beside the name. */}
+      <div className="hero__avatar">
         {/* Pre-sized 216px (3x of 72px) WebP, so it skips the image optimizer. */}
-        <Image src="/profile.webp" alt="" width={72} height={72} unoptimized loading="eager" />
+        <Image src="/profile.webp" alt={`Photo of ${profile.name}`} width={72} height={72} unoptimized loading="eager" />
       </div>
       <p className="hero__role">{profile.role}</p>
       <p className="hero__headline">{profile.headline}</p>

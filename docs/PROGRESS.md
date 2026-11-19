@@ -5,6 +5,21 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-19 — Session 70: Review fixes, Batch D (M14)
+
+**Done** on `feat/m14-batch-d` (Izzat: quick wins from the team review doc, no notice period)
+- robots.txt and sitemap.xml; photo alt text; "AWS Certified Solutions Architect – Associate" in the hero.
+- Filled primary "Estimate this feature" button; "excluding SST" dropped (in-house rates carry no SST).
+- A kept plan under an error is dimmed and labelled "Previous plan for: …"; a chip over typed text offers
+  Undo for 10 s; cache hits return `cached: true` and say so; short input gets a text hint.
+- Contact list adds work mode (onsite, hybrid or remote) and Malaysian citizen; plan CTA now hiring-focused.
+- Verified: check (316 unit), full e2e 137 passed, then Batch D, keyboard and Batch A specs after review fixes.
+
+**Next** Batch E (deterministic estimator) once Izzat decides how AI factors may be shown.
+**Waiting on Izzat** Neon Singapore rows 7–9 are rate_limited (no live ok row yet); old US East project.
+
+---
+
 ## 2026-11-19 — Session 69: Housekeeping after the M14 release
 
 **Done** on `chore/m14-housekeeping` (Izzat: items 1 and 4; bumps held)
@@ -17,23 +32,7 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
   `@neondatabase/serverless` 1.2.1 (from 27 Nov).
 
 **Next** the bumps on those dates; usage review in Neon after 1–2 weeks of traffic.
-**Note** Vercel functions run in `sin1` but Neon "portfolio" is in US East: writes are after the response,
-so visitors don't wait; moving it to Singapore is optional.
+**Then** Neon moved to Singapore (`portfolio-sg`, next to `sin1`): new `DATABASE_URL`, redeployed 18:30 UTC,
+rows 2–6 copied with their IDs. Old US East project kept until Izzat decides.
 
 ---
-
-## 2026-11-19 — Session 68: Estimator insights, Batch C (M14)
-
-**Done** on `feat/m14-estimator-insights` (Izzat: Neon for durable rows, my picks for the rest)
-- Neon project "portfolio" (US East, Postgres 18) created; table `estimate_events` (`db/schema.sql`); app role
-  `portfolio_app` may only INSERT and SELECT (DELETE denied, checked). ADR-012, `@neondatabase/serverless` 1.2.0.
-- Route split into a service layer (`lib/estimator/`): one event row and one JSON log line per request, written
-  after the response; 24 h Upstash plan cache keyed by model + prompt version; copy and print the plan;
-  "N plans generated" line (only from 25); cache notice under the form. Click tracking and share links skipped.
-- Security review: no blockers; fixed its notes (versioned cache key, log fields can't be overwritten).
-
-**Verified** see the PR. **Next** release PR for #84–#86 and this when Izzat asks.
-**Waiting on Izzat** rotate the `portfolio_app` password in Neon, then set `DATABASE_URL` in Vercel (Production).
-
----
-

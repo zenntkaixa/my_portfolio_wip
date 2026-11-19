@@ -32,7 +32,7 @@ import type { Team } from "@/lib/budget";
 type Status =
   | { kind: "idle" }
   | { kind: "submitting" }
-  | { kind: "success"; plan: Plan; teamLabel: string; team: Team; example?: true }
+  | { kind: "success"; plan: Plan; teamLabel: string; team: Team; example?: true; cached?: true; description?: string }
   | { kind: "error"; message: string; status: number };
 
 const exampleStatus: Status = {
@@ -79,6 +79,8 @@ export function Estimator() {
   const [status, setStatus] = useState<Status>(exampleStatus);
   // The last successful plan stays on screen under an error banner.
   const [lastOk, setLastOk] = useState<Success>(exampleStatus as Success);
+  // Text a chip replaced, offered back for ~10 s.
+  const [undo, setUndo] = useState<string | null>(null);
   const [tab, setTab] = useState<Tab>("phases");
   const [cooldown, setCooldown] = useState(0);
   const turnstile = useRef<TurnstileHandle>(null);
@@ -93,6 +95,12 @@ export function Estimator() {
 
   // Abort any in-flight request on unmount.
   useEffect(() => () => abortRef.current?.abort(), []);
+
+  useEffect(() => {
+    if (undo === null) return;
+    const id = setTimeout(() => setUndo(null), 10_000);
+    return () => clearTimeout(id);
+  }, [undo]);
 
   const onToken = useCallback((t: string | null) => setToken(t), []);
 
@@ -181,7 +189,7 @@ export function Estimator() {
         fail(502, estimatorCopy.badPlan);
       } else {
         const teamLabel = `${estimatorCopy.people(teamSize)}, ${seniority}${mode === "ai-assisted" ? estimatorCopy.mode.teamSuffix : ""}`;
-        const ok: Success = { kind: "success", plan: data.plan, teamLabel, team: { size: teamSize, seniority, mode } };
+        const ok: Success = { kind: "success", plan: data.plan, teamLabel, team: { size: teamSize, seniority, mode }, description: feature, ...(data.cached === true && { cached: true as const }) };
         setLastOk(ok);
         setStatus(ok);
         setTab("phases");
@@ -240,13 +248,33 @@ export function Estimator() {
                 className="estimator__chip"
                 onClick={() => {
                   focusField.current = true;
+                  // Typed text (not another chip's) is kept for Undo instead of being silently lost.
+                  const typed = feature.trim() !== "" && !(examples ?? []).some((c) => c.text === feature);
+                  // A second chip keeps the original typed text available to Undo.
+                  if (typed) setUndo(feature);
                   setFeature(ex.text);
                 }}
               >
                 {ex.label}
               </button>
             ))}
+            {undo !== null && (
+              <button
+                type="button"
+                className="estimator__chip estimator__undo"
+                onClick={() => {
+                  focusField.current = true;
+                  setFeature(undo);
+                  setUndo(null);
+                }}
+              >
+                {estimatorCopy.undo.button}
+              </button>
+            )}
           </div>
+          <p role="status" className="sr-only">
+            {undo !== null ? estimatorCopy.undo.announce : ""}
+          </p>
 
           <div className="estimator__field">
             <label htmlFor="feature" className="estimator__label">
@@ -259,6 +287,7 @@ export function Estimator() {
               value={feature}
               onChange={(e) => {
                 setFeature(e.target.value);
+                setUndo(null);
                 if (fieldError) {
                   acted.current = false; // restoring the plan must not steal focus from the field
                   setStatus(lastOk);
@@ -289,7 +318,7 @@ export function Estimator() {
               {length} / {FEATURE_MAX}
               <span aria-live="polite">
                 {/* Shown from the start, so the disabled submit button has a stated reason. */}
-                {tooShort ? estimatorCopy.atLeast(FEATURE_MIN) : ""}
+                {tooShort ? (length > 0 ? estimatorCopy.moreWords(FEATURE_MIN) : estimatorCopy.atLeast(FEATURE_MIN)) : ""}
               </span>
             </p>
           </div>
@@ -353,7 +382,7 @@ export function Estimator() {
 
           <Turnstile ref={turnstile} onToken={onToken} />
 
-          <button type="submit" disabled={!canSubmit}>
+          <button type="submit" className="estimator__submit" disabled={!canSubmit}>
             {cooldown > 0
               ? estimatorCopy.waitLabel(formatWait(cooldown))
               : estimatorCopy.submit}
@@ -419,6 +448,11 @@ export function Estimator() {
 
         {shown && (
           <ResultsBoundary resetKey={shown.plan}>
+            {banner && !shown.example && shown.description && (
+              <p className="estimator__note">{estimatorCopy.previousPlan(shown.description)}</p>
+            )}
+            <div className="estimator__plan" data-kept={banner && !shown.example ? "" : undefined}>
+            {!banner && shown.cached && <p className="estimator__note">{estimatorCopy.cachedNote}</p>}
             {/* shown.* below: an error banner keeps the last good plan on screen */}
             {shown.example && (
               <p id="estimator-example-note" className="estimator__example-note">
@@ -474,6 +508,7 @@ export function Estimator() {
                 ? estimatorCopy.example.footer
                 : estimatorCopy.footerNote}
             </p>
+            </div>
           </ResultsBoundary>
         )}
       </section>

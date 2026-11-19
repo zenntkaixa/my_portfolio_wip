@@ -51,13 +51,12 @@ test("hero owns the page's only h1 and shows role, location and availability", a
   await expect(hero.getByText(profile.location, { exact: true })).toBeVisible();
   await expect(hero.getByText(profile.availability, { exact: true })).toBeVisible();
 
-  // The photo is decorative (the h1 carries the name): it loads, and stays out of the accessibility tree.
+  // The photo loads and has real alt text built from the name.
   const photo = hero.locator(".hero__avatar img");
   await expect(photo).toBeVisible();
-  await expect(photo).toHaveAttribute("alt", "");
-  await expect(hero.locator(".hero__avatar")).toHaveAttribute("aria-hidden", "true");
+  await expect(photo).toHaveAttribute("alt", `Photo of ${profile.name}`);
   expect(await photo.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth)).toBe(216);
-  expect(await hero.getByRole("img").count()).toBe(0);
+  await expect(hero.getByRole("img", { name: `Photo of ${profile.name}` })).toHaveCount(1);
 });
 
 test("hero offers email and LinkedIn on the first screen", async ({ page }) => {

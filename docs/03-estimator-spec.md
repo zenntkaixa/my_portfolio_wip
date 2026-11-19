@@ -65,6 +65,8 @@ Success `200`:
 }
 ```
 
+A cache hit adds `"cached": true` to this body; fresh plans leave it out. The UI then shows a note that this is the saved plan.
+
 `openQuestions` (up to 3: what a BA would ask the requester before committing) and `outOfScope` (up to 3:
 what the plan deliberately leaves out) are always present from the server (`[]` when the model gave none);
 the client treats them as optional so older payloads still render. `calendarAdjusted` appears only when the
@@ -149,7 +151,7 @@ Show a plan-shaped skeleton (4 summary cards, 5 timeline bars), the status line 
 announced once) and a visual-only step line that rotates every 2.5 s ("Reading your brief…" ...), plus
 "Usually about 10 seconds." On success focus moves to the plan heading; on error to the banner.
 A failed estimate never wipes the last successful plan (example or live): it stays below the banner.
-Under every plan, above the footer note: "Want this scoped for your real project?" with Email me and
+Under every plan, above the footer note: "Like how I break down work? Let's talk about your team." with Email me and
 LinkedIn links (never a phone number). A chip click fills the field and puts the caret at its end.
 The client rejects plans with malformed tasks or absurd totals (hours over 100000, days over 2000,
 weeks over 400) with the "incomplete plan" banner, and an error boundary around the plan shows a short

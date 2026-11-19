@@ -1039,9 +1039,34 @@ p {
   outline: none;
 }
 
-/* Comfortable tap height for the submit button (its padding alone gives 43px). */
-.estimator__lock > button[type="submit"] {
+/* Primary action: the hero's filled "Email me" look, full width of the form. */
+.estimator__lock > .estimator__submit {
+  width: 100%;
   min-height: 44px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  border: 1px solid transparent;
+  font-weight: 600;
+}
+
+/* Disabled keeps the inset look of every other disabled control, with a visible edge. */
+.estimator__lock > .estimator__submit:disabled {
+  background: var(--surface-2);
+  color: var(--muted);
+  border-color: var(--line);
+}
+
+/* Plan kept under an error banner: dimmed, not hidden. */
+.estimator__plan {
+  display: contents;
+}
+
+.estimator__plan[data-kept] {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--gap) / 2);
+  /* Light enough to read as "not current", strong enough that --muted text keeps AA contrast. */
+  opacity: 0.75;
 }
 
 /* Hidden, but keeping its space, until the random pick replaces the server-rendered three. */

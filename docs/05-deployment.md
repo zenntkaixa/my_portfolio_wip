@@ -102,3 +102,11 @@ Accessibility 100, Best Practices 100, SEO 100.
 Done 2026-11-13, steps 1 to 5: canonical and `og:url` show the new domain, a fake token gets 403, Izzat's
 estimate worked there and reached the shared limiter, the old hostname is off the Turnstile widget, and
 `my-portfolio-wip.vercel.app` redirects (308) to the new domain.
+
+## Usage events (ADR-012)
+
+Done 2026-11-19: Neon project `portfolio-sg` (free, Singapore `ap-southeast-1`, next to Vercel `sin1`),
+database `portfolio`, table `estimate_events` from `db/schema.sql`. The app connects as `portfolio_app`
+(INSERT and SELECT only; DELETE refused). Its connection string is `DATABASE_URL` in Vercel Production
+(Sensitive); changing it needs a redeploy. The first project (US East) was replaced the same day and its
+5 rows copied over with their IDs and times.
