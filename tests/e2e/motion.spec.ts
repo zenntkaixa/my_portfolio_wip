@@ -75,10 +75,10 @@ test("no preference: tiles run tile-in with delays staggered in DOM order", asyn
   await expect(page.locator(".bento > *")).toHaveCount(tileCount);
 
   const styles = await tileStyles(page);
-  // Hero and Now (first row, LCP) rise without a fade; every other tile fades and rises.
+  // Hero, Now and the estimator (LCP candidates) rise without a fade; every other tile fades and rises.
   const classes = await page
     .locator(TILES)
-    .evaluateAll((els) => els.map((el) => /\btile--(hero|now)\b/.test(el.className)));
+    .evaluateAll((els) => els.map((el) => /\btile--(hero|now|estimator)\b/.test(el.className)));
   expect(classes.some(Boolean)).toBe(true);
   expect(styles.map((s) => s.name)).toEqual(classes.map((first) => (first ? "tile-rise" : "tile-in")));
   expect(styles.map((s) => toMs(s.delay))).toEqual(
@@ -86,10 +86,10 @@ test("no preference: tiles run tile-in with delays staggered in DOM order", asyn
   );
 });
 
-test("no preference: hero and Now are fully opaque from the first frame", async ({ page }) => {
+test("no preference: hero, Now and the estimator are fully opaque from the first frame", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/");
-  for (const cls of [".tile--hero", ".tile--now"]) {
+  for (const cls of [".tile--hero", ".tile--now", ".tile--estimator"]) {
     const el = page.locator(`.bento > ${cls}`);
     expect(await el.evaluate((e) => getComputedStyle(e).animationName)).toBe("tile-rise");
     // Sampled while the (delayed) rise may still be running: opacity is never animated.

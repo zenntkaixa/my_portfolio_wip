@@ -3,6 +3,8 @@ import {
   aiWorkflow,
   caseStudies,
   certifications,
+  certificationsNote,
+  guidewireCheck,
   education,
   experience,
   featuredProject,
@@ -48,12 +50,13 @@ test("hero owns the page's only h1 and shows role, location and availability", a
   await expect(hero.getByText(profile.location, { exact: true })).toBeVisible();
   await expect(hero.getByText(profile.availability, { exact: true })).toBeVisible();
 
-  // The initials avatar is decorative: visible on screen, absent from the accessibility tree.
-  const initials = hero.getByText(profile.initials, { exact: true });
-  await expect(initials).toBeVisible();
-  await expect(initials).toHaveAttribute("aria-hidden", "true");
-  const snapshot = await hero.ariaSnapshot();
-  expect(snapshot).not.toMatch(new RegExp(`\\b${profile.initials}\\b`));
+  // The photo is decorative (the h1 carries the name): it loads, and stays out of the accessibility tree.
+  const photo = hero.locator(".hero__avatar img");
+  await expect(photo).toBeVisible();
+  await expect(photo).toHaveAttribute("alt", "");
+  await expect(hero.locator(".hero__avatar")).toHaveAttribute("aria-hidden", "true");
+  expect(await photo.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth)).toBe(216);
+  expect(await hero.getByRole("img").count()).toBe(0);
 });
 
 test("hero offers email and LinkedIn on the first screen", async ({ page }) => {
@@ -309,8 +312,24 @@ test.describe("certifications tile", () => {
     const items = region(page).getByRole("list").getByRole("listitem");
     // Exact text: "name, year" when there is a year, just "name" (no trailing ", ") when not.
     await expect(items).toHaveText(
-      certifications.map((c) => (c.year ? `${c.name}, ${c.year}` : c.name)),
+      certifications.map((c) => {
+        const name = "url" in c ? `${c.name} (opens in a new tab)` : c.name;
+        return c.year ? `${name}, ${c.year}` : name;
+      }),
     );
+    await expect(region(page).getByText(certificationsNote, { exact: true })).toBeVisible();
+  });
+
+  test("each certification with a verification page links to it in a new tab, plus the Guidewire checker", async ({ page }) => {
+    await page.goto("/");
+    const links = region(page).getByRole("link");
+    const expected = [...certifications.flatMap((c) => ("url" in c && c.url ? [c.url] : [])), guidewireCheck.url];
+    await expect(links).toHaveCount(expected.length);
+    for (const [i, href] of expected.entries()) {
+      await expect(links.nth(i)).toHaveAttribute("href", href);
+      await expect(links.nth(i)).toHaveAttribute("target", "_blank");
+    }
+    await expect(region(page).getByText(guidewireCheck.after)).toBeVisible();
   });
 });
 

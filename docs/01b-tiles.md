@@ -5,7 +5,7 @@ Read only the section for the tile you are changing.
 
 ## Hero
 - The name is the page's only `<h1>` (display font, `--fs-2xl`) and names the hero section.
-- A 72px initials avatar (`--accent` on `--accent-soft`, `--r-md`) sits beside the name and role.
+- A 72px photo (`public/profile.webp`, 216px source, `--r-md`, decorative `alt=""`) sits beside the name and role.
 - Under the role, the headline (`profile.headline`, display font, `--fs-xl`, weight 600) states the outcome,
   then a proof line (`profile.proof`, a `role="list"` list at `--fs-sm` in `--muted`): employers and the
   AWS certification, approved by Izzat 2026-11-17. Numbers stay in the Now tile, not here.

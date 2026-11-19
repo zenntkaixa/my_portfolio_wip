@@ -106,12 +106,35 @@ export const stack = [
   { group: "AI and quality", items: ["Claude", "Gemini", "OpenAI", "CI/CD", "SonarQube", "Playwright"] },
 ];
 
+// Exam-based certifications only (Izzat, 2026-11-19), newest first. Course certificates stay off.
+export const certificationsNote = "Each one earned by passing a paid exam.";
+
+// url: the issuer's public verification page. Guidewire has none per certificate (see guidewireCheck).
 export const certifications = [
-  { name: "AWS Certified Solutions Architect, Associate", year: "2025" },
   { name: "Guidewire InsuranceSuite Developer, Associate", year: "2026" },
-  { name: "Guidewire Jutro Developer, Associate", year: "" },
-  { name: "Anthropic Claude Code 101", year: "2026" },
+  { name: "Guidewire Jutro Developer, Associate", year: "2026" },
+  {
+    name: "EC-Council Certified Blockchain Professional v2",
+    year: "2025",
+    url: "https://aspen.eccouncil.org/VerifyBadge?type=certification&a=01GkhY5%2B2oWIqQRU420B9ODaazlz%2FX6n3RG703e64UA%3D",
+  },
+  {
+    name: "EC-Council Certified Blockchain Professional v2, Business Leaders",
+    year: "2025",
+    url: "https://aspen.eccouncil.org/VerifyBadge?type=certification&a=hkxP%2FY3Fixvny%2BW%2FJqIbo12KUtqjBX8IP%2B92lrrW5k8%3D",
+  },
+  {
+    name: "AWS Certified Solutions Architect, Associate",
+    year: "2025",
+    url: "https://www.credly.com/badges/a8c36b1e-52e4-4d9d-9f99-013c88ac4c56",
+  },
 ];
+
+export const guidewireCheck = {
+  link: "Guidewire's Certification Checker",
+  url: "https://education.guidewire.com/lmt/lmtlogin.prHome?site=guidewire",
+  after: `: search “${profile.fullName}” to verify the Guidewire ones.`,
+};
 
 export const education = "BSc Computer Science (Software Engineering), Universiti Tun Hussein Onn Malaysia";
 

@@ -25,7 +25,7 @@ Malaysia**. It should prove three things within 30 seconds:
 | Abuse protection | Cloudflare Turnstile bot check plus per-visitor rate limit (daily cap as extra) |
 | Project tiles | Both: anonymised work case studies and side projects |
 | Featured side project | radiozk — https://github.com/zenntkaixa/radiozk |
-| Avatar | Initials ("IF"), no photo |
+| Avatar | Photo (Izzat's, 2026-11-19), 72px in the hero; icons and the share image keep the initials |
 | Contact | Email and LinkedIn only. **No phone number.** |
 
 ## Open items (ask Izzat when you reach them)
