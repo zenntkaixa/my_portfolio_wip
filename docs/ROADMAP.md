@@ -129,3 +129,6 @@ Added 2026-11-19 (Izzat): the deferred M12 layout items, the web CV and the #76 
 - [x] Soften three claims (portal batching, "Shipped at", personal PRs) and use the full degree title [content]
 - [x] Phones: a link above the form previews the example plan (title, hours, weeks) and jumps to it [ui-builder]
 - [x] Desktop: the form stays in view (sticky) beside the taller plan, when the screen fits the whole form [ui-builder]
+- [x] Seniority and working style: one highlight slides to the chosen option (CSS only; idea from Astryx's
+  SegmentedControl, no Astryx code, ADR-010 unchanged) [ui-builder]
+- [x] Plan timeline: "Week 1, 2…" labels under the week gridlines (`weekLabels` in `lib/timeline.ts`) [ui-builder]

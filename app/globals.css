@@ -1184,6 +1184,9 @@ p {
 }
 
 .estimator__segments {
+  --n: 4;
+  --i: 0;
+  position: relative;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   border: 1px solid var(--muted);
@@ -1193,7 +1196,32 @@ p {
 }
 
 .estimator__segments--two {
+  --n: 2;
   grid-template-columns: repeat(2, 1fr);
+}
+
+/* One highlight under the segments that slides to the checked one (CSS only, works before hydration). */
+.estimator__segments::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: calc(100% / var(--n));
+  transform: translateX(calc(var(--i) * 100%));
+  background: var(--accent);
+}
+
+.estimator__segments:has(.estimator__segment:nth-child(2) input:checked) {
+  --i: 1;
+}
+
+.estimator__segments:has(.estimator__segment:nth-child(3) input:checked) {
+  --i: 2;
+}
+
+.estimator__segments:has(.estimator__segment:nth-child(4) input:checked) {
+  --i: 3;
 }
 
 .estimator__segments--two .estimator__segment span {
@@ -1208,6 +1236,7 @@ p {
 
 .estimator__segment input {
   position: absolute;
+  z-index: 1; /* above the label text, which sits above the sliding highlight */
   inset: 0;
   width: 100%;
   height: 100%;
@@ -1217,6 +1246,7 @@ p {
 }
 
 .estimator__segment span {
+  position: relative;
   display: block;
   padding: 0.5em 0.5em;
   text-align: center;
@@ -1229,7 +1259,6 @@ p {
 }
 
 .estimator__segment:has(input:checked) span {
-  background: var(--accent);
   color: var(--accent-ink);
   font-weight: 600;
 }
@@ -1249,8 +1278,11 @@ p {
   color: var(--muted);
 }
 
-.estimator__seniority:disabled .estimator__segment:has(input:checked) span {
+.estimator__seniority:disabled .estimator__segments::before {
   background: var(--surface-2);
+}
+
+.estimator__seniority:disabled .estimator__segment:has(input:checked) span {
   color: var(--ink);
 }
 
@@ -1270,12 +1302,29 @@ p {
   .estimator__segment:nth-child(n + 3) span {
     border-top: 1px solid var(--line);
   }
+
+  /* Two rows: no slide, the checked segment fills itself. */
+  .estimator__segments::before {
+    display: none;
+  }
+
+  .estimator__segment:has(input:checked) span {
+    background: var(--accent);
+  }
+
+  .estimator__seniority:disabled .estimator__segment:has(input:checked) span {
+    background: var(--surface-2);
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .estimator__chip,
   .estimator__segment span {
     transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+  }
+
+  .estimator__segments::before {
+    transition: transform 0.2s ease-out, background-color 0.15s;
   }
 }
 
@@ -1759,6 +1808,22 @@ p {
   left: var(--left);
   width: 1px;
   background: var(--line);
+}
+
+/* Week names under the timeline, centred on each 5-day span the gridlines mark. */
+.tab1-axis {
+  position: relative;
+  height: 1.2em;
+  margin-top: -0.2rem;
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+
+.tab1-axis span {
+  position: absolute;
+  left: var(--left);
+  transform: translateX(-50%);
+  white-space: nowrap;
 }
 
 .tab1-bar {

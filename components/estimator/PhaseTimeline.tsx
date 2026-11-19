@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 import type { Plan } from "@/lib/estimate";
 import { estimatorCopy as copy } from "@/lib/content";
-import { toBars, weekMarkers } from "@/lib/timeline";
+import { toBars, weekLabels, weekMarkers } from "@/lib/timeline";
 
 type Geometry = CSSProperties & Record<`--${string}`, string>;
 
@@ -11,6 +11,7 @@ const pct = (n: number) => `${Number(n.toFixed(3))}%`;
 export function PhaseTimeline({ plan, teamLabel }: { plan: Plan; teamLabel: string }) {
   const bars = toBars(plan.phases, plan.totalDays);
   const markers = weekMarkers(plan.totalDays);
+  const weeks = weekLabels(plan.totalDays);
 
   return (
     <div className="results-phases">
@@ -62,6 +63,16 @@ export function PhaseTimeline({ plan, teamLabel }: { plan: Plan; teamLabel: stri
             </li>
           ))}
         </ol>
+      )}
+      {/* Visual axis only: each row already says its days, and the summary gives calendar weeks. */}
+      {bars.length > 0 && weeks.length > 0 && (
+        <div className="tab1-axis" aria-hidden="true" data-testid="week-axis">
+          {weeks.map((w) => (
+            <span key={w.week} style={{ "--left": pct(w.centerPct) } as Geometry}>
+              {copy.weekLabel(w.week)}
+            </span>
+          ))}
+        </div>
       )}
 
       <ul className="tab1-cards" role="list">

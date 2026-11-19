@@ -39,6 +39,27 @@ export function weekMarkers(totalDays: number): number[] {
   return markers;
 }
 
+/** A week label under the timeline: its number and the centre of its span, as a percentage. */
+export type WeekLabel = { week: number; centerPct: number };
+
+/**
+ * Labels for the weeks the gridlines mark (5 working days each, the last one possibly shorter).
+ * At most 6 labels, so they fit a phone: long plans label every 2nd, 3rd... week, always starting at week 1.
+ * Returns [] when there are no gridlines (totalDays is 5 or less, or not finite).
+ */
+export function weekLabels(totalDays: number): WeekLabel[] {
+  if (!Number.isFinite(totalDays) || totalDays <= 5) return [];
+  const weeks = Math.ceil(totalDays / 5);
+  const step = Math.ceil(weeks / 6);
+  const labels: WeekLabel[] = [];
+  for (let w = 1; w <= weeks; w += step) {
+    const start = (w - 1) * 5;
+    const end = Math.min(w * 5, totalDays);
+    labels.push({ week: w, centerPct: ((start + end) / 2 / totalDays) * 100 });
+  }
+  return labels;
+}
+
 /**
  * Sum task hours by role (pass tasks flattened across phases), sorted by hours descending,
  * ties broken by role name ascending.
