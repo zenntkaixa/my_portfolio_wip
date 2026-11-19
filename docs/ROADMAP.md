@@ -107,7 +107,7 @@ Added 2026-11-17 after a Lighthouse re-check of production (PageSpeed quota was 
 Added 2026-11-19 (Izzat).
 - [x] Certification names link to their verification pages (Credly, EC-Council ASPEN); Guidewire has no
   per-certificate page, so a note links its Certification Checker with the name to search [ui-builder]
-- [ ] "Download CV" button in the hero (waiting on Izzat's CV PDF; check it for the phone number first)
+- [x] "Download CV" link in the hero: web copy of CV v4, phone removed, clients anonymised (M13) [ui-builder]
 
 ## M11 — Broad positioning
 Added 2026-11-19: Izzat is targeting roles beyond insurance and banking (B2B SaaS, HealthTech, logistics,

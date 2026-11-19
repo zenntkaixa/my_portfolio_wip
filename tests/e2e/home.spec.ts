@@ -72,6 +72,18 @@ test("hero offers email and LinkedIn on the first screen", async ({ page }) => {
   await expect(linkedin).toHaveAttribute("rel", /noopener/);
 });
 
+test("hero offers the web CV as a PDF download", async ({ page }) => {
+  await page.goto("/");
+  const hero = page.getByRole("region", { name: profile.name, exact: true });
+  const cv = hero.getByRole("link", { name: `${profile.cv.label} (${profile.cv.note})`, exact: true });
+  await expect(cv).toHaveAttribute("href", profile.cv.href);
+  await expect(cv).toHaveAttribute("download", "");
+  const res = await page.request.get(profile.cv.href);
+  expect(res.status()).toBe(200);
+  expect(res.headers()["content-type"]).toContain("application/pdf");
+  expect((await res.body()).subarray(0, 5).toString()).toBe("%PDF-");
+});
+
 test("every tile fits a 320px screen, so nothing is cut off or scrolls sideways", async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 700 });
   await page.goto("/");

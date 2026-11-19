@@ -12,6 +12,8 @@ export const profile = {
   summary:
     "Eight years of Java, Spring Boot and React, now shipped with AI coding agents. I stay accountable for every line that merges.",
   emailCta: "Email me",
+  // Web copy of the CV: no phone number, clients anonymised (docs/04-content.md).
+  cv: { label: "Download CV", note: "PDF, 3 pages", href: "/izzat-fahmi-cv.pdf" },
   location: "Petaling Jaya, Malaysia",
   availability: "Open to senior full-stack roles in Malaysia",
   contactNote: "The fastest way to reach me is email.",
