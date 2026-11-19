@@ -17,8 +17,8 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
   `@neondatabase/serverless` 1.2.1 (from 27 Nov).
 
 **Next** the bumps on those dates; usage review in Neon after 1–2 weeks of traffic.
-**Note** Vercel functions run in `sin1` but Neon "portfolio" is in US East: writes are after the response,
-so visitors don't wait; moving it to Singapore is optional.
+**Then** Neon moved to Singapore (`portfolio-sg`, next to `sin1`): new `DATABASE_URL`, redeployed 18:30 UTC,
+rows 2–6 copied with their IDs. Old US East project kept until Izzat decides.
 
 ---
 
