@@ -70,6 +70,7 @@ describe("POST /api/estimate", () => {
     vi.stubEnv("DATABASE_URL", "");
     vi.spyOn(console, "error").mockImplementation(() => {});
     vi.spyOn(console, "info").mockImplementation(() => {});
+    vi.spyOn(console, "warn").mockImplementation(() => {});
     deferred.length = 0;
   });
   afterEach(() => {
@@ -322,7 +323,8 @@ describe("POST /api/estimate", () => {
 
     deferred.length = 0;
     expect((await POST(request("mixed", { feature: "short" }))).status).toBe(400);
-    expect(JSON.parse(String(vi.mocked(console.error).mock.calls[0][0]))).toMatchObject({ outcome: "invalid_input", status: 400 });
+    expect(JSON.parse(String(vi.mocked(console.warn).mock.calls[0][0]))).toMatchObject({ outcome: "invalid_input", status: 400 });
+    expect(vi.mocked(console.error)).not.toHaveBeenCalled(); // visitor-side: a warning, not a server error
     expect(deferred).toHaveLength(0); // free to trigger before the human check: logged, no database row
   });
 
@@ -406,7 +408,9 @@ describe("POST /api/estimate", () => {
       );
       const res = await POST(request());
       expect(res.status).toBe(200);
-      expect(((await res.json()) as { plan: { title: string } }).plan.title).toBe("Cached");
+      const body = (await res.json()) as { plan: { title: string }; cached?: boolean };
+      expect(body.plan.title).toBe("Cached");
+      expect(body.cached).toBe(true);
       expect(hits).toEqual({ upstash: ["EVAL", "GET"], anthropic: 0 });
       const line = JSON.parse(String(vi.mocked(console.info).mock.calls[0][0])) as { outcome: string; cache_hit: boolean };
       expect(line).toMatchObject({ outcome: "ok", cache_hit: true });

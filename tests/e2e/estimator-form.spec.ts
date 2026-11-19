@@ -22,7 +22,7 @@ test("two short examples and one detailed brief; the brief chip fills its full t
   await expect(page.locator("#feature-count")).toContainText(`${chips[0].length} /`);
   await box.fill("short");
   await expect(page.locator("#feature-count")).toContainText("5 /");
-  await expect(page.locator("#feature-count")).toContainText("at least");
+  await expect(page.locator("#feature-count")).toContainText("20 characters minimum");
 });
 
 test("team slider changes the readout", async ({ page }) => {

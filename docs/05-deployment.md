@@ -21,7 +21,8 @@ Local development uses Cloudflare's official **test keys** (already in `.env.exa
 
 ## First deploy (Izzat does the account steps; Claude Code can guide)
 
-Production is **https://zenntkaixa.dev** (also `my-portfolio-wip.vercel.app`; Vercel project imported from
+Production is **https://zenntkaixa.dev** (also `my-portfolio-wip.vercel.app`, where the page loads but the
+estimator's human check only passes on `TURNSTILE_HOSTNAME`, i.e. zenntkaixa.dev; Vercel project imported from
 `zenntkaixa/my_portfolio_wip`, production branch `main`, region `sin1`). The order below keeps the
 estimator **off** (no `ANTHROPIC_API_KEY`, so it answers 503) until human verification is real, so the
 public endpoint can't spend money while Turnstile still uses always-pass test keys.
@@ -101,3 +102,11 @@ Accessibility 100, Best Practices 100, SEO 100.
 Done 2026-11-13, steps 1 to 5: canonical and `og:url` show the new domain, a fake token gets 403, Izzat's
 estimate worked there and reached the shared limiter, the old hostname is off the Turnstile widget, and
 `my-portfolio-wip.vercel.app` redirects (308) to the new domain.
+
+## Usage events (ADR-012)
+
+Done 2026-11-19: Neon project `portfolio-sg` (free, Singapore `ap-southeast-1`, next to Vercel `sin1`),
+database `portfolio`, table `estimate_events` from `db/schema.sql`. The app connects as `portfolio_app`
+(INSERT and SELECT only; DELETE refused). Its connection string is `DATABASE_URL` in Vercel Production
+(Sensitive); changing it needs a redeploy. The first project (US East) was replaced the same day and its
+5 rows copied over with their IDs and times.

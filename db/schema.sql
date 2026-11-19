@@ -1,4 +1,4 @@
--- Neon project "portfolio", database `portfolio` (ADR-012). Kept for reproducibility; applied by hand.
+-- Neon project "portfolio-sg" (Singapore, next to Vercel sin1), database `portfolio` (ADR-012). Kept for reproducibility; applied by hand.
 CREATE TABLE estimate_events (
   id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   created_at timestamptz NOT NULL DEFAULT now(),

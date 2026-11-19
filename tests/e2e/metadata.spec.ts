@@ -37,3 +37,16 @@ test("local page does not load the Vercel analytics script", async ({ page }) =>
   await page.goto("/");
   await expect(page.locator('script[src*="/_vercel/insights"]')).toHaveCount(0);
 });
+
+test("robots.txt and sitemap.xml are served and point at the site", async ({ request }) => {
+  const robots = await request.get("/robots.txt");
+  expect(robots.status()).toBe(200);
+  const text = await robots.text();
+  expect(text).toContain("Allow: /");
+  expect(text).toContain(`Sitemap: ${siteUrl}/sitemap.xml`);
+  const sitemap = await request.get("/sitemap.xml");
+  expect(sitemap.status()).toBe(200);
+  const xml = await sitemap.text();
+  expect(xml).toContain(`<loc>${siteUrl}</loc>`);
+  expect(xml).toContain(`<loc>${siteUrl}${profile.cv.href}</loc>`);
+});
