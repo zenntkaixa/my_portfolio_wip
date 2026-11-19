@@ -23,6 +23,7 @@ import { ExternalLink } from "@/components/ExternalLink";
 import { Turnstile, type TurnstileHandle } from "./Turnstile";
 import { PhaseTimeline } from "./PhaseTimeline";
 import { TaskTable } from "./TaskTable";
+import { PlanActions } from "./PlanActions";
 import { ResultsBoundary } from "./ResultsBoundary";
 import { ResultTabs } from "./ResultTabs";
 import { BudgetView } from "./BudgetView";
@@ -362,6 +363,7 @@ export function Estimator() {
             <p className="estimator__model-note">{estimatorCopy.retryWaiting}</p>
           )}
           <p className="estimator__model-note">{estimatorCopy.modelNote}</p>
+          <p className="estimator__model-note">{estimatorCopy.cacheNote}</p>
         </fieldset>
       </form>
 
@@ -432,6 +434,7 @@ export function Estimator() {
               {shown.plan.title}
             </h3>
             <p>{shown.plan.summary}</p>
+            <PlanActions plan={shown.plan} team={shown.team} />
             <ResultTabs
               label={estimatorCopy.tabsLabel}
               value={tab}
@@ -460,6 +463,7 @@ export function Estimator() {
                 },
               ]}
             />
+            <p className="plan-print-footer">{estimatorCopy.actions.footer(profile.name)}</p>
             <p className="estimator__cta">
               {estimatorCopy.cta.text}
               <a href={`mailto:${profile.email}`}>{estimatorCopy.cta.email}</a>

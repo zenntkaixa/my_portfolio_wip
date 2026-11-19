@@ -1971,3 +1971,98 @@ p {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* Plan actions: a quiet row above the result tabs (buttons use the base button styles). */
+.plan-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-block: 12px;
+}
+
+.plan-actions__msg {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--warn);
+}
+
+.plan-print-footer {
+  display: none;
+}
+
+/* Print: only the estimator results, all three tabs stacked, black on white. Keywords (black,
+   white) are used on purpose: print ignores the theme, so dark mode must not print light-on-dark. */
+@media print {
+  /* Hide everything that is neither the results section, nor inside it, nor an ancestor of it. */
+  body *:not(:has(.estimator__results)):not(.estimator__results):not(.estimator__results *) {
+    display: none !important;
+  }
+
+  html,
+  body,
+  .tile--estimator,
+  .estimator {
+    background: white !important;
+    color: black !important;
+  }
+
+  .tile--estimator {
+    border: 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+
+  /* The hidden form would otherwise still hold the left half of the side-by-side grid. */
+  .estimator {
+    display: block !important;
+  }
+
+  .estimator__results {
+    color: black;
+  }
+
+  .estimator__results * {
+    color: black !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+  }
+
+  /* Hide the interactive and live parts of the results. */
+  .plan-actions,
+  .rtabs__list,
+  .estimator__banner,
+  .estimator__status,
+  .estimator__skeleton,
+  .estimator__cta {
+    display: none !important;
+  }
+
+  .rtabs__panel,
+  .rtabs__panel[hidden] {
+    display: block !important;
+    padding-top: 12px;
+  }
+
+  .tab1-cards > li,
+  .tab2-table tr,
+  .tab1-row {
+    break-inside: avoid;
+  }
+
+  .tab2-scroll {
+    overflow: visible;
+  }
+
+  .tab1-bar {
+    background-color: black !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .plan-print-footer {
+    display: block;
+    margin-top: 16px;
+    font-size: var(--fs-sm);
+  }
+}

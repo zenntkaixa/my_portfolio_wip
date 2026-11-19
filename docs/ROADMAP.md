@@ -146,3 +146,6 @@ need an ADR and Izzat's privacy call) wait for Izzat.
 - [x] Batch B: code enforces team capacity (calendar note), 20% contingency row and cost basis, seniority hour
   multipliers (mixed RM 78), solo teams in sequence, "Questions to confirm" and "Not included" with MVP slicing,
   structured outputs, timeouts 4 s + 45 s, prompt in `lib/prompt.ts` (ADR-011) [prompt-engineer, ui-builder]
+- [x] Batch C: usage rows in Neon Postgres (ADR-012) and one JSON log line per request; route → service →
+  adapters; 24 h plan cache in Upstash; copy and print the plan; "N plans generated" line from 25; share links
+  and click tracking skipped (Izzat) [api-engineer, ui-builder]
