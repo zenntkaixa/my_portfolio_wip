@@ -5,6 +5,20 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-19 — Session 65: Pre-release batch (M13)
+
+**Done** on `feat/m13-cv-and-estimator-layout`
+- Claims softened per Izzat (#76 checks 1 to 3; Beyondsoft field kept); degree is "Bachelor of Computer
+  Science (Software Engineering) with Honours". CV v4 and the LinkedIn doc in his Drive updated to match.
+- "Download CV" in the hero: `public/izzat-fahmi-cv.pdf`, made from CV v4 without the phone number, clients
+  anonymised (checked with `pdftotext`). Closes M10.
+- Estimator: phone link above the form jumps to the example plan; desktop form is sticky beside the plan.
+
+**Verified** `npm run check`, e2e 113 passed. **Next** release PR when Izzat asks.
+**Waiting on Izzat** check CV v4's layout in Word; AIA/OCBC on the private CV; update LinkedIn.
+
+---
+
 ## 2026-11-19 — Session 64: Astryx trial (ADR-010)
 
 **Done** (Izzat's instruction, outside the roadmap)
