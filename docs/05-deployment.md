@@ -13,6 +13,7 @@
 | `DAILY_LIMIT` | Optional | Default 150 |
 | `UPSTASH_REDIS_REST_URL` | Optional, Vercel Production | `https://` REST URL of the Upstash database; shares the limits across instances (ADR-009) |
 | `UPSTASH_REDIS_REST_TOKEN` | Optional, Vercel Production | Server only, type Sensitive. Without both vars, or when Upstash fails or takes over 1 s, the in-memory limiter is used |
+| `DATABASE_URL` | Optional, Vercel Production | Server only, type Sensitive. Neon connection string for the usage-event rows (ADR-012), least-privilege role (INSERT + SELECT). Unset: no rows, no plan count |
 
 On Production the estimator refuses (503) Cloudflare test keys or a missing `TURNSTILE_HOSTNAME`; the guard also runs when `VERCEL=1` without `VERCEL_ENV`, and a real secret always needs `TURNSTILE_HOSTNAME`. Preview and local test-key setups are unaffected. Changing any Turnstile env var needs a redeploy (the site key is inlined at build time).
 

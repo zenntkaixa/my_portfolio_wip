@@ -85,9 +85,31 @@ Errors, always `{ "error": "human-readable sentence" }`:
 A 502 caused by an error status from the Anthropic API (nothing was generated or billed) gives the visitor's
 rate-limit slot and the daily count back. Timeouts, refusals and cut-off or unreadable replies keep the slot.
 
+### Plan cache (M14)
+Ok plans are cached in Upstash for 24 hours (`lib/estimator/cache.ts`). Key: `plan:<version>:` (the version is a hash of the full request settings, model, prompt and schema plus a manual `CACHE_REV` for `normalisePlan` changes, so changing any of them starts a fresh cache) + SHA-256 hex of
+`JSON.stringify([feature trimmed, whitespace collapsed, lowercased, teamSize, seniority, mode])`; value: the
+final normalised plan JSON; `SET ... EX 86400`. The cache is read after Turnstile and the rate limit (a hit
+still uses a slot), and a hit returns the same 200 shape. Only ok plans are written, after the response. Any
+Upstash error is a silent miss; without the Upstash env vars (local, e2e) the cache is off.
+
+### Usage events and logging (M14, ADR-012)
+Every request ends in exactly one outcome: `ok`, `invalid_input` (400/413/415), `misconfigured` (503),
+`human_check_failed` (403), `rate_limited` (429), `upstream_error` (502, refunded), `timeout` (504),
+`cut_off` (502), `refused` (422), `unsupported` (422, model `{error}`), `bad_plan` (502, unreadable or
+incomplete). Its fields go to two places:
+- **One JSON log line** (`{"event":"estimate", ...}`): `console.info` for ok, `console.error` otherwise,
+  plus short context such as `stop_reason`, `error_type`, `error_name`, `text_length`.
+- **One row** in Neon `estimate_events` (`db/schema.sql`), except for `invalid_input`, `misconfigured` and
+  `human_check_failed` (free to trigger before the human check, so log only), written with `after()` so the visitor never
+  waits; skipped when `DATABASE_URL` is unset. `cost_usd` comes from token usage and a per-model price
+  table (unknown model: null). Cache hits store `cache_hit = true` and no model or usage.
+
+Neither ever holds the feature text, plan text, IP or an upstream error body. `countPlans()` in
+`lib/estimator/events.ts` returns the number of ok rows (null without `DATABASE_URL` or on error).
+
 ## Prompt
 Lives in `lib/prompt.ts` (`SYSTEM_PROMPT`, `userMessage`, `requestBody`, `RESPONSE_SCHEMA`; pure functions
-the route imports). Owned by the `prompt-engineer` subagent. ADR-011: the model proposes, code enforces.
+`lib/estimator/anthropic.ts` imports). Owned by the `prompt-engineer` subagent. ADR-011: the model proposes, code enforces.
 
 - Roles allowed: `BA, Architect, Backend, Frontend, QA, DevOps, PM` (from `lib/estimate.ts`).
 - Feature text is wrapped in `<feature>` tags and treated as untrusted data.
@@ -179,5 +201,7 @@ a real reply.
 - Unit: `validateRequest`, `normalisePlan` (incl. the capacity check), `lib/prompt.ts`, `lib/budget.ts`,
   `lib/timeline.ts` (pure functions, no network).
 - Unit: `tests/unit/route.test.ts` calls `POST` with `fetch` mocked for Turnstile and Anthropic.
+- Unit: `tests/unit/estimatorService.test.ts` runs `runEstimate` with fake deps (order, refund, cache,
+  outcomes); `tests/unit/estimatorEvents.test.ts` mocks the Neon driver and Upstash `fetch`.
 - E2E: Playwright intercepts `POST /api/estimate` with `page.route` and returns
   `tests/fixtures/plan.json`. Never hit the real API in tests. Turnstile uses Cloudflare's test site key.

@@ -70,3 +70,11 @@ Read only the section for the tile you are changing.
 ## Estimator results (Batch B additions)
 - Timeline tab: under Assumptions and Risks, two more lists in the same `.tab1-list` style, "Questions to confirm" (`openQuestions`) and "Not included" (`outOfScope`); each hides when empty. When `calendarAdjusted` is set, a `.tab3-note` under the summary says the calendar was stretched to fit the team (`teamSize` comes from `Estimator.tsx`).
 - Budget tab: a "Contingency (20%)" row sits before the build total; below the table, a seniority note comes before the rate note, which states the cost basis (Klang Valley in-house rates, excluding SST). All copy is in `estimatorCopy`.
+
+## Estimator plan actions (C2)
+- A `.plan-actions` row (base buttons, quiet) sits above the result tabs: "Copy plan" (`lib/planText.ts` to the clipboard; label becomes "Copied" for 2 s, a polite status announces it or the failure) and "Print or save as PDF" (`window.print()`).
+- `@media print` at the end of `app/globals.css` hides everything except `.estimator__results`, stacks all three tab panels (overriding `hidden`), prints black on white with no accent frame, avoids splitting phase cards and table rows, and shows `.plan-print-footer`.
+
+## Estimator usage line and cache notice (C3)
+- `EstimatorTile` is an async Server Component: it calls `countPlans()` and, only when the count is at least 25, shows a muted `.estimator__built` line ("{n} plans generated since November 2026", `en-MY` formatting). `app/page.tsx` sets `revalidate = 3600`. No `DATABASE_URL` means no line.
+- A muted `.estimator__model-note` under the submit button states the 24-hour plan cache and that the description isn't stored.
