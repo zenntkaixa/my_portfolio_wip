@@ -100,3 +100,4 @@ Added 2026-11-17 from the audit's leftovers; batched on one branch with M7 (Izza
 Added 2026-11-17 after a Lighthouse re-check of production (PageSpeed quota was used up; VM runs).
 - [x] Estimator intro paints without the fade: since M6 it is the mobile LCP element, and its fade-in
   waited on the main thread (render delay 3.3–4.6 s) [ui-builder]
+- [x] Photo in the hero in place of the initials (Izzat's photo, 2026-11-19) [ui-builder]

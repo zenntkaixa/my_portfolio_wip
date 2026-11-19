@@ -17,7 +17,10 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 **Verified:** local production build, 4 mobile runs each: perf 73/73/80/82 → 93/83/87/88, LCP 3.8 → 2.7 s;
 `npm run check`, e2e (motion spec now covers the estimator).
 
-**Next:** confirm on PageSpeed Insights once the quota resets; then photo, CV and Jutro year (need Izzat).
+- 2026-11-19: Izzat's photo replaces the initials in the hero (`public/profile.webp`, 216px, 6 KB,
+  no metadata; decorative `alt=""`). Brief's "no photo" decision updated. Icons and OG keep initials.
+
+**Next:** confirm on PageSpeed Insights after release; CV PDF and the Jutro year (need Izzat).
 
 ---
 
