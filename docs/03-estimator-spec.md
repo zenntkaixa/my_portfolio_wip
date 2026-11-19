@@ -97,7 +97,8 @@ Every request ends in exactly one outcome: `ok`, `invalid_input` (400/413/415), 
 `human_check_failed` (403), `rate_limited` (429), `upstream_error` (502, refunded), `timeout` (504),
 `cut_off` (502), `refused` (422), `unsupported` (422, model `{error}`), `bad_plan` (502, unreadable or
 incomplete). Its fields go to two places:
-- **One JSON log line** (`{"event":"estimate", ...}`): `console.info` for ok, `console.error` otherwise,
+- **One JSON log line** (`{"event":"estimate", ...}`): `console.info` for ok, `console.warn` for `invalid_input`, `human_check_failed` and
+  `rate_limited` (visitor-side, so Vercel's error view shows only server failures), `console.error` otherwise,
   plus short context such as `stop_reason`, `error_type`, `error_name`, `text_length`.
 - **One row** in Neon `estimate_events` (`db/schema.sql`), except for `invalid_input`, `misconfigured` and
   `human_check_failed` (free to trigger before the human check, so log only), written with `after()` so the visitor never

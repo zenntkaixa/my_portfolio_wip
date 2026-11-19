@@ -109,8 +109,8 @@ Per-tile layout rules live in `docs/01b-tiles.md`. Read only the section for the
   `--stat-n` integer shown through a CSS counter, no JS. The real value sits in an `.sr-only` span; the
   counting digits are `aria-hidden`. Reduced motion shows the final value at once.
 - Plan timeline bars grow in from the left (`@keyframes tab1-grow`, 500ms).
-- Tile hover is deferred to M2 with the estimator tile (no tile is clickable as a whole yet). When it
-  lands: border colour moves to `--accent`, no scale.
+- No tile hover: no tile is clickable as a whole, so nothing lifts or recolours (scope cut with Izzat in
+  M7). Links and buttons inside tiles keep their own hover styles; never scale.
 - Visual-check screenshots emulate `reducedMotion: "reduce"` so they never catch a mid-fade.
 
 ## Copy style on the page

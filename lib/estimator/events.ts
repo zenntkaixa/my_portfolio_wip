@@ -103,11 +103,16 @@ export async function countPlans(): Promise<number | null> {
   }
 }
 
-/** One JSON line per request: console.info for ok, console.error otherwise. */
+// Turned away on the visitor's side (bad input, failed human check, over the limit): expected traffic, so a
+// warning, which keeps Vercel's error view for real server failures.
+const VISITOR_SIDE = new Set(["invalid_input", "human_check_failed", "rate_limited"]);
+
+/** One JSON line per request: console.info for ok, console.warn for visitor-side outcomes, console.error otherwise. */
 export function logEvent(row: EventRow, detail: EventDetail = {}) {
   // Detail first so it can never overwrite a row field; upstream strings are cut short.
   const safe = Object.fromEntries(Object.entries(detail).map(([k, v]) => [k, typeof v === "string" ? v.slice(0, 64) : v]));
   const line = JSON.stringify({ ...safe, event: "estimate", ...row });
   if (row.outcome === "ok") console.info(line);
+  else if (VISITOR_SIDE.has(row.outcome)) console.warn(line);
   else console.error(line);
 }

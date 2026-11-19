@@ -17,7 +17,7 @@ Malaysia**. It should prove three things within 30 seconds:
 | Topic | Decision |
 |---|---|
 | Visual style | Bento grid dashboard, clean and minimal, light and dark mode |
-| Framework and hosting | Next.js on Vercel, free `.vercel.app` domain first, custom domain later |
+| Framework and hosting | Next.js on Vercel; custom domain **zenntkaixa.dev** since 2026-11-13 |
 | AI demo | Feature description in, end-to-end technical workflow and time-to-done estimate out |
 | AI model | Claude via the Anthropic API (Izzat pays per use) |
 | Team setup in demo | Visitor picks team size and seniority |
@@ -29,10 +29,8 @@ Malaysia**. It should prove three things within 30 seconds:
 | Contact | Email and LinkedIn only. **No phone number.** |
 
 ## Open items (ask Izzat when you reach them)
-- Live URL for radiozk on Render (add to `featuredProject.live` in `lib/content.ts`)
-- Final production Turnstile keys and the Vercel URL
 - Whether to add more side projects later
-- Custom domain name
+(Resolved: radiozk live URL (M5), production Turnstile keys (M4), custom domain zenntkaixa.dev (M5).)
 
 ## Source of truth for facts
 Izzat's CV (October 2026). All facts are already captured in `lib/content.ts`. Never invent employers,

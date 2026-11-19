@@ -4,6 +4,21 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-19 — Session 67: Estimator credibility, Batch B (M14)
+
+**Done** on `feat/m14-estimator-credibility` (Izzat: contingency row, mixed RM 78, one Haiku check)
+- Code enforces capacity (6 productive h per person-day; calendar stretched with a note), 20% contingency
+  row, seniority hour multipliers, solo teams in sequence, "Questions to confirm" and "Not included", MVP slices.
+- Structured outputs replace regex parsing; prompt moved to `lib/prompt.ts`; timeouts 4 s + 45 s; ADR-011.
+- Security review: no blockers; added its fix (plans over 2000 days rejected).
+- Haiku golden set, 11 cases + 1 probe (~2 US cents): all valid; vague and non-software get 422; MVP slice
+  and injection behave; no calendar needed stretching. Mixed came out near junior (one sample each).
+
+**Verified** see the PR. **Next** release PR for #84, #85 and this when Izzat asks; then Batch C.
+**Waiting on Izzat** caching and share links (privacy call).
+
+---
+
 ## 2026-11-19 — Session 66: Estimator review, Batch A (M14)
 
 **Done** on `feat/m14-estimator-phone-conversion`

@@ -21,7 +21,8 @@ Local development uses Cloudflare's official **test keys** (already in `.env.exa
 
 ## First deploy (Izzat does the account steps; Claude Code can guide)
 
-Production is **https://zenntkaixa.dev** (also `my-portfolio-wip.vercel.app`; Vercel project imported from
+Production is **https://zenntkaixa.dev** (also `my-portfolio-wip.vercel.app`, where the page loads but the
+estimator's human check only passes on `TURNSTILE_HOSTNAME`, i.e. zenntkaixa.dev; Vercel project imported from
 `zenntkaixa/my_portfolio_wip`, production branch `main`, region `sin1`). The order below keeps the
 estimator **off** (no `ANTHROPIC_API_KEY`, so it answers 503) until human verification is real, so the
 public endpoint can't spend money while Turnstile still uses always-pass test keys.
