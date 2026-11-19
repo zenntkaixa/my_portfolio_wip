@@ -6,7 +6,7 @@ export const profile = {
   lastName: "Suhaimi",
   // Legal name, as registered with Guidewire's Certification Checker.
   fullName: "Mohamad Izzat Fahmi bin Suhaimi",
-  initials: "IF",
+  initials: "MIFS",
   role: "Senior full-stack engineer · Java, Spring Boot, React, AWS",
   headline: "I build reliable systems and the integrations that hold them together.",
   // Approved by Izzat 2026-11-17 (M6). Employers and the certification only: the Now tile already shows the numbers.

@@ -13,7 +13,7 @@ All biography, project and contact text is in `lib/content.ts`. Change copy ther
 - Certifications and education as listed.
 - Email `zenntkaixa@yahoo.com`, LinkedIn, GitHub.
 - `public/izzat-fahmi-cv.pdf`: the web copy of Izzat's CV (from the private Word CV v4 in his Drive), with
-  the phone number removed and clients anonymised as below. Before replacing it, run
+  the display name as its heading, the phone number removed and clients anonymised as below. Before replacing it, run
   `pdftotext public/izzat-fahmi-cv.pdf -` and check the text has no phone number and no client names.
 
 ## Never publish
@@ -29,7 +29,7 @@ All biography, project and contact text is in `lib/content.ts`. Change copy ther
 
 ## SEO and metadata
 - Display name: "Mohd. Izzat Fahmi Suhaimi" (first name "Mohd. Izzat Fahmi", last name "Suhaimi"; Izzat, 2026-11-19).
-  The legal name stays in `profile.fullName` for the Guidewire checker.
+  Initials "MIFS" (icons and share card). The legal name stays in `profile.fullName` for the Guidewire checker.
 - Title: "Mohd. Izzat Fahmi Suhaimi — Senior full-stack engineer" (the role before " · "; the stack list stays in the hero)
 - Description: `seo.description` (the fuller sentence; the hero headline is shorter).
 - Open Graph image: generated in M5 with `next/og` (initials, name, role, on the blueprint grid).
