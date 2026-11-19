@@ -12,7 +12,7 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
   (`dpl_DxAGof15UeS5Chrbu5fbJQYUJ2GW`) with Izzat's OK; live checks passed. PageSpeed quota still exhausted.
 - UI/UX team review (4 agents) and a LinkedIn cross-check done; Izzat now targets roles beyond insurance.
 - Hero headline and role industry-neutral; case studies retitled by capability with LinkedIn outcomes;
-  each job shows its domain (healthcare SaaS included); dated personal GitHub stat; PwC stats relabelled.
+  each job shows its domain (Vetter is veterinary practice SaaS, per the CV); dated personal GitHub stat; PwC stats relabelled.
 - Estimator: "built by me" link, 20-character minimum shown before typing, tabs "Timeline / Tasks /
   Budget", amounts kept whole from 360px. Share image shows the role without the stack list.
 

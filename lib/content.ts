@@ -26,7 +26,7 @@ export const seo = {
   siteName: "Izzat Fahmi, portfolio",
   /** Search and share description: fuller than the hero headline. */
   description:
-    "Backend-first full-stack engineer. Eight years building reliable systems and integrations across insurance, banking, compliance and healthcare SaaS, now shipped with AI coding agents.",
+    "Backend-first full-stack engineer. Eight years building reliable systems and integrations across insurance, banking, compliance and SaaS, now shipped with AI coding agents.",
   ogTagline: "Live AI demo: describe a feature, get a delivery plan",
   ogAlt: "Izzat Fahmi, senior full-stack engineer. Live AI demo: describe a feature, get a delivery plan.",
 };
@@ -103,7 +103,7 @@ export const experience = [
   { org: "Allianz Technology", role: "Life Core Developer", period: "2024 to 2025", field: "Life insurance core systems" },
   { org: "Beyondsoft Malaysia", role: "Java Developer", period: "2023 to 2024", field: "Compliance and document checks" },
   { org: "Hitachi Digital Host", role: "Application Engineer", period: "2020 to 2022", field: "Digital banking" },
-  { org: "Vetter Software", role: "Engineer, then QA Engineer", period: "2017 to 2020", field: "Healthcare SaaS (health records)" },
+  { org: "Vetter Software", role: "Engineer, then QA Engineer", period: "2017 to 2020", field: "Veterinary practice SaaS" },
 ];
 
 export const stack = [
