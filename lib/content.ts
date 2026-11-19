@@ -7,7 +7,7 @@ export const profile = {
   role: "Senior full-stack engineer · Java, Spring Boot, React, AWS",
   headline: "I build reliable systems and the integrations that hold them together.",
   // Approved by Izzat 2026-11-17 (M6). Employers and the certification only: the Now tile already shows the numbers.
-  proof: ["Shipped at PwC · Allianz Technology · Hitachi", "AWS Certified Solutions Architect"],
+  proof: ["Built at PwC · Allianz Technology · Hitachi", "AWS Certified Solutions Architect"],
   proofLabel: "Track record",
   summary:
     "Eight years of Java, Spring Boot and React, now shipped with AI coding agents. I stay accountable for every line that merges.",
@@ -69,7 +69,7 @@ export const featuredProject = {
   // Personal GitHub activity (zenntkaixa, public repos), counted 2026-11-19. Dated so it never overclaims.
   personal: {
     value: "176",
-    text: "merged pull requests on personal projects since Oct 2026 · 2 apps live in production",
+    text: "merged pull requests on personal projects since Oct 2026, many of them small, AI-assisted changes I reviewed",
     link: "My GitHub profile",
   },
   live: "https://zenntkaixa-radiozk.onrender.com/",
@@ -84,9 +84,9 @@ export const aiWorkflow = [
 
 export const caseStudies = [
   {
-    title: "Cutting API round trips in a customer portal",
+    title: "Multi-policy changes with batch APIs",
     context: "US insurer, Guidewire Digital Portal program",
-    body: "Built React and TypeScript features on Guidewire Jutro. Batched multi-policy changes into composite and batch API requests instead of one call per change, built a risk-scoring integration reused across product lines, and brought documents from two backend systems into one view with role-based access. Resolved 32 failed release-branch merges to keep releases on schedule.",
+    body: "Built React and TypeScript features on Guidewire Jutro. Implemented multi-policy changes with composite and batch API requests to reduce unnecessary round trips, built a risk-scoring integration reused across product lines, and brought documents from two backend systems into one view with role-based access. Resolved 32 failed release-branch merges to keep releases on schedule.",
     stack: ["React", "TypeScript", "Jutro"],
   },
   {
@@ -149,7 +149,7 @@ export const guidewireCheck = {
   after: `: search “${profile.fullName}” to verify the Guidewire ones.`,
 };
 
-export const education = "BSc Computer Science (Software Engineering), Universiti Tun Hussein Onn Malaysia";
+export const education = "Bachelor of Computer Science (Software Engineering) with Honours, Universiti Tun Hussein Onn Malaysia";
 
 export const turnstileFailedMessage =
   "The human check couldn't load. Disable content blockers for this site or refresh the page.";
