@@ -1,10 +1,11 @@
 import { Tile } from "@/components/Bento";
-import { certifications } from "@/lib/content";
+import { certifications, certificationsNote } from "@/lib/content";
 
 /** Certifications: name on the left, year right-aligned; no year renders nothing. */
 export function CertificationsTile() {
   return (
     <Tile span={5} tabletSpan={3} title="Certifications" id="certifications">
+      <p className="certs__note">{certificationsNote}</p>
       <ul className="certs" role="list">
         {certifications.map((c) => (
           <li key={c.name} className="certs__item">
