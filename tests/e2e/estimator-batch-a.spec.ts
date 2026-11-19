@@ -23,6 +23,8 @@ test.describe("phone", () => {
     const t = samplePlan.phases[0].tasks[0];
     const row = panel.getByRole("row").filter({ hasText: t.task });
     await expect(row).toContainText(t.role);
+    // The check is about sideways cut-off, so bring the row up first; its height on the page varies.
+    await row.scrollIntoViewIfNeeded();
     await expect(row.getByRole("cell").last()).toBeInViewport({ ratio: 1 });
     const scroll = panel.locator(".tab2-scroll");
     expect(await scroll.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true);
