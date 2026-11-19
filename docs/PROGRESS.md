@@ -5,6 +5,19 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-19 — Session 64: Astryx trial (ADR-010)
+
+**Done** (Izzat's instruction, outside the roadmap)
+- Installed Astryx (core, theme-neutral, cli, StyleX peer) after vetting; `init` agent docs kept in `AGENTS.md` only.
+- Cobalt theme: Neutral extended with the site accent (`src/themes/cobalt/`), default in `astryx-themes.ts`.
+- Wiring `<Theme>` + reset into the layout broke dark mode, fonts (CSP blocks Figtree) and list bullets
+  (10 e2e failures), so Izzat chose to keep Astryx off the live site; previewed via the editor's PNGs instead.
+
+**Verified** `npm run check`, e2e back to 110 passed. **Next** release M11 + M12 when Izzat asks.
+**Waiting on Izzat** wording checks from #76, Hitachi name, degree title, web-safe CV.
+
+---
+
 ## 2026-11-19 — Session 63: Review polish (M12)
 
 **Done**
@@ -18,22 +31,5 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 **Verified** `npm run check` (266), e2e 110 passed, screenshots light/dark 1440 and 390, no sideways scroll.
 **Next** Izzat's "push it", then a release. Deferred: example plan above the form on mobile, desktop space.
 **Waiting on Izzat** wording checks from #76, Hitachi name, degree title, a web-safe CV for "Download CV".
-
----
-
-## 2026-11-19 — Session 62: Broad positioning (M11)
-
-**Done**
-- Release #75 (M9 + M10) is live. Vercel missed the push to `main`, so production was deployed by hand
-  (`dpl_DxAGof15UeS5Chrbu5fbJQYUJ2GW`) with Izzat's OK; live checks passed. PageSpeed quota still exhausted.
-- UI/UX team review (4 agents) and a LinkedIn cross-check done; Izzat now targets roles beyond insurance.
-- Hero headline and role industry-neutral; case studies retitled by capability with LinkedIn outcomes;
-  each job shows its domain (Vetter is veterinary practice SaaS, per the CV); dated personal GitHub stat; PwC stats relabelled.
-- Estimator: "built by me" link, 20-character minimum shown before typing, tabs "Timeline / Tasks /
-  Budget", amounts kept whole from 360px. Share image shows the role without the stack list.
-
-**Verified:** `npm run check`, e2e, visual at 320/390/1440, share image rendered.
-
-**Next:** Izzat updates LinkedIn after release; CV PDF; PageSpeed check; layout items from the review.
 
 ---
