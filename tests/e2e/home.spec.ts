@@ -4,6 +4,7 @@ import {
   caseStudies,
   certifications,
   certificationsNote,
+  guidewireCheck,
   education,
   experience,
   featuredProject,
@@ -311,9 +312,24 @@ test.describe("certifications tile", () => {
     const items = region(page).getByRole("list").getByRole("listitem");
     // Exact text: "name, year" when there is a year, just "name" (no trailing ", ") when not.
     await expect(items).toHaveText(
-      certifications.map((c) => (c.year ? `${c.name}, ${c.year}` : c.name)),
+      certifications.map((c) => {
+        const name = "url" in c ? `${c.name} (opens in a new tab)` : c.name;
+        return c.year ? `${name}, ${c.year}` : name;
+      }),
     );
     await expect(region(page).getByText(certificationsNote, { exact: true })).toBeVisible();
+  });
+
+  test("each certification with a verification page links to it in a new tab, plus the Guidewire checker", async ({ page }) => {
+    await page.goto("/");
+    const links = region(page).getByRole("link");
+    const expected = [...certifications.flatMap((c) => ("url" in c && c.url ? [c.url] : [])), guidewireCheck.url];
+    await expect(links).toHaveCount(expected.length);
+    for (const [i, href] of expected.entries()) {
+      await expect(links.nth(i)).toHaveAttribute("href", href);
+      await expect(links.nth(i)).toHaveAttribute("target", "_blank");
+    }
+    await expect(region(page).getByText(guidewireCheck.after)).toBeVisible();
   });
 });
 
