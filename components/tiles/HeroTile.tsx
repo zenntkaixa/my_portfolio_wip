@@ -2,7 +2,6 @@ import Image from "next/image";
 import { Tile } from "@/components/Bento";
 import { ExternalLink } from "@/components/ExternalLink";
 import { profile } from "@/lib/content";
-import photo from "@/public/profile.webp";
 
 // Email and LinkedIn only. Never add a phone number (docs/04-content.md).
 /** Hero: photo beside the name (the page's only h1) and role, then headline, summary, contact links, meta. */
@@ -20,7 +19,7 @@ export function HeroTile() {
       {/* Decorative: the h1 above already carries the name. Grid placement puts it beside the name. */}
       <div className="hero__avatar" aria-hidden="true">
         {/* Pre-sized 216px (3x of 72px) WebP, so it skips the image optimizer. */}
-        <Image src={photo} alt="" width={72} height={72} unoptimized loading="eager" />
+        <Image src="/profile.webp" alt="" width={72} height={72} unoptimized loading="eager" />
       </div>
       <p className="hero__role">{profile.role}</p>
       <p className="hero__headline">{profile.headline}</p>
