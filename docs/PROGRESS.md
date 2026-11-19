@@ -5,6 +5,23 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-19 — Session 69: Housekeeping after the M14 release
+
+**Done** on `chore/m14-housekeeping` (Izzat: items 1 and 4; bumps held)
+- Release #88 live (main 6e808ef); first live estimate wrote Neon row 2 (ok, 15.3 s, US$0.0017).
+- Stale docs fixed: tile hover (01), domain and resolved open items (00), CI watch (ADR-005), estimator
+  only on zenntkaixa.dev (05).
+- Visitor-side outcomes (invalid input, failed human check, rate limited) log as warnings, so Vercel's error
+  view shows only server failures.
+- Held by the two-week rule: Playwright 1.65.1 + CI image (from 27 Nov), Vitest 5.1.1 (from 2 Dec),
+  `@neondatabase/serverless` 1.2.1 (from 27 Nov).
+
+**Next** the bumps on those dates; usage review in Neon after 1–2 weeks of traffic.
+**Note** Vercel functions run in `sin1` but Neon "portfolio" is in US East: writes are after the response,
+so visitors don't wait; moving it to Singapore is optional.
+
+---
+
 ## 2026-11-19 — Session 68: Estimator insights, Batch C (M14)
 
 **Done** on `feat/m14-estimator-insights` (Izzat: Neon for durable rows, my picks for the rest)
@@ -17,21 +34,6 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 **Verified** see the PR. **Next** release PR for #84–#86 and this when Izzat asks.
 **Waiting on Izzat** rotate the `portfolio_app` password in Neon, then set `DATABASE_URL` in Vercel (Production).
-
----
-
-## 2026-11-19 — Session 67: Estimator credibility, Batch B (M14)
-
-**Done** on `feat/m14-estimator-credibility` (Izzat: contingency row, mixed RM 78, one Haiku check)
-- Code enforces capacity (6 productive h per person-day; calendar stretched with a note), 20% contingency
-  row, seniority hour multipliers, solo teams in sequence, "Questions to confirm" and "Not included", MVP slices.
-- Structured outputs replace regex parsing; prompt moved to `lib/prompt.ts`; timeouts 4 s + 45 s; ADR-011.
-- Security review: no blockers; added its fix (plans over 2000 days rejected).
-- Haiku golden set, 11 cases + 1 probe (~2 US cents): all valid; vague and non-software get 422; MVP slice
-  and injection behave; no calendar needed stretching. Mixed came out near junior (one sample each).
-
-**Verified** see the PR. **Next** release PR for #84, #85 and this when Izzat asks; then Batch C.
-**Waiting on Izzat** caching and share links (privacy call).
 
 ---
 

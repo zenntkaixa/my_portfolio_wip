@@ -22,5 +22,6 @@ this repo's own `code-reviewer` and `/ship` overlapped with them.
 
 ## Consequences
 - One review agent instead of two to choose between; its improvements arrive via `~/claude-team`.
-- The CI-watch step of `ship-pr` stays off until the M3 GitHub Actions task lands.
+- The CI-watch step of `ship-pr` stayed off until the M3 GitHub Actions task landed; it has been on since
+  (`/ship` waits on `gh pr checks <n> --watch`).
 - A fresh machine needs `~/claude-team/install.sh`, or the generic agents are missing.

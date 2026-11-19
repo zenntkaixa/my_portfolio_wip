@@ -14,6 +14,7 @@ beforeEach(() => {
   query.mockReset();
   vi.spyOn(console, "error").mockImplementation(() => {});
   vi.spyOn(console, "info").mockImplementation(() => {});
+  vi.spyOn(console, "warn").mockImplementation(() => {});
 });
 afterEach(() => {
   vi.unstubAllEnvs();
