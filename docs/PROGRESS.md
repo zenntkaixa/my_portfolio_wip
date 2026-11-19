@@ -14,6 +14,8 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
   anonymised (checked with `pdftotext`). Closes M10.
 - Estimator: phone link above the form jumps to the example plan; desktop form is sticky beside the plan.
 - Display name is now "Mohd. Izzat Fahmi Suhaimi" (first "Mohd. Izzat Fahmi", last "Suhaimi"), also in og:profile tags.
+- Released (#82); PageSpeed 97/100/100/100 mobile, 100 across desktop. Then initials "MIFS" and the web CV heading.
+- Borrowed from Astryx as ideas only: sliding segment highlight, week labels under the plan timeline.
 
 **Verified** `npm run check`, e2e 113 passed. **Next** release PR when Izzat asks.
 **Waiting on Izzat** check CV v4's layout in Word; AIA/OCBC on the private CV; update LinkedIn.

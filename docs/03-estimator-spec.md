@@ -111,7 +111,8 @@ results area and a calm status line ("Planning phases…"). No spinners longer t
 - Under the submit button, a note says the estimator uses Claude Haiku for speed and the plan is a
   starting point, not a quote (`estimatorCopy.modelNote`).
 - Timeline: one horizontal bar per phase. `left = startDay / totalDays`, `width = durationDays / totalDays`.
-  Week gridlines every 5 working days. Label "Day 3 to 7" on each bar. Maths lives in `lib/timeline.ts`.
+  Week gridlines every 5 working days, with "Week 1", "Week 2"... centred under each span (at most 6
+  labels; long plans label every 2nd or 3rd week). Label "Day 3 to 7" on each bar. Maths lives in `lib/timeline.ts`.
 - Phase cards below: name, goal, duration, task count.
 - Assumptions and risks as two short lists.
 

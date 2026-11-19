@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import fixture from "../fixtures/plan.json";
 import type { Phase, Task } from "@/lib/estimate";
-import { roleTotals, toBars, weekMarkers } from "@/lib/timeline";
+import { roleTotals, toBars, weekLabels, weekMarkers } from "@/lib/timeline";
 
 const plan = fixture.plan as unknown as { phases: Phase[]; totalDays: number };
 const phase = (startDay: number, durationDays: number, name = "P"): Phase => ({
@@ -119,5 +119,24 @@ describe("roleTotals", () => {
       "Backend",
       "QA",
     ]);
+  });
+});
+
+describe("weekLabels", () => {
+  it("labels each week at the centre of its span, the last one shorter", () => {
+    const l = weekLabels(13);
+    expect(l.map((x) => x.week)).toEqual([1, 2, 3]);
+    expect(l[0].centerPct).toBeCloseTo((2.5 / 13) * 100, 5);
+    expect(l[2].centerPct).toBeCloseTo((11.5 / 13) * 100, 5);
+  });
+
+  it("keeps at most 6 labels on long plans, starting at week 1", () => {
+    expect(weekLabels(60).map((x) => x.week)).toEqual([1, 3, 5, 7, 9, 11]);
+    expect(weekLabels(30)).toHaveLength(6);
+  });
+
+  it("returns [] when there are no gridlines", () => {
+    expect(weekLabels(5)).toEqual([]);
+    expect(weekLabels(Number.NaN)).toEqual([]);
   });
 });
