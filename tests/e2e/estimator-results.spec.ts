@@ -72,7 +72,7 @@ test("repeated phase names render every bar and card without duplicate-key warni
 });
 
 async function openTab2(page: Page) {
-  await page.getByRole("tab", { name: "Task table" }).click();
+  await page.getByRole("tab", { name: "Tasks" }).click();
   await expect(page.getByRole("region", { name: estimatorCopy.tasks.regionLabel })).toBeVisible();
 }
 

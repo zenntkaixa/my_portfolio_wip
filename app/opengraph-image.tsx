@@ -66,7 +66,7 @@ export default async function OpengraphImage() {
             >
               {profile.name}
             </div>
-            <div style={{ marginTop: 12, fontSize: 36, color: c["--muted"] }}>{profile.role}</div>
+            <div style={{ marginTop: 12, fontSize: 36, color: c["--muted"] }}>{profile.role.split(" · ")[0]}</div>
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <div
