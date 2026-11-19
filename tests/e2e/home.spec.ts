@@ -354,6 +354,13 @@ test.describe("contact tile", () => {
     await expect(email).toHaveAttribute("href", `mailto:${profile.email}`);
   });
 
+  test("lists what I'm looking for under its own heading", async ({ page }) => {
+    await page.goto("/");
+    const tile = region(page);
+    await expect(tile.getByRole("heading", { name: profile.lookingForLabel, level: 3 })).toBeVisible();
+    await expect(tile.getByRole("list").first().getByRole("listitem")).toHaveText(profile.lookingFor);
+  });
+
   for (const [label, key] of [
     ["LinkedIn", "linkedin"],
     ["GitHub", "github"],

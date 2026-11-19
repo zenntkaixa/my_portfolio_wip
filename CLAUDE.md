@@ -36,7 +36,7 @@ Node 26 via nvm. In a fresh shell: `export NVM_DIR=$HOME/.nvm; . $NVM_DIR/nvm.sh
 (system node is older). Scripts are in `package.json`; the two that matter:
 
 - `npm run check`: typecheck, unit tests and build. The pre-commit gate.
-- `npm run test:e2e`: Playwright, starts its own dev server.
+- `npm run test:e2e`: Playwright; builds and starts a production server (CI reuses the `check` build).
 
 Kill dev servers by PID (including the child `next-server`), never with `pkill -f`.
 

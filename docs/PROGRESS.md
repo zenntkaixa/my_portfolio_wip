@@ -5,6 +5,22 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-19 — Session 63: Review polish (M12)
+
+**Done**
+- M11 merged (#76). Izzat's CV refined (3 pages, capability-first) and stored privately in his Google Drive,
+  "Career docs" folder; not in this repo (phone number and client names).
+- M12: estimator tile gets a 2px accent border; contact tile lists what Izzat is looking for.
+- Review items already met, no change: skip link, consistent link styles, 44px tap heights.
+- E2E now runs on a production server (`next start`; CI reuses the `check` build): the same 110 tests in
+  1.1 min instead of 2.9 locally. Unit tests (2 s) were left alone; trimming them saves nothing.
+
+**Verified** `npm run check` (266), e2e 110 passed, screenshots light/dark 1440 and 390, no sideways scroll.
+**Next** Izzat's "push it", then a release. Deferred: example plan above the form on mobile, desktop space.
+**Waiting on Izzat** wording checks from #76, Hitachi name, degree title, a web-safe CV for "Download CV".
+
+---
+
 ## 2026-11-19 — Session 62: Broad positioning (M11)
 
 **Done**
@@ -21,18 +37,3 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 **Next:** Izzat updates LinkedIn after release; CV PDF; PageSpeed check; layout items from the review.
 
 ---
-
-## 2026-11-19 — Session 61: Certification proof links (M10)
-
-**Done**
-- AWS and both EC-Council certifications link to their public verification pages (Credly, ASPEN),
-  opening in a new tab; all four links checked by fetch (200, name and "Valid" on each page).
-- Guidewire has no per-certificate page: a note links its Certification Checker with the name to search.
-- Cert names wrap with `balance`; the note gets a full gap above it.
-
-**Verified:** `npm run check`, e2e (new link test), visual check at 390 and 1440.
-
-**Next:** release (M9 + M10); "Download CV" waits on Izzat's PDF; PageSpeed check after release.
-
----
-

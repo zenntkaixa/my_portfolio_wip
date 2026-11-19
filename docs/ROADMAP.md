@@ -117,3 +117,9 @@ e-commerce, developer tools, security). Transferable capabilities lead; industri
 - [x] Personal GitHub stat (dated) in the project tile; PwC stats relabelled for impact [ui-builder]
 - [x] Estimator quick fixes from the team review: "built by me" line, minimum length shown before typing,
   shorter tab names, budget amounts never split across lines [ui-builder]
+
+## M12 — Review polish
+Added 2026-11-19 from the UI/UX team review. The skip link and consistent link styles were already in place;
+44px tap heights already covered. Deferred: example plan above the form on mobile, desktop space beside the form.
+- [x] Estimator tile framed with a 2px `--accent` border so it reads as the thing to try [ui-builder]
+- [x] Contact tile: "What I'm looking for" list (roles, kinds of team, location) [ui-builder]
