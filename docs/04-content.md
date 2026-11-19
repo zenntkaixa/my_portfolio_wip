@@ -28,6 +28,8 @@ All biography, project and contact text is in `lib/content.ts`. Change copy ther
 - Short sentences. Sentence case. No exclamation marks.
 
 ## SEO and metadata
-- Title: "Izzat Fahmi — Senior full-stack engineer" (the role before " · "; the stack list stays in the hero)
+- Display name: "Mohd. Izzat Fahmi Suhaimi" (first name "Mohd. Izzat Fahmi", last name "Suhaimi"; Izzat, 2026-11-19).
+  The legal name stays in `profile.fullName` for the Guidewire checker.
+- Title: "Mohd. Izzat Fahmi Suhaimi — Senior full-stack engineer" (the role before " · "; the stack list stays in the hero)
 - Description: `seo.description` (the fuller sentence; the hero headline is shorter).
 - Open Graph image: generated in M5 with `next/og` (initials, name, role, on the blueprint grid).

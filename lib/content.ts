@@ -1,7 +1,10 @@
 // All site copy lives here, so updating the portfolio never means touching layout code.
 
 export const profile = {
-  name: "Izzat Fahmi",
+  name: "Mohd. Izzat Fahmi Suhaimi",
+  firstName: "Mohd. Izzat Fahmi",
+  lastName: "Suhaimi",
+  // Legal name, as registered with Guidewire's Certification Checker.
   fullName: "Mohamad Izzat Fahmi bin Suhaimi",
   initials: "IF",
   role: "Senior full-stack engineer · Java, Spring Boot, React, AWS",
@@ -31,12 +34,12 @@ export const profile = {
 export const siteUrl = "https://zenntkaixa.dev";
 
 export const seo = {
-  siteName: "Izzat Fahmi, portfolio",
+  siteName: "Mohd. Izzat Fahmi Suhaimi, portfolio",
   /** Search and share description: fuller than the hero headline. */
   description:
     "Backend-first full-stack engineer. Eight years building reliable systems and integrations across insurance, banking, compliance and SaaS, now shipped with AI coding agents.",
   ogTagline: "Live AI demo: describe a feature, get a delivery plan",
-  ogAlt: "Izzat Fahmi, senior full-stack engineer. Live AI demo: describe a feature, get a delivery plan.",
+  ogAlt: "Mohd. Izzat Fahmi Suhaimi, senior full-stack engineer. Live AI demo: describe a feature, get a delivery plan.",
 };
 
 export const skipLink = "Skip to the estimator";
