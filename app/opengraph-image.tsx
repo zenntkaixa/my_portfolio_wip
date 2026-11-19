@@ -58,7 +58,7 @@ export default async function OpengraphImage() {
               style={{
                 marginTop: 32,
                 fontFamily: "Bricolage Grotesque",
-                fontSize: 96,
+                fontSize: 84,
                 fontWeight: 700,
                 lineHeight: 1.05,
                 letterSpacing: -2,

@@ -27,7 +27,9 @@ export const metadata: Metadata = {
   description: seo.description,
   alternates: { canonical: "/" },
   openGraph: {
-    type: "website",
+    type: "profile",
+    firstName: profile.firstName,
+    lastName: profile.lastName,
     url: "/",
     siteName: seo.siteName,
     title,
