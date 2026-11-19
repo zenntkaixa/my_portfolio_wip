@@ -21,7 +21,9 @@ export default async function Icon() {
           color: c["--accent-ink"],
           borderRadius: 8,
           fontFamily: "Bricolage Grotesque",
-          fontSize: 17,
+          // Four letters in 32px: small and tight, chosen by Izzat over two.
+          fontSize: 11,
+          letterSpacing: -0.5,
           fontWeight: 700,
         }}
       >

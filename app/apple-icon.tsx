@@ -21,7 +21,7 @@ export default async function Icon() {
           color: c["--accent-ink"],
           borderRadius: 40,
           fontFamily: "Bricolage Grotesque",
-          fontSize: 88,
+          fontSize: 54,
           fontWeight: 700,
         }}
       >

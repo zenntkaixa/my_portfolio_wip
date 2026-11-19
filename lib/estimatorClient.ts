@@ -8,23 +8,24 @@ export const isObj = (v: unknown): v is Record<string, unknown> =>
 const isStrList = (v: unknown) =>
   Array.isArray(v) && v.every((x) => typeof x === "string");
 
-/** Minimal shape check so a malformed body never crashes the renderers. */
+const num = (v: unknown, max = Infinity): v is number =>
+  typeof v === "number" && Number.isFinite(v) && v <= max;
+
+/** Shape and sanity check so a malformed or absurd body never crashes the renderers. */
 export function isPlan(v: unknown): v is Plan {
   if (!isObj(v)) return false;
   if (typeof v.title !== "string" || typeof v.summary !== "string")
     return false;
   if (!isStrList(v.assumptions) || !isStrList(v.risks)) return false;
+  // Optional (older replies and the e2e fixture may lack them), but a list of strings when present.
+  if ([v.openQuestions, v.outOfScope].some((l) => l !== undefined && !isStrList(l))) return false;
   if (
     !Array.isArray(v.costs) ||
-    !v.costs.every((c) => isObj(c) && typeof c.item === "string" && typeof c.low === "number" && typeof c.high === "number")
+    !v.costs.every((c) => isObj(c) && typeof c.item === "string" && num(c.low) && num(c.high))
   ) {
     return false;
   }
-  if (
-    typeof v.totalHours !== "number" ||
-    typeof v.totalDays !== "number" ||
-    typeof v.calendarWeeks !== "number"
-  ) {
+  if (!num(v.totalHours, 100000) || !num(v.totalDays, 2000) || !num(v.calendarWeeks, 400)) {
     return false;
   }
   return (
@@ -33,9 +34,12 @@ export function isPlan(v: unknown): v is Plan {
       (p) =>
         isObj(p) &&
         typeof p.name === "string" &&
-        typeof p.startDay === "number" &&
-        typeof p.durationDays === "number" &&
-        Array.isArray(p.tasks),
+        num(p.startDay) &&
+        num(p.durationDays) &&
+        Array.isArray(p.tasks) &&
+        p.tasks.every(
+          (t) => isObj(t) && typeof t.task === "string" && typeof t.role === "string" && num(t.hours),
+        ),
     )
   );
 }

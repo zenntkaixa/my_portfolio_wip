@@ -39,8 +39,9 @@ export default async function OpengraphImage() {
           <div style={{ display: "flex", flexDirection: "column" }}>
             <div
               style={{
-                width: 76,
                 height: 76,
+                padding: "0 20px",
+                alignSelf: "flex-start",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",

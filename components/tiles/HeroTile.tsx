@@ -36,6 +36,9 @@ export function HeroTile() {
           </a>
         </li>
         <li>
+          <a href="#estimator">{profile.demoCta}</a>
+        </li>
+        <li>
           <ExternalLink href={profile.linkedin}>LinkedIn</ExternalLink>
         </li>
         <li>

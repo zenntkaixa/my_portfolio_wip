@@ -13,6 +13,9 @@ import { CertificationsTile } from "@/components/tiles/CertificationsTile";
 import { ContactTile } from "@/components/tiles/ContactTile";
 import { caseStudies, skipLink } from "@/lib/content";
 
+// Hourly refresh keeps the plans-generated count current without a request-time query.
+export const revalidate = 3600;
+
 // Tile order and desktop spans follow the bento table in docs/01-design-system.md.
 export default function Home() {
   return (

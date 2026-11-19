@@ -1034,6 +1034,11 @@ p {
   scroll-margin-top: var(--gap);
 }
 
+/* Programmatic focus on submit only; the section isn't interactive. */
+.estimator__results:focus {
+  outline: none;
+}
+
 /* Comfortable tap height for the submit button (its padding alone gives 43px). */
 .estimator__lock > button[type="submit"] {
   min-height: 44px;
@@ -1184,6 +1189,9 @@ p {
 }
 
 .estimator__segments {
+  --n: 4;
+  --i: 0;
+  position: relative;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   border: 1px solid var(--muted);
@@ -1193,7 +1201,32 @@ p {
 }
 
 .estimator__segments--two {
+  --n: 2;
   grid-template-columns: repeat(2, 1fr);
+}
+
+/* One highlight under the segments that slides to the checked one (CSS only, works before hydration). */
+.estimator__segments::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: calc(100% / var(--n));
+  transform: translateX(calc(var(--i) * 100%));
+  background: var(--accent);
+}
+
+.estimator__segments:has(.estimator__segment:nth-child(2) input:checked) {
+  --i: 1;
+}
+
+.estimator__segments:has(.estimator__segment:nth-child(3) input:checked) {
+  --i: 2;
+}
+
+.estimator__segments:has(.estimator__segment:nth-child(4) input:checked) {
+  --i: 3;
 }
 
 .estimator__segments--two .estimator__segment span {
@@ -1208,6 +1241,7 @@ p {
 
 .estimator__segment input {
   position: absolute;
+  z-index: 1; /* above the label text, which sits above the sliding highlight */
   inset: 0;
   width: 100%;
   height: 100%;
@@ -1217,6 +1251,7 @@ p {
 }
 
 .estimator__segment span {
+  position: relative;
   display: block;
   padding: 0.5em 0.5em;
   text-align: center;
@@ -1229,7 +1264,6 @@ p {
 }
 
 .estimator__segment:has(input:checked) span {
-  background: var(--accent);
   color: var(--accent-ink);
   font-weight: 600;
 }
@@ -1249,8 +1283,11 @@ p {
   color: var(--muted);
 }
 
-.estimator__seniority:disabled .estimator__segment:has(input:checked) span {
+.estimator__seniority:disabled .estimator__segments::before {
   background: var(--surface-2);
+}
+
+.estimator__seniority:disabled .estimator__segment:has(input:checked) span {
   color: var(--ink);
 }
 
@@ -1270,12 +1307,29 @@ p {
   .estimator__segment:nth-child(n + 3) span {
     border-top: 1px solid var(--line);
   }
+
+  /* Two rows: no slide, the checked segment fills itself. */
+  .estimator__segments::before {
+    display: none;
+  }
+
+  .estimator__segment:has(input:checked) span {
+    background: var(--accent);
+  }
+
+  .estimator__seniority:disabled .estimator__segment:has(input:checked) span {
+    background: var(--surface-2);
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .estimator__chip,
   .estimator__segment span {
     transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+  }
+
+  .estimator__segments::before {
+    transition: transform 0.2s ease-out, background-color 0.15s;
   }
 }
 
@@ -1314,6 +1368,7 @@ p {
 }
 
 .estimator__results {
+  overflow-wrap: anywhere;
   display: flex;
   flex-direction: column;
   gap: calc(var(--gap) / 2);
@@ -1380,6 +1435,47 @@ p {
 
 .estimator__bone--block {
   height: 5rem;
+}
+
+.estimator__bone--card {
+  height: 4rem;
+}
+
+.estimator__bone--bar {
+  height: 1.1rem;
+}
+
+.estimator__skeleton-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: calc(var(--gap) / 2);
+}
+
+@media (min-width: 720px) {
+  .estimator__skeleton-cards {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.estimator__step {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--ink);
+}
+
+.estimator__cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 var(--gap);
+  margin: 0;
+  font-size: var(--fs-sm);
+}
+
+.estimator__cta a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -1564,10 +1660,30 @@ p {
 }
 
 .tab2-table thead th {
+  white-space: nowrap;
   border-top: 0;
   font-size: var(--fs-xs);
   font-weight: 600;
   color: var(--muted);
+}
+
+.tab2-role-line {
+  display: none;
+  color: var(--muted);
+  font-size: var(--fs-xs);
+}
+
+/* Phones: Task + Hours fit 320px, so the Role column gives way to a second line in the Task cell. */
+@media (max-width: 599px) {
+  .tab2-table:not(.tab3-table) {
+    min-width: 0;
+  }
+  .tab2-table .tab2-role {
+    display: none;
+  }
+  .tab2-role-line {
+    display: block;
+  }
 }
 
 .tab2-table th:last-child,
@@ -1761,6 +1877,22 @@ p {
   background: var(--line);
 }
 
+/* Week names under the timeline, centred on each 5-day span the gridlines mark. */
+.tab1-axis {
+  position: relative;
+  height: 1.2em;
+  margin-top: -0.2rem;
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+
+.tab1-axis span {
+  position: absolute;
+  left: clamp(1.75rem, var(--left), calc(100% - 1.75rem));
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
 .tab1-bar {
   position: absolute;
   top: 0;
@@ -1837,5 +1969,100 @@ p {
 
   .tab1-lists {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Plan actions: a quiet row above the result tabs (buttons use the base button styles). */
+.plan-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-block: 12px;
+}
+
+.plan-actions__msg {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--warn);
+}
+
+.plan-print-footer {
+  display: none;
+}
+
+/* Print: only the estimator results, all three tabs stacked, black on white. Keywords (black,
+   white) are used on purpose: print ignores the theme, so dark mode must not print light-on-dark. */
+@media print {
+  /* Hide everything that is neither the results section, nor inside it, nor an ancestor of it. */
+  body *:not(:has(.estimator__results)):not(.estimator__results):not(.estimator__results *) {
+    display: none !important;
+  }
+
+  html,
+  body,
+  .tile--estimator,
+  .estimator {
+    background: white !important;
+    color: black !important;
+  }
+
+  .tile--estimator {
+    border: 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+
+  /* The hidden form would otherwise still hold the left half of the side-by-side grid. */
+  .estimator {
+    display: block !important;
+  }
+
+  .estimator__results {
+    color: black;
+  }
+
+  .estimator__results * {
+    color: black !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+  }
+
+  /* Hide the interactive and live parts of the results. */
+  .plan-actions,
+  .rtabs__list,
+  .estimator__banner,
+  .estimator__status,
+  .estimator__skeleton,
+  .estimator__cta {
+    display: none !important;
+  }
+
+  .rtabs__panel,
+  .rtabs__panel[hidden] {
+    display: block !important;
+    padding-top: 12px;
+  }
+
+  .tab1-cards > li,
+  .tab2-table tr,
+  .tab1-row {
+    break-inside: avoid;
+  }
+
+  .tab2-scroll {
+    overflow: visible;
+  }
+
+  .tab1-bar {
+    background-color: black !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .plan-print-footer {
+    display: block;
+    margin-top: 16px;
+    font-size: var(--fs-sm);
   }
 }

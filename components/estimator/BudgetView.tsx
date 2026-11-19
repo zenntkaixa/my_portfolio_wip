@@ -52,6 +52,10 @@ export function BudgetView({ plan, team }: { plan: Plan; team: Team }) {
                 <td>{range(x)}</td>
               </tr>
             ))}
+            <tr>
+              <td>{c.contingency}</td>
+              <td>{rm(b.contingency)}</td>
+            </tr>
             <tr className="tab2-sub">
               <th scope="row">{c.buildTotal}</th>
               <td>{range(b.build)}</td>
@@ -79,6 +83,7 @@ export function BudgetView({ plan, team }: { plan: Plan; team: Team }) {
           </tbody>
         </table>
       </div>
+      <p className="tab3-note">{c.seniorityNote}</p>
       <p className="tab3-note">{c.rateNote(HOURLY_RATE)}</p>
       <p className="tab3-note">{c.note}</p>
     </div>

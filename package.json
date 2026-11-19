@@ -16,6 +16,7 @@
     "@astryxdesign/cli": "^0.7.16",
     "@astryxdesign/core": "^0.7.16",
     "@astryxdesign/theme-neutral": "^0.7.16",
+    "@neondatabase/serverless": "1.2.0",
     "@stylexjs/stylex": "^0.19.2",
     "next": "16.4.6",
     "react": "19.3.1",

@@ -108,3 +108,23 @@ test("on desktop the preview link is hidden, since the plan sits beside the form
   await page.goto("/");
   await expect(page.getByRole("link", { name: /^See an example plan below/ })).toBeHidden();
 });
+
+test("the example timeline names its weeks under the bars", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByTestId("week-axis")).toHaveText(["Week 1", "Week 2", "Week 3"].join(""));
+});
+
+test("the seniority highlight slides under the chosen option", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  const group = page.locator(".estimator__segments").first();
+  const highlightX = () =>
+    group.evaluate((el) => new DOMMatrix(getComputedStyle(el, "::before").transform).m41);
+  const segmentX = (value: string) =>
+    group.locator(`label:has(input[value=${value}])`).evaluate((el) => el.getBoundingClientRect().left - el.parentElement!.getBoundingClientRect().left - el.parentElement!.clientLeft);
+
+  await page.locator("label:has(input[value=junior])").click();
+  await expect.poll(highlightX).toBeCloseTo(await segmentX("junior"), 0);
+  await page.locator("label:has(input[value=senior])").click();
+  await expect.poll(highlightX).toBeCloseTo(await segmentX("senior"), 0);
+});

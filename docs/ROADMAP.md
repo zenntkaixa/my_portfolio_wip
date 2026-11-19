@@ -129,3 +129,23 @@ Added 2026-11-19 (Izzat): the deferred M12 layout items, the web CV and the #76 
 - [x] Soften three claims (portal batching, "Shipped at", personal PRs) and use the full degree title [content]
 - [x] Phones: a link above the form previews the example plan (title, hours, weeks) and jumps to it [ui-builder]
 - [x] Desktop: the form stays in view (sticky) beside the taller plan, when the screen fits the whole form [ui-builder]
+- [x] Seniority and working style: one highlight slides to the chosen option (CSS only; idea from Astryx's
+  SegmentedControl, no Astryx code, ADR-010 unchanged) [ui-builder]
+- [x] Plan timeline: "Week 1, 2…" labels under the week gridlines (`weekLabels` in `lib/timeline.ts`) [ui-builder]
+
+## M14 — Estimator review follow-ups
+Added 2026-11-19 from a five-role review (PO/PM, BA, QA, Architect, UI/UX). Batch A is phone and conversion;
+Batch B (credibility: calendar vs hours, contingency, seniority multipliers, open questions and out of scope,
+structured outputs, timeouts) and Batch C (analytics events, copy/print plan, logging; caching and share links
+need an ADR and Izzat's privacy call) wait for Izzat.
+- [x] Batch A: phone task table stacks the role under the task; submit focuses and scrolls to the results;
+  hero "Try the live demo" link; step-by-step wait with a plan-shaped skeleton; "Want this scoped…" email and
+  LinkedIn line under every plan; chip puts the caret in the field; client rejects malformed plans and an error
+  boundary guards the results; long words wrap, edge week labels stay inside, a failed re-estimate keeps the
+  last plan [ui-builder]
+- [x] Batch B: code enforces team capacity (calendar note), 20% contingency row and cost basis, seniority hour
+  multipliers (mixed RM 78), solo teams in sequence, "Questions to confirm" and "Not included" with MVP slicing,
+  structured outputs, timeouts 4 s + 45 s, prompt in `lib/prompt.ts` (ADR-011) [prompt-engineer, ui-builder]
+- [x] Batch C: usage rows in Neon Postgres (ADR-012) and one JSON log line per request; route → service →
+  adapters; 24 h plan cache in Upstash; copy and print the plan; "N plans generated" line from 25; share links
+  and click tracking skipped (Izzat) [api-engineer, ui-builder]

@@ -100,9 +100,11 @@ test("Tab order, visible focus indicators, no trap, Shift+Tab goes back", async 
   const inEstimator = stops.filter((s) => s.section.startsWith("estimator"));
   expect(inEstimator[0], listing).toMatchObject({ tag: "a", name: `${estimatorBuiltBy.link} (opens in a new tab)` });
   const estAll = inEstimator.slice(1);
-  // The example results follow the form: the selected tab, then its panel.
+  // The example results follow the form: Copy and Print, the selected tab, then its panel.
   const est = estAll.slice(0, estAll.findIndex((s) => s.name === estimatorCopy.submit) + 1);
-  expect(estAll.slice(est.length).map((s) => s.role), listing).toEqual(["tab", "tabpanel"]);
+  const after = estAll.slice(est.length);
+  expect(after.slice(0, 2).map((s) => s.tag), listing).toEqual(["button", "button"]);
+  expect(after.slice(2).map((s) => s.role), listing).toEqual(["tab", "tabpanel", "", ""]); // then the Email me and LinkedIn call-to-action links
   const chips = est.filter((s) => s.tag === "button" && s.role === "").slice(0, -1);
   const kinds = est.map((s) => (s.tag === "textarea" ? "textarea" : s.role === "range" ? "range" : s.role === "radio" ? "radio" : "button"));
   expect(kinds, listing).toEqual([...chips.map(() => "button"), "textarea", "range", "radio", "radio", "button"]);
@@ -143,7 +145,9 @@ test("keyboard-only submit moves focus to the results heading; arrows, Home and 
 
   await expect(page.getByRole("heading", { name: plan.plan.title })).toBeFocused();
 
-  // Tab from the heading lands on the selected tab (roving tabindex), then arrows/Home/End move.
+  // Tab from the heading passes Copy and Print, then lands on the selected tab (roving tabindex); arrows/Home/End move.
+  await page.keyboard.press("Tab");
+  await page.keyboard.press("Tab");
   await page.keyboard.press("Tab");
   const phases = page.getByRole("tab", { name: estimatorCopy.tabPhases });
   const tasks = page.getByRole("tab", { name: estimatorCopy.tabTasks });

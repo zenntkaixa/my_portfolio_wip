@@ -5,48 +5,33 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
-## 2026-11-19 — Session 65: Pre-release batch (M13)
+## 2026-11-19 — Session 68: Estimator insights, Batch C (M14)
 
-**Done** on `feat/m13-cv-and-estimator-layout`
-- Claims softened per Izzat (#76 checks 1 to 3; Beyondsoft field kept); degree is "Bachelor of Computer
-  Science (Software Engineering) with Honours". CV v4 and the LinkedIn doc in his Drive updated to match.
-- "Download CV" in the hero: `public/izzat-fahmi-cv.pdf`, made from CV v4 without the phone number, clients
-  anonymised (checked with `pdftotext`). Closes M10.
-- Estimator: phone link above the form jumps to the example plan; desktop form is sticky beside the plan.
-- Display name is now "Mohd. Izzat Fahmi Suhaimi" (first "Mohd. Izzat Fahmi", last "Suhaimi"), also in og:profile tags.
+**Done** on `feat/m14-estimator-insights` (Izzat: Neon for durable rows, my picks for the rest)
+- Neon project "portfolio" (US East, Postgres 18) created; table `estimate_events` (`db/schema.sql`); app role
+  `portfolio_app` may only INSERT and SELECT (DELETE denied, checked). ADR-012, `@neondatabase/serverless` 1.2.0.
+- Route split into a service layer (`lib/estimator/`): one event row and one JSON log line per request, written
+  after the response; 24 h Upstash plan cache keyed by model + prompt version; copy and print the plan;
+  "N plans generated" line (only from 25); cache notice under the form. Click tracking and share links skipped.
+- Security review: no blockers; fixed its notes (versioned cache key, log fields can't be overwritten).
 
-**Verified** `npm run check`, e2e 113 passed. **Next** release PR when Izzat asks.
-**Waiting on Izzat** check CV v4's layout in Word; AIA/OCBC on the private CV; update LinkedIn.
-
----
-
-## 2026-11-19 — Session 64: Astryx trial (ADR-010)
-
-**Done** (Izzat's instruction, outside the roadmap)
-- Installed Astryx (core, theme-neutral, cli, StyleX peer) after vetting; `init` agent docs kept in `AGENTS.md` only.
-- Cobalt theme: Neutral extended with the site accent (`src/themes/cobalt/`), default in `astryx-themes.ts`.
-- Wiring `<Theme>` + reset into the layout broke dark mode, fonts (CSP blocks Figtree) and list bullets
-  (10 e2e failures), so Izzat chose to keep Astryx off the live site; previewed via the editor's PNGs instead.
-
-**Verified** `npm run check`, e2e back to 110 passed. **Next** release M11 + M12 when Izzat asks.
-- Hitachi settled: started at Hitachi eBworx (legacy work), moved to its subsidiary Hitachi Digital Host and
-  was tasked with the microservices modernisation; site entry, case study, CV and LinkedIn doc updated.
-**Waiting on Izzat** wording checks from #76, degree title, web-safe CV.
+**Verified** see the PR. **Next** release PR for #84–#86 and this when Izzat asks.
+**Waiting on Izzat** rotate the `portfolio_app` password in Neon, then set `DATABASE_URL` in Vercel (Production).
 
 ---
 
-## 2026-11-19 — Session 63: Review polish (M12)
+## 2026-11-19 — Session 67: Estimator credibility, Batch B (M14)
 
-**Done**
-- M11 merged (#76). Izzat's CV refined (3 pages, capability-first) and stored privately in his Google Drive,
-  "Career docs" folder; not in this repo (phone number and client names).
-- M12: estimator tile gets a 2px accent border; contact tile lists what Izzat is looking for.
-- Review items already met, no change: skip link, consistent link styles, 44px tap heights.
-- E2E now runs on a production server (`next start`; CI reuses the `check` build): the same 110 tests in
-  1.1 min instead of 2.9 locally. Unit tests (2 s) were left alone; trimming them saves nothing.
+**Done** on `feat/m14-estimator-credibility` (Izzat: contingency row, mixed RM 78, one Haiku check)
+- Code enforces capacity (6 productive h per person-day; calendar stretched with a note), 20% contingency
+  row, seniority hour multipliers, solo teams in sequence, "Questions to confirm" and "Not included", MVP slices.
+- Structured outputs replace regex parsing; prompt moved to `lib/prompt.ts`; timeouts 4 s + 45 s; ADR-011.
+- Security review: no blockers; added its fix (plans over 2000 days rejected).
+- Haiku golden set, 11 cases + 1 probe (~2 US cents): all valid; vague and non-software get 422; MVP slice
+  and injection behave; no calendar needed stretching. Mixed came out near junior (one sample each).
 
-**Verified** `npm run check` (266), e2e 110 passed, screenshots light/dark 1440 and 390, no sideways scroll.
-**Next** Izzat's "push it", then a release. Deferred: example plan above the form on mobile, desktop space.
-**Waiting on Izzat** wording checks from #76, Hitachi name, degree title, a web-safe CV for "Download CV".
+**Verified** see the PR. **Next** release PR for #84, #85 and this when Izzat asks; then Batch C.
+**Waiting on Izzat** caching and share links (privacy call).
 
 ---
+
