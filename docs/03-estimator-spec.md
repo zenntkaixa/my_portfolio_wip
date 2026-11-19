@@ -97,8 +97,17 @@ names the review bottleneck and separation of duties as risks, and never states 
 gain. The plan shape is the same in both modes; the team line reads e.g. "2 people, senior, with AI agents".
 
 ## UI states
-`idle → submitting → success | error`. While submitting: disable the form, show a skeleton of the
-results area and a calm status line ("Planning phases…"). No spinners longer than needed.
+`idle → submitting → success | error`. While submitting: disable the form, move focus to the results
+section and scroll it into view (smooth unless reduced motion; on phones the results sit below the form).
+Show a plan-shaped skeleton (4 summary cards, 5 timeline bars), the status line ("Planning phases…",
+announced once) and a visual-only step line that rotates every 2.5 s ("Reading your brief…" ...), plus
+"Usually about 10 seconds." On success focus moves to the plan heading; on error to the banner.
+A failed estimate never wipes the last successful plan (example or live): it stays below the banner.
+Under every plan, above the footer note: "Want this scoped for your real project?" with Email me and
+LinkedIn links (never a phone number). A chip click fills the field and puts the caret at its end.
+The client rejects plans with malformed tasks or absurd totals (hours over 100000, days over 2000,
+weeks over 400) with the "incomplete plan" banner, and an error boundary around the plan shows a short
+fallback if rendering throws.
 
 ## Output tabs
 
@@ -119,7 +128,8 @@ results area and a calm status line ("Planning phases…"). No spinners longer t
 **Tab 2 — Tasks**
 - Role totals as chips above the table (hours per role, sorted descending).
 - Table grouped by phase: Task · Role · Hours. Phase subtotal rows. Grand total footer.
-- Wide table scrolls horizontally inside its own container on mobile.
+- Below 600px the Role column is hidden and the role shows as a muted second line in the Task cell, so
+  Task and Hours fit 320px with no sideways scroll.
 
 Tabs use proper ARIA (`role="tablist"`, `aria-selected`, arrow-key navigation).
 

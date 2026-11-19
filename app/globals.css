@@ -1034,6 +1034,11 @@ p {
   scroll-margin-top: var(--gap);
 }
 
+/* Programmatic focus on submit only; the section isn't interactive. */
+.estimator__results:focus {
+  outline: none;
+}
+
 /* Comfortable tap height for the submit button (its padding alone gives 43px). */
 .estimator__lock > button[type="submit"] {
   min-height: 44px;
@@ -1363,6 +1368,7 @@ p {
 }
 
 .estimator__results {
+  overflow-wrap: anywhere;
   display: flex;
   flex-direction: column;
   gap: calc(var(--gap) / 2);
@@ -1429,6 +1435,47 @@ p {
 
 .estimator__bone--block {
   height: 5rem;
+}
+
+.estimator__bone--card {
+  height: 4rem;
+}
+
+.estimator__bone--bar {
+  height: 1.1rem;
+}
+
+.estimator__skeleton-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: calc(var(--gap) / 2);
+}
+
+@media (min-width: 720px) {
+  .estimator__skeleton-cards {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.estimator__step {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--ink);
+}
+
+.estimator__cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 var(--gap);
+  margin: 0;
+  font-size: var(--fs-sm);
+}
+
+.estimator__cta a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -1613,10 +1660,30 @@ p {
 }
 
 .tab2-table thead th {
+  white-space: nowrap;
   border-top: 0;
   font-size: var(--fs-xs);
   font-weight: 600;
   color: var(--muted);
+}
+
+.tab2-role-line {
+  display: none;
+  color: var(--muted);
+  font-size: var(--fs-xs);
+}
+
+/* Phones: Task + Hours fit 320px, so the Role column gives way to a second line in the Task cell. */
+@media (max-width: 599px) {
+  .tab2-table:not(.tab3-table) {
+    min-width: 0;
+  }
+  .tab2-table .tab2-role {
+    display: none;
+  }
+  .tab2-role-line {
+    display: block;
+  }
 }
 
 .tab2-table th:last-child,
@@ -1821,7 +1888,7 @@ p {
 
 .tab1-axis span {
   position: absolute;
-  left: var(--left);
+  left: clamp(1.75rem, var(--left), calc(100% - 1.75rem));
   transform: translateX(-50%);
   white-space: nowrap;
 }

@@ -22,7 +22,7 @@ export function TaskTable({ plan }: { plan: Plan }) {
           <thead>
             <tr>
               <th scope="col">{c.task}</th>
-              <th scope="col">{c.role}</th>
+              <th scope="col" className="tab2-role">{c.role}</th>
               <th scope="col">{c.hours}</th>
             </tr>
           </thead>
@@ -35,24 +35,27 @@ export function TaskTable({ plan }: { plan: Plan }) {
               </tr>
               {ph.tasks.map((t, i) => (
                 <tr key={`${pi}-${i}`}>
-                  <td>{t.task}</td>
-                  <td>{t.role}</td>
+                  <td>
+                    {t.task}
+                    {/* Phones: the Role column is hidden, so the role sits under the task. */}
+                    {" "}
+                    <span className="tab2-role-line">{t.role}</span>
+                  </td>
+                  <td className="tab2-role">{t.role}</td>
                   <td>{t.hours}</td>
                 </tr>
               ))}
               <tr className="tab2-sub">
-                <th scope="row" colSpan={2}>
-                  {c.subtotal}
-                </th>
+                <th scope="row">{c.subtotal}</th>
+                <td className="tab2-role" />
                 <td>{ph.tasks.reduce((n, t) => n + t.hours, 0)}</td>
               </tr>
             </tbody>
           ))}
           <tfoot>
             <tr>
-              <th scope="row" colSpan={2}>
-                {c.total}
-              </th>
+              <th scope="row">{c.total}</th>
+              <td className="tab2-role" />
               <td>{plan.totalHours}</td>
             </tr>
           </tfoot>

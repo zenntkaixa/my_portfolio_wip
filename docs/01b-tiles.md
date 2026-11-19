@@ -10,8 +10,8 @@ Read only the section for the tile you are changing.
   industry-neutral terms (M11, 2026-11-19: Izzat is targeting roles beyond insurance and banking),
   then a proof line (`profile.proof`, a `role="list"` list at `--fs-sm` in `--muted`): employers and the
   AWS certification, approved by Izzat 2026-11-17. Numbers stay in the Now tile, not here.
-- Under the summary, a contact row: "Email me" as the primary button (`.button-link`, mailto) and a LinkedIn
-  text link, so a visitor can reach Izzat without scrolling. Email and LinkedIn only, never a phone number.
+- Under the summary, a contact row: "Email me" as the primary button (`.button-link`, mailto) then "Try the live demo" (jumps to `#estimator`), a LinkedIn
+  text link and the CV download, so a visitor can reach Izzat without scrolling. Email and LinkedIn only, never a phone number.
 - The meta line is the location, then the availability text with a small `--ok` dot before it.
 
 ## Now

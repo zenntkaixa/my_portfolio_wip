@@ -5,6 +5,20 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-19 — Session 66: Estimator review, Batch A (M14)
+
+**Done** on `feat/m14-estimator-phone-conversion`
+- Five-role review of the estimator (mocked API, no spend); findings ranked into Batches A, B and C (ROADMAP M14).
+- Batch A built: phone task table, focus and scroll to results on submit, hero demo link, step-by-step wait,
+  contact line under plans, chip focus, client plan validation and error boundary, small layout fixes.
+- Fixed in review: the submit scroll ran before the render that removes the preview link (results ended 62px
+  above the screen); the test now requires the step line fully on screen.
+
+**Verified** `npm run check` (271), e2e 123 passed. **Next** Batch B when Izzat approves (needs one Haiku check).
+**Waiting on Izzat** contingency as row or range; Upstash caching of descriptions (privacy); Haiku check OK.
+
+---
+
 ## 2026-11-19 — Session 65: Pre-release batch (M13)
 
 **Done** on `feat/m13-cv-and-estimator-layout`
