@@ -4,6 +4,20 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-19 — Session 61: Certification proof links (M10)
+
+**Done**
+- AWS and both EC-Council certifications link to their public verification pages (Credly, ASPEN),
+  opening in a new tab; all four links checked by fetch (200, name and "Valid" on each page).
+- Guidewire has no per-certificate page: a note links its Certification Checker with the name to search.
+- Cert names wrap with `balance`; the note gets a full gap above it.
+
+**Verified:** `npm run check`, e2e (new link test), visual check at 390 and 1440.
+
+**Next:** release (M9 + M10); "Download CV" waits on Izzat's PDF; PageSpeed check after release.
+
+---
+
 ## 2026-11-17 — Session 60: Estimator intro paints without the fade (M9)
 
 **Done**

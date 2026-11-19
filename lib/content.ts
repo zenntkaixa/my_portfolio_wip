@@ -15,6 +15,12 @@ export const profile = {
   location: "Petaling Jaya, Malaysia",
   availability: "Open to senior full-stack roles in Malaysia",
   contactNote: "The fastest way to reach me is email.",
+  lookingForLabel: "What I'm looking for",
+  lookingFor: [
+    "Senior full-stack or backend engineering roles",
+    "B2B SaaS, enterprise software, platform and cloud teams, or a new industry",
+    "Based in Petaling Jaya, and used to working with teams across time zones",
+  ],
   email: "zenntkaixa@yahoo.com",
   linkedin: "https://www.linkedin.com/in/mohamad-izzat-fahmi-bin-suhaimi-00b047145",
   github: "https://github.com/zenntkaixa",

@@ -3,7 +3,8 @@
 ## Concept: "delivery blueprint"
 Izzat's story is turning requirements into shipped systems. The site borrows from engineering
 blueprints: a cool cobalt on a light blue-grey, navy in dark mode, precise thin borders. The **estimator
-tile is the one bold element** (blueprint grid background, largest tile). Everything else stays quiet.
+tile is the one bold element** (blueprint grid background, 2px `--accent` border, largest tile). Everything
+else stays quiet.
 
 ## Tokens (implemented in `app/globals.css`)
 

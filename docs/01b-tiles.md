@@ -61,6 +61,8 @@ Read only the section for the tile you are changing.
   `--muted`, with 1px `--line` dividers. An empty year renders nothing.
 
 ## Contact
+- Under the availability note: "What I'm looking for" (`--fs-sm`, semibold, `--muted` h3) and a short
+  bulleted list (`profile.lookingFor`): roles, kinds of team, location (M12).
 - The email is a mailto link styled as the primary button (`.button-link`: `--accent` background,
   `--accent-ink` text, `--r-sm`, 2px underline on hover, `LinkText` border in forced colours).
 - LinkedIn and GitHub are plain text links in a wrapping row. Never a phone number.
