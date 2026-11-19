@@ -1,17 +1,22 @@
 // All site copy lives here, so updating the portfolio never means touching layout code.
 
 export const profile = {
-  name: "Izzat Fahmi",
+  name: "Mohd. Izzat Fahmi Suhaimi",
+  firstName: "Mohd. Izzat Fahmi",
+  lastName: "Suhaimi",
+  // Legal name, as registered with Guidewire's Certification Checker.
   fullName: "Mohamad Izzat Fahmi bin Suhaimi",
   initials: "IF",
   role: "Senior full-stack engineer · Java, Spring Boot, React, AWS",
   headline: "I build reliable systems and the integrations that hold them together.",
   // Approved by Izzat 2026-11-17 (M6). Employers and the certification only: the Now tile already shows the numbers.
-  proof: ["Shipped at PwC · Allianz Technology · Hitachi", "AWS Certified Solutions Architect"],
+  proof: ["Built at PwC · Allianz Technology · Hitachi", "AWS Certified Solutions Architect"],
   proofLabel: "Track record",
   summary:
     "Eight years of Java, Spring Boot and React, now shipped with AI coding agents. I stay accountable for every line that merges.",
   emailCta: "Email me",
+  // Web copy of the CV: no phone number, clients anonymised (docs/04-content.md).
+  cv: { label: "Download CV", note: "PDF, 3 pages", href: "/izzat-fahmi-cv.pdf" },
   location: "Petaling Jaya, Malaysia",
   availability: "Open to senior full-stack roles in Malaysia",
   contactNote: "The fastest way to reach me is email.",
@@ -29,12 +34,12 @@ export const profile = {
 export const siteUrl = "https://zenntkaixa.dev";
 
 export const seo = {
-  siteName: "Izzat Fahmi, portfolio",
+  siteName: "Mohd. Izzat Fahmi Suhaimi, portfolio",
   /** Search and share description: fuller than the hero headline. */
   description:
     "Backend-first full-stack engineer. Eight years building reliable systems and integrations across insurance, banking, compliance and SaaS, now shipped with AI coding agents.",
   ogTagline: "Live AI demo: describe a feature, get a delivery plan",
-  ogAlt: "Izzat Fahmi, senior full-stack engineer. Live AI demo: describe a feature, get a delivery plan.",
+  ogAlt: "Mohd. Izzat Fahmi Suhaimi, senior full-stack engineer. Live AI demo: describe a feature, get a delivery plan.",
 };
 
 export const skipLink = "Skip to the estimator";
@@ -69,7 +74,7 @@ export const featuredProject = {
   // Personal GitHub activity (zenntkaixa, public repos), counted 2026-11-19. Dated so it never overclaims.
   personal: {
     value: "176",
-    text: "merged pull requests on personal projects since Oct 2026 · 2 apps live in production",
+    text: "merged pull requests on personal projects since Oct 2026, many of them small, AI-assisted changes I reviewed",
     link: "My GitHub profile",
   },
   live: "https://zenntkaixa-radiozk.onrender.com/",
@@ -84,9 +89,9 @@ export const aiWorkflow = [
 
 export const caseStudies = [
   {
-    title: "Cutting API round trips in a customer portal",
+    title: "Multi-policy changes with batch APIs",
     context: "US insurer, Guidewire Digital Portal program",
-    body: "Built React and TypeScript features on Guidewire Jutro. Batched multi-policy changes into composite and batch API requests instead of one call per change, built a risk-scoring integration reused across product lines, and brought documents from two backend systems into one view with role-based access. Resolved 32 failed release-branch merges to keep releases on schedule.",
+    body: "Built React and TypeScript features on Guidewire Jutro. Implemented multi-policy changes with composite and batch API requests to reduce unnecessary round trips, built a risk-scoring integration reused across product lines, and brought documents from two backend systems into one view with role-based access. Resolved 32 failed release-branch merges to keep releases on schedule.",
     stack: ["React", "TypeScript", "Jutro"],
   },
   {
@@ -96,10 +101,10 @@ export const caseStudies = [
     stack: ["Java", "Spring Boot", "Azure"],
   },
   {
-    title: "Moving a monolith toward microservices",
+    title: "Modernising a legacy banking platform",
     context: "Regional bank, digital banking",
-    body: "Worked on moving a monolithic Java banking codebase toward microservices, including data synchronisation between old and new services, and shipped approved releases on GitLab, Jenkins and OpenShift.",
-    stack: ["Java", "Spring Boot", "OpenShift"],
+    body: "Started on the legacy platform, then was tasked with moving it to microservices: API-first Spring Boot services on PostgreSQL, data synchronisation between old and new services, and DevOps delivery with GitLab, Jenkins and OpenShift.",
+    stack: ["Spring Boot", "PostgreSQL", "OpenShift"],
   },
 ];
 
@@ -108,7 +113,7 @@ export const experience = [
   { org: "PwC Acceleration Centers", role: "Senior Associate, Full-Stack Developer", period: "2025 to now", field: "Insurance customer portals" },
   { org: "Allianz Technology", role: "Life Core Developer", period: "2024 to 2025", field: "Life insurance core systems" },
   { org: "Beyondsoft Malaysia", role: "Java Developer", period: "2023 to 2024", field: "Compliance and document checks" },
-  { org: "Hitachi Digital Host", role: "Application Engineer", period: "2020 to 2022", field: "Digital banking" },
+  { org: "Hitachi eBworx, then Hitachi Digital Host", role: "Application Engineer", period: "2020 to 2022", field: "Digital banking modernisation" },
   { org: "Vetter Software", role: "Engineer, then QA Engineer", period: "2017 to 2020", field: "Veterinary practice SaaS" },
 ];
 
@@ -149,7 +154,7 @@ export const guidewireCheck = {
   after: `: search “${profile.fullName}” to verify the Guidewire ones.`,
 };
 
-export const education = "BSc Computer Science (Software Engineering), Universiti Tun Hussein Onn Malaysia";
+export const education = "Bachelor of Computer Science (Software Engineering) with Honours, Universiti Tun Hussein Onn Malaysia";
 
 export const turnstileFailedMessage =
   "The human check couldn't load. Disable content blockers for this site or refresh the page.";
@@ -281,6 +286,7 @@ export const estimatorCopy = {
   example: {
     note: (feature: string) => `Example plan for: ${feature}. Describe your own feature in the form for a live estimate.`,
     footer: "This example was written by hand to show the format. Live estimates are generated by Claude.",
+    preview: (title: string, hours: string, weeks: string) => `See an example plan below: ${title}, ${hours}, ${weeks}`,
   },
   mode: {
     legend: "Working style",

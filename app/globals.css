@@ -1006,6 +1006,34 @@ p {
   gap: var(--gap);
 }
 
+/* Phone shortcut to the example plan, which sits below the whole form until the columns split. */
+.estimator__preview {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: calc(var(--gap) / 2) var(--gap);
+  border: 1px solid var(--accent);
+  border-radius: var(--r-sm);
+  background: var(--accent-soft);
+  color: var(--ink);
+  font-size: var(--fs-sm);
+  text-decoration: none;
+}
+
+.estimator__preview::after {
+  content: "\2193" / "";
+  margin-left: auto;
+  padding-left: calc(var(--gap) / 2);
+}
+
+.estimator__preview:hover {
+  text-decoration: underline;
+}
+
+.estimator__results {
+  scroll-margin-top: var(--gap);
+}
+
 /* Comfortable tap height for the submit button (its padding alone gives 43px). */
 .estimator__lock > button[type="submit"] {
   min-height: 44px;
@@ -1303,6 +1331,18 @@ p {
   }
   .estimator__results {
     margin-top: 0;
+  }
+  .estimator__preview {
+    display: none;
+  }
+}
+
+/* The plan is much taller than the form: keep the form in view while reading it, so a change and a
+   rerun are one glance away. Only when the whole form fits the screen, or its bottom would be unreachable. */
+@media (min-width: 1025px) and (min-height: 760px) {
+  .estimator__form {
+    position: sticky;
+    top: var(--gap);
   }
 }
 

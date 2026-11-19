@@ -84,3 +84,27 @@ test("after a field error, typing brings the example back instead of an empty re
   await expect(field).toBeFocused();
   await expect(field).toHaveValue("Add one-time code login with email delivery and rate limiting now");
 });
+
+test.describe("example preview on a phone", () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test("a link above the form jumps to the example plan, and goes away with a live estimate", async ({ page }) => {
+    await page.route("**/api/estimate", (route) => route.fulfill({ json: { plan: { ...plan.plan, title: "Live plan title" } } }));
+    await page.goto("/");
+    const preview = page.getByRole("link", { name: /^See an example plan below/ });
+    await expect(preview).toContainText(samplePlan.title);
+    await preview.click();
+    await expect(page.getByRole("heading", { name: samplePlan.title })).toBeInViewport();
+
+    await page.getByLabel("Feature description").fill("Add one-time code login with email delivery and rate limiting");
+    await page.getByRole("button", { name: estimatorCopy.submit }).click();
+    await expect(page.getByRole("heading", { name: "Live plan title" })).toBeVisible();
+    await expect(preview).toHaveCount(0);
+  });
+});
+
+test("on desktop the preview link is hidden, since the plan sits beside the form", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  await expect(page.getByRole("link", { name: /^See an example plan below/ })).toBeHidden();
+});

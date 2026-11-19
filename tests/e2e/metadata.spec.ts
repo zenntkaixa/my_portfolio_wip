@@ -11,6 +11,8 @@ test("home head carries Open Graph, Twitter and canonical metadata", async ({ pa
     page.locator(`head meta[${attr}="${key}"]`).first().getAttribute("content");
 
   expect(await meta("property", "og:title")).toContain(profile.name);
+  expect(await meta("property", "profile:first_name")).toBe(profile.firstName);
+  expect(await meta("property", "profile:last_name")).toBe(profile.lastName);
   expect(await meta("property", "og:description")).toBe(seo.description);
   expect(await meta("property", "og:url")).toMatch(siteUrlPattern);
   expect(await meta("name", "twitter:card")).toBe("summary_large_image");

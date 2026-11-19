@@ -5,6 +5,21 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-19 — Session 65: Pre-release batch (M13)
+
+**Done** on `feat/m13-cv-and-estimator-layout`
+- Claims softened per Izzat (#76 checks 1 to 3; Beyondsoft field kept); degree is "Bachelor of Computer
+  Science (Software Engineering) with Honours". CV v4 and the LinkedIn doc in his Drive updated to match.
+- "Download CV" in the hero: `public/izzat-fahmi-cv.pdf`, made from CV v4 without the phone number, clients
+  anonymised (checked with `pdftotext`). Closes M10.
+- Estimator: phone link above the form jumps to the example plan; desktop form is sticky beside the plan.
+- Display name is now "Mohd. Izzat Fahmi Suhaimi" (first "Mohd. Izzat Fahmi", last "Suhaimi"), also in og:profile tags.
+
+**Verified** `npm run check`, e2e 113 passed. **Next** release PR when Izzat asks.
+**Waiting on Izzat** check CV v4's layout in Word; AIA/OCBC on the private CV; update LinkedIn.
+
+---
+
 ## 2026-11-19 — Session 64: Astryx trial (ADR-010)
 
 **Done** (Izzat's instruction, outside the roadmap)
@@ -14,7 +29,9 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
   (10 e2e failures), so Izzat chose to keep Astryx off the live site; previewed via the editor's PNGs instead.
 
 **Verified** `npm run check`, e2e back to 110 passed. **Next** release M11 + M12 when Izzat asks.
-**Waiting on Izzat** wording checks from #76, Hitachi name, degree title, web-safe CV.
+- Hitachi settled: started at Hitachi eBworx (legacy work), moved to its subsidiary Hitachi Digital Host and
+  was tasked with the microservices modernisation; site entry, case study, CV and LinkedIn doc updated.
+**Waiting on Izzat** wording checks from #76, degree title, web-safe CV.
 
 ---
 

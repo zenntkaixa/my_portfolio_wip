@@ -107,7 +107,7 @@ Added 2026-11-17 after a Lighthouse re-check of production (PageSpeed quota was 
 Added 2026-11-19 (Izzat).
 - [x] Certification names link to their verification pages (Credly, EC-Council ASPEN); Guidewire has no
   per-certificate page, so a note links its Certification Checker with the name to search [ui-builder]
-- [ ] "Download CV" button in the hero (waiting on Izzat's CV PDF; check it for the phone number first)
+- [x] "Download CV" link in the hero: web copy of CV v4, phone removed, clients anonymised (M13) [ui-builder]
 
 ## M11 — Broad positioning
 Added 2026-11-19: Izzat is targeting roles beyond insurance and banking (B2B SaaS, HealthTech, logistics,
@@ -123,3 +123,9 @@ Added 2026-11-19 from the UI/UX team review. The skip link and consistent link s
 44px tap heights already covered. Deferred: example plan above the form on mobile, desktop space beside the form.
 - [x] Estimator tile framed with a 2px `--accent` border so it reads as the thing to try [ui-builder]
 - [x] Contact tile: "What I'm looking for" list (roles, kinds of team, location) [ui-builder]
+
+## M13 — Pre-release batch
+Added 2026-11-19 (Izzat): the deferred M12 layout items, the web CV and the #76 wording checks.
+- [x] Soften three claims (portal batching, "Shipped at", personal PRs) and use the full degree title [content]
+- [x] Phones: a link above the form previews the example plan (title, hours, weeks) and jumps to it [ui-builder]
+- [x] Desktop: the form stays in view (sticky) beside the taller plan, when the screen fits the whole form [ui-builder]
