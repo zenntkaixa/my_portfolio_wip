@@ -86,10 +86,21 @@ export type Plan = {
   confidence: "low" | "medium" | "high";
   /** Tools and running costs in MYR, as ranges. People cost is calculated in lib/budget.ts. */
   costs: CostItem[];
+  /** Up to 3 questions a BA would ask the requester before committing. Optional for older replies. */
+  openQuestions?: string[];
+  /** Up to 3 things this plan deliberately leaves out (the deferred parts of an MVP slice). */
+  outOfScope?: string[];
   totalHours: number;
   totalDays: number;
   calendarWeeks: number;
+  /** Set when the server stretched the model's calendar to fit the team's capacity. */
+  calendarAdjusted?: true;
 };
+
+/** Longest plan the client shows (400 weeks). */
+export const MAX_PLAN_DAYS = 2000;
+/** Productive hours one person delivers in a working day; the capacity check and the prompt both use it. */
+export const HOURS_PER_DAY = 6;
 
 export function validateRequest(body: unknown): { ok: true; value: EstimateRequest } | { ok: false; error: string } {
   if (!body || typeof body !== "object") return { ok: false, error: "Send a JSON body with feature, teamSize and seniority." };
@@ -135,13 +146,19 @@ function normaliseCosts(v: unknown): CostItem[] {
   });
 }
 
-/** Turn whatever the model returned into a safe, consistent Plan. Totals are computed here, not trusted. */
-export function normalisePlan(raw: unknown): Plan | null {
+// Rounds up to the next half day, so a stretched calendar never lands below the capacity minimum.
+const ceilHalf = (n: number) => Math.max(0, Math.ceil(n * 2 - 1e-9) / 2); // max(0) turns -0 into 0
+
+/**
+ * Turn whatever the model returned into a safe, consistent Plan. Totals are computed here, not trusted.
+ * With a team size, a calendar shorter than totalHours / (teamSize * HOURS_PER_DAY) is stretched to fit.
+ */
+export function normalisePlan(raw: unknown, teamSize?: number): Plan | null {
   if (!raw || typeof raw !== "object") return null;
   const r = raw as Record<string, unknown>;
   if (!Array.isArray(r.phases) || r.phases.length === 0) return null;
 
-  const phases: Phase[] = r.phases.slice(0, 10).map((p) => {
+  let phases: Phase[] = r.phases.slice(0, 10).map((p) => {
     const ph = (p ?? {}) as Record<string, unknown>;
     const tasks = Array.isArray(ph.tasks)
       ? ph.tasks.slice(0, 12).map((t) => {
@@ -161,7 +178,21 @@ export function normalisePlan(raw: unknown): Plan | null {
   const totalHours = phases.reduce((s, p) => s + p.tasks.reduce((a, t) => a + t.hours, 0), 0);
   // No usable task anywhere (e.g. the model used another key for task names): not a plan.
   if (totalHours === 0) return null;
-  const totalDays = Math.max(...phases.map((p) => p.startDay + p.durationDays));
+  let totalDays = Math.max(...phases.map((p) => p.startDay + p.durationDays));
+  const minDays = teamSize ? totalHours / (teamSize * HOURS_PER_DAY) : 0;
+  // A plan this long can't be shown (the client caps 2000 days / 400 weeks), so it is not a usable plan.
+  if (minDays > MAX_PLAN_DAYS) return null;
+  const calendarAdjusted = totalDays < minDays;
+  if (calendarAdjusted) {
+    // Scaling every start and duration by one factor keeps the phase order and overlaps the model chose.
+    const factor = minDays / totalDays;
+    // Round start and end (not duration) so back-to-back phases stay back to back.
+    phases = phases.map((p) => {
+      const startDay = ceilHalf(p.startDay * factor);
+      return { ...p, startDay, durationDays: ceilHalf((p.startDay + p.durationDays) * factor) - startDay };
+    });
+    totalDays = Math.max(...phases.map((p) => p.startDay + p.durationDays));
+  }
   const confidence = r.confidence === "low" || r.confidence === "high" ? r.confidence : "medium";
 
   return {
@@ -172,10 +203,13 @@ export function normalisePlan(raw: unknown): Plan | null {
     risks: strList(r.risks, 6),
     confidence,
     costs: normaliseCosts(r.costs),
+    openQuestions: strList(r.openQuestions, 3),
+    outOfScope: strList(r.outOfScope, 3),
     // Task hours are in 0.5 steps, so the sum is exact. Not rounded, so it always equals the
     // phase subtotals and role totals the UI shows.
     totalHours,
     totalDays,
     calendarWeeks: Math.max(1, Math.round((totalDays / 5) * 10) / 10),
+    ...(calendarAdjusted ? { calendarAdjusted: true as const } : {}),
   };
 }

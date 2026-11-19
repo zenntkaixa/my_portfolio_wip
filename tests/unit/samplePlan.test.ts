@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { normalisePlan } from "@/lib/estimate";
 import { isPlan } from "@/lib/estimatorClient";
 import { estimatorExamples } from "@/lib/content";
-import { sampleFeature, samplePlan } from "@/lib/samplePlan";
+import { sampleFeature, samplePlan, sampleTeam } from "@/lib/samplePlan";
 
 describe("the stored example plan", () => {
   it("is a plan the results view accepts", () => {
@@ -10,7 +10,8 @@ describe("the stored example plan", () => {
   });
 
   it("survives the same normalisation a live reply goes through, totals included", () => {
-    expect(normalisePlan(samplePlan)).toEqual(samplePlan);
+    expect(normalisePlan(samplePlan, sampleTeam.size)).toEqual(samplePlan);
+    expect(samplePlan.calendarAdjusted).toBeUndefined();
   });
 
   it("is for the first example feature", () => {

@@ -17,6 +17,8 @@ export function isPlan(v: unknown): v is Plan {
   if (typeof v.title !== "string" || typeof v.summary !== "string")
     return false;
   if (!isStrList(v.assumptions) || !isStrList(v.risks)) return false;
+  // Optional (older replies and the e2e fixture may lack them), but a list of strings when present.
+  if ([v.openQuestions, v.outOfScope].some((l) => l !== undefined && !isStrList(l))) return false;
   if (
     !Array.isArray(v.costs) ||
     !v.costs.every((c) => isObj(c) && typeof c.item === "string" && num(c.low) && num(c.high))

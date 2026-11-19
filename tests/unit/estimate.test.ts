@@ -298,3 +298,62 @@ describe("normalisePlan costs", () => {
     expect(normalisePlan(base)?.costs).toEqual([]);
   });
 });
+
+describe("normalisePlan openQuestions and outOfScope", () => {
+  const base = { phases: [{ name: "Build", tasks: [{ task: "Do it", role: "Backend", hours: 8 }] }] };
+
+  it("trims, drops empties and caps both lists at 3", () => {
+    const p = normalisePlan({ ...base, openQuestions: [" q1 ", "", 5, "q2", "q3", "q4"], outOfScope: ["o".repeat(400), "b", "c", "d"] })!;
+    expect(p.openQuestions).toEqual(["q1", "q2", "q3"]);
+    expect(p.outOfScope).toHaveLength(3);
+    expect(p.outOfScope?.[0]).toHaveLength(300);
+  });
+
+  it("defaults both to [] when missing or not a list", () => {
+    expect(normalisePlan(base)).toMatchObject({ openQuestions: [], outOfScope: [] });
+    expect(normalisePlan({ ...base, openQuestions: "x", outOfScope: null })).toMatchObject({ openQuestions: [], outOfScope: [] });
+  });
+});
+
+describe("normalisePlan capacity check (6 productive hours per person-day)", () => {
+  const phase = (startDay: number, durationDays: number, hours: number) => ({ name: `P${startDay}`, startDay, durationDays, tasks: [{ task: "t", role: "Backend", hours }] });
+
+  it("leaves a calendar that fits the team unchanged and unflagged", () => {
+    const p = normalisePlan({ phases: [phase(0, 5, 40), phase(5, 5, 40)] }, 2)!; // 80 h / 12 h a day = 6.7 days <= 10
+    expect(p.totalDays).toBe(10);
+    expect(p.calendarAdjusted).toBeUndefined();
+    expect("calendarAdjusted" in p).toBe(false);
+  });
+
+  it("stretches 300 h for 1 person in 5 days to about 50 days, keeping phase order and overlaps", () => {
+    const p = normalisePlan({ phases: [phase(0, 2, 100), phase(1, 2, 100), phase(3, 2, 100)] }, 1)!;
+    expect(p.calendarAdjusted).toBe(true);
+    expect(p.totalDays).toBeGreaterThanOrEqual(50);
+    expect(p.totalDays).toBeLessThanOrEqual(50.5);
+    expect(p.phases.map((x) => [x.startDay, x.durationDays])).toEqual([[0, 20], [10, 20], [30, 20]]);
+    expect(p.calendarWeeks).toBe(10);
+    expect(p.totalHours).toBe(300);
+  });
+
+  it("rounds stretched days up to half days so the calendar never ends below the minimum", () => {
+    const p = normalisePlan({ phases: [phase(0, 3, 50)] }, 1)!; // min 8.33 days
+    expect(p.phases[0].durationDays).toBe(8.5);
+    expect(p.totalDays).toBe(8.5);
+  });
+
+  it("rejects a plan whose capacity floor is longer than the client can show (2000 days)", () => {
+    const big = Array.from({ length: 10 }, (_, i) => ({ name: `P${i}`, startDay: i, durationDays: 1, tasks: Array.from({ length: 12 }, () => ({ task: "t", role: "Backend", hours: 400 })) }));
+    expect(normalisePlan({ phases: big }, 1)).toBeNull(); // 48,000 h / 6 h = 8,000 days
+    expect(normalisePlan({ phases: big }, 8)).not.toBeNull(); // 1,000 days
+  });
+
+  it("keeps back-to-back phases back to back after stretching", () => {
+    const p = normalisePlan({ phases: [phase(0, 1, 10), phase(1, 1, 10), phase(2, 1, 6)] }, 1)!; // 26 h: min 4.33 days, factor ~1.44
+    for (let i = 1; i < p.phases.length; i++) expect(p.phases[i].startDay).toBe(p.phases[i - 1].startDay + p.phases[i - 1].durationDays);
+    expect(p.phases.every((x) => x.durationDays >= 0.5)).toBe(true);
+  });
+
+  it("skips the check without a team size", () => {
+    expect(normalisePlan({ phases: [phase(0, 1, 300)] })!.calendarAdjusted).toBeUndefined();
+  });
+});

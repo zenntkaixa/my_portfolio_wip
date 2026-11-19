@@ -143,3 +143,6 @@ need an ADR and Izzat's privacy call) wait for Izzat.
   LinkedIn line under every plan; chip puts the caret in the field; client rejects malformed plans and an error
   boundary guards the results; long words wrap, edge week labels stay inside, a failed re-estimate keeps the
   last plan [ui-builder]
+- [x] Batch B: code enforces team capacity (calendar note), 20% contingency row and cost basis, seniority hour
+  multipliers (mixed RM 78), solo teams in sequence, "Questions to confirm" and "Not included" with MVP slicing,
+  structured outputs, timeouts 4 s + 45 s, prompt in `lib/prompt.ts` (ADR-011) [prompt-engineer, ui-builder]

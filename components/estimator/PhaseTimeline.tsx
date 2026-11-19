@@ -8,10 +8,12 @@ type Geometry = CSSProperties & Record<`--${string}`, string>;
 const pct = (n: number) => `${Number(n.toFixed(3))}%`;
 
 /** Tab 1 of the results: summary row, timeline chart, phase cards, assumptions and risks. */
-export function PhaseTimeline({ plan, teamLabel }: { plan: Plan; teamLabel: string }) {
+export function PhaseTimeline({ plan, teamLabel, teamSize }: { plan: Plan; teamLabel: string; teamSize: number }) {
   const bars = toBars(plan.phases, plan.totalDays);
   const markers = weekMarkers(plan.totalDays);
   const weeks = weekLabels(plan.totalDays);
+  const questions = plan.openQuestions ?? [];
+  const outOfScope = plan.outOfScope ?? [];
 
   return (
     <div className="results-phases">
@@ -39,6 +41,7 @@ export function PhaseTimeline({ plan, teamLabel }: { plan: Plan; teamLabel: stri
           <dd className="tab1-hint">{copy.summary.hints.confidence[plan.confidence]}</dd>
         </div>
       </dl>
+      {plan.calendarAdjusted && <p className="tab3-note">{copy.calendarAdjusted(teamSize)}</p>}
 
       {bars.length > 0 && (
         <ol className="tab1-timeline" role="list" aria-label={copy.timelineLabel(plan.totalDays)}>
@@ -88,7 +91,7 @@ export function PhaseTimeline({ plan, teamLabel }: { plan: Plan; teamLabel: stri
         ))}
       </ul>
 
-      {(plan.assumptions.length > 0 || plan.risks.length > 0) && (
+      {(plan.assumptions.length > 0 || plan.risks.length > 0 || questions.length > 0 || outOfScope.length > 0) && (
         <div className="tab1-lists">
           {plan.assumptions.length > 0 && (
             <section aria-labelledby="tab1-assumptions">
@@ -106,6 +109,26 @@ export function PhaseTimeline({ plan, teamLabel }: { plan: Plan; teamLabel: stri
               <ul role="list" className="tab1-list tab1-list--risks">
                 {plan.risks.map((r, i) => (
                   <li key={`${i}-${r}`}>{r}</li>
+                ))}
+              </ul>
+            </section>
+          )}
+          {questions.length > 0 && (
+            <section aria-labelledby="tab1-questions">
+              <h4 id="tab1-questions">{copy.questionsHeading}</h4>
+              <ul role="list" className="tab1-list">
+                {questions.map((x, i) => (
+                  <li key={`${i}-${x}`}>{x}</li>
+                ))}
+              </ul>
+            </section>
+          )}
+          {outOfScope.length > 0 && (
+            <section aria-labelledby="tab1-scope">
+              <h4 id="tab1-scope">{copy.outOfScopeHeading}</h4>
+              <ul role="list" className="tab1-list">
+                {outOfScope.map((x, i) => (
+                  <li key={`${i}-${x}`}>{x}</li>
                 ))}
               </ul>
             </section>

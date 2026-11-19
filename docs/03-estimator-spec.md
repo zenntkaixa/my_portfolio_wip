@@ -54,13 +54,21 @@ Success `200`:
     "risks": ["string"],
     "confidence": "low | medium | high",
     "costs": [{ "item": "string", "kind": "one-off | monthly", "low": 100, "high": 400 }],
+    "openQuestions": ["string"],
+    "outOfScope": ["string"],
     "totalHours": 180,
     "totalDays": 18,
-    "calendarWeeks": 3.6
+    "calendarWeeks": 3.6,
+    "calendarAdjusted": true
   },
   "inputs": { "teamSize": 4, "seniority": "mixed", "mode": "traditional" }
 }
 ```
+
+`openQuestions` (up to 3: what a BA would ask the requester before committing) and `outOfScope` (up to 3:
+what the plan deliberately leaves out) are always present from the server (`[]` when the model gave none);
+the client treats them as optional so older payloads still render. `calendarAdjusted` appears only when the
+server stretched the calendar (see *Capacity check*).
 
 Errors, always `{ "error": "human-readable sentence" }`:
 
@@ -78,15 +86,30 @@ A 502 caused by an error status from the Anthropic API (nothing was generated or
 rate-limit slot and the daily count back. Timeouts, refusals and cut-off or unreadable replies keep the slot.
 
 ## Prompt
-Lives in `app/api/estimate/route.ts` as `SYSTEM_PROMPT`. Owned by the `prompt-engineer` subagent.
+Lives in `lib/prompt.ts` (`SYSTEM_PROMPT`, `userMessage`, `requestBody`, `RESPONSE_SCHEMA`; pure functions
+the route imports). Owned by the `prompt-engineer` subagent. ADR-011: the model proposes, code enforces.
 
 - Roles allowed: `BA, Architect, Backend, Frontend, QA, DevOps, PM` (from `lib/estimate.ts`).
 - Feature text is wrapped in `<feature>` tags and treated as untrusted data.
-- Model returns JSON only. Server strips fences, parses, then `normalisePlan` clamps numbers,
+- **Structured outputs:** the body sends `output_config.format = { type: "json_schema", schema }`. The schema
+  is `anyOf` the plan object or `{ error: string }`; every object has `additionalProperties: false` and all
+  keys required; enums for `role`, `confidence` and cost `kind`; no min/max or array-size keywords (not
+  supported), and no totals. The server `JSON.parse`s the first text block (no fence stripping); anything
+  unparseable is the 502 "unreadable plan". `normalisePlan` stays the second check: it clamps numbers,
   trims strings, caps array lengths and **recomputes all totals**. Never trust model totals.
+- **Seniority:** hours are sized for a mid-level baseline, then junior about 1.3x, senior about 0.85x,
+  mixed about 1.0x (a 1 senior : 2 mid : 1 junior blend, a ratio, not a headcount).
+- **Solo teams:** with 1 person, phases run in sequence (no overlap) and that person covers every role.
+- **Scope:** huge or multi-feature requests get an MVP slice, said in the summary, with the deferred parts
+  in `outOfScope`.
+- **Capacity check** (`normalisePlan(raw, teamSize)`): 1 person-day = 6 productive hours (`HOURS_PER_DAY`,
+  also stated in the prompt). If `totalDays < totalHours / (teamSize × 6)`, every phase's `startDay` and
+  `durationDays` is multiplied by the same factor (rounded up to half days, so order and overlaps are kept),
+  totals are recomputed and `calendarAdjusted: true` is set.
+- **Timeouts:** Turnstile siteverify 4 s, Anthropic call 45 s (`maxDuration` 60 s).
 - Default model: `claude-haiku-5-5` (cheapest). `ANTHROPIC_MODEL` env var can switch to Sonnet.
 - Request: `max_tokens` 8000 on Haiku, 4000 on pricier models (`maxTokensFor`),
-  `output_config: { effort: "low" }`, `thinking` omitted (adaptive by default; its tokens count
+  `output_config: { effort: "low", format }`, no `temperature`/`top_p`/`top_k`, `thinking` omitted (adaptive by default; its tokens count
   against `max_tokens`). On failure the server logs only `stop_reason`,
   token usage and text length, never the feature or model text.
 
@@ -135,8 +158,10 @@ Tabs use proper ARIA (`role="tablist"`, `aria-selected`, arrow-key navigation).
 
 **Tab 3 — Budget** (`components/estimator/BudgetView.tsx`, numbers in `lib/budget.ts`), in MYR:
 - **Build:** people cost = total hours × an assumed in-house rate per seniority (junior RM 40, mid
-  RM 75, senior RM 120, mixed RM 80 per hour: mid-range Klang Valley salary × 1.3 for EPF, SOCSO, EIS
-  and overheads ÷ 160 hours; approved by Izzat 2026-11-17). With AI agents, seats = team size × started
+  RM 75, senior RM 120, mixed RM 78 per hour: mid-range Klang Valley salary × 1.3 for EPF, SOCSO, EIS
+  and overheads ÷ 160 hours; approved by Izzat 2026-11-17; mixed is the 1 senior, 2 mid, 1 junior blend,
+  set 2026-11-19). Contingency = 20% of people cost (`CONTINGENCY`, rounded to whole ringgit), its own row
+  and part of the build total. With AI agents, seats = team size × started
   months of the calendar × RM 80–400 (standard to premium business seat). Plus the model's one-off items.
 - **Running costs after launch:** the model's monthly items and their total.
 - The model lists only tools and running costs (3 to 8, ranges, whole ringgit, only what the feature
@@ -151,7 +176,8 @@ generated by Claude." The stored plan must never be presented as model output un
 a real reply.
 
 ## Testing
-- Unit: `validateRequest`, `normalisePlan`, `lib/timeline.ts` (pure functions, no network).
+- Unit: `validateRequest`, `normalisePlan` (incl. the capacity check), `lib/prompt.ts`, `lib/budget.ts`,
+  `lib/timeline.ts` (pure functions, no network).
 - Unit: `tests/unit/route.test.ts` calls `POST` with `fetch` mocked for Turnstile and Anthropic.
 - E2E: Playwright intercepts `POST /api/estimate` with `page.route` and returns
   `tests/fixtures/plan.json`. Never hit the real API in tests. Turnstile uses Cloudflare's test site key.

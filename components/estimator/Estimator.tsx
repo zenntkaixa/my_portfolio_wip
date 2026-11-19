@@ -444,6 +444,7 @@ export function Estimator() {
                     <PhaseTimeline
                       plan={shown.plan}
                       teamLabel={shown.teamLabel}
+                      teamSize={shown.team.size}
                     />
                   ),
                 },

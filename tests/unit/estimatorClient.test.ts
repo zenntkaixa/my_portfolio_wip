@@ -53,6 +53,12 @@ describe("isPlan", () => {
     expect(isPlan({ ...plan.plan, totalHours: 100000, totalDays: 2000, calendarWeeks: 400 })).toBe(true);
   });
   it("accepts the fixture plan", () => expect(isPlan(plan.plan)).toBe(true));
+  it("accepts plans without openQuestions/outOfScope but rejects non-string lists", () => {
+    const { openQuestions: _q, outOfScope: _o, ...older } = plan.plan;
+    expect(isPlan(older)).toBe(true);
+    expect(isPlan({ ...plan.plan, openQuestions: [1] })).toBe(false);
+    expect(isPlan({ ...plan.plan, outOfScope: "x" })).toBe(false);
+  });
   it("rejects a plan without a costs list", () => {
     const { costs: _costs, ...noCosts } = plan.plan;
     expect(isPlan(noCosts)).toBe(false);
