@@ -17,7 +17,8 @@ export type EstimateDeps = {
   now: () => number;
 };
 
-export type SuccessBody = { plan: Plan; inputs: Pick<EstimateRequest, "teamSize" | "seniority" | "mode"> };
+// `cached` is present (true) only when the plan came from the 24-hour cache.
+export type SuccessBody = { plan: Plan; inputs: Pick<EstimateRequest, "teamSize" | "seniority" | "mode">; cached?: true };
 
 export type EstimateResult = {
   status: number;
@@ -111,7 +112,7 @@ async function estimate(req: EstimateRequest, ip: string, startedAt: number, dep
   const key = cacheKey(req);
   const cached = await deps.cache.get(key);
   if (cached) {
-    return { status: 200, body: { plan: cached, inputs }, event: eventRow("ok", 200, elapsed(), inputs, { ...planFields(cached), cache_hit: true }) };
+    return { status: 200, body: { plan: cached, inputs, cached: true }, event: eventRow("ok", 200, elapsed(), inputs, { ...planFields(cached), cache_hit: true }) };
   }
 
   const reply = await deps.callModel({ feature, teamSize, seniority, mode });

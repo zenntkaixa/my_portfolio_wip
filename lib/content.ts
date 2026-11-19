@@ -10,7 +10,7 @@ export const profile = {
   role: "Senior full-stack engineer · Java, Spring Boot, React, AWS",
   headline: "I build reliable systems and the integrations that hold them together.",
   // Approved by Izzat 2026-11-17 (M6). Employers and the certification only: the Now tile already shows the numbers.
-  proof: ["Built at PwC · Allianz Technology · Hitachi", "AWS Certified Solutions Architect"],
+  proof: ["Built at PwC · Allianz Technology · Hitachi", "AWS Certified Solutions Architect – Associate"],
   proofLabel: "Track record",
   summary:
     "Eight years of Java, Spring Boot and React, now shipped with AI coding agents. I stay accountable for every line that merges.",
@@ -26,6 +26,8 @@ export const profile = {
     "Senior full-stack or backend engineering roles",
     "B2B SaaS, enterprise software, platform and cloud teams, or a new industry",
     "Based in Petaling Jaya, and used to working with teams across time zones",
+    "Work mode: onsite, hybrid or remote",
+    "Malaysian citizen",
   ],
   email: "zenntkaixa@yahoo.com",
   linkedin: "https://www.linkedin.com/in/mohamad-izzat-fahmi-bin-suhaimi-00b047145",
@@ -277,7 +279,7 @@ export const estimatorCopy = {
     monthlyTotal: "Per month",
     none: "None listed",
     rateNote: (rates: Record<string, number>) =>
-      `People cost uses assumed Klang Valley in-house rates (salary plus EPF, SOCSO, EIS and overheads), excluding SST: ${Object.entries(rates)
+      `People cost uses assumed Klang Valley in-house rates (salary plus EPF, SOCSO, EIS and overheads): ${Object.entries(rates)
         .map(([k, v]) => `${k} RM ${v}`)
         .join(", ")} per hour. Agency rates are higher.`,
     seniorityNote:
@@ -301,11 +303,16 @@ export const estimatorCopy = {
   },
   people: (n: number) => `${n} ${n === 1 ? "person" : "people"}`,
   atLeast: (min: number) => ` (at least ${min} characters)`,
+  /** Replaces `atLeast` once the visitor has typed something but is still under the minimum. */
+  moreWords: (min: number) => ` Add a few more words (${min} characters minimum).`,
+  cachedNote: "Same request as before, so this is the saved plan from the last 24 hours.",
+  previousPlan: (desc: string) => `Previous plan for: “${desc.length > 60 ? `${desc.slice(0, 60).trimEnd()}…` : desc}”`,
+  undo: { button: "Undo", announce: "Example added. Undo is available for 10 seconds." },
   planning: "Planning phases…",
   /** Rotates every ~2.5s while waiting; visual only (the status line announces `planning` once). */
   steps: ["Reading your brief…", "Sizing the phases…", "Estimating tasks…", "Costing the team…"],
   usuallyWait: "Usually about 10 seconds.",
-  cta: { text: "Want this scoped for your real project?", email: "Email me", linkedin: "LinkedIn" },
+  cta: { text: "Like how I break down work? Let's talk about your team.", email: "Email me", linkedin: "LinkedIn" },
   resultsCrashed: "Something went wrong showing this plan. Reload the page and try again.",
   summary: {
     hours: "Effort",
