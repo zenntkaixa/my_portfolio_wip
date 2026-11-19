@@ -10,8 +10,10 @@ export default defineConfig({
     trace: "on-first-retry",
   },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  // A production server: no on-demand compiling (the suite ran 2.6x faster than on `next dev`), and it
+  // serves the real CSP and bundles. CI reuses the build from `npm run check`; locally it builds first.
   webServer: {
-    command: "npm run dev",
+    command: process.env.CI ? "npm run start" : "npm run build && npm run start",
     url: "http://localhost:3000",
     reuseExistingServer: true,
     timeout: 120_000,

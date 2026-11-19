@@ -58,10 +58,13 @@ jobs:
           installed=$(node -p "require('@playwright/test/package.json').version")
           test "$installed" = "1.64.1" || { echo "::error::@playwright/test is $installed but the CI image is v1.64.1; bump both (ADR-007)"; exit 1; }
 
-      # Typecheck, unit tests and build. No secrets: every test mocks fetch.
+      # Typecheck, unit tests and build. No secrets: every test mocks fetch. The build is reused by the
+      # e2e server, so it carries Cloudflare's public always-pass test site key (inlined at build time).
       - run: npm run check
+        env:
+          NEXT_PUBLIC_TURNSTILE_SITE_KEY: 1x00000000000000000000AA
 
-      # Starts its own dev server; the API is mocked. Turnstile is faked except in the specs about the widget,
+      # Serves the build from the step above with `next start`; the API is mocked. Turnstile is faked except in the specs about the widget,
       # which use the always-pass test key.
       - run: npm run test:e2e
         if: steps.scope.outputs.docs_only != 'true'

@@ -12,6 +12,8 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
   "Career docs" folder; not in this repo (phone number and client names).
 - M12: estimator tile gets a 2px accent border; contact tile lists what Izzat is looking for.
 - Review items already met, no change: skip link, consistent link styles, 44px tap heights.
+- E2E now runs on a production server (`next start`; CI reuses the `check` build): the same 110 tests in
+  1.1 min instead of 2.9 locally. Unit tests (2 s) were left alone; trimming them saves nothing.
 
 **Verified** `npm run check` (266), e2e 110 passed, screenshots light/dark 1440 and 390, no sideways scroll.
 **Next** Izzat's "push it", then a release. Deferred: example plan above the form on mobile, desktop space.
