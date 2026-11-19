@@ -96,10 +96,10 @@ export const caseStudies = [
     stack: ["Java", "Spring Boot", "Azure"],
   },
   {
-    title: "Moving a monolith toward microservices",
+    title: "Modernising a legacy banking platform",
     context: "Regional bank, digital banking",
-    body: "Worked on moving a monolithic Java banking codebase toward microservices, including data synchronisation between old and new services, and shipped approved releases on GitLab, Jenkins and OpenShift.",
-    stack: ["Java", "Spring Boot", "OpenShift"],
+    body: "Started on the legacy platform, then was tasked with moving it to microservices: API-first Spring Boot services on PostgreSQL, data synchronisation between old and new services, and DevOps delivery with GitLab, Jenkins and OpenShift.",
+    stack: ["Spring Boot", "PostgreSQL", "OpenShift"],
   },
 ];
 
@@ -108,7 +108,7 @@ export const experience = [
   { org: "PwC Acceleration Centers", role: "Senior Associate, Full-Stack Developer", period: "2025 to now", field: "Insurance customer portals" },
   { org: "Allianz Technology", role: "Life Core Developer", period: "2024 to 2025", field: "Life insurance core systems" },
   { org: "Beyondsoft Malaysia", role: "Java Developer", period: "2023 to 2024", field: "Compliance and document checks" },
-  { org: "Hitachi Digital Host", role: "Application Engineer", period: "2020 to 2022", field: "Digital banking" },
+  { org: "Hitachi eBworx, then Hitachi Digital Host", role: "Application Engineer", period: "2020 to 2022", field: "Digital banking modernisation" },
   { org: "Vetter Software", role: "Engineer, then QA Engineer", period: "2017 to 2020", field: "Veterinary practice SaaS" },
 ];
 

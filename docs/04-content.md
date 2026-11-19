@@ -6,7 +6,7 @@ All biography, project and contact text is in `lib/content.ts`. Change copy ther
 
 ## Allowed to publish
 - Employer names and job titles (PwC Acceleration Centers, Allianz Technology, Beyondsoft Malaysia,
-  Hitachi Digital Host, Vetter Software). These are already public on LinkedIn.
+  Hitachi eBworx and its subsidiary Hitachi Digital Host, Vetter Software). These are already public on LinkedIn.
 - Metrics from the CV: 8+ years, 100 merged PRs across 13 repositories (Apr to Oct 2026), 32 release-branch
   merges resolved. Personal GitHub: 176 merged PRs on public repos since Oct 2026 (counted 2026-11-19;
   dated on the page so it never overclaims; update at each release).

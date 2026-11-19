@@ -14,7 +14,9 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
   (10 e2e failures), so Izzat chose to keep Astryx off the live site; previewed via the editor's PNGs instead.
 
 **Verified** `npm run check`, e2e back to 110 passed. **Next** release M11 + M12 when Izzat asks.
-**Waiting on Izzat** wording checks from #76, Hitachi name, degree title, web-safe CV.
+- Hitachi settled: started at Hitachi eBworx (legacy work), moved to its subsidiary Hitachi Digital Host and
+  was tasked with the microservices modernisation; site entry, case study, CV and LinkedIn doc updated.
+**Waiting on Izzat** wording checks from #76, degree title, web-safe CV.
 
 ---
 
