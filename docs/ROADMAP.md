@@ -101,3 +101,4 @@ Added 2026-11-17 after a Lighthouse re-check of production (PageSpeed quota was 
 - [x] Estimator intro paints without the fade: since M6 it is the mobile LCP element, and its fade-in
   waited on the main thread (render delay 3.3–4.6 s) [ui-builder]
 - [x] Photo in the hero in place of the initials (Izzat's photo, 2026-11-19) [ui-builder]
+- [x] Certifications list only the five exam-based ones, newest first, with a one-line note (Izzat) [ui-builder]

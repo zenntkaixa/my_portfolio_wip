@@ -20,7 +20,10 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 - 2026-11-19: Izzat's photo replaces the initials in the hero (`public/profile.webp`, 216px, 6 KB,
   no metadata; decorative `alt=""`). Brief's "no photo" decision updated. Icons and OG keep initials.
 
-**Next:** confirm on PageSpeed Insights after release; CV PDF and the Jutro year (need Izzat).
+- Certifications: the five exam-based ones (Guidewire x2, EC-Council x2, AWS), newest first, with
+  "Each one earned by passing a paid exam."; Claude Code 101 (a course) dropped. No credential IDs.
+
+**Next:** confirm on PageSpeed Insights after release; CV PDF (needs Izzat).
 
 ---
 

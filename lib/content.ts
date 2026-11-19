@@ -106,11 +106,15 @@ export const stack = [
   { group: "AI and quality", items: ["Claude", "Gemini", "OpenAI", "CI/CD", "SonarQube", "Playwright"] },
 ];
 
+// Exam-based certifications only (Izzat, 2026-11-19), newest first. Course certificates stay off.
+export const certificationsNote = "Each one earned by passing a paid exam.";
+
 export const certifications = [
-  { name: "AWS Certified Solutions Architect, Associate", year: "2025" },
   { name: "Guidewire InsuranceSuite Developer, Associate", year: "2026" },
-  { name: "Guidewire Jutro Developer, Associate", year: "" },
-  { name: "Anthropic Claude Code 101", year: "2026" },
+  { name: "Guidewire Jutro Developer, Associate", year: "2026" },
+  { name: "EC-Council Certified Blockchain Professional v2", year: "2025" },
+  { name: "EC-Council Certified Blockchain Professional v2, Business Leaders", year: "2025" },
+  { name: "AWS Certified Solutions Architect, Associate", year: "2025" },
 ];
 
 export const education = "BSc Computer Science (Software Engineering), Universiti Tun Hussein Onn Malaysia";

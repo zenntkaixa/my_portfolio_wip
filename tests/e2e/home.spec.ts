@@ -3,6 +3,7 @@ import {
   aiWorkflow,
   caseStudies,
   certifications,
+  certificationsNote,
   education,
   experience,
   featuredProject,
@@ -312,6 +313,7 @@ test.describe("certifications tile", () => {
     await expect(items).toHaveText(
       certifications.map((c) => (c.year ? `${c.name}, ${c.year}` : c.name)),
     );
+    await expect(region(page).getByText(certificationsNote, { exact: true })).toBeVisible();
   });
 });
 

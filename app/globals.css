@@ -836,6 +836,16 @@ p {
   border-block-start: 1px solid var(--line);
 }
 
+.certs__note {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+
+.certs__name {
+  text-wrap: pretty; /* no lone "v2" on its own line */
+}
+
 .certs__item {
   display: flex;
   align-items: baseline;
