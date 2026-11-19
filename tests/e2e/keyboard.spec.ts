@@ -97,7 +97,7 @@ test("Tab order, visible focus indicators, no trap, Shift+Tab goes back", async 
 
   // Estimator: the "built by me" code link under the intro, then the controls in the documented order:
   // chips, textarea, slider, seniority, working style, submit.
-  const inEstimator = stops.filter((s) => s.section === "estimator");
+  const inEstimator = stops.filter((s) => s.section.startsWith("estimator"));
   expect(inEstimator[0], listing).toMatchObject({ tag: "a", name: `${estimatorBuiltBy.link} (opens in a new tab)` });
   const estAll = inEstimator.slice(1);
   // The example results follow the form: the selected tab, then its panel.
@@ -110,7 +110,7 @@ test("Tab order, visible focus indicators, no trap, Shift+Tab goes back", async 
   expect(est.at(-1)?.name, listing).toBe(estimatorCopy.submit);
 
   // Contact links come last; nothing focusable follows them.
-  const lastEstimator = stops.findLastIndex((s) => s.section === "estimator");
+  const lastEstimator = stops.findLastIndex((s) => s.section.startsWith("estimator"));
   const firstContact = stops.findIndex((s) => s.section === "contact");
   expect(firstContact, listing).toBeGreaterThan(lastEstimator);
   expect(stops.slice(firstContact).every((s) => s.section === "contact"), listing).toBe(true);

@@ -173,6 +173,16 @@ export function Estimator() {
         className="estimator__form"
         aria-busy={submitting}
       >
+        {/* Phones only (hidden in CSS once results sit beside the form): the example is below the whole form. */}
+        {status.kind === "success" && status.example && (
+          <a className="estimator__preview" href="#estimator-results">
+            {estimatorCopy.example.preview(
+              samplePlan.title,
+              estimatorCopy.summary.hoursValue(samplePlan.totalHours),
+              estimatorCopy.summary.weeksValue(samplePlan.calendarWeeks),
+            )}
+          </a>
+        )}
         <fieldset className="estimator__lock" disabled={submitting}>
           <div
             className="estimator__examples"
@@ -308,6 +318,7 @@ export function Estimator() {
       </form>
 
       <section
+        id="estimator-results"
         className="estimator__results"
         aria-label="Estimate results"
         aria-busy={submitting}

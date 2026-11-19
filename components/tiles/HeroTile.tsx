@@ -38,6 +38,12 @@ export function HeroTile() {
         <li>
           <ExternalLink href={profile.linkedin}>LinkedIn</ExternalLink>
         </li>
+        <li>
+          <a href={profile.cv.href} download>
+            {profile.cv.label}
+            <span className="sr-only"> ({profile.cv.note})</span>
+          </a>
+        </li>
       </ul>
       <p className="hero__meta tile__meta">
         <span>{profile.location}</span>

@@ -12,6 +12,9 @@ All biography, project and contact text is in `lib/content.ts`. Change copy ther
   dated on the page so it never overclaims; update at each release).
 - Certifications and education as listed.
 - Email `zenntkaixa@yahoo.com`, LinkedIn, GitHub.
+- `public/izzat-fahmi-cv.pdf`: the web copy of Izzat's CV (from the private Word CV v4 in his Drive), with
+  the phone number removed and clients anonymised as below. Before replacing it, run
+  `pdftotext public/izzat-fahmi-cv.pdf -` and check the text has no phone number and no client names.
 
 ## Never publish
 - Phone number
