@@ -36,6 +36,22 @@ describe("parseRetryAfter", () => {
 });
 
 describe("isPlan", () => {
+  const withPhases = (phases: unknown) => ({ ...plan.plan, phases });
+  it("rejects non-object phases and tasks, and malformed tasks", () => {
+    expect(isPlan(withPhases([null]))).toBe(false);
+    const ph = plan.plan.phases[0];
+    expect(isPlan(withPhases([{ ...ph, tasks: ["x"] }]))).toBe(false);
+    expect(isPlan(withPhases([{ ...ph, tasks: [{ task: "a", role: "b" }] }]))).toBe(false);
+    expect(isPlan(withPhases([{ ...ph, tasks: [{ task: 1, role: "b", hours: 2 }] }]))).toBe(false);
+    expect(isPlan(withPhases([{ ...ph, tasks: [{ task: "a", role: "b", hours: NaN }] }]))).toBe(false);
+  });
+  it("rejects non-finite or absurd totals", () => {
+    expect(isPlan({ ...plan.plan, totalHours: Infinity })).toBe(false);
+    expect(isPlan({ ...plan.plan, totalHours: 100001 })).toBe(false);
+    expect(isPlan({ ...plan.plan, totalDays: 2001 })).toBe(false);
+    expect(isPlan({ ...plan.plan, calendarWeeks: 401 })).toBe(false);
+    expect(isPlan({ ...plan.plan, totalHours: 100000, totalDays: 2000, calendarWeeks: 400 })).toBe(true);
+  });
   it("accepts the fixture plan", () => expect(isPlan(plan.plan)).toBe(true));
   it("rejects a plan without a costs list", () => {
     const { costs: _costs, ...noCosts } = plan.plan;

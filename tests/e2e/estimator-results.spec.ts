@@ -93,10 +93,10 @@ test("tab 2 shows role chips, phase subtotals and the grand total", async ({ pag
     await expect(body.getByRole("rowheader", { name: ph.name })).toBeVisible();
     await expect(body.locator("tr")).toHaveCount(ph.tasks.length + 2);
     const sum = ph.tasks.reduce((n, t) => n + t.hours, 0);
-    await expect(body.getByRole("row", { name: new RegExp(`^${c.subtotal}`) }).getByRole("cell")).toHaveText(String(sum));
+    await expect(body.getByRole("row", { name: new RegExp(`^${c.subtotal}`) }).getByRole("cell").last()).toHaveText(String(sum));
   }
   await expect(
-    page.getByRole("table").getByRole("row", { name: new RegExp(`^${c.total}`) }).getByRole("cell"),
+    page.getByRole("table").getByRole("row", { name: new RegExp(`^${c.total}`) }).getByRole("cell").last(),
   ).toHaveText(String(p.totalHours));
 });
 
@@ -108,7 +108,7 @@ test("tab 2 does not scroll the page at 320px and its region is focusable", asyn
   expect(overflow).toBeLessThanOrEqual(0);
   const region = page.getByRole("region", { name: estimatorCopy.tasks.regionLabel });
   const scrolls = await region.evaluate((el) => el.scrollWidth > el.clientWidth);
-  expect(scrolls).toBe(true);
+  expect(scrolls).toBe(false); // Role column is hidden on phones, so Task + Hours fit
   await region.focus();
   await expect(region).toBeFocused();
 });
@@ -142,11 +142,11 @@ test("tab 2 keeps half-hour totals consistent", async ({ page }) => {
   await openTab2(page);
   const c = estimatorCopy.tasks;
   const num = async (loc: ReturnType<Page["locator"]>) => parseFloat((await loc.innerText()).trim());
-  const subs = page.getByTestId("phase-body").getByRole("row", { name: new RegExp(`^${c.subtotal}`) }).getByRole("cell");
+  const subs = page.getByTestId("phase-body").getByRole("row", { name: new RegExp(`^${c.subtotal}`) }).getByRole("cell").filter({ hasText: /\d/ });
   const s1 = await num(subs.nth(0));
   const s2 = await num(subs.nth(1));
   expect([s1, s2]).toEqual([10.5, 8]);
-  const foot = await num(page.getByRole("table").getByRole("row", { name: new RegExp(`^${c.total}`) }).getByRole("cell"));
+  const foot = await num(page.getByRole("table").getByRole("row", { name: new RegExp(`^${c.total}`) }).getByRole("cell").last());
   expect(foot).toBe(s1 + s2);
   expect(foot).toBe(18.5);
   const chipTexts = await page.getByRole("list", { name: c.roleChipsLabel }).getByRole("listitem").allInnerTexts();

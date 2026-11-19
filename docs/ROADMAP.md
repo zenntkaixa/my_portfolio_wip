@@ -132,3 +132,14 @@ Added 2026-11-19 (Izzat): the deferred M12 layout items, the web CV and the #76 
 - [x] Seniority and working style: one highlight slides to the chosen option (CSS only; idea from Astryx's
   SegmentedControl, no Astryx code, ADR-010 unchanged) [ui-builder]
 - [x] Plan timeline: "Week 1, 2…" labels under the week gridlines (`weekLabels` in `lib/timeline.ts`) [ui-builder]
+
+## M14 — Estimator review follow-ups
+Added 2026-11-19 from a five-role review (PO/PM, BA, QA, Architect, UI/UX). Batch A is phone and conversion;
+Batch B (credibility: calendar vs hours, contingency, seniority multipliers, open questions and out of scope,
+structured outputs, timeouts) and Batch C (analytics events, copy/print plan, logging; caching and share links
+need an ADR and Izzat's privacy call) wait for Izzat.
+- [x] Batch A: phone task table stacks the role under the task; submit focuses and scrolls to the results;
+  hero "Try the live demo" link; step-by-step wait with a plan-shaped skeleton; "Want this scoped…" email and
+  LinkedIn line under every plan; chip puts the caret in the field; client rejects malformed plans and an error
+  boundary guards the results; long words wrap, edge week labels stay inside, a failed re-estimate keeps the
+  last plan [ui-builder]

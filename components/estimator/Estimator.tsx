@@ -16,12 +16,14 @@ import {
   isPlan,
   parseRetryAfter,
 } from "@/lib/estimatorClient";
-import { estimatorBriefs, estimatorCopy, estimatorExamples } from "@/lib/content";
+import { estimatorBriefs, estimatorCopy, estimatorExamples, profile } from "@/lib/content";
 import { sampleFeature, samplePlan, sampleTeam } from "@/lib/samplePlan";
 import { pickRandom } from "@/lib/pick";
+import { ExternalLink } from "@/components/ExternalLink";
 import { Turnstile, type TurnstileHandle } from "./Turnstile";
 import { PhaseTimeline } from "./PhaseTimeline";
 import { TaskTable } from "./TaskTable";
+import { ResultsBoundary } from "./ResultsBoundary";
 import { ResultTabs } from "./ResultTabs";
 import { BudgetView } from "./BudgetView";
 import type { Team } from "@/lib/budget";
@@ -39,6 +41,18 @@ const exampleStatus: Status = {
   team: sampleTeam,
   example: true,
 };
+
+type Success = Extract<Status, { kind: "success" }>;
+
+/** Visual-only progress line; the status line announces `planning` once, so this is aria-hidden by its parent. */
+function PlanningStep() {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setI((n) => (n + 1) % estimatorCopy.steps.length), 2500);
+    return () => clearInterval(id);
+  }, []);
+  return <p className="estimator__step">{estimatorCopy.steps[i]}</p>;
+}
 
 type Tab = "phases" | "tasks" | "budget";
 
@@ -62,12 +76,16 @@ export function Estimator() {
   useEffect(() => setExamples(pickChips(pickRandom(estimatorExamples, 2), pickRandom(estimatorBriefs, 1)[0])), []);
   const [token, setToken] = useState<string | null>(null);
   const [status, setStatus] = useState<Status>(exampleStatus);
+  // The last successful plan stays on screen under an error banner.
+  const [lastOk, setLastOk] = useState<Success>(exampleStatus as Success);
   const [tab, setTab] = useState<Tab>("phases");
   const [cooldown, setCooldown] = useState(0);
   const turnstile = useRef<TurnstileHandle>(null);
   const heading = useRef<HTMLHeadingElement>(null);
   const bannerEl = useRef<HTMLDivElement>(null);
   const textarea = useRef<HTMLTextAreaElement>(null);
+  const resultsEl = useRef<HTMLElement>(null);
+  const focusField = useRef(false);
   const abortRef = useRef<AbortController | null>(null);
   // Focus moves to the results only after a user action, never for the example shown on load.
   const acted = useRef(false);
@@ -95,6 +113,25 @@ export function Estimator() {
     }
   }, [status]);
 
+  // Phones and tablets: the results sit below the form. Scroll after the render, since it removes the preview
+  // link above. Desktop (the 1025px split in globals.css) keeps them beside the form, so no jump there.
+  useEffect(() => {
+    if (status.kind !== "submitting" || window.matchMedia("(min-width: 1025px)").matches) return;
+    resultsEl.current?.scrollIntoView({
+      block: "start",
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+    });
+  }, [status.kind]);
+
+  // After a chip fills the field: caret at the end, ready to type or submit.
+  useEffect(() => {
+    const el = textarea.current;
+    if (!focusField.current || !el) return;
+    focusField.current = false;
+    el.focus();
+    el.setSelectionRange(el.value.length, el.value.length);
+  }, [feature]);
+
   const length = feature.trim().length;
   const tooShort = length < FEATURE_MIN;
   const submitting = status.kind === "submitting";
@@ -112,6 +149,8 @@ export function Estimator() {
     abortRef.current = controller;
     acted.current = true;
     setStatus({ kind: "submitting" });
+    // Focus the results before the fieldset disables, so focus isn't lost; the scroll waits for the render below.
+    resultsEl.current?.focus({ preventScroll: true });
     const fail = (code: number, message: string) =>
       setStatus({ kind: "error", message, status: code });
     try {
@@ -141,7 +180,9 @@ export function Estimator() {
         fail(502, estimatorCopy.badPlan);
       } else {
         const teamLabel = `${estimatorCopy.people(teamSize)}, ${seniority}${mode === "ai-assisted" ? estimatorCopy.mode.teamSuffix : ""}`;
-        setStatus({ kind: "success", plan: data.plan, teamLabel, team: { size: teamSize, seniority, mode } });
+        const ok: Success = { kind: "success", plan: data.plan, teamLabel, team: { size: teamSize, seniority, mode } };
+        setLastOk(ok);
+        setStatus(ok);
         setTab("phases");
       }
     } catch (err) {
@@ -162,6 +203,7 @@ export function Estimator() {
     status.kind === "error" && status.status === 400 ? status.message : null;
   const banner =
     status.kind === "error" && status.status !== 400 ? status : null;
+  const shown = status.kind === "success" ? status : status.kind === "error" ? lastOk : null;
   const retryable =
     banner &&
     (banner.status === 0 || banner.status === 502 || banner.status === 504);
@@ -174,7 +216,7 @@ export function Estimator() {
         aria-busy={submitting}
       >
         {/* Phones only (hidden in CSS once results sit beside the form): the example is below the whole form. */}
-        {status.kind === "success" && status.example && (
+        {shown?.example && (
           <a className="estimator__preview" href="#estimator-results">
             {estimatorCopy.example.preview(
               samplePlan.title,
@@ -195,7 +237,10 @@ export function Estimator() {
                 key={ex.text}
                 type="button"
                 className="estimator__chip"
-                onClick={() => setFeature(ex.text)}
+                onClick={() => {
+                  focusField.current = true;
+                  setFeature(ex.text);
+                }}
               >
                 {ex.label}
               </button>
@@ -213,7 +258,10 @@ export function Estimator() {
               value={feature}
               onChange={(e) => {
                 setFeature(e.target.value);
-                if (fieldError) setStatus(exampleStatus);
+                if (fieldError) {
+                  acted.current = false; // restoring the plan must not steal focus from the field
+                  setStatus(lastOk);
+                }
               }}
               maxLength={FEATURE_MAX}
               rows={4}
@@ -318,6 +366,8 @@ export function Estimator() {
       </form>
 
       <section
+        ref={resultsEl}
+        tabIndex={-1}
         id="estimator-results"
         className="estimator__results"
         aria-label="Estimate results"
@@ -329,10 +379,17 @@ export function Estimator() {
 
         {submitting && (
           <div className="estimator__skeleton" aria-hidden="true">
+            <PlanningStep />
+            <p className="estimator__status">{estimatorCopy.usuallyWait}</p>
             <span className="estimator__bone estimator__bone--title" />
-            <span className="estimator__bone" />
-            <span className="estimator__bone estimator__bone--short" />
-            <span className="estimator__bone estimator__bone--block" />
+            <div className="estimator__skeleton-cards">
+              {[0, 1, 2, 3].map((n) => (
+                <span key={n} className="estimator__bone estimator__bone--card" />
+              ))}
+            </div>
+            {[70, 45, 80, 60, 35].map((w, n) => (
+              <span key={n} className="estimator__bone estimator__bone--bar" style={{ width: `${w}%` }} />
+            ))}
           </div>
         )}
 
@@ -358,9 +415,10 @@ export function Estimator() {
           </div>
         )}
 
-        {status.kind === "success" && (
-          <>
-            {status.example && (
+        {shown && (
+          <ResultsBoundary resetKey={shown.plan}>
+            {/* shown.* below: an error banner keeps the last good plan on screen */}
+            {shown.example && (
               <p id="estimator-example-note" className="estimator__example-note">
                 {estimatorCopy.example.note(sampleFeature)}
               </p>
@@ -369,11 +427,11 @@ export function Estimator() {
             <h3
               ref={heading}
               tabIndex={-1}
-              aria-describedby={status.example ? "estimator-example-note" : undefined}
+              aria-describedby={shown.example ? "estimator-example-note" : undefined}
             >
-              {status.plan.title}
+              {shown.plan.title}
             </h3>
-            <p>{status.plan.summary}</p>
+            <p>{shown.plan.summary}</p>
             <ResultTabs
               label={estimatorCopy.tabsLabel}
               value={tab}
@@ -384,29 +442,34 @@ export function Estimator() {
                   label: estimatorCopy.tabPhases,
                   content: (
                     <PhaseTimeline
-                      plan={status.plan}
-                      teamLabel={status.teamLabel}
+                      plan={shown.plan}
+                      teamLabel={shown.teamLabel}
                     />
                   ),
                 },
                 {
                   key: "tasks",
                   label: estimatorCopy.tabTasks,
-                  content: <TaskTable plan={status.plan} />,
+                  content: <TaskTable plan={shown.plan} />,
                 },
                 {
                   key: "budget",
                   label: estimatorCopy.tabBudget,
-                  content: <BudgetView plan={status.plan} team={status.team} />,
+                  content: <BudgetView plan={shown.plan} team={shown.team} />,
                 },
               ]}
             />
+            <p className="estimator__cta">
+              {estimatorCopy.cta.text}
+              <a href={`mailto:${profile.email}`}>{estimatorCopy.cta.email}</a>
+              <ExternalLink href={profile.linkedin}>{estimatorCopy.cta.linkedin}</ExternalLink>
+            </p>
             <p className="estimator__note">
-              {status.example
+              {shown.example
                 ? estimatorCopy.example.footer
                 : estimatorCopy.footerNote}
             </p>
-          </>
+          </ResultsBoundary>
         )}
       </section>
     </div>

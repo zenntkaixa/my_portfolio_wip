@@ -15,6 +15,7 @@ export const profile = {
   summary:
     "Eight years of Java, Spring Boot and React, now shipped with AI coding agents. I stay accountable for every line that merges.",
   emailCta: "Email me",
+  demoCta: "Try the live demo",
   // Web copy of the CV: no phone number, clients anonymised (docs/04-content.md).
   cv: { label: "Download CV", note: "PDF, 3 pages", href: "/izzat-fahmi-cv.pdf" },
   location: "Petaling Jaya, Malaysia",
@@ -296,6 +297,11 @@ export const estimatorCopy = {
   people: (n: number) => `${n} ${n === 1 ? "person" : "people"}`,
   atLeast: (min: number) => ` (at least ${min} characters)`,
   planning: "Planning phases…",
+  /** Rotates every ~2.5s while waiting; visual only (the status line announces `planning` once). */
+  steps: ["Reading your brief…", "Sizing the phases…", "Estimating tasks…", "Costing the team…"],
+  usuallyWait: "Usually about 10 seconds.",
+  cta: { text: "Want this scoped for your real project?", email: "Email me", linkedin: "LinkedIn" },
+  resultsCrashed: "Something went wrong showing this plan. Reload the page and try again.",
   summary: {
     hours: "Effort",
     weeks: "Calendar",
