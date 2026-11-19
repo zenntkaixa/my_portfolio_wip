@@ -842,8 +842,12 @@ p {
   color: var(--muted);
 }
 
+.certs + .certs__note {
+  margin-top: var(--gap);
+}
+
 .certs__name {
-  text-wrap: pretty; /* no lone "v2" on its own line */
+  text-wrap: balance; /* no lone "v2" on its own line */
 }
 
 .certs__item {
