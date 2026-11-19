@@ -112,6 +112,15 @@ export const samplePlan: Plan = {
     "Brute-force attempts on codes"
   ],
   "confidence": "medium",
+  "openQuestions": [
+    "How long should a code stay valid, and how many wrong tries lock the account?",
+    "Does password login stay available, or does SMS replace it?",
+    "Which countries' mobile numbers must the SMS provider reach?"
+  ],
+  "outOfScope": [
+    "Email or authenticator-app codes as a fallback",
+    "Changing the mobile number on an account"
+  ],
   "costs": [
     { "item": "SMS provider for one-time codes", "kind": "monthly", "low": 150, "high": 600 },
     { "item": "Redis cache for codes and rate limits", "kind": "monthly", "low": 50, "high": 250 },

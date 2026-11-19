@@ -17,6 +17,8 @@
     ],
     "risks": ["SMS delivery delays in some regions", "Brute-force attempts on codes"],
     "confidence": "medium",
+    "openQuestions": ["How long should a code stay valid, and how many wrong tries lock the account?", "Does password login stay available, or does SMS replace it?"],
+    "outOfScope": ["Email or authenticator-app codes as a fallback", "Changing the mobile number on an account"],
     "costs": [
       { "item": "SMS provider for one-time codes", "kind": "monthly", "low": 150, "high": 600 },
       { "item": "Error monitoring", "kind": "monthly", "low": 0, "high": 200 },

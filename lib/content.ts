@@ -271,14 +271,17 @@ export const estimatorCopy = {
     seats: "AI agent seats",
     seatsDetail: (count: number, months: number, low: number, high: number) =>
       `${count} ${count === 1 ? "seat" : "seats"} × ${months} ${months === 1 ? "month" : "months"} × RM ${low}–${high}`,
+    contingency: "Contingency (20%)",
     buildTotal: "Estimated build cost",
     monthlyGroup: "Running costs after launch",
     monthlyTotal: "Per month",
     none: "None listed",
     rateNote: (rates: Record<string, number>) =>
-      `People cost uses assumed in-house rates in Malaysia, including EPF, SOCSO, EIS and overheads: ${Object.entries(rates)
+      `People cost uses assumed Klang Valley in-house rates (salary plus EPF, SOCSO, EIS and overheads), excluding SST: ${Object.entries(rates)
         .map(([k, v]) => `${k} RM ${v}`)
-        .join(", ")} per hour.`,
+        .join(", ")} per hour. Agency rates are higher.`,
+    seniorityNote:
+      "Juniors take more hours at a lower rate; seniors fewer hours at a higher rate. Mixed assumes 1 senior, 2 mid and 1 junior.",
     note: "Tool and running costs are typical market ranges for planning only. Verify with vendors before you commit.",
   },
   submit: "Estimate this feature",
@@ -337,6 +340,9 @@ export const estimatorCopy = {
   },
   assumptionsHeading: "Assumptions",
   risksHeading: "Risks",
+  questionsHeading: "Questions to confirm",
+  outOfScopeHeading: "Not included",
+  calendarAdjusted: (n: number) => `Calendar stretched to fit a team of ${n} at about 6 productive hours a day.`,
   waitLabel: (time: string) => `Try again in ${time}`,
   retry: "Try again",
   retryWaiting: "Waiting for human check…",

@@ -3,8 +3,12 @@ import type { Mode, Plan, Seniority } from "@/lib/estimate";
 /**
  * Assumed in-house cost per hour in MYR, approved by Izzat on 2026-11-17: a mid-range Klang Valley
  * monthly salary x 1.3 (EPF, SOCSO, EIS, equipment and overheads) / 160 working hours.
+ * Mixed is the blend of 1 senior, 2 mid and 1 junior: (120 + 2 x 75 + 40) / 4, rounded to 78.
  */
-export const HOURLY_RATE: Record<Seniority, number> = { junior: 40, mid: 75, senior: 120, mixed: 80 };
+export const HOURLY_RATE: Record<Seniority, number> = { junior: 40, mid: 75, senior: 120, mixed: 78 };
+
+/** Contingency on people cost for rework, sick days and scope wobble; part of the build total. */
+export const CONTINGENCY = 0.2;
 
 /** AI coding agent seat per engineer per month in MYR: a standard business seat to a premium one. */
 export const SEAT = { low: 80, high: 400 };
@@ -14,6 +18,7 @@ export type Team = { size: number; seniority: Seniority; mode: Mode };
 export type Budget = {
   rate: number;
   people: number;
+  contingency: number;
   seats: (Range & { count: number; months: number }) | null;
   oneOff: Range;
   monthly: Range;
@@ -27,6 +32,7 @@ const sum = (items: Range[]): Range =>
 export function budget(plan: Plan, team: Team): Budget {
   const rate = HOURLY_RATE[team.seniority];
   const people = Math.round(plan.totalHours * rate);
+  const contingency = Math.round(people * CONTINGENCY);
   const months = Math.max(1, Math.ceil(plan.calendarWeeks / 4.33));
   const seats =
     team.mode === "ai-assisted"
@@ -34,6 +40,6 @@ export function budget(plan: Plan, team: Team): Budget {
       : null;
   const oneOff = sum(plan.costs.filter((c) => c.kind === "one-off"));
   const monthly = sum(plan.costs.filter((c) => c.kind === "monthly"));
-  const build = sum([{ low: people, high: people }, seats ?? { low: 0, high: 0 }, oneOff]);
-  return { rate, people, seats, oneOff, monthly, build };
+  const build = sum([{ low: people + contingency, high: people + contingency }, seats ?? { low: 0, high: 0 }, oneOff]);
+  return { rate, people, contingency, seats, oneOff, monthly, build };
 }

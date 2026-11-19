@@ -66,3 +66,7 @@ Read only the section for the tile you are changing.
 - The email is a mailto link styled as the primary button (`.button-link`: `--accent` background,
   `--accent-ink` text, `--r-sm`, 2px underline on hover, `LinkText` border in forced colours).
 - LinkedIn and GitHub are plain text links in a wrapping row. Never a phone number.
+
+## Estimator results (Batch B additions)
+- Timeline tab: under Assumptions and Risks, two more lists in the same `.tab1-list` style, "Questions to confirm" (`openQuestions`) and "Not included" (`outOfScope`); each hides when empty. When `calendarAdjusted` is set, a `.tab3-note` under the summary says the calendar was stretched to fit the team (`teamSize` comes from `Estimator.tsx`).
+- Budget tab: a "Contingency (20%)" row sits before the build total; below the table, a seniority note comes before the rate note, which states the cost basis (Klang Valley in-house rates, excluding SST). All copy is in `estimatorCopy`.
