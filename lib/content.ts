@@ -4,8 +4,8 @@ export const profile = {
   name: "Izzat Fahmi",
   fullName: "Mohamad Izzat Fahmi bin Suhaimi",
   initials: "IF",
-  role: "Full-stack software engineer",
-  headline: "I build the systems insurers and banks run on.",
+  role: "Senior full-stack engineer · Java, Spring Boot, React, AWS",
+  headline: "I build reliable systems and the integrations that hold them together.",
   // Approved by Izzat 2026-11-17 (M6). Employers and the certification only: the Now tile already shows the numbers.
   proof: ["Shipped at PwC · Allianz Technology · Hitachi", "AWS Certified Solutions Architect"],
   proofLabel: "Track record",
@@ -26,9 +26,9 @@ export const seo = {
   siteName: "Izzat Fahmi, portfolio",
   /** Search and share description: fuller than the hero headline. */
   description:
-    "Backend-first engineer. Eight years building the systems insurers and banks run on, now shipping them with AI coding agents.",
+    "Backend-first full-stack engineer. Eight years building reliable systems and integrations across insurance, banking, compliance and healthcare SaaS, now shipped with AI coding agents.",
   ogTagline: "Live AI demo: describe a feature, get a delivery plan",
-  ogAlt: "Izzat Fahmi, full-stack software engineer. Live AI demo: describe a feature, get a delivery plan.",
+  ogAlt: "Izzat Fahmi, senior full-stack engineer. Live AI demo: describe a feature, get a delivery plan.",
 };
 
 export const skipLink = "Skip to the estimator";
@@ -43,8 +43,8 @@ export const now = {
   detail: "Customer portal features for a US insurance program, with onshore teams across time zones.",
   stats: [
     { value: "8+", label: "years in production software" },
-    { value: "100", label: "merged pull requests contributed to, Apr to Oct 2026" },
-    { value: "13", label: "repositories touched in the same period" },
+    { value: "100", label: "merged pull requests I contributed to across 13 repositories, Apr to Oct 2026" },
+    { value: "32", label: "failed release-branch merges resolved to keep releases on schedule" },
   ],
 };
 
@@ -60,6 +60,12 @@ export const featuredProject = {
   ],
   stack: ["React 19", "TypeScript", "Node.js", "Express", "PostgreSQL", "nginx", "Docker"],
   repo: "https://github.com/zenntkaixa/radiozk",
+  // Personal GitHub activity (zenntkaixa, public repos), counted 2026-11-19. Dated so it never overclaims.
+  personal: {
+    value: "176",
+    text: "merged pull requests on personal projects since Oct 2026 · 2 apps live in production",
+    link: "My GitHub profile",
+  },
   live: "https://zenntkaixa-radiozk.onrender.com/",
 };
 
@@ -72,31 +78,32 @@ export const aiWorkflow = [
 
 export const caseStudies = [
   {
-    title: "Customer portal for a US insurer",
-    context: "Guidewire Digital Portal program",
-    body: "Built React and TypeScript features on Guidewire Jutro, wired to REST, composite and batch APIs with role-based access. Resolved 32 failed release-branch merges and cleared UAT defects in the driver, vehicle and authorization flows to keep releases on schedule.",
+    title: "Cutting API round trips in a customer portal",
+    context: "US insurer, Guidewire Digital Portal program",
+    body: "Built React and TypeScript features on Guidewire Jutro. Batched multi-policy changes into composite and batch API requests instead of one call per change, built a risk-scoring integration reused across product lines, and brought documents from two backend systems into one view with role-based access. Resolved 32 failed release-branch merges to keep releases on schedule.",
     stack: ["React", "TypeScript", "Jutro"],
   },
   {
-    title: "OCR in insurance onboarding",
+    title: "Compliance-grade document checks with OCR",
     context: "Regional life insurer, digital platform",
-    body: "Built Spring Boot REST APIs that bring OCR results into insurance workflows, added anti-money-laundering checks, and kept quality gates green with unit tests, SonarQube and Jenkins on Azure.",
+    body: "Built Spring Boot REST APIs that bring OCR results into review and correction workflows, added anti-money-laundering checks, and kept quality gates green with unit tests, SonarQube and Jenkins on Azure.",
     stack: ["Java", "Spring Boot", "Azure"],
   },
   {
-    title: "Modernising a banking platform",
+    title: "Moving a monolith toward microservices",
     context: "Regional bank, digital banking",
-    body: "Helped move a monolithic Java codebase toward microservices, including data synchronisation between old and new services, and supported releases on GitLab, Jenkins and OpenShift.",
+    body: "Worked on moving a monolithic Java banking codebase toward microservices, including data synchronisation between old and new services, and shipped approved releases on GitLab, Jenkins and OpenShift.",
     stack: ["Java", "Spring Boot", "OpenShift"],
   },
 ];
 
 export const experience = [
-  { org: "PwC Acceleration Centers", role: "Senior Associate, Full-Stack Developer", period: "2025 to now" },
-  { org: "Allianz Technology", role: "Life Core Developer", period: "2024 to 2025" },
-  { org: "Beyondsoft Malaysia", role: "Java Developer", period: "2023 to 2024" },
-  { org: "Hitachi Digital Host", role: "Application Engineer", period: "2020 to 2022" },
-  { org: "Vetter Software", role: "Engineer, then QA Engineer", period: "2017 to 2020" },
+  // field: the domain, so the range of industries shows at a glance.
+  { org: "PwC Acceleration Centers", role: "Senior Associate, Full-Stack Developer", period: "2025 to now", field: "Insurance customer portals" },
+  { org: "Allianz Technology", role: "Life Core Developer", period: "2024 to 2025", field: "Life insurance core systems" },
+  { org: "Beyondsoft Malaysia", role: "Java Developer", period: "2023 to 2024", field: "Compliance and document checks" },
+  { org: "Hitachi Digital Host", role: "Application Engineer", period: "2020 to 2022", field: "Digital banking" },
+  { org: "Vetter Software", role: "Engineer, then QA Engineer", period: "2017 to 2020", field: "Healthcare SaaS (health records)" },
 ];
 
 export const stack = [
@@ -226,10 +233,19 @@ export const estimatorExamples = [
   "Plan a Raya open house with RSVPs and a food sign-up",
 ];
 
+export const estimatorIntro =
+  "Describe a software feature, choose your team, and get the end-to-end technical workflow with a time-to-done estimate. This is how I break down requirements at work, powered by Claude.";
+
+export const estimatorBuiltBy = {
+  text: "I built this with Next.js, the Claude API, Cloudflare Turnstile and a rate limit. ",
+  link: "Read the code",
+  url: "https://github.com/zenntkaixa/my_portfolio_wip",
+};
+
 export const estimatorCopy = {
   tabsLabel: "Plan views",
-  tabPhases: "Phases and timeline",
-  tabTasks: "Task table",
+  tabPhases: "Timeline",
+  tabTasks: "Tasks",
   tabBudget: "Budget",
   budget: {
     caption: "Estimated budget in Malaysian ringgit",

@@ -108,3 +108,12 @@ Added 2026-11-19 (Izzat).
 - [x] Certification names link to their verification pages (Credly, EC-Council ASPEN); Guidewire has no
   per-certificate page, so a note links its Certification Checker with the name to search [ui-builder]
 - [ ] "Download CV" button in the hero (waiting on Izzat's CV PDF; check it for the phone number first)
+
+## M11 — Broad positioning
+Added 2026-11-19: Izzat is targeting roles beyond insurance and banking (B2B SaaS, HealthTech, logistics,
+e-commerce, developer tools, security). Transferable capabilities lead; industries become evidence.
+- [x] Hero headline and role line industry-neutral; SEO and share text to match [ui-builder]
+- [x] Case studies retitled by capability, with outcomes from LinkedIn; experience shows each domain [ui-builder]
+- [x] Personal GitHub stat (dated) in the project tile; PwC stats relabelled for impact [ui-builder]
+- [x] Estimator quick fixes from the team review: "built by me" line, minimum length shown before typing,
+  shorter tab names, budget amounts never split across lines [ui-builder]

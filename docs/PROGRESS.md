@@ -5,6 +5,23 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-19 — Session 62: Broad positioning (M11)
+
+**Done**
+- Release #75 (M9 + M10) is live. Vercel missed the push to `main`, so production was deployed by hand
+  (`dpl_DxAGof15UeS5Chrbu5fbJQYUJ2GW`) with Izzat's OK; live checks passed. PageSpeed quota still exhausted.
+- UI/UX team review (4 agents) and a LinkedIn cross-check done; Izzat now targets roles beyond insurance.
+- Hero headline and role industry-neutral; case studies retitled by capability with LinkedIn outcomes;
+  each job shows its domain (healthcare SaaS included); dated personal GitHub stat; PwC stats relabelled.
+- Estimator: "built by me" link, 20-character minimum shown before typing, tabs "Timeline / Tasks /
+  Budget", amounts kept whole from 360px. Share image shows the role without the stack list.
+
+**Verified:** `npm run check`, e2e, visual at 320/390/1440, share image rendered.
+
+**Next:** Izzat updates LinkedIn after release; CV PDF; PageSpeed check; layout items from the review.
+
+---
+
 ## 2026-11-19 — Session 61: Certification proof links (M10)
 
 **Done**
@@ -16,28 +33,6 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 **Verified:** `npm run check`, e2e (new link test), visual check at 390 and 1440.
 
 **Next:** release (M9 + M10); "Download CV" waits on Izzat's PDF; PageSpeed check after release.
-
----
-
-## 2026-11-17 — Session 60: Estimator intro paints without the fade (M9)
-
-**Done**
-- Release #72 (M7 + M8) live and checked on production: count-up, footer, 3 tags, API 400 guard.
-- Re-check of production: desktop 100 in all four; mobile accessibility, best practices and SEO 100.
-  PageSpeed's keyless quota was used up, so mobile performance came from VM Lighthouse runs.
-- Cause found: since M6's shorter hero summary, the mobile LCP element is the estimator's intro
-  paragraph, and that tile faded in (render delay 3.3–4.6 s). It now uses `tile-rise` like hero and Now.
-
-**Verified:** local production build, 4 mobile runs each: perf 73/73/80/82 → 93/83/87/88, LCP 3.8 → 2.7 s;
-`npm run check`, e2e (motion spec now covers the estimator).
-
-- 2026-11-19: Izzat's photo replaces the initials in the hero (`public/profile.webp`, 216px, 6 KB,
-  no metadata; decorative `alt=""`). Brief's "no photo" decision updated. Icons and OG keep initials.
-
-- Certifications: the five exam-based ones (Guidewire x2, EC-Council x2, AWS), newest first, with
-  "Each one earned by passing a paid exam."; Claude Code 101 (a course) dropped. No credential IDs.
-
-**Next:** confirm on PageSpeed Insights after release; CV PDF (needs Izzat).
 
 ---
 

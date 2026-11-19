@@ -7,8 +7,9 @@ All biography, project and contact text is in `lib/content.ts`. Change copy ther
 ## Allowed to publish
 - Employer names and job titles (PwC Acceleration Centers, Allianz Technology, Beyondsoft Malaysia,
   Hitachi Digital Host, Vetter Software). These are already public on LinkedIn.
-- Metrics from the CV: 8+ years, 100 merged PRs and 13 repositories (Apr to Oct 2026), 32 release-branch
-  merges resolved.
+- Metrics from the CV: 8+ years, 100 merged PRs across 13 repositories (Apr to Oct 2026), 32 release-branch
+  merges resolved. Personal GitHub: 176 merged PRs on public repos since Oct 2026 (counted 2026-11-19;
+  dated on the page so it never overclaims; update at each release).
 - Certifications and education as listed.
 - Email `zenntkaixa@yahoo.com`, LinkedIn, GitHub.
 
@@ -24,6 +25,6 @@ All biography, project and contact text is in `lib/content.ts`. Change copy ther
 - Short sentences. Sentence case. No exclamation marks.
 
 ## SEO and metadata
-- Title: "Izzat Fahmi — Full-stack software engineer"
+- Title: "Izzat Fahmi — Senior full-stack engineer" (the role before " · "; the stack list stays in the hero)
 - Description: `seo.description` (the fuller sentence; the hero headline is shorter).
 - Open Graph image: generated in M5 with `next/og` (initials, name, role, on the blueprint grid).

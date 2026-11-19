@@ -4,6 +4,7 @@ import {
   caseStudies,
   certifications,
   certificationsNote,
+  estimatorBuiltBy,
   guidewireCheck,
   education,
   experience,
@@ -174,6 +175,14 @@ test.describe("featured project tile", () => {
     }
   });
 
+  test("shows the dated personal GitHub stat with a link to the profile", async ({ page }) => {
+    await page.goto("/");
+    const line = region(page).locator(".project__personal");
+    await expect(line).toContainText(`${featuredProject.personal.value} ${featuredProject.personal.text}`);
+    const link = line.getByRole("link", { name: `${featuredProject.personal.link} (opens in a new tab)` });
+    await expect(link).toHaveAttribute("href", profile.github);
+  });
+
   test("tech stack list has exactly the stack items, in order", async ({ page }) => {
     await page.goto("/");
     const stack = region(page).getByRole("list", { name: "Tech stack", exact: true });
@@ -272,7 +281,7 @@ test.describe("experience tile", () => {
     await expect(timeline).toHaveCount(1);
     // Exact text proves the hidden ", " separators sit between the parts, in this order.
     await expect(timeline.getByRole("listitem")).toHaveText(
-      experience.map((e) => `${e.period}, ${e.org}, ${e.role}`),
+      experience.map((e) => `${e.period}, ${e.org}, ${e.role}, ${e.field}`),
     );
   });
 
@@ -392,4 +401,14 @@ test("skip link is first in tab order and moves focus to the estimator", async (
 test("the footer is a contentinfo landmark with the year, name and build line", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("contentinfo")).toHaveText(footer.text(new Date().getFullYear()));
+});
+
+test("the estimator says who built it and links the code; the 20-character minimum shows before typing", async ({ page }) => {
+  await page.goto("/");
+  const tile = page.locator("#estimator");
+  await expect(tile.getByRole("link", { name: `${estimatorBuiltBy.link} (opens in a new tab)` })).toHaveAttribute(
+    "href",
+    estimatorBuiltBy.url,
+  );
+  await expect(page.locator("#feature-count")).toContainText("at least 20 characters");
 });

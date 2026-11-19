@@ -780,6 +780,23 @@ p {
   font-weight: 600;
 }
 
+.timeline__field {
+  display: block;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+
+.project__personal,
+.estimator__built {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+
+.project__personal > strong {
+  color: var(--ink);
+}
+
 .experience__label,
 .stack__heading {
   font-size: var(--fs-sm);
@@ -1526,6 +1543,14 @@ p {
 
 .tab3-table td:last-child {
   min-width: 5.5rem;
+  white-space: nowrap; /* never split "RM 11,960–16,960" across lines */
+}
+
+/* Below 360px the whole range doesn't fit beside the label; let it break after the dash instead of scrolling. */
+@media (max-width: 359px) {
+  .tab3-table td:last-child {
+    white-space: normal;
+  }
 }
 
 .tab3-detail {

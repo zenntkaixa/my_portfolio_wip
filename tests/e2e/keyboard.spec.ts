@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "./fakeTurnstile";
 import plan from "../fixtures/plan.json";
-import { estimatorCopy } from "../../lib/content";
+import { estimatorBuiltBy, estimatorCopy } from "../../lib/content";
 
 // Keyboard-only walkthrough. The real API is never called: /api/estimate is intercepted.
 // Turnstile is faked (./fakeTurnstile), so submit enables at once without waiting on Cloudflare;
@@ -95,8 +95,11 @@ test("Tab order, visible focus indicators, no trap, Shift+Tab goes back", async 
   // First stop is the skip link; it targets the estimator.
   expect(stops[0], listing).toMatchObject({ tag: "a", name: "Skip to the estimator" });
 
-  // Estimator controls come in the documented order: chips, textarea, slider, seniority, working style, submit.
-  const estAll = stops.filter((s) => s.section === "estimator");
+  // Estimator: the "built by me" code link under the intro, then the controls in the documented order:
+  // chips, textarea, slider, seniority, working style, submit.
+  const inEstimator = stops.filter((s) => s.section === "estimator");
+  expect(inEstimator[0], listing).toMatchObject({ tag: "a", name: `${estimatorBuiltBy.link} (opens in a new tab)` });
+  const estAll = inEstimator.slice(1);
   // The example results follow the form: the selected tab, then its panel.
   const est = estAll.slice(0, estAll.findIndex((s) => s.name === estimatorCopy.submit) + 1);
   expect(estAll.slice(est.length).map((s) => s.role), listing).toEqual(["tab", "tabpanel"]);

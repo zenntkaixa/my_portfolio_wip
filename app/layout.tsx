@@ -18,7 +18,8 @@ const body = IBM_Plex_Sans({
   display: "swap",
 });
 
-const title = `${profile.name} — ${profile.role}`;
+// Role only, without the stack list after " · ", so search results don't truncate the title.
+const title = `${profile.name} — ${profile.role.split(" · ")[0]}`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
