@@ -229,9 +229,8 @@ export function Estimator() {
             >
               {length} / {FEATURE_MAX}
               <span aria-live="polite">
-                {tooShort && length > 0
-                  ? estimatorCopy.atLeast(FEATURE_MIN)
-                  : ""}
+                {/* Shown from the start, so the disabled submit button has a stated reason. */}
+                {tooShort ? estimatorCopy.atLeast(FEATURE_MIN) : ""}
               </span>
             </p>
           </div>

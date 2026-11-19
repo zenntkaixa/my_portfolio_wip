@@ -6,7 +6,8 @@ Read only the section for the tile you are changing.
 ## Hero
 - The name is the page's only `<h1>` (display font, `--fs-2xl`) and names the hero section.
 - A 72px photo (`public/profile.webp`, 216px source, `--r-md`, decorative `alt=""`) sits beside the name and role.
-- Under the role, the headline (`profile.headline`, display font, `--fs-xl`, weight 600) states the outcome,
+- Under the role, the headline (`profile.headline`, display font, `--fs-xl`, weight 600) states the outcome in
+  industry-neutral terms (M11, 2026-11-19: Izzat is targeting roles beyond insurance and banking),
   then a proof line (`profile.proof`, a `role="list"` list at `--fs-sm` in `--muted`): employers and the
   AWS certification, approved by Izzat 2026-11-17. Numbers stay in the Now tile, not here.
 - Under the summary, a contact row: "Email me" as the primary button (`.button-link`, mailto) and a LinkedIn
@@ -22,6 +23,8 @@ Read only the section for the tile you are changing.
   rows, value beside label, with horizontal dividers. Tablet widths keep the three columns.
 
 ## Featured project
+- First line under the title: the dated personal GitHub stat (`featuredProject.personal`, `--fs-sm`, `--muted`,
+  number in `--ink`) with a link to the GitHub profile (M11).
 - Tagline is the lead line: `--fs-lg`, weight 600 (bolder than the hero headline because it sits
   right under a tile title), line-height 1.4.
 - Highlights: bulleted list with tighter 0.25em item spacing. Stack: `.chips` labelled "Tech stack".
@@ -43,8 +46,9 @@ Read only the section for the tile you are changing.
 
 ## Experience
 - A vertical timeline (`ol.timeline`, `role="list"`): the period in a 7.5em left column at `--fs-sm`,
-  tabular-nums, `--muted`; the org in semibold with the role below it; a 1px `--line` rule between.
-- Visually hidden commas separate period, org and role for screen readers and copy-paste.
+  tabular-nums, `--muted`; the org in semibold with the role below it, then the field (`experience[].field`,
+  `--fs-sm`, `--muted`) so the range of industries shows at a glance (M11); a 1px `--line` rule between.
+- Visually hidden commas separate period, org, role and field for screen readers and copy-paste.
 - Container query: when the tile is narrower than 420px, the period sits above each entry and the rule runs down
   the left edge. Education follows under an h3 "Education".
 
@@ -57,6 +61,8 @@ Read only the section for the tile you are changing.
   `--muted`, with 1px `--line` dividers. An empty year renders nothing.
 
 ## Contact
+- Under the availability note: "What I'm looking for" (`--fs-sm`, semibold, `--muted` h3) and a short
+  bulleted list (`profile.lookingFor`): roles, kinds of team, location (M12).
 - The email is a mailto link styled as the primary button (`.button-link`: `--accent` background,
   `--accent-ink` text, `--r-sm`, 2px underline on hover, `LinkText` border in forced colours).
 - LinkedIn and GitHub are plain text links in a wrapping row. Never a phone number.

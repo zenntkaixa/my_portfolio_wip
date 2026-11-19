@@ -1,11 +1,15 @@
 import { Tile } from "@/components/Bento";
 import { ExternalLink } from "@/components/ExternalLink";
-import { featuredProject as p } from "@/lib/content";
+import { featuredProject as p, profile } from "@/lib/content";
 
-/** Featured project: lead tagline, description, highlights, stack chips, then repo and live links. */
+/** Featured project: lead tagline, description, highlights, stack chips, then repo and live links, after a dated personal GitHub stat. */
 export function ProjectTile() {
   return (
     <Tile span={7} title={`Featured project: ${p.name}`} id="projects">
+      <p className="project__personal">
+        <strong>{p.personal.value}</strong> {p.personal.text} ·{" "}
+        <ExternalLink href={profile.github}>{p.personal.link}</ExternalLink>
+      </p>
       <p className="project__tagline">{p.tagline}</p>
       <p>{p.description}</p>
       <ul className="project__highlights">

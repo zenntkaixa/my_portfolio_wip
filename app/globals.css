@@ -293,6 +293,8 @@ p {
     linear-gradient(90deg, var(--grid) 1px, transparent 1px);
   background-size: 24px 24px;
   background-position: -1px -1px;
+  /* An accent edge marks it as the thing to try (M12); no shadow, per the design system. */
+  border: 2px solid var(--accent);
 }
 
 @media (max-width: 1024px) {
@@ -780,6 +782,23 @@ p {
   font-weight: 600;
 }
 
+.timeline__field {
+  display: block;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+
+.project__personal,
+.estimator__built {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+
+.project__personal > strong {
+  color: var(--ink);
+}
+
 .experience__label,
 .stack__heading {
   font-size: var(--fs-sm);
@@ -876,6 +895,22 @@ p {
 /* ---- Contact tile ----
    The email is a mailto link styled as the primary button (--accent-ink on --accent passes AA
    in both themes). LinkedIn and GitHub are quieter text links in a bullet-less list. */
+
+.tile > .contact__label {
+  margin-top: 1.25em;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.tile > .contact__wants {
+  margin: 0.4em 0 0;
+  padding-left: 1.2em;
+}
+
+.contact__wants > li + li {
+  margin-top: 0.25em;
+}
 
 .tile > .contact__primary {
   margin-top: 1.25em;
@@ -1526,6 +1561,14 @@ p {
 
 .tab3-table td:last-child {
   min-width: 5.5rem;
+  white-space: nowrap; /* never split "RM 11,960–16,960" across lines */
+}
+
+/* Below 360px the whole range doesn't fit beside the label; let it break after the dash instead of scrolling. */
+@media (max-width: 359px) {
+  .tab3-table td:last-child {
+    white-space: normal;
+  }
 }
 
 .tab3-detail {

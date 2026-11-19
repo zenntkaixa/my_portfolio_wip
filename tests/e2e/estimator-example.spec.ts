@@ -51,6 +51,9 @@ test.describe("tap targets on a phone", () => {
 
   test("links and buttons a thumb must hit are at least 44px tall", async ({ page }) => {
     await page.goto("/");
+    // The random chips replace the server-rendered ones after hydration; measuring mid-swap reads detached
+    // nodes as 0px tall.
+    await expect(page.getByRole("group", { name: "Example features" })).toHaveAttribute("data-ready", "");
     const short = await page
       .locator(".hero__actions a, .project__links a, .contact__links a, .contact__primary a, .theme-toggle, .estimator__chip, .estimator__lock > button[type=submit]")
       .evaluateAll((els) =>

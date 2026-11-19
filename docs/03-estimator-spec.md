@@ -6,9 +6,11 @@ The output must look like something a real delivery lead would hand a team.
 
 ## Inputs (UI)
 
+Above the form: the intro (`estimatorIntro`) and a "built by me" line linking the repo (`estimatorBuiltBy`, M11).
+
 | Field | Control | Rules |
 |---|---|---|
-| Feature description | `<textarea>` with live character count | 20 to 1500 characters |
+| Feature description | `<textarea>` with live character count; "(at least 20 characters)" shows from load until met | 20 to 1500 characters |
 | Team size | Range slider plus number readout | Integer 1 to 12, default 4 |
 | Seniority | Segmented control | `junior`, `mid`, `senior`, `mixed` (default `mixed`) |
 | Working style | Segmented control | `traditional` ("Traditional team", default), `ai-assisted` ("With AI agents") |
@@ -100,7 +102,7 @@ results area and a calm status line ("Planning phases…"). No spinners longer t
 
 ## Output tabs
 
-**Tab 1 — Phases & timeline** (default)
+**Tab 1 — Timeline** (default; was "Phases and timeline", shortened in M11 so tabs fit one line on phones)
 - Summary row: total effort hours, calendar weeks, team (e.g. "4 people, mixed"), confidence badge.
   Each item has a one-line hint under its value (`estimatorCopy.summary.hints`). Confidence is defined
   in the prompt by counting six facts the description states (users, existing systems, data,
@@ -113,7 +115,7 @@ results area and a calm status line ("Planning phases…"). No spinners longer t
 - Phase cards below: name, goal, duration, task count.
 - Assumptions and risks as two short lists.
 
-**Tab 2 — Task table**
+**Tab 2 — Tasks**
 - Role totals as chips above the table (hours per role, sorted descending).
 - Table grouped by phase: Task · Role · Hours. Phase subtotal rows. Grand total footer.
 - Wide table scrolls horizontally inside its own container on mobile.

@@ -1,7 +1,7 @@
 import { Tile } from "@/components/Bento";
 import { experience, education } from "@/lib/content";
 
-/** Experience: a vertical timeline (period, then org and role), with education below. */
+/** Experience: a vertical timeline (period, then org, role and field), with education below. */
 export function ExperienceTile() {
   return (
     <Tile span={7} title="Experience" id="experience" className="tile--experience">
@@ -16,6 +16,8 @@ export function ExperienceTile() {
               <span className="timeline__org">{e.org}</span>
               <span className="sr-only">, </span>
               <span className="timeline__role">{e.role}</span>
+              <span className="sr-only">, </span>
+              <span className="timeline__field">{e.field}</span>
             </span>
           </li>
         ))}
