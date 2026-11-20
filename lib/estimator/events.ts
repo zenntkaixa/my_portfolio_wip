@@ -103,6 +103,31 @@ export async function countPlans(): Promise<number | null> {
   }
 }
 
+export type UsageStats = { plans: number; medianS: number; p95S: number; cacheHitPct: number; costCents: number };
+
+/** Last-30-days numbers for the "How it's built" panel; null when DATABASE_URL is unset, the query fails or there are no plans. */
+export async function usageStats(): Promise<UsageStats | null> {
+  try {
+    const sql = db();
+    if (!sql) return null;
+    const rows = (await sql.query(
+      `SELECT count(*) AS plans,
+        percentile_cont(0.5) WITHIN GROUP (ORDER BY duration_ms) FILTER (WHERE NOT cache_hit) AS median_ms,
+        percentile_cont(0.95) WITHIN GROUP (ORDER BY duration_ms) FILTER (WHERE NOT cache_hit) AS p95_ms,
+        avg(CASE WHEN cache_hit THEN 1 ELSE 0 END) AS cache_rate,
+        avg(cost_usd) FILTER (WHERE NOT cache_hit) AS avg_cost
+      FROM estimate_events WHERE outcome = 'ok' AND created_at > now() - interval '30 days'`,
+    )) as Record<string, unknown>[];
+    const r = rows[0];
+    const [plans, median, p95, rate, cost] = [r?.plans, r?.median_ms, r?.p95_ms, r?.cache_rate, r?.avg_cost].map((v) => (v == null ? NaN : Number(v)));
+    if (![plans, median, p95, rate, cost].every(Number.isFinite) || plans < 1) return null;
+    return { plans, medianS: median / 1000, p95S: p95 / 1000, cacheHitPct: rate * 100, costCents: cost * 100 };
+  } catch (err) {
+    logFailure("estimate_stats_failed", err);
+    return null;
+  }
+}
+
 // Turned away on the visitor's side (bad input, failed human check, over the limit): expected traffic, so a
 // warning, which keeps Vercel's error view for real server failures.
 const VISITOR_SIDE = new Set(["invalid_input", "human_check_failed", "rate_limited"]);
