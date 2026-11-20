@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import type { EstimateRequest, Plan } from "@/lib/estimate";
+import type { EstimateRequest, Scope } from "@/lib/estimate";
 import type { ModelResult } from "@/lib/estimator/anthropic";
 import { cacheKey, type PlanCache } from "@/lib/estimator/cache";
 import type { EventRow } from "@/lib/estimator/events";
@@ -10,7 +10,7 @@ const req: EstimateRequest = { feature: "Let users reset their password by email
 const reply = (over: Partial<Extract<ModelResult, { kind: "reply" }>> = {}): ModelResult => ({
   kind: "reply",
   model: "claude-haiku-5-5",
-  text: JSON.stringify(fixture.plan),
+  text: JSON.stringify(fixture.scope),
   stopReason: "end_turn",
   inputTokens: 1000,
   outputTokens: 2000,
@@ -18,7 +18,7 @@ const reply = (over: Partial<Extract<ModelResult, { kind: "reply" }>> = {}): Mod
 });
 
 function deps(over: Partial<EstimateDeps> = {}) {
-  const store = new Map<string, Plan>();
+  const store = new Map<string, Scope>();
   const cache: PlanCache = { get: async (k) => store.get(k) ?? null, set: async (k, p) => void store.set(k, p) };
   const refund = vi.fn(async () => {});
   const rows: EventRow[] = [];
@@ -56,6 +56,18 @@ describe("runEstimate", () => {
     expect(d.verifyHuman).toHaveBeenCalledTimes(2);
     expect(d.checkLimits).toHaveBeenCalledTimes(2);
     expect(rows[1]).toMatchObject({ outcome: "ok", cache_hit: true, model: null, cost_usd: null });
+  });
+
+  it("sends the model only feature and team size, and reuses one scope for every seniority and mode", async () => {
+    const { d, rows } = deps();
+    const first = await runEstimate(req, "1.1.1.1", 0, d);
+    expect(d.callModel).toHaveBeenCalledWith({ feature: req.feature, teamSize: req.teamSize });
+    const second = await runEstimate({ ...req, seniority: "junior", mode: "ai-assisted" }, "1.1.1.1", 0, d);
+    expect(d.callModel).toHaveBeenCalledTimes(1);
+    expect(second.body).toEqual({ ...(first.body as object), inputs: { teamSize: 2, seniority: "junior", mode: "ai-assisted" }, cached: true });
+    // The row still logs the built plan for its own inputs: junior with agents differs from mixed traditional.
+    expect(rows[1].total_hours).not.toBe(rows[0].total_hours);
+    expect(rows[1]).toMatchObject({ seniority: "junior", mode: "ai-assisted", confidence: "medium" });
   });
 
   it("stops at a failed human check before the limiter", async () => {
@@ -103,11 +115,11 @@ describe("runEstimate", () => {
 });
 
 describe("cacheKey", () => {
-  it("ignores case and spacing but not the other inputs", () => {
+  it("ignores case, spacing, seniority and working style, but not team size", () => {
     expect(cacheKey({ ...req, feature: " LET  users reset their password by email link" })).toBe(cacheKey(req));
     expect(cacheKey(req)).toMatch(/^plan:[0-9a-f]{12}:[0-9a-f]{64}$/);
     expect(cacheKey({ ...req, teamSize: 3 })).not.toBe(cacheKey(req));
-    expect(cacheKey({ ...req, mode: "ai-assisted" })).not.toBe(cacheKey(req));
-    expect(cacheKey({ ...req, seniority: "senior" })).not.toBe(cacheKey(req));
+    expect(cacheKey({ ...req, mode: "ai-assisted" } as typeof req)).toBe(cacheKey(req));
+    expect(cacheKey({ ...req, seniority: "senior" } as typeof req)).toBe(cacheKey(req));
   });
 });

@@ -143,7 +143,7 @@ test("keyboard-only submit moves focus to the results heading; arrows, Home and 
   await expect(submitButton(page)).toBeFocused();
   await page.keyboard.press("Enter");
 
-  await expect(page.getByRole("heading", { name: plan.plan.title })).toBeFocused();
+  await expect(page.getByRole("heading", { name: plan.scope.title })).toBeFocused();
 
   // Tab from the heading passes Copy and Print, then lands on the selected tab (roving tabindex); arrows/Home/End move.
   await page.keyboard.press("Tab");

@@ -79,7 +79,7 @@ export async function POST(req: Request) {
     verifyHuman: verifyTurnstile,
     checkLimits,
     // The write happens after the response; the read is on the request path (1 s Upstash timeout).
-    cache: { get: cache.get, set: async (key, plan) => after(() => cache.set(key, plan)) },
+    cache: { get: cache.get, set: async (key, scope) => after(() => cache.set(key, scope)) },
     callModel: callAnthropic,
     recordEvent: report,
     now: Date.now,

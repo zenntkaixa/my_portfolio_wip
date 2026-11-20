@@ -7,6 +7,7 @@ import {
   MODES,
   SENIORITY,
   type Plan,
+  type Scope,
   type Mode,
   type Seniority,
 } from "@/lib/estimate";
@@ -14,10 +15,12 @@ import {
   formatWait,
   isObj,
   isPlan,
+  isScope,
   parseRetryAfter,
 } from "@/lib/estimatorClient";
 import { estimatorBriefs, estimatorCopy, estimatorExamples, profile } from "@/lib/content";
-import { sampleFeature, samplePlan, sampleTeam } from "@/lib/samplePlan";
+import { sampleFeature, samplePlan, sampleScope, sampleTeam } from "@/lib/samplePlan";
+import { buildPlan } from "@/lib/estimateModel";
 import { pickRandom } from "@/lib/pick";
 import { ExternalLink } from "@/components/ExternalLink";
 import { Turnstile, type TurnstileHandle } from "./Turnstile";
@@ -32,11 +35,12 @@ import type { Team } from "@/lib/budget";
 type Status =
   | { kind: "idle" }
   | { kind: "submitting" }
-  | { kind: "success"; plan: Plan; teamLabel: string; team: Team; example?: true; cached?: true; description?: string }
+  | { kind: "success"; scope: Scope; plan: Plan; teamLabel: string; team: Team; example?: true; cached?: true; description?: string }
   | { kind: "error"; message: string; status: number };
 
 const exampleStatus: Status = {
   kind: "success",
+  scope: sampleScope,
   plan: samplePlan,
   teamLabel: `${estimatorCopy.people(sampleTeam.size)}, ${sampleTeam.seniority}`,
   team: sampleTeam,
@@ -179,17 +183,20 @@ export function Estimator() {
         isObj(data) && typeof data.error === "string" && data.error
           ? data.error
           : null;
+      // The server sends the scope; seniority and working style are applied here (ADR-013).
+      const scope = isObj(data) && isScope(data.scope) ? data.scope : null;
+      const built = scope ? buildPlan(scope, { teamSize, seniority, mode }) : null;
       if (!res.ok) {
         const fallback =
           estimatorCopy.fallback[res.status] ?? estimatorCopy.fallback.other;
         if (res.status === 429)
           setCooldown(parseRetryAfter(res.headers.get("Retry-After")));
         fail(res.status, serverError ?? fallback);
-      } else if (!isObj(data) || !isPlan(data.plan)) {
+      } else if (!scope || !built || !isPlan(built)) {
         fail(502, estimatorCopy.badPlan);
       } else {
         const teamLabel = `${estimatorCopy.people(teamSize)}, ${seniority}${mode === "ai-assisted" ? estimatorCopy.mode.teamSuffix : ""}`;
-        const ok: Success = { kind: "success", plan: data.plan, teamLabel, team: { size: teamSize, seniority, mode }, description: feature, ...(data.cached === true && { cached: true as const }) };
+        const ok: Success = { kind: "success", scope, plan: built, teamLabel, team: { size: teamSize, seniority, mode }, description: feature, ...(isObj(data) && data.cached === true && { cached: true as const }) };
         setLastOk(ok);
         setStatus(ok);
         setTab("phases");
@@ -468,7 +475,7 @@ export function Estimator() {
               {shown.plan.title}
             </h3>
             <p>{shown.plan.summary}</p>
-            <PlanActions plan={shown.plan} team={shown.team} />
+            <PlanActions plan={shown.plan} team={shown.team} scope={shown.scope} />
             <ResultTabs
               label={estimatorCopy.tabsLabel}
               value={tab}
@@ -493,7 +500,7 @@ export function Estimator() {
                 {
                   key: "budget",
                   label: estimatorCopy.tabBudget,
-                  content: <BudgetView plan={shown.plan} team={shown.team} />,
+                  content: <BudgetView plan={shown.plan} team={shown.team} scope={shown.scope} />,
                 },
               ]}
             />

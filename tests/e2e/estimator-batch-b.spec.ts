@@ -17,8 +17,8 @@ async function submitWith(page: Page, body: unknown) {
 test("open questions and out-of-scope lists show the plan's items", async ({ page }) => {
   await submitWith(page, plan);
   for (const [heading, items] of [
-    [estimatorCopy.questionsHeading, plan.plan.openQuestions],
-    [estimatorCopy.outOfScopeHeading, plan.plan.outOfScope],
+    [estimatorCopy.questionsHeading, plan.scope.openQuestions],
+    [estimatorCopy.outOfScopeHeading, plan.scope.outOfScope],
   ] as const) {
     await expect(page.getByRole("heading", { name: heading })).toBeVisible();
     for (const item of items) await expect(page.getByText(item, { exact: true })).toBeVisible();
@@ -28,12 +28,12 @@ test("open questions and out-of-scope lists show the plan's items", async ({ pag
 test("budget tab shows the contingency row", async ({ page }) => {
   await submitWith(page, plan);
   await page.getByRole("tab", { name: estimatorCopy.tabBudget }).click();
-  await expect(page.getByRole("row", { name: new RegExp(estimatorCopy.budget.contingency.replace(/[()]/g, "\\$&")) })).toBeVisible();
+  await expect(page.getByRole("row", { name: /Contingency \(\d+%\)/ })).toBeVisible();
   await expect(page.getByText(estimatorCopy.budget.rateNote(HOURLY_RATE))).toBeVisible();
 });
 
 test("calendar note appears only when the plan was stretched", async ({ page }) => {
-  await submitWith(page, { ...plan, plan: { ...plan.plan, calendarAdjusted: true } });
+  await submitWith(page, { ...plan, scope: { ...plan.scope, phases: [{ ...plan.scope.phases[0], durationDays: 1, tasks: [{ task: "All of it", role: "Backend", category: "code", baseHours: 120 }] }] } });
   await expect(page.getByText(/Calendar stretched to fit a team of \d+/)).toBeVisible();
 });
 

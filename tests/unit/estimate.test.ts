@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { maxTokensFor, stripFeatureTags, normalisePlan, validateRequest } from "@/lib/estimate";
+import { maxTokensFor, stripFeatureTags, normaliseScope, validateRequest } from "@/lib/estimate";
 
 const valid = { feature: "Let users reset their password by email link", teamSize: 4, seniority: "mixed", token: "t" };
 
@@ -102,70 +102,25 @@ describe("maxTokensFor", () => {
   });
 });
 
-describe("normalisePlan", () => {
-  const raw = {
-    title: "Plan",
-    summary: "Summary",
-    assumptions: ["a"],
-    risks: ["r"],
-    confidence: "high",
-    totalHours: 99999, // the model's arithmetic must be ignored
-    phases: [
-      { name: "Build", goal: "g", startDay: 0, durationDays: 5, tasks: [{ task: "API", role: "Backend", hours: 10 }, { task: "UI", role: "Frontend", hours: 6 }] },
-      { name: "Test", goal: "g", startDay: 4, durationDays: 3, tasks: [{ task: "E2E", role: "QA", hours: 4 }] },
-    ],
-  };
-
-  it("recomputes totals instead of trusting the model", () => {
-    const plan = normalisePlan(raw)!;
-    expect(plan.totalHours).toBe(20);
-    expect(plan.totalDays).toBe(7);
-    expect(plan.calendarWeeks).toBe(1.4);
-  });
-
-  it("keeps half-hour totals exact so they match the subtotals", () => {
-    const plan = normalisePlan({
-      ...raw,
-      phases: [
-        { ...raw.phases[0], tasks: [{ task: "API", role: "Backend", hours: 10.5 }] },
-        { ...raw.phases[1], tasks: [{ task: "E2E", role: "QA", hours: 8 }] },
-      ],
-    })!;
-    expect(plan.totalHours).toBe(18.5);
-  });
-
-  it("clamps silly numbers and defaults bad confidence", () => {
-    const plan = normalisePlan({
-      ...raw,
-      confidence: "certain",
-      phases: [{ name: "X", startDay: -5, durationDays: 9999, tasks: [{ task: "t", hours: -3 }] }],
-    })!;
-    expect(plan.confidence).toBe("medium");
-    expect(plan.phases[0].startDay).toBe(0);
-    expect(plan.phases[0].durationDays).toBe(120);
-    expect(plan.phases[0].tasks[0].hours).toBe(0.5);
-    expect(plan.phases[0].tasks[0].role).toBe("Backend");
-  });
-
-  it("returns null when there are no phases", () => {
-    expect(normalisePlan({ title: "x", phases: [] })).toBeNull();
-    expect(normalisePlan("nope")).toBeNull();
-  });
-});
-
-describe("normalisePlan limits and normalisation", () => {
-  const task = (over: Record<string, unknown> = {}) => ({ task: "t", role: "QA", hours: 1, ...over });
+describe("normaliseScope limits and normalisation", () => {
+  const task = (over: Record<string, unknown> = {}) => ({ task: "t", role: "QA", category: "tests", baseHours: 1, ...over });
   const phase = (over: Record<string, unknown> = {}) => ({ name: "P", goal: "g", startDay: 0, durationDays: 1, tasks: [task()], ...over });
-  const plan = (over: Record<string, unknown> = {}) => normalisePlan({ title: "T", phases: [phase()], ...over })!;
+  const scope = (over: Record<string, unknown> = {}) => normaliseScope({ title: "T", phases: [phase()], ...over }, 4)!;
 
-  it("returns null for non-object input and non-array phases", () => {
-    for (const bad of [null, undefined, 5, "x", true]) expect(normalisePlan(bad)).toBeNull();
-    expect(normalisePlan({ phases: "nope" })).toBeNull();
-    expect(normalisePlan({ phases: { length: 2 } })).toBeNull();
+  it("returns null for non-object input, no phases and non-array phases", () => {
+    for (const bad of [null, undefined, 5, "x", true]) expect(normaliseScope(bad, 4)).toBeNull();
+    expect(normaliseScope({ phases: [] }, 4)).toBeNull();
+    expect(normaliseScope({ phases: "nope" }, 4)).toBeNull();
+    expect(normaliseScope({ phases: { length: 2 } }, 4)).toBeNull();
+  });
+
+  it("ignores model totals and confidence; keeps only the scope keys", () => {
+    const s = scope({ totalHours: 99999, confidence: "high", calendarAdjusted: true });
+    expect(Object.keys(s).sort()).toEqual(["assumptions", "costs", "facts", "openQuestions", "outOfScope", "phases", "risks", "summary", "title"]);
   });
 
   it("caps phases, tasks, assumptions and risks", () => {
-    const p = plan({
+    const p = scope({
       phases: Array.from({ length: 15 }, () => phase({ tasks: Array.from({ length: 20 }, () => task()) })),
       assumptions: Array.from({ length: 10 }, (_, i) => `a${i}`),
       risks: Array.from({ length: 10 }, (_, i) => `r${i}`),
@@ -177,7 +132,7 @@ describe("normalisePlan limits and normalisation", () => {
   });
 
   it("caps string lengths", () => {
-    const p = plan({
+    const p = scope({
       title: "t".repeat(500),
       summary: "s".repeat(1000),
       assumptions: ["a".repeat(400)],
@@ -195,7 +150,7 @@ describe("normalisePlan limits and normalisation", () => {
   });
 
   it("trims strings and drops empty list items", () => {
-    const p = plan({ title: "  Hi  ", assumptions: ["  a ", "", "   ", 5], phases: [phase({ name: "  N ", goal: " G ", tasks: [task({ task: "  do it  " })] })] });
+    const p = scope({ title: "  Hi  ", assumptions: ["  a ", "", "   ", 5], phases: [phase({ name: "  N ", goal: " G ", tasks: [task({ task: "  do it  " })] })] });
     expect(p.title).toBe("Hi");
     expect(p.assumptions).toEqual(["a"]);
     expect(p.phases[0].name).toBe("N");
@@ -203,57 +158,58 @@ describe("normalisePlan limits and normalisation", () => {
     expect(p.phases[0].tasks[0].task).toBe("do it");
   });
 
-  it("drops tasks with an empty name", () => {
-    const p = plan({ phases: [phase({ tasks: [task({ task: "" }), task({ task: "   " }), task({ task: undefined }), null, task({ task: "keep" })] })] });
+  it("drops tasks with an empty name and returns null when no phase has a usable task", () => {
+    const p = scope({ phases: [phase({ tasks: [task({ task: "" }), task({ task: "   " }), task({ task: undefined }), null, task({ task: "keep" })] })] });
     expect(p.phases[0].tasks.map((t) => t.task)).toEqual(["keep"]);
-  });
-
-  it("returns null when no phase has a usable task", () => {
-    expect(normalisePlan({ phases: [phase({ tasks: [{ name: "wrong key", role: "QA", hours: 8 }] }), phase({ tasks: [] })] })).toBeNull();
+    expect(normaliseScope({ phases: [phase({ tasks: [{ name: "wrong key", role: "QA", baseHours: 8 }] }), phase({ tasks: [] })] }, 4)).toBeNull();
   });
 
   it("tolerates a phase with no tasks array or a null phase", () => {
-    const p = plan({ phases: [null, phase({ tasks: "x" }), phase()] });
+    const p = scope({ phases: [null, phase({ tasks: "x" }), phase()] });
     expect(p.phases).toHaveLength(3);
     expect(p.phases[0].name).toBe("Phase");
     expect(p.phases[0].tasks).toEqual([]);
   });
 
   it.each([[0, 0.5], [0.2, 0.5], [1.2, 1], [1.3, 1.5], [2.74, 2.5], [400, 400], [401, 400], ["abc", 0.5], [Infinity, 0.5]])(
-    "hours %j -> %j",
-    (hours, expected) => {
-      expect(plan({ phases: [phase({ tasks: [task({ hours })] })] }).phases[0].tasks[0].hours).toBe(expected);
+    "baseHours %j -> %j",
+    (baseHours, expected) => {
+      expect(scope({ phases: [phase({ tasks: [task({ baseHours })] })] }).phases[0].tasks[0].baseHours).toBe(expected);
     },
   );
 
+  it("ignores the old hours key", () => {
+    expect(scope({ phases: [phase({ tasks: [{ task: "t", role: "QA", category: "code", hours: 40 }] })] }).phases[0].tasks[0].baseHours).toBe(0.5);
+  });
+
+  it("keeps known categories and maps unknown ones to integration (no AI reduction)", () => {
+    const cats = ["discovery", "design", "code", "tests", "docs-config", "integration", "security", "uat", "release"];
+    const p = scope({ phases: [phase({ tasks: [...cats, "Code", "magic", undefined].map((category) => task({ category })) })] });
+    expect(p.phases[0].tasks.map((t) => t.category)).toEqual([...cats, "integration", "integration", "integration"]);
+  });
+
+  it("keeps the six facts as strict booleans, false when missing", () => {
+    expect(scope({ facts: { users: true, systems: "yes", data: 1, integrations: true, extra: true } }).facts).toEqual({
+      users: true, systems: false, data: false, integrations: true, limits: false, outOfScope: false,
+    });
+    expect(scope({ facts: null }).facts).toEqual({ users: false, systems: false, data: false, integrations: false, limits: false, outOfScope: false });
+  });
+
   it("clamps startDay to 0..365 and durationDays to 0.5..120", () => {
-    const a = plan({ phases: [phase({ startDay: -1, durationDays: 0 })] }).phases[0];
+    const a = scope({ phases: [phase({ startDay: -1, durationDays: 0 })] }).phases[0];
     expect([a.startDay, a.durationDays]).toEqual([0, 0.5]);
-    const b = plan({ phases: [phase({ startDay: 1000, durationDays: 500 })] }).phases[0];
+    const b = scope({ phases: [phase({ startDay: 1000, durationDays: 500 })] }).phases[0];
     expect([b.startDay, b.durationDays]).toEqual([365, 120]);
   });
 
-  it("computes exact totals, max end day, and at least 1 calendar week", () => {
-    const p = plan({
-      phases: [
-        phase({ startDay: 0, durationDays: 3, tasks: [task({ hours: 1.5 }), task({ hours: 2 })] }),
-        phase({ startDay: 10, durationDays: 5, tasks: [task({ hours: 4 })] }),
-        phase({ startDay: 2, durationDays: 2, tasks: [] }),
-      ],
-    });
-    expect(p.totalHours).toBe(7.5);
-    expect(p.totalDays).toBe(15);
-    expect(p.calendarWeeks).toBe(3);
-    const small = plan({ phases: [phase({ startDay: 0, durationDays: 1 })] });
-    expect(small.calendarWeeks).toBe(1);
+  it("falls back for the title", () => {
+    expect(scope({ title: "   " }).title).toBe("Delivery plan");
   });
 
-  it("falls back for title and confidence", () => {
-    const p = normalisePlan({ title: "   ", phases: [phase()] })!;
-    expect(p.title).toBe("Delivery plan");
-    expect(p.confidence).toBe("medium");
-    expect(plan({ confidence: "low" }).confidence).toBe("low");
-    expect(plan({ confidence: "HIGH" }).confidence).toBe("medium");
+  it("rejects a scope whose slowest build (junior) for this team is longer than the client can show (2000 days)", () => {
+    const big = Array.from({ length: 10 }, (_, i) => phase({ name: `P${i}`, startDay: i, tasks: Array.from({ length: 12 }, () => task({ role: "Backend", category: "code", baseHours: 400 })) }));
+    expect(normaliseScope({ phases: big }, 1)).toBeNull(); // 48,000 h x 1.3 / 6 h = 10,400 days
+    expect(normaliseScope({ phases: big }, 8)).not.toBeNull(); // about 1,300 days
   });
 
   it.each([
@@ -265,16 +221,15 @@ describe("normalisePlan limits and normalisation", () => {
     ["Infrastructure", "DevOps"], ["Wizard", "Backend"], ["", "Backend"], [undefined, "Backend"], [42, "Backend"],
     ["constructor", "Backend"], ["__proto__", "Backend"], ["toString", "Backend"], ["hasOwnProperty", "Backend"],
   ])("role %j -> %s", (role, expected) => {
-    const p = plan({ phases: [phase({ tasks: [task({ role })] })] });
-    expect(p.phases[0].tasks[0].role).toBe(expected);
+    expect(scope({ phases: [phase({ tasks: [task({ role })] })] }).phases[0].tasks[0].role).toBe(expected);
   });
 });
 
-describe("normalisePlan costs", () => {
-  const base = { phases: [{ name: "Build", tasks: [{ task: "Do it", role: "Backend", hours: 8 }] }] };
+describe("normaliseScope costs", () => {
+  const base = { phases: [{ name: "Build", tasks: [{ task: "Do it", role: "Backend", category: "code", baseHours: 8 }] }] };
 
   it("keeps valid items, orders each range, clamps and drops bad ones", () => {
-    const p = normalisePlan({
+    const p = normaliseScope({
       ...base,
       costs: [
         { item: "Hosting", kind: "monthly", low: 300, high: 100 },
@@ -284,7 +239,7 @@ describe("normalisePlan costs", () => {
         { item: "No numbers", kind: "monthly", low: "a", high: 5 },
         null,
       ],
-    });
+    }, 4);
     expect(p?.costs).toEqual([
       { item: "Hosting", kind: "monthly", low: 100, high: 300 },
       { item: "Pen test", kind: "one-off", low: 0, high: 200_000 },
@@ -294,66 +249,23 @@ describe("normalisePlan costs", () => {
 
   it("caps the list at 8 and treats a missing list as empty", () => {
     const many = Array.from({ length: 12 }, (_, i) => ({ item: `Item ${i}`, kind: "monthly", low: 1, high: 2 }));
-    expect(normalisePlan({ ...base, costs: many })?.costs).toHaveLength(8);
-    expect(normalisePlan(base)?.costs).toEqual([]);
+    expect(normaliseScope({ ...base, costs: many }, 4)?.costs).toHaveLength(8);
+    expect(normaliseScope(base, 4)?.costs).toEqual([]);
   });
 });
 
-describe("normalisePlan openQuestions and outOfScope", () => {
-  const base = { phases: [{ name: "Build", tasks: [{ task: "Do it", role: "Backend", hours: 8 }] }] };
+describe("normaliseScope openQuestions and outOfScope", () => {
+  const base = { phases: [{ name: "Build", tasks: [{ task: "Do it", role: "Backend", category: "code", baseHours: 8 }] }] };
 
   it("trims, drops empties and caps both lists at 3", () => {
-    const p = normalisePlan({ ...base, openQuestions: [" q1 ", "", 5, "q2", "q3", "q4"], outOfScope: ["o".repeat(400), "b", "c", "d"] })!;
+    const p = normaliseScope({ ...base, openQuestions: [" q1 ", "", 5, "q2", "q3", "q4"], outOfScope: ["o".repeat(400), "b", "c", "d"] }, 4)!;
     expect(p.openQuestions).toEqual(["q1", "q2", "q3"]);
     expect(p.outOfScope).toHaveLength(3);
-    expect(p.outOfScope?.[0]).toHaveLength(300);
+    expect(p.outOfScope[0]).toHaveLength(300);
   });
 
   it("defaults both to [] when missing or not a list", () => {
-    expect(normalisePlan(base)).toMatchObject({ openQuestions: [], outOfScope: [] });
-    expect(normalisePlan({ ...base, openQuestions: "x", outOfScope: null })).toMatchObject({ openQuestions: [], outOfScope: [] });
-  });
-});
-
-describe("normalisePlan capacity check (6 productive hours per person-day)", () => {
-  const phase = (startDay: number, durationDays: number, hours: number) => ({ name: `P${startDay}`, startDay, durationDays, tasks: [{ task: "t", role: "Backend", hours }] });
-
-  it("leaves a calendar that fits the team unchanged and unflagged", () => {
-    const p = normalisePlan({ phases: [phase(0, 5, 40), phase(5, 5, 40)] }, 2)!; // 80 h / 12 h a day = 6.7 days <= 10
-    expect(p.totalDays).toBe(10);
-    expect(p.calendarAdjusted).toBeUndefined();
-    expect("calendarAdjusted" in p).toBe(false);
-  });
-
-  it("stretches 300 h for 1 person in 5 days to about 50 days, keeping phase order and overlaps", () => {
-    const p = normalisePlan({ phases: [phase(0, 2, 100), phase(1, 2, 100), phase(3, 2, 100)] }, 1)!;
-    expect(p.calendarAdjusted).toBe(true);
-    expect(p.totalDays).toBeGreaterThanOrEqual(50);
-    expect(p.totalDays).toBeLessThanOrEqual(50.5);
-    expect(p.phases.map((x) => [x.startDay, x.durationDays])).toEqual([[0, 20], [10, 20], [30, 20]]);
-    expect(p.calendarWeeks).toBe(10);
-    expect(p.totalHours).toBe(300);
-  });
-
-  it("rounds stretched days up to half days so the calendar never ends below the minimum", () => {
-    const p = normalisePlan({ phases: [phase(0, 3, 50)] }, 1)!; // min 8.33 days
-    expect(p.phases[0].durationDays).toBe(8.5);
-    expect(p.totalDays).toBe(8.5);
-  });
-
-  it("rejects a plan whose capacity floor is longer than the client can show (2000 days)", () => {
-    const big = Array.from({ length: 10 }, (_, i) => ({ name: `P${i}`, startDay: i, durationDays: 1, tasks: Array.from({ length: 12 }, () => ({ task: "t", role: "Backend", hours: 400 })) }));
-    expect(normalisePlan({ phases: big }, 1)).toBeNull(); // 48,000 h / 6 h = 8,000 days
-    expect(normalisePlan({ phases: big }, 8)).not.toBeNull(); // 1,000 days
-  });
-
-  it("keeps back-to-back phases back to back after stretching", () => {
-    const p = normalisePlan({ phases: [phase(0, 1, 10), phase(1, 1, 10), phase(2, 1, 6)] }, 1)!; // 26 h: min 4.33 days, factor ~1.44
-    for (let i = 1; i < p.phases.length; i++) expect(p.phases[i].startDay).toBe(p.phases[i - 1].startDay + p.phases[i - 1].durationDays);
-    expect(p.phases.every((x) => x.durationDays >= 0.5)).toBe(true);
-  });
-
-  it("skips the check without a team size", () => {
-    expect(normalisePlan({ phases: [phase(0, 1, 300)] })!.calendarAdjusted).toBeUndefined();
+    expect(normaliseScope(base, 4)).toMatchObject({ openQuestions: [], outOfScope: [] });
+    expect(normaliseScope({ ...base, openQuestions: "x", outOfScope: null }, 4)).toMatchObject({ openQuestions: [], outOfScope: [] });
   });
 });

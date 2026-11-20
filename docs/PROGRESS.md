@@ -5,6 +5,20 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-20 — Session 71: Deterministic estimator, Batch E (M14)
+
+**Done** on `feat/m14-deterministic-estimator` (Izzat: option 1, E1 and E2 together)
+- The model returns one scope (mid-level base hours, task categories, six facts); code applies seniority, the AI
+  band (20–40% less on code, tests, docs and config, plus a review task), confidence, ranges, contingency
+  10/20/30% and the calendar. One call serves both styles; cache key is feature + team size. ADR-013.
+- UI: effort range, missing facts, contingency rate, Estimate drivers, same-scope comparison; copy plan updated.
+- Security review: safe to ship. Code review fixes in (calendar scales with hours, cache reads fully validated).
+- Verified: check 346 unit, full e2e 149. Old US East Neon project deleted; live row 10 ok in Singapore.
+
+**Waiting on Izzat** run the Haiku golden set (`!` command in chat); auto mode blocked the live call for me.
+
+---
+
 ## 2026-11-19 — Session 70: Review fixes, Batch D (M14)
 
 **Done** on `feat/m14-batch-d` (Izzat: quick wins from the team review doc, no notice period)
@@ -17,22 +31,5 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 **Next** Batch E (deterministic estimator) once Izzat decides how AI factors may be shown.
 **Waiting on Izzat** Neon Singapore rows 7–9 are rate_limited (no live ok row yet); old US East project.
-
----
-
-## 2026-11-19 — Session 69: Housekeeping after the M14 release
-
-**Done** on `chore/m14-housekeeping` (Izzat: items 1 and 4; bumps held)
-- Release #88 live (main 6e808ef); first live estimate wrote Neon row 2 (ok, 15.3 s, US$0.0017).
-- Stale docs fixed: tile hover (01), domain and resolved open items (00), CI watch (ADR-005), estimator
-  only on zenntkaixa.dev (05).
-- Visitor-side outcomes (invalid input, failed human check, rate limited) log as warnings, so Vercel's error
-  view shows only server failures.
-- Held by the two-week rule: Playwright 1.65.1 + CI image (from 27 Nov), Vitest 5.1.1 (from 2 Dec),
-  `@neondatabase/serverless` 1.2.1 (from 27 Nov).
-
-**Next** the bumps on those dates; usage review in Neon after 1–2 weeks of traffic.
-**Then** Neon moved to Singapore (`portfolio-sg`, next to `sin1`): new `DATABASE_URL`, redeployed 18:30 UTC,
-rows 2–6 copied with their IDs. Old US East project kept until Izzat decides.
 
 ---

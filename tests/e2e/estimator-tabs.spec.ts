@@ -8,7 +8,7 @@ async function submitOnce(page: Page) {
   const submit = page.getByRole("button", { name: estimatorCopy.submit });
   await expect(submit).toBeEnabled({ timeout: 15_000 });
   await submit.click();
-  await expect(page.getByRole("heading", { name: plan.plan.title })).toBeVisible();
+  await expect(page.getByRole("heading", { name: plan.scope.title })).toBeVisible();
 }
 
 async function showResults(page: Page) {

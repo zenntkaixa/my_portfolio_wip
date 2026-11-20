@@ -2091,3 +2091,69 @@ p {
     font-size: var(--fs-sm);
   }
 }
+
+/* Budget tab: working-style comparison and the "Estimate drivers" disclosure (Batch E). */
+.cmp {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--gap) / 2);
+  margin-top: var(--gap);
+}
+
+.cmp h4,
+.drivers summary {
+  margin: 0;
+  font-size: var(--fs-base);
+}
+
+.cmp-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-size: var(--fs-sm);
+  border: 1px solid var(--line);
+}
+
+.cmp-table th,
+.cmp-table td {
+  padding: 0.5rem 0.6rem;
+  text-align: left;
+  vertical-align: top;
+  border-top: 1px solid var(--line);
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+
+.cmp-table thead th {
+  border-top: 0;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.cmp-table tbody th {
+  font-weight: 600;
+}
+
+.cmp-table .cmp-current {
+  background: var(--surface-2);
+}
+
+.cmp-tag {
+  display: block;
+  font-weight: 400;
+  color: var(--ink);
+}
+
+.drivers {
+  margin-top: var(--gap);
+}
+
+.drivers summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.drivers .tab1-list {
+  margin-top: 0.5rem;
+}
