@@ -293,14 +293,14 @@ export const howItsBuilt = {
   }),
   evalTitle: "Tested against the real model",
   evalCaption:
-    "Run on 2026-11-20 with Claude Haiku on 8 briefs. I run it by hand with npm run eval:estimator, never in CI, because real calls cost money.",
+    "Run on 2026-11-20 with Claude Haiku on 9 briefs. I run it by hand with npm run eval:estimator, never in CI, because real calls cost money.",
   evalHead: ["Check", "Result"],
   evalRows: [
-    ["Valid plans", "5 of 5"],
+    ["Valid plans, including a one-line request (dark mode)", "6 of 6"],
     ["Refused as intended (vague, off-topic, prompt injection)", "3 of 3"],
-    ["AI-assisted vs traditional, same scope", "10% to 12% fewer hours"],
-    ["Same brief run twice", "246 h vs 280 h (+14%), identical 21 tasks"],
-    ["Cost of the whole run", "US$0.0069"],
+    ["With AI agents vs traditional, same scope", "10% to 12% fewer hours"],
+    ["Same brief run twice", "264 h vs 291 h (+10%), same facts, 22 tasks each"],
+    ["Cost of the whole run", "US$0.0080"],
   ],
   linksTitle: "Why it works this way",
   links: [
