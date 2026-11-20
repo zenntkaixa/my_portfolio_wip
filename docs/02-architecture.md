@@ -53,6 +53,7 @@ Order matters: cheap checks run before the paid call. Never move the Claude call
 | `lib/estimator/service.ts` | Estimator orchestration with injected deps; outcomes and event rows | **Done** |
 | `lib/estimator/turnstile.ts`, `anthropic.ts`, `cache.ts`, `events.ts` | Adapters: siteverify, Messages API, 24 h plan cache (Upstash), event rows and log line (Neon, ADR-012) | **Done** |
 | `db/schema.sql` | DDL of the Neon `estimate_events` table | **Done** |
+| `lib/estimator/events.ts` `usageStats()` | Page data source: 30-day stats (Neon) for the "How it's built" panel, revalidated hourly with `countPlans()` | **Done** |
 | `lib/timeline.ts` | Pure maths for the timeline chart and role totals | Skeleton + tests |
 | `components/Bento.tsx` | Grid wrapper and `Tile` primitive (span props, `headingLevel`, `titleClassName`) | **Done** |
 | `components/tiles/*` | One file per tile | Skeletons |
