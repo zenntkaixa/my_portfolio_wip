@@ -5,6 +5,21 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-20 — Session 73: Prompt fact definitions and vague briefs (M14)
+
+**Done** on `fix/m14-integrations-fact` (Izzat: my suggestion, then the follow-ups the evals showed)
+- The six facts are defined concretely: a named user group counts as users, a named page or system as
+  systems, any named outside service (WhatsApp, FPX, SMS, email) as integrations.
+- New rule: a request with no concrete capability ("make our app better") gets the error answer; a short
+  concrete one ("add dark mode") is planned. Eval gained a ninth brief for that.
+- Three Izzat eval runs (US$0.0071, 0.0080, 0.0080). Final: 6 of 6 plans, 3 of 3 refusals, AI 10–12% lower,
+  leave twice 264 vs 291 h with the same facts. Panel table updated.
+- Verified: check 349 unit, full e2e 152.
+
+**Next** release #95 and this together; bumps from 27 Nov and 2 Dec; Neon usage review.
+
+---
+
 ## 2026-11-20 — Session 72: How it's built panel (M14)
 
 **Done** on `feat/m14-how-its-built` (Izzat: my suggestion)
@@ -15,19 +30,5 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 - Verified: check 349 unit, full e2e 152 passed; reviewer no blockers (labels now say "new plan").
 
 **Next** integrations prompt fix (named services count); bumps from 27 Nov and 2 Dec; Neon usage review.
-
----
-
-## 2026-11-20 — Session 71: Deterministic estimator, Batch E (M14)
-
-**Done** on `feat/m14-deterministic-estimator` (Izzat: option 1, E1 and E2 together)
-- The model returns one scope (mid-level base hours, task categories, six facts); code applies seniority, the AI
-  band (20–40% less on code, tests, docs and config, plus a review task), confidence, ranges, contingency
-  10/20/30% and the calendar. One call serves both styles; cache key is feature + team size. ADR-013.
-- UI: effort range, missing facts, contingency rate, Estimate drivers, same-scope comparison; copy plan updated.
-- Security review: safe to ship. Code review fixes in (calendar scales with hours, cache reads fully validated).
-- Verified: check 346 unit, full e2e 149. Old US East Neon project deleted; live row 10 ok in Singapore.
-
-**Waiting on Izzat** run the Haiku golden set (`!` command in chat); auto mode blocked the live call for me.
 
 ---
