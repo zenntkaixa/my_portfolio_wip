@@ -10,7 +10,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "check": "npm run typecheck && npm run test && npm run build"
+    "check": "npm run typecheck && npm run test && npm run build",
+    "eval:estimator": "node --env-file-if-exists=.env.local --import ./scripts/eval/register.mjs scripts/eval/estimator.mts"
   },
   "dependencies": {
     "@astryxdesign/cli": "^0.7.16",

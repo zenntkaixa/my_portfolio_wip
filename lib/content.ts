@@ -258,6 +258,58 @@ export const estimatorBuiltBy = {
   url: "https://github.com/zenntkaixa/my_portfolio_wip",
 };
 
+const adr = "https://github.com/zenntkaixa/my_portfolio_wip/blob/develop/docs/decisions/";
+
+/** "How it's built" panel under the estimator intro. Stats come from Neon (lib/estimator/events.ts usageStats). */
+export const howItsBuilt = {
+  summary: "How it's built",
+  pathTitle: "The path of one request",
+  path: [
+    { step: "Browser form", note: "You describe the feature, team size and seniority." },
+    { step: "Cloudflare Turnstile", note: "A human check, verified on the server." },
+    { step: "API route", note: "Validates and length-limits every input." },
+    { step: "Rate limit and daily cap", note: "Shared across servers in Upstash Redis." },
+    { step: "24-hour plan cache", note: "The same brief inside a day costs nothing." },
+    { step: "Claude Haiku", note: "Returns the scope as schema-checked JSON (structured outputs)." },
+    { step: "Code applies every factor", note: "buildPlan turns the scope into hours, calendar and budget." },
+    { step: "Plan shown", note: "One metadata row goes to Postgres (Neon, Singapore), never your text." },
+  ],
+  splitTitle: "Model proposes, code enforces",
+  modelTitle: "The model decides",
+  model: ["Tasks", "Roles and categories", "Mid-level base hours", "Which facts the brief states", "Risks and questions"],
+  codeTitle: "Code decides",
+  code: ["Seniority and AI factors", "Confidence", "Effort range", "Contingency", "Calendar and budget", "Every total"],
+  splitWhy: "So the same scope gives both working styles, and the numbers always add up.",
+  statsTitle: "Live numbers",
+  statsMin: 5,
+  stats: (s: { plans: number; medianS: number; p95S: number; cacheHitPct: number; costCents: number }) => ({
+    caption: `Last 30 days, ${s.plans} plans`,
+    items: [
+      ["Median time to a new plan", `${s.medianS.toFixed(1)} s`],
+      ["Slowest 5% of new plans (p95)", `${s.p95S.toFixed(1)} s`],
+      ["Served from cache", `${Math.round(s.cacheHitPct)}%`],
+      ["Model cost per new plan", `${s.costCents.toFixed(2)} US cents`],
+    ] as [string, string][],
+  }),
+  evalTitle: "Tested against the real model",
+  evalCaption:
+    "Run on 2026-11-20 with Claude Haiku on 9 briefs. I run it by hand with npm run eval:estimator, never in CI, because real calls cost money.",
+  evalHead: ["Check", "Result"],
+  evalRows: [
+    ["Valid plans, including a one-line request (dark mode)", "6 of 6"],
+    ["Refused as intended (vague, off-topic, prompt injection)", "3 of 3"],
+    ["With AI agents vs traditional, same scope", "10% to 12% fewer hours"],
+    ["Same brief run twice", "264 h vs 291 h (+10%), same facts, 22 tasks each"],
+    ["Cost of the whole run", "US$0.0080"],
+  ],
+  linksTitle: "Why it works this way",
+  links: [
+    { label: "ADR-011: the model proposes, code enforces", url: adr + "ADR-011-model-proposes-code-enforces.md" },
+    { label: "ADR-013: a deterministic effort model", url: adr + "ADR-013-deterministic-effort-model.md" },
+    { label: "ADR-009: a shared rate limit", url: adr + "ADR-009-upstash-rate-limit.md" },
+  ],
+};
+
 /** Plain-words names for the six facts the description may leave out (Fact in lib/estimate.ts). */
 const factLabels = {
   users: "who the users are",

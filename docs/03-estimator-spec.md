@@ -186,7 +186,10 @@ fallback if rendering throws.
   Each item has a one-line hint under its value (`estimatorCopy.summary.hints`). Confidence is computed
   in code (`confidenceFor`) from the six facts the model reports the description states (users, existing
   systems, data, integrations, limits, out of scope): high at four or more, medium at two or three, low
-  at one or none. Its hint changes with the level (`hints.confidence.low|medium|high`).
+  at one or none. Each fact is defined concretely in the prompt so runs agree: naming the user group
+  counts as users (no number needed), naming an existing page or system counts as systems, and naming any
+  outside service (a payment method, messaging channel, email or SMS provider) counts as integrations. A request that names no concrete capability ("make our app better") gets
+  the error answer, like a non-software request; a short concrete one ("add dark mode") is planned. Its hint changes with the level (`hints.confidence.low|medium|high`).
 - Under the submit button, a note says the estimator uses Claude Haiku for speed and the plan is a
   starting point, not a quote (`estimatorCopy.modelNote`).
 - Timeline: one horizontal bar per phase. `left = startDay / totalDays`, `width = durationDays / totalDays`.
