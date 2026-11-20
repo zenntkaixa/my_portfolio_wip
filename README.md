@@ -17,7 +17,7 @@ Claude returns an end-to-end delivery plan with effort and calendar estimates.
 - **The estimator path** (`app/api/estimate/route.ts`, `lib/estimate.ts`). Requests are checked in a
   fixed order: content type and size, then schema validation, then Cloudflare Turnstile, then
   per-visitor and daily limits, and only then the Claude call. The model's JSON is never trusted:
-  `normalisePlan` caps, clamps and re-totals it before the UI sees it.
+  `normaliseScope` caps and clamps it, and `buildPlan` applies seniority, the AI band and the calendar in code (ADR-013).
 - **Spend and abuse controls**: input limits, rate limit, daily cap, a small default model, metadata-only
   error logging. Reasoning in `docs/decisions/ADR-002-abuse-protection.md` and
   `docs/security-review-m2.md`.

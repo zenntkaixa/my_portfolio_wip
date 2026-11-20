@@ -3,7 +3,7 @@ import { requestBody } from "@/lib/prompt";
 
 export const MODEL = process.env.ANTHROPIC_MODEL || "claude-haiku-5-5";
 
-export type ModelInput = Pick<EstimateRequest, "feature" | "teamSize" | "seniority" | "mode">;
+export type ModelInput = Pick<EstimateRequest, "feature" | "teamSize">;
 
 export type ModelResult =
   /** The API answered with an error status: nothing was generated or billed. */

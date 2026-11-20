@@ -22,7 +22,7 @@ test("success moves focus to the results heading and shows the footer note", asy
   await page.route("**/api/estimate", (route) => route.fulfill({ json: plan }));
   const submit = await prepare(page);
   await submit.click();
-  const heading = page.getByRole("heading", { name: plan.plan.title });
+  const heading = page.getByRole("heading", { name: plan.scope.title });
   await expect(heading).toBeFocused();
   await expect(page.getByText(estimatorCopy.footerNote)).toBeVisible();
 });
@@ -53,7 +53,7 @@ test("slow response shows the status line and disables the form", async ({ page 
   await expect(page.getByLabel("Feature description")).toBeDisabled();
   await expect(submit).toBeDisabled();
   await expect(page.getByRole("region", { name: "Estimate results" })).toHaveAttribute("aria-busy", "true");
-  await expect(page.getByRole("heading", { name: plan.plan.title })).toBeVisible();
+  await expect(page.getByRole("heading", { name: plan.scope.title })).toBeVisible();
   await expect(page.getByLabel("Feature description")).toBeEnabled();
 });
 
@@ -115,7 +115,7 @@ test("502 shows Retry, which re-submits and succeeds", async ({ page }) => {
   const retry = page.getByRole("button", { name: estimatorCopy.retry });
   await expect(retry).toBeEnabled(); // needs a fresh Turnstile token
   await retry.click();
-  await expect(page.getByRole("heading", { name: plan.plan.title })).toBeVisible();
+  await expect(page.getByRole("heading", { name: plan.scope.title })).toBeVisible();
   expect(calls).toBe(2);
 });
 
@@ -156,7 +156,7 @@ test("no console errors or page errors on load and a mocked happy-path submit", 
   await page.route("**/api/estimate", (route) => route.fulfill({ json: plan }));
   const submit = await prepare(page);
   await submit.click();
-  await expect(page.getByRole("heading", { name: plan.plan.title })).toBeFocused();
+  await expect(page.getByRole("heading", { name: plan.scope.title })).toBeFocused();
 
   expect(errors).toEqual([]);
 });

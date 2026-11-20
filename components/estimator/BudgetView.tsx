@@ -1,16 +1,15 @@
-import type { Plan } from "@/lib/estimate";
-import { budget, HOURLY_RATE, SEAT, type Range, type Team } from "@/lib/budget";
+import type { Plan, Scope } from "@/lib/estimate";
+import { budget, HOURLY_RATE, SEAT, type Team } from "@/lib/budget";
 import { estimatorCopy } from "@/lib/content";
-
-// The no-break space keeps "RM" with its number; a range can still wrap after its dash on narrow screens.
-const rm = (n: number) => `RM\u00a0${n.toLocaleString("en-MY")}`;
-const range = (r: Range) => (r.low === r.high ? rm(r.low) : `${rm(r.low)}–${r.high.toLocaleString("en-MY")}`);
+import { range } from "./money";
+import { ModeComparison } from "./ModeComparison";
+import { EstimateDrivers } from "./EstimateDrivers";
 
 /**
  * Tab 3 of the results: people cost and seats calculated in lib/budget.ts, plus the model's tool and
  * running cost ranges. Spec: docs/03-estimator-spec.md → "Tab 3".
  */
-export function BudgetView({ plan, team }: { plan: Plan; team: Team }) {
+export function BudgetView({ plan, team, scope }: { plan: Plan; team: Team; scope: Scope }) {
   const c = estimatorCopy.budget;
   const b = budget(plan, team);
   const oneOff = plan.costs.filter((x) => x.kind === "one-off");
@@ -33,9 +32,9 @@ export function BudgetView({ plan, team }: { plan: Plan; team: Team }) {
             <tr>
               <td>
                 {c.people}
-                <span className="tab3-detail">{c.peopleDetail(plan.totalHours, b.rate, team.seniority)}</span>
+                <span className="tab3-detail">{c.peopleDetail(plan.effort.likely, b.rate, team.seniority)}</span>
               </td>
-              <td>{rm(b.people)}</td>
+              <td>{range(b.peopleRange)}</td>
             </tr>
             {b.seats && (
               <tr>
@@ -53,8 +52,11 @@ export function BudgetView({ plan, team }: { plan: Plan; team: Team }) {
               </tr>
             ))}
             <tr>
-              <td>{c.contingency}</td>
-              <td>{rm(b.contingency)}</td>
+              <td>
+                {c.contingency(Math.round(b.contingencyRate * 100))}
+                <span className="tab3-detail">{c.contingencyWhy}</span>
+              </td>
+              <td>{range(b.contingencyRange)}</td>
             </tr>
             <tr className="tab2-sub">
               <th scope="row">{c.buildTotal}</th>
@@ -83,6 +85,8 @@ export function BudgetView({ plan, team }: { plan: Plan; team: Team }) {
           </tbody>
         </table>
       </div>
+      <ModeComparison scope={scope} team={team} />
+      <EstimateDrivers plan={plan} seniority={team.seniority} mode={team.mode} />
       <p className="tab3-note">{c.seniorityNote}</p>
       <p className="tab3-note">{c.rateNote(HOURLY_RATE)}</p>
       <p className="tab3-note">{c.note}</p>

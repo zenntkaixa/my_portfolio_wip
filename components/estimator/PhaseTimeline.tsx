@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import type { Plan } from "@/lib/estimate";
 import { estimatorCopy as copy } from "@/lib/content";
+import { missingText } from "@/lib/planText";
 import { toBars, weekLabels, weekMarkers } from "@/lib/timeline";
 
 type Geometry = CSSProperties & Record<`--${string}`, string>;
@@ -21,7 +22,9 @@ export function PhaseTimeline({ plan, teamLabel, teamSize }: { plan: Plan; teamL
         <div>
           <dt>{copy.summary.hours}</dt>
           <dd>{copy.summary.hoursValue(plan.totalHours)}</dd>
-          <dd className="tab1-hint">{copy.summary.hints.hours}</dd>
+          <dd className="tab1-hint">
+            {copy.summary.rangeNote(plan.effort.best, plan.effort.worst)}. {copy.summary.hints.hours}
+          </dd>
         </div>
         <div>
           <dt>{copy.summary.weeks}</dt>
@@ -39,6 +42,7 @@ export function PhaseTimeline({ plan, teamLabel, teamSize }: { plan: Plan; teamL
             <span className={`tab1-badge tab1-badge--${plan.confidence}`}>{plan.confidence}</span>
           </dd>
           <dd className="tab1-hint">{copy.summary.hints.confidence[plan.confidence]}</dd>
+          <dd className="tab1-hint" data-testid="missing-facts">{missingText(plan)}</dd>
         </div>
       </dl>
       {plan.calendarAdjusted && <p className="tab3-note">{copy.calendarAdjusted(teamSize)}</p>}

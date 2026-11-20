@@ -29,7 +29,7 @@ test("on load the stored example is shown, labelled, with no request and no focu
 });
 
 test("a live estimate replaces the example and its labels", async ({ page }) => {
-  const live = { plan: { ...plan.plan, title: "Live plan title" } };
+  const live = { scope: { ...plan.scope, title: "Live plan title" } };
   await page.route("**/api/estimate", (route) => route.fulfill({ json: live }));
   await page.goto("/");
   await expect(page.getByText(estimatorCopy.example.footer)).toBeVisible();
@@ -89,7 +89,7 @@ test.describe("example preview on a phone", () => {
   test.use({ viewport: { width: 390, height: 844 } });
 
   test("a link above the form jumps to the example plan, and goes away with a live estimate", async ({ page }) => {
-    await page.route("**/api/estimate", (route) => route.fulfill({ json: { plan: { ...plan.plan, title: "Live plan title" } } }));
+    await page.route("**/api/estimate", (route) => route.fulfill({ json: { scope: { ...plan.scope, title: "Live plan title" } } }));
     await page.goto("/");
     const preview = page.getByRole("link", { name: /^See an example plan below/ });
     await expect(preview).toContainText(samplePlan.title);

@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 import fixture from "../fixtures/plan.json";
-import type { Phase, Task } from "@/lib/estimate";
+import type { Phase, Scope, Task } from "@/lib/estimate";
+import { buildPlan } from "@/lib/estimateModel";
 import { roleTotals, toBars, weekLabels, weekMarkers } from "@/lib/timeline";
 
-const plan = fixture.plan as unknown as { phases: Phase[]; totalDays: number };
+// The page builds the plan from the fixture's scope with the default inputs.
+const plan = buildPlan(fixture.scope as Scope, { teamSize: 4, seniority: "mixed", mode: "traditional" });
 const phase = (startDay: number, durationDays: number, name = "P"): Phase => ({
   name,
   goal: "",
@@ -112,7 +114,7 @@ describe("roleTotals", () => {
   });
 
   it("breaks ties by role name ascending", () => {
-    const t = (role: string, hours: number): Task => ({ task: "x", role, hours });
+    const t = (role: string, hours: number): Task => ({ task: "x", role, category: "code", hours });
     expect(roleTotals([t("QA", 4), t("BA", 4), t("Backend", 4), t("DevOps", 9)]).map((r) => r.role)).toEqual([
       "DevOps",
       "BA",

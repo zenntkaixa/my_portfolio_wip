@@ -1,3 +1,5 @@
+import { buildPlan } from "@/lib/estimateModel";
+
 export const SENIORITY = ["junior", "mid", "senior", "mixed"] as const;
 export type Seniority = (typeof SENIORITY)[number];
 export const MODES = ["traditional", "ai-assisted"] as const;
@@ -68,7 +70,33 @@ export type EstimateRequest = {
   token: string;
 };
 
-export type Task = { task: string; role: string; hours: number };
+/** Task categories. Code applies the AI band only to the agent-friendly ones (lib/estimateModel.ts). */
+export const CATEGORIES = ["discovery", "design", "code", "tests", "docs-config", "integration", "security", "uat", "release"] as const;
+export type Category = (typeof CATEGORIES)[number];
+/** What the description states; confidence counts the true ones. */
+export const FACTS = ["users", "systems", "data", "integrations", "limits", "outOfScope"] as const;
+export type Fact = (typeof FACTS)[number];
+export type Confidence = "low" | "medium" | "high";
+export type CostItem = { item: string; kind: "one-off" | "monthly"; low: number; high: number };
+
+/** The model's output after normaliseScope: the work, independent of seniority and working style. */
+export type ScopeTask = { task: string; role: string; category: Category; baseHours: number };
+export type ScopePhase = { name: string; goal: string; startDay: number; durationDays: number; tasks: ScopeTask[] };
+export type Scope = {
+  title: string;
+  summary: string;
+  assumptions: string[];
+  phases: ScopePhase[];
+  risks: string[];
+  facts: Record<Fact, boolean>;
+  /** Tools and running costs in MYR, as ranges. People cost is calculated in lib/budget.ts. */
+  costs: CostItem[];
+  openQuestions: string[];
+  outOfScope: string[];
+};
+
+/** A built plan (buildPlan in lib/estimateModel.ts): hours adjusted for seniority and working style. */
+export type Task = { task: string; role: string; category: Category; hours: number };
 export type Phase = {
   name: string;
   goal: string;
@@ -76,31 +104,32 @@ export type Phase = {
   durationDays: number;
   tasks: Task[];
 };
-export type CostItem = { item: string; kind: "one-off" | "monthly"; low: number; high: number };
 export type Plan = {
   title: string;
   summary: string;
   assumptions: string[];
   phases: Phase[];
   risks: string[];
-  confidence: "low" | "medium" | "high";
-  /** Tools and running costs in MYR, as ranges. People cost is calculated in lib/budget.ts. */
+  confidence: Confidence;
+  /** Facts the description left out, in FACTS order. */
+  missingFacts: Fact[];
+  /** Effort range in hours; likely equals totalHours. */
+  effort: { best: number; likely: number; worst: number };
   costs: CostItem[];
-  /** Up to 3 questions a BA would ask the requester before committing. Optional for older replies. */
+  /** Up to 3 questions a BA would ask the requester before committing. */
   openQuestions?: string[];
   /** Up to 3 things this plan deliberately leaves out (the deferred parts of an MVP slice). */
   outOfScope?: string[];
   totalHours: number;
   totalDays: number;
   calendarWeeks: number;
-  /** Set when the server stretched the model's calendar to fit the team's capacity. */
+  /** Set when capacity made the calendar longer than the model's proposed phases. */
   calendarAdjusted?: true;
 };
 
 /** Longest plan the client shows (400 weeks). */
 export const MAX_PLAN_DAYS = 2000;
-/** Productive hours one person delivers in a working day; the capacity check and the prompt both use it. */
-export const HOURS_PER_DAY = 6;
+export { HOURS_PER_DAY } from "@/lib/estimateModel";
 
 export function validateRequest(body: unknown): { ok: true; value: EstimateRequest } | { ok: false; error: string } {
   if (!body || typeof body !== "object") return { ok: false, error: "Send a JSON body with feature, teamSize and seniority." };
@@ -146,24 +175,26 @@ function normaliseCosts(v: unknown): CostItem[] {
   });
 }
 
-// Rounds up to the next half day, so a stretched calendar never lands below the capacity minimum.
-const ceilHalf = (n: number) => Math.max(0, Math.ceil(n * 2 - 1e-9) / 2); // max(0) turns -0 into 0
+const normaliseCategory = (v: unknown): Category =>
+  // Unknown counts as integration: no AI reduction, so a bad label never shrinks the estimate.
+  CATEGORIES.includes(v as Category) ? (v as Category) : "integration";
 
 /**
- * Turn whatever the model returned into a safe, consistent Plan. Totals are computed here, not trusted.
- * With a team size, a calendar shorter than totalHours / (teamSize * HOURS_PER_DAY) is stretched to fit.
+ * Turn whatever the model returned into a safe Scope: strings trimmed, numbers clamped, lists capped.
+ * Null when there is no usable task, or when the slowest build of it (junior, traditional) for this
+ * team is longer than MAX_PLAN_DAYS.
  */
-export function normalisePlan(raw: unknown, teamSize?: number): Plan | null {
+export function normaliseScope(raw: unknown, teamSize: number): Scope | null {
   if (!raw || typeof raw !== "object") return null;
   const r = raw as Record<string, unknown>;
   if (!Array.isArray(r.phases) || r.phases.length === 0) return null;
 
-  let phases: Phase[] = r.phases.slice(0, 10).map((p) => {
+  const phases: ScopePhase[] = r.phases.slice(0, 10).map((p) => {
     const ph = (p ?? {}) as Record<string, unknown>;
     const tasks = Array.isArray(ph.tasks)
       ? ph.tasks.slice(0, 12).map((t) => {
           const tk = (t ?? {}) as Record<string, unknown>;
-          return { task: str(tk.task, 200), role: normaliseRole(tk.role), hours: num(tk.hours, 0.5, 400) };
+          return { task: str(tk.task, 200), role: normaliseRole(tk.role), category: normaliseCategory(tk.category), baseHours: num(tk.baseHours, 0.5, 400) };
         }).filter((t) => t.task)
       : [];
     return {
@@ -174,42 +205,23 @@ export function normalisePlan(raw: unknown, teamSize?: number): Plan | null {
       tasks,
     };
   });
-
-  const totalHours = phases.reduce((s, p) => s + p.tasks.reduce((a, t) => a + t.hours, 0), 0);
   // No usable task anywhere (e.g. the model used another key for task names): not a plan.
-  if (totalHours === 0) return null;
-  let totalDays = Math.max(...phases.map((p) => p.startDay + p.durationDays));
-  const minDays = teamSize ? totalHours / (teamSize * HOURS_PER_DAY) : 0;
-  // A plan this long can't be shown (the client caps 2000 days / 400 weeks), so it is not a usable plan.
-  if (minDays > MAX_PLAN_DAYS) return null;
-  const calendarAdjusted = totalDays < minDays;
-  if (calendarAdjusted) {
-    // Scaling every start and duration by one factor keeps the phase order and overlaps the model chose.
-    const factor = minDays / totalDays;
-    // Round start and end (not duration) so back-to-back phases stay back to back.
-    phases = phases.map((p) => {
-      const startDay = ceilHalf(p.startDay * factor);
-      return { ...p, startDay, durationDays: ceilHalf((p.startDay + p.durationDays) * factor) - startDay };
-    });
-    totalDays = Math.max(...phases.map((p) => p.startDay + p.durationDays));
-  }
-  const confidence = r.confidence === "low" || r.confidence === "high" ? r.confidence : "medium";
+  if (!phases.some((p) => p.tasks.length)) return null;
 
-  return {
+  const f = (r.facts ?? {}) as Record<string, unknown>;
+  const scope: Scope = {
     title: str(r.title, 100) || "Delivery plan",
     summary: str(r.summary, 600),
     assumptions: strList(r.assumptions, 6),
     phases,
     risks: strList(r.risks, 6),
-    confidence,
+    facts: Object.fromEntries(FACTS.map((k) => [k, f[k] === true])) as Record<Fact, boolean>,
     costs: normaliseCosts(r.costs),
     openQuestions: strList(r.openQuestions, 3),
     outOfScope: strList(r.outOfScope, 3),
-    // Task hours are in 0.5 steps, so the sum is exact. Not rounded, so it always equals the
-    // phase subtotals and role totals the UI shows.
-    totalHours,
-    totalDays,
-    calendarWeeks: Math.max(1, Math.round((totalDays / 5) * 10) / 10),
-    ...(calendarAdjusted ? { calendarAdjusted: true as const } : {}),
   };
+  // A plan this long can't be shown (the client caps 2000 days / 400 weeks), so it is not a usable plan.
+  // Check the slowest build: junior, in whichever mode takes longer (AI adds review tasks).
+  if (MODES.some((mode) => buildPlan(scope, { teamSize, seniority: "junior", mode }).totalDays > MAX_PLAN_DAYS)) return null;
+  return scope;
 }

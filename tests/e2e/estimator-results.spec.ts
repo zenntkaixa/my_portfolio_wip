@@ -2,10 +2,15 @@ import { expect, test, type Page } from "./fakeTurnstile";
 import plan from "../fixtures/plan.json";
 import { estimatorCopy } from "../../lib/content";
 import { roleTotals, toBars } from "../../lib/timeline";
+import { buildPlan } from "../../lib/estimateModel";
+import type { Scope } from "../../lib/estimate";
+
+// The page builds the plan from the scope with the default inputs (4 people, mixed, traditional).
+const built = buildPlan(plan.scope as Scope, { teamSize: 4, seniority: "mixed", mode: "traditional" });
 
 // The real API is never called: /api/estimate is intercepted.
 
-async function showResults(page: Page, body: unknown = plan, title = plan.plan.title) {
+async function showResults(page: Page, body: unknown = plan, title = plan.scope.title) {
   await page.route("**/api/estimate", (route) => route.fulfill({ json: body }));
   await page.goto("/");
   await page.getByLabel("Feature description").fill("Add one-time code login with email delivery and rate limiting");
@@ -17,7 +22,7 @@ async function showResults(page: Page, body: unknown = plan, title = plan.plan.t
 
 test("tab 1 shows summary, timeline bars, cards, assumptions and risks", async ({ page }) => {
   await showResults(page);
-  const p = plan.plan;
+  const p = built;
   const bars = toBars(p.phases, p.totalDays);
 
   const timeline = page.getByRole("list", { name: estimatorCopy.timelineLabel(p.totalDays) });
@@ -62,8 +67,8 @@ test("tab 1 does not scroll horizontally at 320px", async ({ page }) => {
 test("repeated phase names render every bar and card without duplicate-key warnings", async ({ page }) => {
   const logs: string[] = [];
   page.on("console", (m) => logs.push(m.text()));
-  const [a, b] = plan.plan.phases;
-  const dup = { ...plan, plan: { ...plan.plan, title: "Duplicate names", phases: [a, { ...b, name: a.name, startDay: 2 }], assumptions: ["Same", "Same"], risks: ["Same", "Same"] } };
+  const [a, b] = plan.scope.phases;
+  const dup = { ...plan, scope: { ...plan.scope, title: "Duplicate names", phases: [a, { ...b, name: a.name, startDay: 2 }], assumptions: ["Same", "Same"], risks: ["Same", "Same"] } };
   await showResults(page, dup, "Duplicate names");
   await expect(page.getByTestId("timeline-bar")).toHaveCount(2);
   await expect(page.getByTestId("phase-card")).toHaveCount(2);
@@ -79,7 +84,7 @@ async function openTab2(page: Page) {
 test("tab 2 shows role chips, phase subtotals and the grand total", async ({ page }) => {
   await showResults(page);
   await openTab2(page);
-  const p = plan.plan;
+  const p = built;
   const c = estimatorCopy.tasks;
 
   const expected = roleTotals(p.phases.flatMap((ph) => ph.tasks)).map((r) => c.chip(r.role, r.hours));
@@ -116,8 +121,8 @@ test("tab 2 does not scroll the page at 320px and its region is focusable", asyn
 test("repeated phase names render two tab 2 groups without key warnings", async ({ page }) => {
   const logs: string[] = [];
   page.on("console", (m) => logs.push(m.text()));
-  const [a, b] = plan.plan.phases;
-  const dup = { ...plan, plan: { ...plan.plan, title: "Duplicate names", phases: [a, { ...b, name: a.name, startDay: 2 }] } };
+  const [a, b] = plan.scope.phases;
+  const dup = { ...plan, scope: { ...plan.scope, title: "Duplicate names", phases: [a, { ...b, name: a.name, startDay: 2 }] } };
   await showResults(page, dup, "Duplicate names");
   await openTab2(page);
   await expect(page.getByTestId("phase-body")).toHaveCount(2);
@@ -125,16 +130,15 @@ test("repeated phase names render two tab 2 groups without key warnings", async 
 });
 
 test("tab 2 keeps half-hour totals consistent", async ({ page }) => {
-  const [a, b] = plan.plan.phases;
+  const [a, b] = plan.scope.phases;
   const half = {
     ...plan,
-    plan: {
-      ...plan.plan,
+    scope: {
+      ...plan.scope,
       title: "Half hours",
-      totalHours: 18.5,
       phases: [
-        { ...a, tasks: [{ task: "One", role: "Backend", hours: 6 }, { task: "Two", role: "QA", hours: 4.5 }] },
-        { ...b, tasks: [{ task: "Three", role: "Backend", hours: 3.5 }, { task: "Four", role: "QA", hours: 4.5 }] },
+        { ...a, tasks: [{ task: "One", role: "Backend", category: "code", baseHours: 6 }, { task: "Two", role: "QA", category: "tests", baseHours: 4.5 }] },
+        { ...b, tasks: [{ task: "Three", role: "Backend", category: "code", baseHours: 3.5 }, { task: "Four", role: "QA", category: "tests", baseHours: 4.5 }] },
       ],
     },
   };

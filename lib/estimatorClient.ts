@@ -1,4 +1,4 @@
-import type { Plan } from "@/lib/estimate";
+import { CATEGORIES, FACTS, type Category, type Plan, type Scope } from "@/lib/estimate";
 
 export const DEFAULT_RETRY_SECONDS = 60;
 export const MAX_RETRY_SECONDS = 3600;
@@ -11,7 +11,38 @@ const isStrList = (v: unknown) =>
 const num = (v: unknown, max = Infinity): v is number =>
   typeof v === "number" && Number.isFinite(v) && v <= max;
 
-/** Shape and sanity check so a malformed or absurd body never crashes the renderers. */
+/** Shape check on the server's scope before buildPlan; isPlan then checks the built totals. */
+export function isScope(v: unknown): v is Scope {
+  if (!isObj(v) || typeof v.title !== "string" || typeof v.summary !== "string") return false;
+  if (![v.assumptions, v.risks, v.openQuestions, v.outOfScope].every(isStrList)) return false;
+  if (!isObj(v.facts) || !FACTS.every((f) => typeof (v.facts as Record<string, unknown>)[f] === "boolean")) return false;
+  if (!Array.isArray(v.costs) || !v.costs.every((c) => isObj(c) && typeof c.item === "string" && num(c.low) && num(c.high))) return false;
+  return (
+    Array.isArray(v.phases) &&
+    v.phases.length > 0 &&
+    v.phases.every(
+      (p) =>
+        isObj(p) &&
+        typeof p.name === "string" &&
+        typeof p.goal === "string" &&
+        num(p.startDay) &&
+        num(p.durationDays) &&
+        p.durationDays > 0 &&
+        Array.isArray(p.tasks) &&
+        p.tasks.every(
+          (t) =>
+            isObj(t) &&
+            typeof t.task === "string" &&
+            typeof t.role === "string" &&
+            CATEGORIES.includes(t.category as Category) &&
+            num(t.baseHours, 400) &&
+            t.baseHours > 0,
+        ),
+    )
+  );
+}
+
+/** Shape and sanity check so a malformed or absurd plan never crashes the renderers. */
 export function isPlan(v: unknown): v is Plan {
   if (!isObj(v)) return false;
   if (typeof v.title !== "string" || typeof v.summary !== "string")

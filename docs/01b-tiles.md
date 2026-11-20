@@ -69,7 +69,7 @@ Read only the section for the tile you are changing.
 
 ## Estimator results (Batch B additions)
 - Timeline tab: under Assumptions and Risks, two more lists in the same `.tab1-list` style, "Questions to confirm" (`openQuestions`) and "Not included" (`outOfScope`); each hides when empty. When `calendarAdjusted` is set, a `.tab3-note` under the summary says the calendar was stretched to fit the team (`teamSize` comes from `Estimator.tsx`).
-- Budget tab: a "Contingency (20%)" row sits before the build total; below the table, a seniority note comes before the rate note, which states the cost basis (Klang Valley in-house rates). All copy is in `estimatorCopy`.
+- Budget tab: a "Contingency (N%)" row (10/20/30% by confidence, with the reason underneath) sits before the build total, and People and Contingency show ranges from the effort range (rows sum exactly to the total range); below the table, a seniority note comes before the rate note, which states the cost basis (Klang Valley in-house rates). All copy is in `estimatorCopy`.
 
 ## Estimator plan actions (C2)
 - A `.plan-actions` row (base buttons, quiet) sits above the result tabs: "Copy plan" (`lib/planText.ts` to the clipboard; label becomes "Copied" for 2 s, a polite status announces it or the failure) and "Print or save as PDF" (`window.print()`).
@@ -85,3 +85,8 @@ Read only the section for the tile you are changing.
 - A chip over typed text keeps it behind an "Undo" chip for 10 s (announced politely; typing dismisses it).
 - `cached: true` in the response shows a muted "saved plan" note above the plan title.
 - Under the minimum, the counter line swaps "(at least 20 characters)" for "Add a few more words" once the visitor has typed.
+
+## Estimator, Batch E (deterministic model UI)
+- Effort card: likely hours plus "Likely; best–worst h range". Confidence card lists the missing facts in plain words ("Not stated: ...") or says all six were stated (`data-testid="missing-facts"`).
+- Budget tab, below the table: "Same scope, two working styles" (`ModeComparison`, a 3-column fixed-layout table: effort, calendar, people cost; the chosen mode's column is shaded and tagged "current"; no sideways scroll at 320px), then the native `<details>` "Estimate drivers" (`EstimateDrivers`) listing each applied factor, built from the constants in `lib/estimateModel.ts` and `lib/budget.ts`.
+- The comparison is `compareModes(scope, team)` (`lib/estimateCompare.ts`): both builds from the kept scope, no request. Shown for live plans and the example. Copy plan text includes the range, contingency rate, missing facts and the comparison. The drivers disclosure is not printed when closed.

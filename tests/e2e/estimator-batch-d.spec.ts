@@ -18,7 +18,7 @@ test("a kept plan is dimmed and labelled under an error banner", async ({ page }
   await page.goto("/");
   await page.getByLabel("Feature description").fill(FEATURE);
   await submit(page);
-  await expect(page.getByRole("heading", { name: plan.plan.title })).toBeVisible();
+  await expect(page.getByRole("heading", { name: plan.scope.title })).toBeVisible();
   await expect(page.locator(".estimator__plan[data-kept]")).toHaveCount(0);
   await submit(page);
   await expect(page.locator(".estimator__banner")).toBeVisible();
@@ -77,7 +77,7 @@ test("cached plans say so; fresh ones do not", async ({ page }) => {
   await page.goto("/");
   await page.getByLabel("Feature description").fill(FEATURE);
   await submit(page);
-  await expect(page.getByRole("heading", { name: plan.plan.title })).toBeVisible();
+  await expect(page.getByRole("heading", { name: plan.scope.title })).toBeVisible();
   await expect(page.getByText(estimatorCopy.cachedNote)).toHaveCount(0);
   await submit(page);
   await expect(page.getByText(estimatorCopy.cachedNote)).toBeVisible();

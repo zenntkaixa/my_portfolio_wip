@@ -1,7 +1,9 @@
 // Estimator orchestration, free of HTTP and env: Turnstile → rate limit → cache → Claude → normalise.
+// The body carries the scope; the client builds the plan from it (lib/estimateModel.ts), the server only for the event row.
 // The route parses and validates the request, then calls `runEstimate` with real adapters; tests inject fakes.
 
-import { normalisePlan, str, type EstimateRequest, type Plan } from "@/lib/estimate";
+import { normaliseScope, str, type EstimateRequest, type Scope } from "@/lib/estimate";
+import { buildPlan } from "@/lib/estimateModel";
 import type { LimitResult } from "@/lib/rateLimit";
 import type { ModelInput, ModelResult } from "@/lib/estimator/anthropic";
 import { cacheKey, type PlanCache } from "@/lib/estimator/cache";
@@ -17,8 +19,8 @@ export type EstimateDeps = {
   now: () => number;
 };
 
-// `cached` is present (true) only when the plan came from the 24-hour cache.
-export type SuccessBody = { plan: Plan; inputs: Pick<EstimateRequest, "teamSize" | "seniority" | "mode">; cached?: true };
+// `cached` is present (true) only when the scope came from the 24-hour cache.
+export type SuccessBody = { scope: Scope; inputs: Pick<EstimateRequest, "teamSize" | "seniority" | "mode">; cached?: true };
 
 export type EstimateResult = {
   status: number;
@@ -73,7 +75,8 @@ export function errorResult(
   return { status, body: { error }, event: eventRow(outcome, status, durationMs, inputs), detail };
 }
 
-function planFields(plan: Plan) {
+function planFields(scope: Scope, inputs: NonNullable<Inputs>) {
+  const plan = buildPlan(scope, inputs);
   return {
     total_hours: plan.totalHours,
     phase_count: plan.phases.length,
@@ -112,10 +115,10 @@ async function estimate(req: EstimateRequest, ip: string, startedAt: number, dep
   const key = cacheKey(req);
   const cached = await deps.cache.get(key);
   if (cached) {
-    return { status: 200, body: { plan: cached, inputs, cached: true }, event: eventRow("ok", 200, elapsed(), inputs, { ...planFields(cached), cache_hit: true }) };
+    return { status: 200, body: { scope: cached, inputs, cached: true }, event: eventRow("ok", 200, elapsed(), inputs, { ...planFields(cached, inputs), cache_hit: true }) };
   }
 
-  const reply = await deps.callModel({ feature, teamSize, seniority, mode });
+  const reply = await deps.callModel({ feature, teamSize });
   if (reply.kind === "http_error") {
     // An error status means no reply was generated or charged, so the visitor gets the slot back.
     // Timeouts and unusable replies below keep it: those calls can still cost money.
@@ -148,9 +151,9 @@ async function estimate(req: EstimateRequest, ip: string, startedAt: number, dep
     return fail("unsupported", 422, sentence || NOT_A_FEATURE, usage, meta);
   }
 
-  const plan = normalisePlan(raw, teamSize);
-  if (!plan) return fail("bad_plan", 502, "The AI returned an incomplete plan. Try again with more detail.", usage, meta);
+  const scope = normaliseScope(raw, teamSize);
+  if (!scope) return fail("bad_plan", 502, "The AI returned an incomplete plan. Try again with more detail.", usage, meta);
 
-  await deps.cache.set(key, plan);
-  return { status: 200, body: { plan, inputs }, event: eventRow("ok", 200, elapsed(), inputs, { ...usage, ...planFields(plan) }) };
+  await deps.cache.set(key, scope);
+  return { status: 200, body: { scope, inputs }, event: eventRow("ok", 200, elapsed(), inputs, { ...usage, ...planFields(scope, inputs) }) };
 }

@@ -58,7 +58,7 @@ test.describe("submit on a phone", () => {
     await expect(page.getByText(estimatorCopy.usuallyWait)).toBeVisible();
     await expect(page.locator(".estimator__bone--card")).toHaveCount(4);
     await expect(page.locator(".estimator__bone--bar")).toHaveCount(5);
-    await expect(page.getByRole("heading", { name: plan.plan.title })).toBeFocused();
+    await expect(page.getByRole("heading", { name: plan.scope.title })).toBeFocused();
   });
 });
 
@@ -79,7 +79,7 @@ test("a call to action follows the example and a live plan", async ({ page }) =>
   };
   await check();
   await (await ready(page)).click();
-  await expect(page.getByRole("heading", { name: plan.plan.title })).toBeFocused();
+  await expect(page.getByRole("heading", { name: plan.scope.title })).toBeFocused();
   await check();
 });
 
@@ -102,16 +102,16 @@ test("a failed re-estimate keeps the previous plan under the error banner", asyn
   );
   const submit = await ready(page);
   await submit.click();
-  await expect(page.getByRole("heading", { name: plan.plan.title })).toBeVisible();
+  await expect(page.getByRole("heading", { name: plan.scope.title })).toBeVisible();
   await expect(submit).toBeEnabled();
   await submit.click();
   await expect(page.getByRole("alert").filter({ hasText: "Boom" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: plan.plan.title })).toBeVisible();
+  await expect(page.getByRole("heading", { name: plan.scope.title })).toBeVisible();
 });
 
 test("an incomplete plan shows the incomplete-plan banner", async ({ page }) => {
   await page.route("**/api/estimate", (route) =>
-    route.fulfill({ json: { plan: { ...plan.plan, totalHours: 1e9 } } }),
+    route.fulfill({ json: { scope: { ...plan.scope, phases: [{ ...plan.scope.phases[0], tasks: [{ task: "x", role: "QA", category: "code", baseHours: 1e9 }] }] } } }),
   );
   await (await ready(page)).click();
   await expect(page.getByRole("alert").filter({ hasText: estimatorCopy.badPlan })).toBeVisible();

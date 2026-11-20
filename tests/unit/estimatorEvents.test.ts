@@ -7,6 +7,7 @@ vi.mock("@neondatabase/serverless", () => ({ neon: vi.fn(() => ({ query })) }));
 import { costUsd, countPlans, logEvent, recordEvent, type EventRow } from "@/lib/estimator/events";
 import { upstashPlanCache, noCache } from "@/lib/estimator/cache";
 import { eventRow } from "@/lib/estimator/service";
+import fixture from "../fixtures/plan.json";
 
 const row: EventRow = eventRow("ok", 200, 1234, { teamSize: 4, seniority: "mixed", mode: "traditional" }, { model: "claude-haiku-5-5" });
 
@@ -83,7 +84,7 @@ describe("logEvent", () => {
 
 describe("upstashPlanCache", () => {
   const env = { UPSTASH_REDIS_REST_URL: "https://example-db.upstash.io", UPSTASH_REDIS_REST_TOKEN: "tok" };
-  const plan = { title: "T", phases: [], totalHours: 10 };
+  const plan = fixture.scope;
 
   it("is off without Upstash", () => {
     expect(upstashPlanCache({})).toBe(noCache);
@@ -111,6 +112,10 @@ describe("upstashPlanCache", () => {
     expect(await cache.get("k")).toBeNull();
     await expect(cache.set("k", plan as never)).resolves.toBeUndefined();
     vi.stubGlobal("fetch", vi.fn(async () => Response.json({ result: '{"not":"a plan"}' })));
+    expect(await cache.get("k")).toBeNull();
+    // The old light check passed this (phases + facts); a task with no hours must be a miss.
+    const broken = { ...plan, phases: [{ ...plan.phases[0], tasks: [{ task: "x", role: "BA", category: "code" }] }] };
+    vi.stubGlobal("fetch", vi.fn(async () => Response.json({ result: JSON.stringify(broken) })));
     expect(await cache.get("k")).toBeNull();
   });
 });
