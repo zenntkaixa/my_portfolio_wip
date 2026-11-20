@@ -45,7 +45,7 @@ async function showResults(page: Page, theme: Theme) {
   await page.route("**/api/estimate", (route) => route.fulfill({ json: plan }));
   await open(page, theme);
   await submit(page);
-  await expect(page.getByRole("heading", { name: plan.plan.title })).toBeVisible();
+  await expect(page.getByRole("heading", { name: plan.scope.title })).toBeVisible();
 }
 
 for (const theme of themes) {

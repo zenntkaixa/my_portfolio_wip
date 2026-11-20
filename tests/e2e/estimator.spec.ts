@@ -11,7 +11,7 @@ test("happy path shows both tabs", async ({ page }) => {
   await expect(submit).toBeEnabled(); // enabled once the fake Turnstile token arrives
   await submit.click();
 
-  await expect(page.getByRole("heading", { name: plan.plan.title })).toBeVisible();
+  await expect(page.getByRole("heading", { name: plan.scope.title })).toBeVisible();
   await page.getByRole("tab", { name: "Tasks" }).click();
   await expect(page.getByRole("cell", { name: /OTP generate and verify endpoints/ })).toBeVisible();
 });

@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { Plan } from "@/lib/estimate";
+import type { Plan, Scope } from "@/lib/estimate";
 import { budget, type Team } from "@/lib/budget";
 import { estimatorCopy } from "@/lib/content";
 import { planToText } from "@/lib/planText";
 
 /** Copy the plan as text or open the print dialog. Print styles live in app/globals.css. */
-export function PlanActions({ plan, team }: { plan: Plan; team: Team }) {
+export function PlanActions({ plan, team, scope }: { plan: Plan; team: Team; scope: Scope }) {
   const a = estimatorCopy.actions;
   const [msg, setMsg] = useState("");
   const [copied, setCopied] = useState(false);
@@ -17,7 +17,7 @@ export function PlanActions({ plan, team }: { plan: Plan; team: Team }) {
   async function copy() {
     clearTimeout(timer.current);
     try {
-      await navigator.clipboard.writeText(planToText(plan, team, budget(plan, team)));
+      await navigator.clipboard.writeText(planToText(plan, team, budget(plan, team), scope));
       setCopied(true);
       setMsg(a.copied);
     } catch {

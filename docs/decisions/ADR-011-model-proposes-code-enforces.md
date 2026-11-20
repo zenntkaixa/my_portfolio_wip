@@ -1,6 +1,6 @@
 # ADR-011 — The model proposes, code enforces
 
-**Status:** Accepted (2026-11-19)
+**Status:** Accepted (2026-11-19). Narrowed by ADR-013: the model now proposes only the scope; seniority, AI band, confidence and calendar are computed in code.
 
 ## Context
 The estimator's plans must look credible to delivery leads. Haiku is good at choosing phases and tasks

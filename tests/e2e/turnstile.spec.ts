@@ -35,7 +35,7 @@ test("submit is disabled after a response, then re-enabled by the new token", as
   await expect(submit).toBeEnabled({ timeout: 15_000 });
   await submit.click();
   await expect(
-    page.getByRole("heading", { name: plan.plan.title }),
+    page.getByRole("heading", { name: plan.scope.title }),
   ).toBeVisible();
   await expect(submit).toBeEnabled({ timeout: 15_000 }); // fresh token after reset
 });

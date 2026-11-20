@@ -40,37 +40,50 @@ Request:
 ```
 `mode` is optional (`traditional` when missing); any other value is a 400.
 
-Success `200`:
+Success `200` (ADR-013: the body is the model's scope; the client builds the plan from it):
 ```json
 {
-  "plan": {
+  "scope": {
     "title": "string",
     "summary": "string",
     "assumptions": ["string"],
     "phases": [
       { "name": "string", "goal": "string", "startDay": 0, "durationDays": 3,
-        "tasks": [{ "task": "string", "role": "Backend", "hours": 12 }] }
+        "tasks": [{ "task": "string", "role": "Backend", "category": "code", "baseHours": 12 }] }
     ],
     "risks": ["string"],
-    "confidence": "low | medium | high",
+    "facts": { "users": true, "systems": false, "data": true, "integrations": true, "limits": false, "outOfScope": false },
     "costs": [{ "item": "string", "kind": "one-off | monthly", "low": 100, "high": 400 }],
     "openQuestions": ["string"],
-    "outOfScope": ["string"],
-    "totalHours": 180,
-    "totalDays": 18,
-    "calendarWeeks": 3.6,
-    "calendarAdjusted": true
+    "outOfScope": ["string"]
   },
   "inputs": { "teamSize": 4, "seniority": "mixed", "mode": "traditional" }
 }
 ```
 
-A cache hit adds `"cached": true` to this body; fresh plans leave it out. The UI then shows a note that this is the saved plan.
+A cache hit adds `"cached": true` to this body; fresh scopes leave it out. The UI then shows a note that this is the saved plan.
 
-`openQuestions` (up to 3: what a BA would ask the requester before committing) and `outOfScope` (up to 3:
-what the plan deliberately leaves out) are always present from the server (`[]` when the model gave none);
-the client treats them as optional so older payloads still render. `calendarAdjusted` appears only when the
-server stretched the calendar (see *Capacity check*).
+`category` is one of `discovery, design, code, tests, docs-config, integration, security, uat, release`.
+`baseHours` is effort for one mid-level engineer working without AI tools. `facts` says which of six
+things the description states. The client checks the body with `isScope`, then calls
+`buildPlan(scope, { teamSize, seniority, mode })` (`lib/estimateModel.ts`) and checks the result with
+`isPlan`. The built `Plan` has `phases[].tasks[] = { task, role, category, hours }`, `confidence`,
+`missingFacts`, `effort { best, likely, worst }`, `totalHours` (= `effort.likely`), `totalDays`,
+`calendarWeeks` and `calendarAdjusted?`, plus the scope's text fields and costs.
+
+### Effort model (`buildPlan`, ADR-013)
+Pure and deterministic: the same scope and inputs always give the same plan. All factors are exported
+constants with unit tests.
+
+| Step | Rule |
+|---|---|
+| Seniority | `baseHours` × junior 1.3, mid 1, senior 0.85, mixed 1 (a 1 senior : 2 mid : 1 junior blend); rounded to 0.5 h |
+| AI agents | Only `code`, `tests`, `docs-config`: × 0.7 likely (band 0.6 best to 0.8 worst). Other categories unchanged |
+| Review | With AI agents, each phase with agent work gets "Review and correct agent output": 15% of that phase's agent-work hours (0.5 h steps, at least 0.5 h), the phase's most-hours role, category `code` |
+| AI text | With AI agents, code adds one assumption (agents draft, a named engineer owns every change) and the review-bottleneck risk; with 1 or 2 people also the separation-of-duties risk |
+| Confidence | Facts stated: 4+ high, 2–3 medium, 0–1 low. `missingFacts` lists the false ones |
+| Effort range | likely = sum of task hours; best/worst = likely × high 0.9/1.15, medium 0.85/1.3, low 0.8/1.5. With AI agents best/worst also use the band's 0.6/0.8 on agent work |
+| Calendar | Model's phase order and shape. Each phase's model days are first scaled by its adjusted hours ÷ base hours (seniority and AI; rounded up to half days, at least 0.5; a phase without tasks keeps its days). It then lasts max(scaled days, hours ÷ (min(team, tasks) × 6)), rounded up to half days. A phase that started after its predecessor ended keeps that gap (back to back stays back to back); one that overlapped starts at the same fraction into it. Team of 1: strictly in sequence. If the result is still shorter than total hours ÷ (team × 6), every phase is stretched by one factor. `calendarAdjusted` when the result is longer than the model's shape with the scaled days (so it means team capacity only). Example plan, mixed team of 4: 13 days (2.6 weeks) traditional, 12.5 days (2.5 weeks) with AI agents |
 
 Errors, always `{ "error": "human-readable sentence" }`:
 
@@ -87,10 +100,11 @@ Errors, always `{ "error": "human-readable sentence" }`:
 A 502 caused by an error status from the Anthropic API (nothing was generated or billed) gives the visitor's
 rate-limit slot and the daily count back. Timeouts, refusals and cut-off or unreadable replies keep the slot.
 
-### Plan cache (M14)
-Ok plans are cached in Upstash for 24 hours (`lib/estimator/cache.ts`). Key: `plan:<version>:` (the version is a hash of the full request settings, model, prompt and schema plus a manual `CACHE_REV` for `normalisePlan` changes, so changing any of them starts a fresh cache) + SHA-256 hex of
-`JSON.stringify([feature trimmed, whitespace collapsed, lowercased, teamSize, seniority, mode])`; value: the
-final normalised plan JSON; `SET ... EX 86400`. The cache is read after Turnstile and the rate limit (a hit
+### Scope cache (M14, ADR-013)
+Ok scopes are cached in Upstash for 24 hours (`lib/estimator/cache.ts`). Key: `plan:<version>:` (the version is a hash of the full request settings, model, prompt and schema plus a manual `CACHE_REV`, now 2, for `normaliseScope` changes, so changing any of them starts a fresh cache) + SHA-256 hex of
+`JSON.stringify([feature trimmed, whitespace collapsed, lowercased, teamSize])`. Seniority and mode are
+not in the key: every combination reuses one scope, so comparing them changes only the factors. Value: the
+normalised scope JSON; `SET ... EX 86400`. The cache is read after Turnstile and the rate limit (a hit
 still uses a slot), and a hit returns the same 200 shape. Only ok plans are written, after the response. Any
 Upstash error is a silent miss; without the Upstash env vars (local, e2e) the cache is off.
 
@@ -102,6 +116,8 @@ incomplete). Its fields go to two places:
 - **One JSON log line** (`{"event":"estimate", ...}`): `console.info` for ok, `console.warn` for `invalid_input`, `human_check_failed` and
   `rate_limited` (visitor-side, so Vercel's error view shows only server failures), `console.error` otherwise,
   plus short context such as `stop_reason`, `error_type`, `error_name`, `text_length`.
+- `total_hours`, `phase_count`, `confidence` and `calendar_adjusted` come from `buildPlan(scope, inputs)`
+  for the request's own seniority and mode, so cache hits log their own numbers.
 - **One row** in Neon `estimate_events` (`db/schema.sql`), except for `invalid_input`, `misconfigured` and
   `human_check_failed` (free to trigger before the human check, so log only), written with `after()` so the visitor never
   waits; skipped when `DATABASE_URL` is unset. `cost_usd` comes from token usage and a per-model price
@@ -112,25 +128,31 @@ Neither ever holds the feature text, plan text, IP or an upstream error body. `c
 
 ## Prompt
 Lives in `lib/prompt.ts` (`SYSTEM_PROMPT`, `userMessage`, `requestBody`, `RESPONSE_SCHEMA`; pure functions
-`lib/estimator/anthropic.ts` imports). Owned by the `prompt-engineer` subagent. ADR-011: the model proposes, code enforces.
+`lib/estimator/anthropic.ts` imports). Owned by the `prompt-engineer` subagent. ADR-011: the model proposes, code enforces;
+ADR-013: the model proposes only the scope. The user message is `Team: N people.` plus the feature; it
+never carries seniority or working style.
 
 - Roles allowed: `BA, Architect, Backend, Frontend, QA, DevOps, PM` (from `lib/estimate.ts`).
 - Feature text is wrapped in `<feature>` tags and treated as untrusted data.
 - **Structured outputs:** the body sends `output_config.format = { type: "json_schema", schema }`. The schema
-  is `anyOf` the plan object or `{ error: string }`; every object has `additionalProperties: false` and all
-  keys required; enums for `role`, `confidence` and cost `kind`; no min/max or array-size keywords (not
-  supported), and no totals. The server `JSON.parse`s the first text block (no fence stripping); anything
-  unparseable is the 502 "unreadable plan". `normalisePlan` stays the second check: it clamps numbers,
-  trims strings, caps array lengths and **recomputes all totals**. Never trust model totals.
-- **Seniority:** hours are sized for a mid-level baseline, then junior about 1.3x, senior about 0.85x,
-  mixed about 1.0x (a 1 senior : 2 mid : 1 junior blend, a ratio, not a headcount).
+  is `anyOf` the scope object or `{ error: string }`; every object has `additionalProperties: false` and all
+  keys required; enums for `role`, `category` and cost `kind`; `facts` is an object of six booleans; no
+  min/max or array-size keywords (not supported), and no totals or confidence. The server `JSON.parse`s the
+  first text block (no fence stripping); anything unparseable is the 502 "unreadable plan".
+  `normaliseScope(raw, teamSize)` is the second check: it clamps numbers (`baseHours` 0.5..400, start
+  0..365, duration 0.5..120), trims strings, caps array lengths, maps unknown roles to Backend and unknown
+  categories to `integration` (no AI reduction), keeps facts as strict booleans, and returns null (502
+  "incomplete plan") when no task is usable or the slowest build (junior, traditional) for this team is
+  over 2000 days.
+- **Base hours:** sized for one mid-level engineer working without AI tools, including review and fixes.
+  The prompt states no multiplier: seniority and the AI band are applied in code.
 - **Solo teams:** with 1 person, phases run in sequence (no overlap) and that person covers every role.
+- **No mode text:** the scope is reused for every seniority and working style, so the prompt tells the
+  model never to mention seniority, AI, agents, tooling or productivity.
 - **Scope:** huge or multi-feature requests get an MVP slice, said in the summary, with the deferred parts
   in `outOfScope`.
-- **Capacity check** (`normalisePlan(raw, teamSize)`): 1 person-day = 6 productive hours (`HOURS_PER_DAY`,
-  also stated in the prompt). If `totalDays < totalHours / (teamSize × 6)`, every phase's `startDay` and
-  `durationDays` is multiplied by the same factor (rounded up to half days, so order and overlaps are kept),
-  totals are recomputed and `calendarAdjusted: true` is set.
+- **Capacity:** 1 person-day = 6 productive hours (`HOURS_PER_DAY`, also stated in the prompt); the
+  calendar itself is computed in `buildPlan` (see *Effort model*).
 - **Timeouts:** Turnstile siteverify 4 s, Anthropic call 45 s (`maxDuration` 60 s).
 - Default model: `claude-haiku-5-5` (cheapest). `ANTHROPIC_MODEL` env var can switch to Sonnet.
 - Request: `max_tokens` 8000 on Haiku, 4000 on pricier models (`maxTokensFor`),
@@ -138,11 +160,11 @@ Lives in `lib/prompt.ts` (`SYSTEM_PROMPT`, `userMessage`, `requestBody`, `RESPON
   against `max_tokens`). On failure the server logs only `stop_reason`,
   token usage and text length, never the feature or model text.
 
-**Working style.** The user message carries `Working style: …`. For `ai-assisted` the prompt lowers hours
-only for work agents do well (code, tests, boilerplate, scripts, configuration, docs), keeps hours as
-human effort, puts a human review task in every build phase, shrinks the calendar less than the effort,
-names the review bottleneck and separation of duties as risks, and never states a fixed productivity
-gain. The plan shape is the same in both modes; the team line reads e.g. "2 people, senior, with AI agents".
+**Working style.** The model never sees it. The AI effect is a published per-category band applied in
+code (see *Effort model*), shown as a range on the agent-friendly part of the work, never as a single
+figure for the whole plan, and the prompt itself never mentions AI percentages. The calendar shrinks less
+than the effort because only some tasks shrink and review is added. The plan shape is the same in both
+modes; the team line reads e.g. "2 people, senior, with AI agents".
 
 ## UI states
 `idle → submitting → success | error`. While submitting: disable the form, move focus to the results
@@ -161,10 +183,10 @@ fallback if rendering throws.
 
 **Tab 1 — Timeline** (default; was "Phases and timeline", shortened in M11 so tabs fit one line on phones)
 - Summary row: total effort hours, calendar weeks, team (e.g. "4 people, mixed"), confidence badge.
-  Each item has a one-line hint under its value (`estimatorCopy.summary.hints`). Confidence is defined
-  in the prompt by counting six facts the description states (users, existing systems, data,
-  integrations, limits, out of scope): high at four or more, medium at two or three, low at one or
-  none. Its hint changes with the level (`hints.confidence.low|medium|high`).
+  Each item has a one-line hint under its value (`estimatorCopy.summary.hints`). Confidence is computed
+  in code (`confidenceFor`) from the six facts the model reports the description states (users, existing
+  systems, data, integrations, limits, out of scope): high at four or more, medium at two or three, low
+  at one or none. Its hint changes with the level (`hints.confidence.low|medium|high`).
 - Under the submit button, a note says the estimator uses Claude Haiku for speed and the plan is a
   starting point, not a quote (`estimatorCopy.modelNote`).
 - Timeline: one horizontal bar per phase. `left = startDay / totalDays`, `width = durationDays / totalDays`.
@@ -185,12 +207,13 @@ Tabs use proper ARIA (`role="tablist"`, `aria-selected`, arrow-key navigation).
 - **Build:** people cost = total hours × an assumed in-house rate per seniority (junior RM 40, mid
   RM 75, senior RM 120, mixed RM 78 per hour: mid-range Klang Valley salary × 1.3 for EPF, SOCSO, EIS
   and overheads ÷ 160 hours; approved by Izzat 2026-11-17; mixed is the 1 senior, 2 mid, 1 junior blend,
-  set 2026-11-19). Contingency = 20% of people cost (`CONTINGENCY`, rounded to whole ringgit), its own row
+  set 2026-11-19). Contingency = 10% (high confidence), 20% (medium) or 30% (low) of people cost (`CONTINGENCY`,
+  `budget().contingencyRate`, rounded to whole ringgit), its own row
   and part of the build total. With AI agents, seats = team size × started
   months of the calendar × RM 80–400 (standard to premium business seat). Plus the model's one-off items.
 - **Running costs after launch:** the model's monthly items and their total.
 - The model lists only tools and running costs (3 to 8, ranges, whole ringgit, only what the feature
-  adds); it never prices people or seats. `normalisePlan` drops bad items, clamps each value to 0..200,000 and
+  adds); it never prices people or seats. `normaliseScope` drops bad items, clamps each value to 0..200,000 and
   orders each range. Notes under the table name the rates and say the ranges are for planning only.
 
 ## Footer note under results
@@ -201,10 +224,11 @@ generated by Claude." The stored plan must never be presented as model output un
 a real reply.
 
 ## Testing
-- Unit: `validateRequest`, `normalisePlan` (incl. the capacity check), `lib/prompt.ts`, `lib/budget.ts`,
-  `lib/timeline.ts` (pure functions, no network).
+- Unit: `validateRequest`, `normaliseScope`, `buildPlan` and its factors (`tests/unit/estimateModel.test.ts`),
+  `lib/prompt.ts` (incl. no multiplier or percentage text), `lib/budget.ts`, `lib/timeline.ts` (pure
+  functions, no network).
 - Unit: `tests/unit/route.test.ts` calls `POST` with `fetch` mocked for Turnstile and Anthropic.
 - Unit: `tests/unit/estimatorService.test.ts` runs `runEstimate` with fake deps (order, refund, cache,
   outcomes); `tests/unit/estimatorEvents.test.ts` mocks the Neon driver and Upstash `fetch`.
 - E2E: Playwright intercepts `POST /api/estimate` with `page.route` and returns
-  `tests/fixtures/plan.json`. Never hit the real API in tests. Turnstile uses Cloudflare's test site key.
+  `tests/fixtures/plan.json` (a `{ scope, inputs }` body). Never hit the real API in tests. Turnstile uses Cloudflare's test site key.

@@ -1,14 +1,15 @@
-import type { Plan } from "@/lib/estimate";
+import type { Scope } from "@/lib/estimate";
+import { buildPlan } from "@/lib/estimateModel";
 import type { Team } from "@/lib/budget";
 import { estimatorExamples } from "@/lib/content";
 
 // The example the estimator shows on load: shown without any request, so it costs no human check, no
 // rate-limit slot and no model call. Written by hand to show the format (the page says so); a real
-// reply for the same feature can replace it. tests/unit/samplePlan.test.ts keeps it a valid Plan.
+// reply for the same feature can replace it. tests/unit/samplePlan.test.ts keeps it a valid Scope.
 export const sampleFeature = estimatorExamples[0];
 export const sampleTeam: Team = { size: 4, seniority: "mixed", mode: "traditional" };
 
-export const samplePlan: Plan = {
+export const sampleScope: Scope = {
   "title": "SMS one-time code login",
   "summary": "Add passwordless login for policyholders using a one-time code sent by SMS, with rate limiting and audit logging.",
   "assumptions": [
@@ -25,12 +26,14 @@ export const samplePlan: Plan = {
         {
           "task": "Refine acceptance criteria",
           "role": "BA",
-          "hours": 8
+          "category": "discovery",
+          "baseHours": 8
         },
         {
           "task": "Threat model the login flow",
           "role": "Architect",
-          "hours": 6
+          "category": "security",
+          "baseHours": 6
         }
       ]
     },
@@ -43,12 +46,14 @@ export const samplePlan: Plan = {
         {
           "task": "OTP API contract",
           "role": "Architect",
-          "hours": 6
+          "category": "design",
+          "baseHours": 6
         },
         {
           "task": "Login screen design",
           "role": "Frontend",
-          "hours": 6
+          "category": "design",
+          "baseHours": 6
         }
       ]
     },
@@ -61,17 +66,20 @@ export const samplePlan: Plan = {
         {
           "task": "OTP generate and verify endpoints",
           "role": "Backend",
-          "hours": 24
+          "category": "code",
+          "baseHours": 24
         },
         {
           "task": "SMS gateway integration",
           "role": "Backend",
-          "hours": 12
+          "category": "integration",
+          "baseHours": 12
         },
         {
           "task": "Login and code entry screens",
           "role": "Frontend",
-          "hours": 20
+          "category": "code",
+          "baseHours": 20
         }
       ]
     },
@@ -84,12 +92,14 @@ export const samplePlan: Plan = {
         {
           "task": "API and e2e tests",
           "role": "QA",
-          "hours": 16
+          "category": "tests",
+          "baseHours": 16
         },
         {
           "task": "UAT support",
           "role": "QA",
-          "hours": 8
+          "category": "uat",
+          "baseHours": 8
         }
       ]
     },
@@ -102,7 +112,8 @@ export const samplePlan: Plan = {
         {
           "task": "Pipeline, config and monitoring",
           "role": "DevOps",
-          "hours": 6
+          "category": "release",
+          "baseHours": 6
         }
       ]
     }
@@ -111,7 +122,8 @@ export const samplePlan: Plan = {
     "SMS delivery delays in some regions",
     "Brute-force attempts on codes"
   ],
-  "confidence": "medium",
+  // Policyholders and an SMS provider are stated; systems, data, limits and scope are not: medium.
+  "facts": { "users": true, "systems": false, "data": false, "integrations": true, "limits": false, "outOfScope": false },
   "openQuestions": [
     "How long should a code stay valid, and how many wrong tries lock the account?",
     "Does password login stay available, or does SMS replace it?",
@@ -126,8 +138,8 @@ export const samplePlan: Plan = {
     { "item": "Redis cache for codes and rate limits", "kind": "monthly", "low": 50, "high": 250 },
     { "item": "Error monitoring and alerts", "kind": "monthly", "low": 0, "high": 200 },
     { "item": "Security review of the login flow", "kind": "one-off", "low": 3000, "high": 8000 }
-  ],
-  "totalHours": 112,
-  "totalDays": 13,
-  "calendarWeeks": 2.6
+  ]
 };
+
+/** Built the same way as a live reply: 112 hours over 13 days (2.6 weeks) for 4 people, mixed, traditional. */
+export const samplePlan = buildPlan(sampleScope, { teamSize: sampleTeam.size, seniority: sampleTeam.seniority, mode: sampleTeam.mode });

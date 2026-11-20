@@ -10,7 +10,7 @@ test("Copy plan writes the plan text to the clipboard and says so", async ({ pag
   await expect(page.getByRole("button", { name: estimatorCopy.actions.copied })).toBeVisible();
   const text = await page.evaluate(() => navigator.clipboard.readText());
   expect(text).toContain(samplePlan.title);
-  expect(text).toContain(estimatorCopy.budget.contingency);
+  expect(text).toContain(estimatorCopy.budget.contingency(20));
 });
 
 test("print shows all three panels and hides the form", async ({ page }) => {

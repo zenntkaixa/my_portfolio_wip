@@ -20,7 +20,7 @@ export function toBars(phases: Phase[], totalDays: number): Bar[] {
   return phases.map((p) => {
     const leftPct = clamp((p.startDay / totalDays) * 100, 0, 100);
     const widthPct = clamp((p.durationDays / totalDays) * 100, 0, 100 - leftPct);
-    // startDay can be a half day (normalisePlan rounds to 0.5); labels use whole days.
+    // startDay can be a half day (the calendar uses 0.5-day steps); labels use whole days.
     const start = Math.floor(p.startDay) + 1;
     const end = Math.ceil(p.startDay + p.durationDays);
     const label = end <= start ? `Day ${start}` : `Day ${start} to ${end}`;

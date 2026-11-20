@@ -1,5 +1,7 @@
 // All site copy lives here, so updating the portfolio never means touching layout code.
 
+import { CONTINGENCY } from "@/lib/budget";
+
 export const profile = {
   name: "Mohd. Izzat Fahmi Suhaimi",
   firstName: "Mohd. Izzat Fahmi",
@@ -256,6 +258,18 @@ export const estimatorBuiltBy = {
   url: "https://github.com/zenntkaixa/my_portfolio_wip",
 };
 
+/** Plain-words names for the six facts the description may leave out (Fact in lib/estimate.ts). */
+const factLabels = {
+  users: "who the users are",
+  systems: "existing systems",
+  data: "the data involved",
+  integrations: "outside services",
+  limits: "limits such as volume, security or deadlines",
+  outOfScope: "what is out of scope",
+};
+
+const pct = (n: number) => `${Math.round(n * 100)}%`;
+
 export const estimatorCopy = {
   tabsLabel: "Plan views",
   tabPhases: "Timeline",
@@ -268,12 +282,13 @@ export const estimatorCopy = {
     cost: "Cost (MYR)",
     buildGroup: "Build",
     people: "People",
-    peopleDetail: (hours: number, rate: number, seniority: string) =>
-      `${hours} hours × RM ${rate} per hour (${seniority})`,
     seats: "AI agent seats",
     seatsDetail: (count: number, months: number, low: number, high: number) =>
       `${count} ${count === 1 ? "seat" : "seats"} × ${months} ${months === 1 ? "month" : "months"} × RM ${low}–${high}`,
-    contingency: "Contingency (20%)",
+    contingency: (ratePct: number) => `Contingency (${ratePct}%)`,
+    contingencyWhy: `Higher when fewer facts were given: ${pct(CONTINGENCY.high)} for high confidence, ${pct(CONTINGENCY.medium)} for medium, ${pct(CONTINGENCY.low)} for low.`,
+    peopleDetail: (hours: number, rate: number, seniority: string) =>
+      `${hours} hours likely × RM ${rate} per hour (${seniority}); the range uses the best and worst effort`,
     buildTotal: "Estimated build cost",
     monthlyGroup: "Running costs after launch",
     monthlyTotal: "Per month",
@@ -300,6 +315,13 @@ export const estimatorCopy = {
     legend: "Working style",
     options: { traditional: "Traditional team", "ai-assisted": "With AI agents" },
     teamSuffix: ", with AI agents",
+  },
+  /** Added by code (lib/estimateModel.ts) to plans with AI agents; the model never sees the working style. */
+  aiPlan: {
+    reviewTask: "Review and correct agent output",
+    assumption: "AI coding agents draft code, tests and configuration; a named engineer reviews, corrects and owns every change.",
+    reviewRisk: "Human review of agent output can become the bottleneck, so the calendar shrinks less than the effort.",
+    soloRisk: "With one or two people, the author of a change is often its only reviewer: weak separation of duties.",
   },
   people: (n: number) => `${n} ${n === 1 ? "person" : "people"}`,
   atLeast: (min: number) => ` (at least ${min} characters)`,
@@ -330,7 +352,36 @@ export const estimatorCopy = {
       },
     },
     hoursValue: (n: number) => `${n} hours`,
+    rangeNote: (best: number, worst: number) => `Likely; ${best}–${worst} h range`,
+    missing: (list: string) => `Not stated: ${list}.`,
+    allStated: `All ${Object.keys(factLabels).length} facts were stated: ${Object.values(factLabels).join(", ")}.`,
     weeksValue: (n: number) => `${n} ${n === 1 ? "week" : "weeks"}`,
+  },
+  factLabels,
+  drivers: {
+    heading: "Estimate drivers",
+    intro: "Every number above comes from these fixed rules, applied by code to the same list of tasks.",
+    seniority: (name: string, factor: number) =>
+      factor === 1 ? `Seniority (${name}): task hours stay as estimated for a mid-level engineer.` : `Seniority (${name}): task hours are multiplied by ${factor}.`,
+    ai: (lessLow: number, lessHigh: number, likelyPct: number, reviewPct: number) =>
+      `With AI agents: ${lessLow}–${lessHigh}% fewer hours, ${likelyPct}% likely, only on code, tests, docs and config. A review task of ${reviewPct}% of that work is added to each phase.`,
+    spread: (best: number, worst: number, confidence: string) =>
+      `Confidence (${confidence}): the range runs from ${Math.round(best * 100)}% to ${Math.round(worst * 100)}% of the likely hours.`,
+    contingency: (ratePct: number) => `Contingency: ${ratePct}% on people cost, set by confidence.`,
+    capacity: (hours: number) =>
+      `Calendar: ${hours} productive hours per person-day. Each phase grows or shrinks with its adjusted hours (seniority and working style), and the whole plan is stretched if the team is too small.`,
+  },
+  compare: {
+    heading: "Same scope, two working styles",
+    caption: "Effort, calendar and people cost for the same scope",
+    row: "Measure",
+    traditional: "Traditional",
+    ai: "With AI agents",
+    current: "current",
+    effort: "Effort (likely)",
+    calendar: "Calendar",
+    people: "People cost",
+    hoursRange: (likely: number, best: number, worst: number) => `${likely} h (${best}–${worst})`,
   },
   timelineLabel: (days: number) => `Timeline, ${days} ${days === 1 ? "day" : "days"}`,
   weekLabel: (n: number) => `Week ${n}`,

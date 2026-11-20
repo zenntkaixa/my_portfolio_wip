@@ -28,7 +28,7 @@ flowchart LR
 3. Route handler (HTTP in, HTTP out): check content-type/size → parse JSON → `validateRequest` → Turnstile
    config guard (503 on production test keys / real secret without hostname) → API key present (503) →
    `runEstimate` in `lib/estimator/service.ts`: verify Turnstile → `checkLimits(ip)` → plan cache →
-   call Claude → parse JSON → `normalisePlan` (recomputes totals) → cache the ok plan → respond.
+   call Claude → parse JSON → `normaliseScope` → cache the ok scope → respond `{ scope, inputs }`; the client runs `buildPlan` (ADR-013).
    The service takes its adapters as injected deps (`verifyHuman`, `checkLimits`, `cache`, `callModel`,
    `recordEvent`, `now`), so its unit tests use fakes. Every request logs one JSON line and, after the
    response (`after()`), writes one row to Neon (03, *Usage events*).
