@@ -387,6 +387,11 @@ export const estimatorCopy = {
   steps: ["Reading your brief…", "Sizing the phases…", "Estimating tasks…", "Costing the team…"],
   usuallyWait: "Usually about 10 seconds.",
   cta: { text: "Like how I break down work? Let's talk about your team.", email: "Email me", linkedin: "LinkedIn" },
+  feedback: {
+    text: "Spotted something off in this plan?",
+    link: "Tell me",
+    subject: (title: string) => `Feedback on the estimator plan: ${title}`,
+  },
   resultsCrashed: "Something went wrong showing this plan. Reload the page and try again.",
   summary: {
     hours: "Effort",

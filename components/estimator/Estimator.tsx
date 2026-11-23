@@ -522,6 +522,15 @@ export function Estimator() {
               <a href={`mailto:${profile.email}`}>{estimatorCopy.cta.email}</a>
               <ExternalLink href={profile.linkedin}>{estimatorCopy.cta.linkedin}</ExternalLink>
             </p>
+            {/* Live plans only: the example was written by hand, so feedback on it says nothing about the model. */}
+            {!shown.example && (
+              <p className="estimator__cta">
+                {estimatorCopy.feedback.text}
+                <a href={`mailto:${profile.email}?subject=${encodeURIComponent(estimatorCopy.feedback.subject(shown.plan.title))}`}>
+                  {estimatorCopy.feedback.link}
+                </a>
+              </p>
+            )}
             <p className="estimator__note">
               {shown.example
                 ? estimatorCopy.example.footer
