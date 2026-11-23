@@ -50,6 +50,10 @@ const pairs: [string, string, number, string][] = [
   ["--accent", "--surface", 3, "focus outline on tiles"],
   ["--accent", "--surface-2", 3, "focus outline / timeline bars on inset areas"],
   ["--ok", "--surface", 3, "open-to-roles dot"],
+  ...["ba", "architect", "backend", "frontend", "qa", "devops", "pm"].flatMap((r): [string, string, number, string][] => [
+    [`--role-${r}`, "--surface", 3, `${r} role dot on table rows`],
+    [`--role-${r}`, "--surface-2", 3, `${r} role dot on chips`],
+  ]),
 ];
 
 describe("design token contrast", () => {

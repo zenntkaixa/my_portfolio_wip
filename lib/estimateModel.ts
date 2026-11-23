@@ -40,7 +40,7 @@ const hoursOf = (tasks: Task[]) => tasks.reduce((s, t) => s + t.hours, 0);
 
 /** One phase's tasks for a seniority and an AI factor (null = traditional), plus its review task. */
 function phaseTasks(tasks: Scope["phases"][number]["tasks"], seniority: Seniority, ai: number | null): Task[] {
-  const out = tasks.map((t) => ({
+  const out: Task[] = tasks.map((t) => ({
     task: t.task,
     role: t.role,
     category: t.category,
@@ -54,7 +54,7 @@ function phaseTasks(tasks: Scope["phases"][number]["tasks"], seniority: Seniorit
   const role = [...byRole].reduce((a, b) => (b[1] > a[1] ? b : a))[0];
   // At least 0.5 h: a 1 h floor made a tiny code task cost more with AI than without.
   const hours = half(agentHours * REVIEW_SHARE);
-  return [...out, { task: estimatorCopy.aiPlan.reviewTask, role, category: "code", hours }];
+  return [...out, { task: estimatorCopy.aiPlan.reviewTask, role, category: "code", hours, addedByCode: true }];
 }
 
 const totalFor = (scope: Scope, seniority: Seniority, ai: number | null) =>

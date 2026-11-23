@@ -21,6 +21,7 @@ else stays quiet.
 | `--accent-soft` | `#E3EAFD` | `#22325C` | Accent backgrounds, focus halo |
 | `--ok` | `#0E8F7E` | `#4CC9B4` | Success, "open to roles" dot |
 | `--warn` | `#B4570C` | `#F0A55E` | Risks, rate-limit messages |
+| `--role-ba` / `-architect` / `-backend` / `-frontend` / `-qa` / `-devops` / `-pm` | `#9A5FC0` `#2A8F9E` `#3F6FD0` `#C0508A` `#3F8F4F` `#A8741A` `#6B7686` | `#C39BE0` `#5FC4D2` `#86A6F0` `#E88FB8` `#7FCF8F` `#E0B45E` `#A3ADBD` | Estimator role dots only; each is at least 3:1 on `--surface` and `--surface-2` (tested in `contrast.test.ts`) |
 | `--grid` | `rgba(43,87,224,.08)` | `rgba(126,156,255,.09)` | Blueprint grid lines |
 
 Theme switching: `data-theme="light|dark"` on `<html>`, set before paint by an inline script in
@@ -54,7 +55,7 @@ Per-tile layout rules live in `docs/01b-tiles.md`. Read only the section for the
 
 ## Bento grid
 
-12 columns, `gap: 16px`, max width 1200px, page padding `clamp(16px, 4vw, 40px)`.
+12 columns, `gap: 16px`, max width 1440px, page padding `clamp(16px, 4vw, 40px)`.
 
 | Row | Tiles (desktop column spans) |
 |---|---|
@@ -65,6 +66,7 @@ Per-tile layout rules live in `docs/01b-tiles.md`. Read only the section for the
 | 5 | Experience `7` · Stack `5` |
 | 6 | Certifications `5` · Contact `7` |
 
+- **Prose measure:** running paragraphs directly in a tile (`.tile > p`) and the estimator notes (`.tab3-note`) are capped at `70ch`, left-aligned, so wide tiles at 1440px keep readable lines. Tables, the Gantt, cards and headings span the tile.
 - **≤ 1024px:** 6 columns. Half width (span 3): case studies 1 and 2, Stack, Certifications.
   Everything else is full width (span 6). In DOM order this gives clean rows with no orphans.
   Adjust only if `/visual-check` shows a problem, and update this line.
@@ -80,6 +82,10 @@ Per-tile layout rules live in `docs/01b-tiles.md`. Read only the section for the
 - Skip link "Skip to the estimator" is the first focusable element: clipped until focused, then shown
   top-left (`--surface`, `--ink`, `--line`, `--r-sm`). The estimator section takes `tabIndex={-1}`
   so focus lands in it; the section itself shows no ring for that programmatic focus.
+
+## Pills
+- `.pill`: neutral outlined tag (1px `--line`, `--muted` text, `--r-sm`, `--fs-xs`, nowrap). Used for estimator roles, the "AI" and "Added by code" task tags and the "current" marker (`.pill--current`, `--muted` border).
+- A role pill adds a decorative dot (`.role-dot[data-role]`, `aria-hidden`) filled from `--role-*`; the role chips above the table carry the same dot and act as the legend. Colour is never the only cue: the role name is always written.
 
 ## Form controls
 - Text inputs, textareas and selects: `--surface` fill, 1px `--muted` border (3:1 non-text contrast;

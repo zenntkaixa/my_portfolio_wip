@@ -24,7 +24,7 @@ export function ModeComparison({ scope, team }: { scope: Scope; team: Team }) {
             {cols.map((c) => (
               <th key={c.mode} scope="col" className={cur(c.mode)} data-mode={c.mode}>
                 {c.label}
-                {c.mode === team.mode && <span className="cmp-tag">{k.current}</span>}
+                {c.mode === team.mode && <span className="pill pill--current cmp-tag">{k.current}</span>}
               </th>
             ))}
           </tr>

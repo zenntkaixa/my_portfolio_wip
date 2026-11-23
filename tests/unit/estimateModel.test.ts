@@ -63,7 +63,7 @@ describe("buildPlan hours", () => {
     const p = buildPlan(scope([ph(0, 5, AGENT_FRIENDLY.map((c) => t(c, 10)).concat([t("discovery", 10), t("design", 10), t("integration", 10), t("security", 10), t("uat", 10), t("release", 10)]))]), ai);
     const hours = Object.fromEntries(p.phases[0].tasks.filter((x) => x.task !== REVIEW).map((x) => [x.category, x.hours]));
     expect(hours).toEqual({ code: 7, tests: 7, "docs-config": 7, discovery: 10, design: 10, integration: 10, security: 10, uat: 10, release: 10 });
-    expect(p.phases[0].tasks.filter((x) => x.task === REVIEW)).toEqual([{ task: REVIEW, role: "Backend", category: "code", hours: 3 }]); // 15% of 21
+    expect(p.phases[0].tasks.filter((x) => x.task === REVIEW)).toEqual([{ task: REVIEW, role: "Backend", category: "code", hours: 3, addedByCode: true }]); // 15% of 21
   });
 
   it("gives the review task to the phase's most-hours role, rounds to 0.5 h with a 0.5 h minimum, and skips phases without agent work", () => {
@@ -73,7 +73,7 @@ describe("buildPlan hours", () => {
       ph(7, 2, [t("tests", 2, "QA")]),
     ]), ai);
     expect(p.phases[0].tasks.some((x) => x.task === REVIEW)).toBe(false);
-    expect(p.phases[1].tasks.at(-1)).toEqual({ task: REVIEW, role: "Frontend", category: "code", hours: 4 }); // 0.15 x 28 = 4.2
+    expect(p.phases[1].tasks.at(-1)).toEqual({ task: REVIEW, role: "Frontend", category: "code", hours: 4, addedByCode: true }); // 0.15 x 28 = 4.2
     expect(p.phases[2].tasks.at(-1)).toMatchObject({ task: REVIEW, role: "QA", hours: 0.5 }); // 0.15 x 1.5 = 0.225
   });
 
@@ -216,5 +216,14 @@ describe("compareModes", () => {
     }
     expect(c.traditional.budget.seats).toBeNull();
     expect(c["ai-assisted"].plan.totalHours).toBeLessThan(c.traditional.plan.totalHours);
+  });
+});
+
+describe("addedByCode", () => {
+  it("marks only the inserted review tasks", () => {
+    const sc = scope([ph(0, 2, [t("code", 8), t("design", 4)]), ph(2, 2, [t("discovery", 4)])]);
+    const tasks = buildPlan(sc, ai).phases.flatMap((p) => p.tasks);
+    expect(tasks.filter((x) => x.addedByCode).map((x) => x.task)).toEqual([REVIEW]);
+    expect(buildPlan(sc, trad).phases.flatMap((p) => p.tasks).some((x) => x.addedByCode)).toBe(false);
   });
 });

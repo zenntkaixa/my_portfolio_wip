@@ -495,7 +495,7 @@ export function Estimator() {
                 {
                   key: "tasks",
                   label: estimatorCopy.tabTasks,
-                  content: <TaskTable plan={shown.plan} />,
+                  content: <TaskTable plan={shown.plan} ai={shown.team.mode === "ai-assisted"} />,
                 },
                 {
                   key: "budget",
