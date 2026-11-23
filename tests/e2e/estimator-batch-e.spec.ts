@@ -77,6 +77,16 @@ test("drivers: traditional lists no AI band, AI lists it", async ({ page }) => {
   await expect(drivers).not.toContainText("With AI agents");
 });
 
+test("printing includes the drivers even when the disclosure is closed", async ({ page }) => {
+  await submitWith(page, plan);
+  const firstDriver = page.locator(".drivers li").first();
+  await expect(page.locator(".drivers")).not.toHaveAttribute("open", "");
+  await page.emulateMedia({ media: "print" });
+  await expect(firstDriver).toBeVisible();
+  await page.emulateMedia({ media: "screen" });
+  await expect(firstDriver).toBeHidden();
+});
+
 test("drivers with AI agents state the band and the review task", async ({ page }) => {
   await submitWith(page, plan, true);
   await openBudget(page);

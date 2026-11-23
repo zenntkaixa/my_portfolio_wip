@@ -79,7 +79,7 @@ constants with unit tests.
 |---|---|
 | Seniority | `baseHours` × junior 1.3, mid 1, senior 0.85, mixed 1 (a 1 senior : 2 mid : 1 junior blend); rounded to 0.5 h |
 | AI agents | Only `code`, `tests`, `docs-config`: × 0.7 likely (band 0.6 best to 0.8 worst). Other categories unchanged |
-| Review | With AI agents, each phase with agent work gets "Review and correct agent output" (marked `addedByCode`, shown with an "Added by code" tag): 15% of that phase's agent-work hours (0.5 h steps, at least 0.5 h), the phase's most-hours role, category `code` |
+| Review | With AI agents, each phase with agent work gets "Review and correct agent output" (marked `addedByCode`, shown with an "Added by code" tag): 15% of that phase's agent-work hours (0.5 h steps, at least 0.5 h, but never more than the hours the agents saved in that phase; no row when they saved nothing), the phase's most-hours role, category `code` |
 | AI text | With AI agents, code adds one assumption (agents draft, a named engineer owns every change) and the review-bottleneck risk; with 1 or 2 people also the separation-of-duties risk |
 | Confidence | Facts stated: 4+ high, 2–3 medium, 0–1 low. `missingFacts` lists the false ones |
 | Effort range | likely = sum of task hours; best/worst = likely × high 0.9/1.15, medium 0.85/1.3, low 0.8/1.5. With AI agents best/worst also use the band's 0.6/0.8 on agent work |

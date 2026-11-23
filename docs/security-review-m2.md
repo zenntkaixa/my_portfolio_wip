@@ -30,7 +30,8 @@ Reviewed by `security-reviewer` (Opus), dependencies by `security-engineer` (`np
   this check is a second layer.
 - **`'unsafe-inline'` in `script-src`** is needed for the theme script and Next's inline scripts until nonces
   are added. No model or user text is ever rendered as HTML.
-- **HSTS without `includeSubDomains` or `preload`**: the conservative choice until a custom domain exists.
+- **HSTS without `preload`**: `includeSubDomains` added in Session 75 once zenntkaixa.dev was live. The `.dev`
+  TLD is already on the browsers' HSTS preload list, so every subdomain is HTTPS-only either way.
 - **The body-size check counts characters, not bytes.** A multibyte body can reach about 24 KB before the 413;
   the 1,500-character feature limit still applies after it.
 - Still accepted (from the Agent contract): the per-instance in-memory rate limit, and Turnstile test keys

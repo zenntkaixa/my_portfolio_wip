@@ -91,7 +91,7 @@ Read first by the sub-agents: project ones in `.claude/agents/` (builders: `ui-b
   gates); Vercel Preview uses Turnstile test keys (previews
   sit behind Vercel login with no API key; production refuses test keys, see `lib/turnstileConfig.ts`);
   plus the decisions in `docs/security-review-m2.md` (dummy-secret skip outside production,
-  `'unsafe-inline'` scripts, HSTS without subdomains).
+  `'unsafe-inline'` scripts, HSTS without preload).
 - **Gotchas agents must check:** copy only in `lib/content.ts`; colours only via `app/globals.css`
   variables; `role="list"` on unstyled lists and `prefers-reduced-motion`; review UI against
   `docs/01-design-system.md` and the estimator against `docs/03-estimator-spec.md`; Playwright reuses
