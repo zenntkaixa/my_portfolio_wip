@@ -14,6 +14,9 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
   and the new heading takes focus with preventScroll plus a smooth `nearest` scroll.
 - New e2e at 1920: the estimator's bottom edge moves ≤2 px while loading (788 px before the fix).
 - Verified: check 379, full e2e 158 (one earlier run hit the known "not stable" flake, 75/75 alone).
+- Flaky e2e root cause (debugger): not code. The VirtualBox VM freezes for 48–280 s (`journalctl -k`
+  "soft lockup", all vCPUs, boots of 19 and 20 Nov); a freeze times out the 2 tests in flight. CI is
+  clean. Fix is on the host (fewer vCPUs than physical cores, no power saving); no timeouts or retries added.
 
 ---
 
