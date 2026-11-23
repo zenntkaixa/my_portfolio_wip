@@ -5,16 +5,17 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
-## 2026-11-23 — Session 77: Plan feedback email line (M14)
+## 2026-11-23 — Session 77: Plan feedback line and launch checks (M14)
 
 **Done** on `feat/m14-plan-feedback` (Izzat).
-- Under a live plan: "Spotted something off in this plan? Tell me", a mailto with the plan title in the
-  subject. Not on the hand-written example. Copy in `estimatorCopy.feedback`; hidden in print like the CTA.
-- New e2e: the link's href, and none on the example. Verified: check 380, full e2e 160 (`--workers=2`).
-- VM on 3 vCPUs still logged two 24 s soft lockups (08:17, outside the test run).
-
-**Next** launch plan step 2 (Izzat's content calls, repo name); favicon.ico, spike check, Lighthouse.
-
+- Live plans get "Spotted something off in this plan? Tell me", a mailto with the plan title as subject
+  (not on the hand-written example; hidden in print). New e2e for the href.
+- `app/favicon.ico`: the 32px icon wrapped in an ICO, so `/favicon.ico` no longer 404s.
+- Lighthouse 13.6 on production: mobile 91–93 / 100 / 100 / 100, desktop 92 / 100 / 100 / 100. Only miss is
+  TBT 330 ms (one 306 ms hydration task); post-launch item.
+- Spike check: no DAILY_LIMIT or RATE_LIMIT_PER_HOUR env in production, so the defaults apply (150/day, 5 per
+  visitor per hour). Plans cost at most US$0.002, so 150 is at most US$0.31 a day. Raising it is Izzat's call.
+- Verified: check 380, full e2e 160 (`--workers=2`).
 ---
 
 ## 2026-11-23 — Session 76: Three small fixes (M14)
