@@ -5,6 +5,18 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-23 — Session 76: Three small fixes (M14)
+
+**Done** on `fix/m14-submit-jump` (Izzat: my suggestion from the backlog).
+- Review task is capped at the hours the agents saved: tasks already at the 0.5 h floor got a review
+  that made AI cost more (0.5 vs 1 h; four 0.5 h tasks 2 vs 2.5 h). No review row when nothing is saved.
+- Print: "What changed the numbers" now prints when closed (print-only `::details-content` rule).
+- HSTS gains `includeSubDomains` (`.dev` is preloaded anyway); security-reviewer: no blockers.
+- Verified: check 380; full e2e 158/159, the miss an axe scan stalled >27 s (2.8 s alone, 6/6).
+  VM now 3 vCPUs and 0 soft lockups, but the suite is slower (4.5 min).
+
+---
+
 ## 2026-11-23 — Session 75: Submit no longer jumps to the tiles below (M14)
 
 **Done** on `fix/m14-submit-jump` (Izzat's bug report).
@@ -17,24 +29,5 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 - Flaky e2e root cause (debugger): not code. The VirtualBox VM freezes for 48–280 s (`journalctl -k`
   "soft lockup", all vCPUs, boots of 19 and 20 Nov); a freeze times out the 2 tests in flight. CI is
   clean. Fix is on the host (fewer vCPUs than physical cores, no power saving); no timeouts or retries added.
-
----
-
-## 2026-11-23 — Session 74: Desktop layout: role column and wider page (M14)
-
-**Done** on `feat/m14-desktop-layout` (Izzat spotted it on a desktop monitor)
-- Release #97 live: How it's built panel with live numbers (10 plans, 13.3 s median); row 16 ok under the new
-  prompt.
-- Tasks tab: with long live task names, Role cells shrank to 74 px and "Architect", "Frontend", "Backend",
-  "DevOps" broke mid-word, because the results' `overflow-wrap: anywhere` lets table columns go below one
-  word. Role cells are now `nowrap`; reproduced and fixed at 1280, 1440 and 1920.
-- New e2e regression test (fails without the fix).
-- Page widened 1200 → 1440 px (Izzat, option 1): estimator results column 510 → 630 px at 1440+; tile prose
-  capped at 70ch; Now tile stats stack under 520 px. 1024 and 1280 unchanged.
-- Roles as outlined pills with a colour dot (7 `--role-*` tokens, ≥3:1 in both themes), role chips as the
-  legend, a "current" pill, and "AI" / "Added by code" tags on task rows (Izzat, option B).
-- Verified: check 379 unit, full e2e 157; reviewer no blockers.
-
-**Next** bumps from 27 Nov and 2 Dec; Neon usage review; the flaky batch-a tests under load.
 
 ---

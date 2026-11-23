@@ -52,8 +52,12 @@ function phaseTasks(tasks: Scope["phases"][number]["tasks"], seniority: Seniorit
   for (const t of out) byRole.set(t.role, (byRole.get(t.role) ?? 0) + t.hours);
   // Most hours wins; ties go to the role that appears first.
   const role = [...byRole].reduce((a, b) => (b[1] > a[1] ? b : a))[0];
-  // At least 0.5 h: a 1 h floor made a tiny code task cost more with AI than without.
-  const hours = half(agentHours * REVIEW_SHARE);
+  const tradAgentHours = tasks
+    .filter((t) => AGENT_FRIENDLY.includes(t.category))
+    .reduce((s, t) => s + half(t.baseHours * SENIORITY_FACTOR[seniority]), 0);
+  // At least 0.5 h, but never more than the agents saved, so a phase never costs more with AI than without.
+  const hours = Math.min(half(agentHours * REVIEW_SHARE), tradAgentHours - agentHours);
+  if (hours <= 0) return out;
   return [...out, { task: estimatorCopy.aiPlan.reviewTask, role, category: "code", hours, addedByCode: true }];
 }
 

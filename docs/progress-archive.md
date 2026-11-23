@@ -4,6 +4,25 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-23 — Session 74: Desktop layout: role column and wider page (M14)
+
+**Done** on `feat/m14-desktop-layout` (Izzat spotted it on a desktop monitor)
+- Release #97 live: How it's built panel with live numbers (10 plans, 13.3 s median); row 16 ok under the new
+  prompt.
+- Tasks tab: with long live task names, Role cells shrank to 74 px and "Architect", "Frontend", "Backend",
+  "DevOps" broke mid-word, because the results' `overflow-wrap: anywhere` lets table columns go below one
+  word. Role cells are now `nowrap`; reproduced and fixed at 1280, 1440 and 1920.
+- New e2e regression test (fails without the fix).
+- Page widened 1200 → 1440 px (Izzat, option 1): estimator results column 510 → 630 px at 1440+; tile prose
+  capped at 70ch; Now tile stats stack under 520 px. 1024 and 1280 unchanged.
+- Roles as outlined pills with a colour dot (7 `--role-*` tokens, ≥3:1 in both themes), role chips as the
+  legend, a "current" pill, and "AI" / "Added by code" tags on task rows (Izzat, option B).
+- Verified: check 379 unit, full e2e 157; reviewer no blockers.
+
+**Next** bumps from 27 Nov and 2 Dec; Neon usage review; the flaky batch-a tests under load.
+
+---
+
 ## 2026-11-20 — Session 73: Prompt fact definitions and vague briefs (M14)
 
 **Done** on `fix/m14-integrations-fact` (Izzat: my suggestion, then the follow-ups the evals showed)
