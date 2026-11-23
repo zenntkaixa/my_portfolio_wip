@@ -91,6 +91,11 @@ Read only the section for the tile you are changing.
 - Budget tab, below the table: "Same scope, two working styles" (`ModeComparison`, a 3-column fixed-layout table: effort, calendar, people cost; the chosen mode's column is shaded and tagged "current"; no sideways scroll at 320px), then the native `<details>` "Estimate drivers" (`EstimateDrivers`) listing each applied factor, built from the constants in `lib/estimateModel.ts` and `lib/budget.ts`.
 - The comparison is `compareModes(scope, team)` (`lib/estimateCompare.ts`): both builds from the kept scope, no request. Shown for live plans and the example. Copy plan text includes the range, contingency rate, missing facts and the comparison. The drivers disclosure is not printed when closed.
 
+## Estimator Tasks tab: pills and tags
+- Roles render as `.pill` with a role-coloured dot (see Pills in the design system), in the Role column and, on phones, in `.tab2-role-line` under the task; the role chips above the table carry the same dot. Role names are read once per row (the hidden one is `display: none`).
+- After the task text, `.tab2-tags` holds one pill: "AI" on `AGENT_FRIENDLY` categories in AI mode (hours reduced by the AI band), or "Added by code" on tasks with `addedByCode` (the review task `buildPlan` inserts). Both carry visually hidden explanations (`estimatorCopy.tasks.tag*`) and wrap below the text on narrow widths. The copied plan text ends those lines with `[AI]` / `[added by code]`.
+- The comparison table marks the current working style with a `.pill--current` pill.
+
 ## Estimator "How it's built" panel (M14)
 - A native `<details class="built">` in `EstimatorTile`, directly under the "Read the code" line, closed by default, no client JS. Copy is `howItsBuilt` in `lib/content.ts`.
 - Sections: request pipeline (numbered `ol`, auto-fit grid, no horizontal scroll at 320px), "Model proposes, code enforces" (two lists, stacked under 30rem), "Live numbers" (`usageStats()`, last 30 days; shown only with at least 5 ok plans, so absent without `DATABASE_URL`), dated eval table (static record from `npm run eval:estimator`, run by hand, never in CI; the variance row stays), and ADR links on GitHub.

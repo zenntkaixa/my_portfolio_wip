@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { buildPlan } from "@/lib/estimateModel";
 import { budget } from "@/lib/budget";
 import { planToText } from "@/lib/planText";
 import { estimatorCopy, profile } from "@/lib/content";
@@ -29,5 +30,20 @@ describe("planToText range, facts and comparison", () => {
     expect(text).toContain(estimatorCopy.compare.heading);
     expect(text).toContain(estimatorCopy.compare.ai);
     expect(planToText(samplePlan, sampleTeam, budget(samplePlan, sampleTeam))).not.toContain(estimatorCopy.compare.heading);
+  });
+});
+
+describe("planToText task markers", () => {
+  const ai = { ...sampleTeam, mode: "ai-assisted" } as const;
+  const bi = { teamSize: sampleTeam.size, seniority: sampleTeam.seniority };
+  const p = buildPlan(sampleScope, { ...bi, mode: "ai-assisted" });
+  const lines = planToText(p, ai, budget(p, ai)).split("\n");
+  it("tags AI-reduced and code-added tasks only in AI mode", () => {
+    expect(lines.some((l) => l.endsWith(" [AI]"))).toBe(true);
+    expect(lines.filter((l) => l.endsWith("[added by code]")).length).toBe(p.phases.flatMap((x) => x.tasks).filter((x) => x.addedByCode).length);
+    const t = buildPlan(sampleScope, { ...bi, mode: "traditional" });
+    const text = planToText(t, { ...ai, mode: "traditional" }, budget(t, ai));
+    expect(text).not.toContain("[AI]");
+    expect(text).not.toContain("[added by code]");
   });
 });

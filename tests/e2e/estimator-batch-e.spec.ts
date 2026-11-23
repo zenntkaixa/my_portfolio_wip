@@ -1,7 +1,7 @@
 import { expect, test, type Page } from "./fakeTurnstile";
 import plan from "../fixtures/plan.json";
 import { estimatorCopy } from "../../lib/content";
-import { buildPlan } from "../../lib/estimateModel";
+import { AGENT_FRIENDLY, buildPlan } from "../../lib/estimateModel";
 import { budget } from "../../lib/budget";
 import type { Scope } from "../../lib/estimate";
 
@@ -123,4 +123,50 @@ test("budget tab fits 320px with no sideways scroll", async ({ page }) => {
   expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
   const t = page.getByTestId("compare");
   expect(await t.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true);
+});
+
+test.describe("role pills and task tags", () => {
+  const openTasks = async (page: Page) => {
+    await page.getByRole("tab", { name: estimatorCopy.tabTasks }).click();
+    return page.getByRole("tabpanel", { name: estimatorCopy.tabTasks });
+  };
+  const rows = (ai: boolean) =>
+    buildPlan(scope, { teamSize: 4, seniority: "mixed", mode: ai ? "ai-assisted" : "traditional" }).phases.flatMap((p) => p.tasks);
+
+  test("each task row shows its role in a pill", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await submitWith(page, plan);
+    const panel = await openTasks(page);
+    const first = rows(false)[0];
+    await expect(panel.locator("td.tab2-role .pill", { hasText: first.role }).first()).toBeVisible();
+    await expect(panel.locator(".tab2-tags")).toHaveCount(0);
+  });
+
+  test("AI tags show only in AI mode, on agent-friendly rows; the review row is tagged as added", async ({ page }) => {
+    await submitWith(page, plan, true);
+    const panel = await openTasks(page);
+    const tasks = rows(true);
+    const agent = tasks.filter((t) => AGENT_FRIENDLY.includes(t.category) && !t.addedByCode).length;
+    expect(agent).toBeGreaterThan(0);
+    await expect(panel.locator(".tab2-tags .pill", { hasText: new RegExp(`^${estimatorCopy.tasks.tagAi}`) })).toHaveCount(agent);
+    const added = panel.locator("tbody tr", { hasText: estimatorCopy.aiPlan.reviewTask });
+    await expect(added.locator(".pill", { hasText: estimatorCopy.tasks.tagAdded }).first()).toBeVisible();
+    await expect(added.getByText(estimatorCopy.tasks.tagAiHint)).toHaveCount(0);
+    for (const t of tasks.filter((t) => !AGENT_FRIENDLY.includes(t.category))) {
+      await expect(panel.locator("tbody tr", { hasText: t.task }).locator(".tab2-tags")).toHaveCount(0);
+    }
+  });
+
+  test("the comparison marks the current style with a pill", async ({ page }) => {
+    await submitWith(page, plan);
+    await openBudget(page);
+    await expect(page.getByTestId("compare").locator("th[data-mode='traditional'] .pill")).toHaveText(estimatorCopy.compare.current);
+  });
+
+  test("tags and pills fit 320px with no sideways scroll", async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 800 });
+    await submitWith(page, plan, true);
+    await openTasks(page);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
+  });
 });

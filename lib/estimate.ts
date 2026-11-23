@@ -96,7 +96,8 @@ export type Scope = {
 };
 
 /** A built plan (buildPlan in lib/estimateModel.ts): hours adjusted for seniority and working style. */
-export type Task = { task: string; role: string; category: Category; hours: number };
+/** `addedByCode` marks the review task buildPlan inserts; the model never proposes it. */
+export type Task = { task: string; role: string; category: Category; hours: number; addedByCode?: true };
 export type Phase = {
   name: string;
   goal: string;

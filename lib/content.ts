@@ -442,6 +442,10 @@ export const estimatorCopy = {
   tasks: {
     roleChipsLabel: "Hours by role",
     chip: (role: string, hours: number) => `${role} ${hours} h`,
+    tagAi: "AI",
+    tagAiHint: "hours reduced by AI agents",
+    tagAdded: "Added by code",
+    tagAddedHint: "not written by the model",
     caption: "Tasks by phase with effort hours",
     regionLabel: "Task table, scrolls sideways on small screens",
     task: "Task",

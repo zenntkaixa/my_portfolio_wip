@@ -15,7 +15,10 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
   word. Role cells are now `nowrap`; reproduced and fixed at 1280, 1440 and 1920.
 - New e2e regression test (fails without the fix).
 - Page widened 1200 → 1440 px (Izzat, option 1): estimator results column 510 → 630 px at 1440+; tile prose
-  capped at 70ch; Now tile stats stack under 520 px. 1024 and 1280 unchanged. Verified: check 349, e2e 153.
+  capped at 70ch; Now tile stats stack under 520 px. 1024 and 1280 unchanged.
+- Roles as outlined pills with a colour dot (7 `--role-*` tokens, ≥3:1 in both themes), role chips as the
+  legend, a "current" pill, and "AI" / "Added by code" tags on task rows (Izzat, option B).
+- Verified: check 379 unit, full e2e 157; reviewer no blockers.
 
 **Next** bumps from 27 Nov and 2 Dec; Neon usage review; the flaky batch-a tests under load.
 
