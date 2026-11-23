@@ -14,7 +14,7 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 - Lighthouse 13.6 on production: mobile 91–93 / 100 / 100 / 100, desktop 92 / 100 / 100 / 100. Only miss is
   TBT 330 ms (one 306 ms hydration task); post-launch item.
 - Spike check: no DAILY_LIMIT or RATE_LIMIT_PER_HOUR env in production, so the defaults apply (150/day, 5 per
-  visitor per hour). Plans cost at most US$0.002, so 150 is at most US$0.31 a day. Raising it is Izzat's call.
+  visitor per hour). Izzat approved `DAILY_LIMIT=500` (Vercel production, at most ~US$1/day); live on next deploy.
 - Verified: check 380, full e2e 160 (`--workers=2`).
 ---
 
