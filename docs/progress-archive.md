@@ -4,6 +4,21 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-20 — Session 73: Prompt fact definitions and vague briefs (M14)
+
+**Done** on `fix/m14-integrations-fact` (Izzat: my suggestion, then the follow-ups the evals showed)
+- The six facts are defined concretely: a named user group counts as users, a named page or system as
+  systems, any named outside service (WhatsApp, FPX, SMS, email) as integrations.
+- New rule: a request with no concrete capability ("make our app better") gets the error answer; a short
+  concrete one ("add dark mode") is planned. Eval gained a ninth brief for that.
+- Three Izzat eval runs (US$0.0071, 0.0080, 0.0080). Final: 6 of 6 plans, 3 of 3 refusals, AI 10–12% lower,
+  leave twice 264 vs 291 h with the same facts. Panel table updated.
+- Verified: check 349 unit, full e2e 152.
+
+**Next** release #95 and this together; bumps from 27 Nov and 2 Dec; Neon usage review.
+
+---
+
 ## 2026-11-20 — Session 72: How it's built panel (M14)
 
 **Done** on `feat/m14-how-its-built` (Izzat: my suggestion)

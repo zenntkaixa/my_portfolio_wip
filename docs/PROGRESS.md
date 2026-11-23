@@ -5,6 +5,18 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-23 — Session 75: Submit no longer jumps to the tiles below (M14)
+
+**Done** on `fix/m14-submit-jump` (Izzat's bug report).
+- Cause: on submit the old plan is swapped for a short skeleton, so the page shrank ~790 px and the
+  tiles below the estimator rose into view; on success, focus() then snapped to the heading.
+- Fix (`Estimator.tsx`): the results keep their height while loading (min-height from the old plan),
+  and the new heading takes focus with preventScroll plus a smooth `nearest` scroll.
+- New e2e at 1920: the estimator's bottom edge moves ≤2 px while loading (788 px before the fix).
+- Verified: check 379, full e2e 158 (one earlier run hit the known "not stable" flake, 75/75 alone).
+
+---
+
 ## 2026-11-23 — Session 74: Desktop layout: role column and wider page (M14)
 
 **Done** on `feat/m14-desktop-layout` (Izzat spotted it on a desktop monitor)
@@ -21,20 +33,5 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 - Verified: check 379 unit, full e2e 157; reviewer no blockers.
 
 **Next** bumps from 27 Nov and 2 Dec; Neon usage review; the flaky batch-a tests under load.
-
----
-
-## 2026-11-20 — Session 73: Prompt fact definitions and vague briefs (M14)
-
-**Done** on `fix/m14-integrations-fact` (Izzat: my suggestion, then the follow-ups the evals showed)
-- The six facts are defined concretely: a named user group counts as users, a named page or system as
-  systems, any named outside service (WhatsApp, FPX, SMS, email) as integrations.
-- New rule: a request with no concrete capability ("make our app better") gets the error answer; a short
-  concrete one ("add dark mode") is planned. Eval gained a ninth brief for that.
-- Three Izzat eval runs (US$0.0071, 0.0080, 0.0080). Final: 6 of 6 plans, 3 of 3 refusals, AI 10–12% lower,
-  leave twice 264 vs 291 h with the same facts. Panel table updated.
-- Verified: check 349 unit, full e2e 152.
-
-**Next** release #95 and this together; bumps from 27 Nov and 2 Dec; Neon usage review.
 
 ---
