@@ -1692,6 +1692,12 @@ p {
   color: var(--muted);
 }
 
+/* Roles are one short word: never let the results' overflow-wrap squeeze them mid-word ("Architec|t"). */
+.tab2-table .tab2-role {
+  white-space: nowrap;
+  overflow-wrap: normal;
+}
+
 .tab2-role-line {
   display: none;
   color: var(--muted);

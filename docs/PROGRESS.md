@@ -5,6 +5,20 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-23 — Session 74: Role names cut mid-word (M14)
+
+**Done** on `fix/m14-role-column` (Izzat spotted it on a desktop monitor)
+- Release #97 live: How it's built panel with live numbers (10 plans, 13.3 s median); row 16 ok under the new
+  prompt.
+- Tasks tab: with long live task names, Role cells shrank to 74 px and "Architect", "Frontend", "Backend",
+  "DevOps" broke mid-word, because the results' `overflow-wrap: anywhere` lets table columns go below one
+  word. Role cells are now `nowrap`; reproduced and fixed at 1280, 1440 and 1920.
+- New e2e regression test (fails without the fix). Verified: check 349 unit, full e2e 153.
+
+**Next** bumps from 27 Nov and 2 Dec; Neon usage review; the flaky batch-a tests under load.
+
+---
+
 ## 2026-11-20 — Session 73: Prompt fact definitions and vague briefs (M14)
 
 **Done** on `fix/m14-integrations-fact` (Izzat: my suggestion, then the follow-ups the evals showed)
@@ -17,18 +31,5 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 - Verified: check 349 unit, full e2e 152.
 
 **Next** release #95 and this together; bumps from 27 Nov and 2 Dec; Neon usage review.
-
----
-
-## 2026-11-20 — Session 72: How it's built panel (M14)
-
-**Done** on `feat/m14-how-its-built` (Izzat: my suggestion)
-- Batch E released (#94) and live: Neon rows 14–15 ok in about 10 s; golden set passed (US$0.0069).
-- A closed-by-default "How it's built" panel in the estimator tile: request path, model proposes / code
-  enforces, live numbers from Neon (30 days, shown from 5 plans), the dated eval table, ADR links.
-- Eval script now in the repo: `npm run eval:estimator` (Izzat runs it; never CI; `--dry` makes no calls).
-- Verified: check 349 unit, full e2e 152 passed; reviewer no blockers (labels now say "new plan").
-
-**Next** integrations prompt fix (named services count); bumps from 27 Nov and 2 Dec; Neon usage review.
 
 ---

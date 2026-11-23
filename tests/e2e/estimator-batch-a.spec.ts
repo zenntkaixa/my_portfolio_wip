@@ -40,6 +40,31 @@ test("task table keeps the Role and Hours columns on desktop", async ({ page }) 
   await expect(page.getByRole("columnheader", { name: estimatorCopy.tasks.hours })).toBeVisible();
 });
 
+test("role names never break mid-word on desktop, even beside long task names", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto("/");
+  await page.getByRole("tab", { name: estimatorCopy.tabTasks }).click();
+  const panel = page.getByRole("tabpanel", { name: estimatorCopy.tabTasks });
+  // Live plans have long task names; the example's are short, so lengthen them in place.
+  await panel.locator("tbody tr").evaluateAll((rows) =>
+    rows.forEach((r) => {
+      const cell = r.querySelector("td:first-child");
+      if (cell?.firstChild && r.querySelector("td.tab2-role")?.textContent) {
+        cell.firstChild.textContent = "Review access control so staff see only their own leave requests and approvals";
+      }
+    }),
+  );
+  const lines = await panel.locator("td.tab2-role").evaluateAll((cells) =>
+    cells.filter((c) => c.textContent).map((c) => {
+      const range = document.createRange();
+      range.selectNodeContents(c);
+      return `${c.textContent}:${range.getClientRects().length}`;
+    }),
+  );
+  expect(lines.length).toBeGreaterThan(0);
+  expect(lines.filter((l) => !l.endsWith(":1"))).toEqual([]);
+});
+
 test.describe("submit on a phone", () => {
   test.use({ viewport: { width: 390, height: 844 } });
 
