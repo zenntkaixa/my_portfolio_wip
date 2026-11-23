@@ -19,7 +19,7 @@ Read only the section for the tile you are changing.
 - Stats: a `<dl>` of div groups, `<dt>` (label) before `<dd>` (value) in the DOM; CSS shows the value
   first. Value in the display font at `--fs-xl`; label at `--fs-sm` in `--muted`.
 - Three columns with 1px `--line` dividers between items only. The tile is a size container: under
-  440px wide (mobile and desktop, where a column is too narrow for the longest label) the stats become
+  520px wide (mobile and desktop, where a column is too narrow for the longest label) the stats become
   rows, value beside label, with horizontal dividers. Tablet widths keep the three columns.
 
 ## Featured project

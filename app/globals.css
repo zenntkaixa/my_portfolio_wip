@@ -66,7 +66,7 @@
 
   --gap: 16px;
   --page-pad: clamp(16px, 4vw, 40px);
-  --max-w: 1200px;
+  --max-w: 1440px;
 }
 
 *,
@@ -279,6 +279,11 @@ p {
   border-radius: var(--r-md);
   padding: clamp(20px, 3vw, 32px);
   min-width: 0;
+}
+
+.tile > p,
+.tile .tab3-note {
+  max-width: 70ch; /* readable measure in wide tiles; left-aligned */
 }
 
 .tile--lg {
@@ -635,9 +640,9 @@ p {
   text-wrap: balance;
 }
 
-/* Narrow tile: stacked rows, number beside its label, dividers become horizontal. Under 440px a column
+/* Narrow tile: stacked rows, number beside its label, dividers become horizontal. Under 520px a column
    is too narrow for the longest label (five lines at desktop width), so desktop uses rows too. */
-@container now (max-width: 440px) {
+@container now (max-width: 520px) {
   .stats {
     grid-template-columns: minmax(0, 1fr);
   }

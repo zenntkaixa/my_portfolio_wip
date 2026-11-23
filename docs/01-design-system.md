@@ -54,7 +54,7 @@ Per-tile layout rules live in `docs/01b-tiles.md`. Read only the section for the
 
 ## Bento grid
 
-12 columns, `gap: 16px`, max width 1200px, page padding `clamp(16px, 4vw, 40px)`.
+12 columns, `gap: 16px`, max width 1440px, page padding `clamp(16px, 4vw, 40px)`.
 
 | Row | Tiles (desktop column spans) |
 |---|---|
@@ -65,6 +65,7 @@ Per-tile layout rules live in `docs/01b-tiles.md`. Read only the section for the
 | 5 | Experience `7` · Stack `5` |
 | 6 | Certifications `5` · Contact `7` |
 
+- **Prose measure:** running paragraphs directly in a tile (`.tile > p`) and the estimator notes (`.tab3-note`) are capped at `70ch`, left-aligned, so wide tiles at 1440px keep readable lines. Tables, the Gantt, cards and headings span the tile.
 - **≤ 1024px:** 6 columns. Half width (span 3): case studies 1 and 2, Stack, Certifications.
   Everything else is full width (span 6). In DOM order this gives clean rows with no orphans.
   Adjust only if `/visual-check` shows a problem, and update this line.
