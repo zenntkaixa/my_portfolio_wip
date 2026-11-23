@@ -15,6 +15,13 @@
   --ok: #0e8f7e;
   --warn: #b4570c;
   --grid: rgba(43, 87, 224, 0.08);
+  --role-ba: #9a5fc0;
+  --role-architect: #2a8f9e;
+  --role-backend: #3f6fd0;
+  --role-frontend: #c0508a;
+  --role-qa: #3f8f4f;
+  --role-devops: #a8741a;
+  --role-pm: #6b7686;
 }
 
 :root[data-theme="dark"] {
@@ -31,6 +38,13 @@
   --ok: #4cc9b4;
   --warn: #f0a55e;
   --grid: rgba(126, 156, 255, 0.09);
+  --role-ba: #c39be0;
+  --role-architect: #5fc4d2;
+  --role-backend: #86a6f0;
+  --role-frontend: #e88fb8;
+  --role-qa: #7fcf8f;
+  --role-devops: #e0b45e;
+  --role-pm: #a3adbd;
 }
 
 /* Fallback before the theme script runs (or with JS off). */
@@ -49,6 +63,13 @@
     --ok: #4cc9b4;
     --warn: #f0a55e;
     --grid: rgba(126, 156, 255, 0.09);
+    --role-ba: #c39be0;
+    --role-architect: #5fc4d2;
+    --role-backend: #86a6f0;
+    --role-frontend: #e88fb8;
+    --role-qa: #7fcf8f;
+    --role-devops: #e0b45e;
+    --role-pm: #a3adbd;
   }
 }
 
@@ -66,7 +87,7 @@
 
   --gap: 16px;
   --page-pad: clamp(16px, 4vw, 40px);
-  --max-w: 1200px;
+  --max-w: 1440px;
 }
 
 *,
@@ -279,6 +300,11 @@ p {
   border-radius: var(--r-md);
   padding: clamp(20px, 3vw, 32px);
   min-width: 0;
+}
+
+.tile > p,
+.tile .tab3-note {
+  max-width: 70ch; /* readable measure in wide tiles; left-aligned */
 }
 
 .tile--lg {
@@ -635,9 +661,9 @@ p {
   text-wrap: balance;
 }
 
-/* Narrow tile: stacked rows, number beside its label, dividers become horizontal. Under 440px a column
+/* Narrow tile: stacked rows, number beside its label, dividers become horizontal. Under 520px a column
    is too narrow for the longest label (five lines at desktop width), so desktop uses rows too. */
-@container now (max-width: 440px) {
+@container now (max-width: 520px) {
   .stats {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -1692,10 +1718,59 @@ p {
   color: var(--muted);
 }
 
+/* Pills: neutral outline, muted text; a role pill adds a small decorative dot in the role's colour. */
+.pill {
+  display: inline-block;
+  padding: 0 0.5em;
+  font-size: var(--fs-xs);
+  line-height: 1.5;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  white-space: nowrap;
+  vertical-align: baseline;
+}
+
+.pill--current {
+  display: inline-block;
+  margin-block-start: 0.2em;
+  border-color: var(--muted);
+}
+
+.role-dot {
+  display: inline-block;
+  inline-size: 0.5em;
+  block-size: 0.5em;
+  margin-inline-end: 0.4em;
+  border-radius: 50%;
+  background: var(--muted);
+}
+
+.role-dot[data-role="BA"] { background: var(--role-ba); }
+.role-dot[data-role="Architect"] { background: var(--role-architect); }
+.role-dot[data-role="Backend"] { background: var(--role-backend); }
+.role-dot[data-role="Frontend"] { background: var(--role-frontend); }
+.role-dot[data-role="QA"] { background: var(--role-qa); }
+.role-dot[data-role="DevOps"] { background: var(--role-devops); }
+.role-dot[data-role="PM"] { background: var(--role-pm); }
+
+/* Tags sit after the task text and wrap below it on narrow widths. */
+.tab2-tags {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-inline-start: 0.4rem;
+}
+
+/* Roles are one short word: never let the results' overflow-wrap squeeze them mid-word ("Architec|t"). */
+.tab2-table .tab2-role {
+  white-space: nowrap;
+  overflow-wrap: normal;
+}
+
 .tab2-role-line {
   display: none;
-  color: var(--muted);
-  font-size: var(--fs-xs);
+  margin-block-start: 0.25rem;
 }
 
 /* Phones: Task + Hours fit 320px, so the Role column gives way to a second line in the Task cell. */
@@ -2140,7 +2215,8 @@ p {
 }
 
 .cmp-tag {
-  display: block;
+  display: table;
+  margin-block-start: 0.25rem;
   font-weight: 400;
   color: var(--ink);
 }

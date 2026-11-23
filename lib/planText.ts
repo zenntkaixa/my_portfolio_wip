@@ -2,6 +2,7 @@ import type { Plan } from "@/lib/estimate";
 import type { Budget, Range, Team } from "@/lib/budget";
 import type { Scope } from "@/lib/estimate";
 import { estimatorCopy, profile } from "@/lib/content";
+import { AGENT_FRIENDLY } from "@/lib/estimateModel";
 import { compareModes } from "@/lib/estimateCompare";
 
 const rm = (n: number) => `RM ${n.toLocaleString("en-MY")}`;
@@ -17,13 +18,17 @@ export const missingText = (plan: Plan) =>
 export function planToText(plan: Plan, team: Team | undefined, b: Budget, scope?: Scope): string {
   const a = estimatorCopy.actions;
   const c = estimatorCopy.budget;
+  const tk = estimatorCopy.tasks;
   const list = (heading: string, items?: string[]) =>
     items?.length ? ["", heading, ...items.map((i) => `- ${i}`)] : [];
   const lines = [plan.title, "", plan.summary];
   if (team) lines.push("", `${a.team}: ${estimatorCopy.people(team.size)}, ${team.seniority}`);
   for (const p of plan.phases) {
     lines.push("", `${p.name} (${a.days(p.startDay, p.startDay + p.durationDays - 1)})`);
-    for (const t of p.tasks) lines.push(`- ${t.task} — ${t.role} — ${t.hours} h`);
+    for (const t of p.tasks) {
+      const tag = t.addedByCode ? ` [${tk.tagAdded.toLowerCase()}]` : team?.mode === "ai-assisted" && AGENT_FRIENDLY.includes(t.category) ? ` [${tk.tagAi}]` : "";
+      lines.push(`- ${t.task} — ${t.role} — ${t.hours} h${tag}`);
+    }
   }
   const e = plan.effort;
   lines.push("", a.totals(plan.totalHours, plan.calendarWeeks), estimatorCopy.summary.rangeNote(e.best, e.worst));
