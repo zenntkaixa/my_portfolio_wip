@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "./fakeTurnstile";
 import plan from "../fixtures/plan.json";
-import { estimatorCopy } from "../../lib/content";
+import { estimatorCopy, profile } from "../../lib/content";
 import { AGENT_FRIENDLY, buildPlan } from "../../lib/estimateModel";
 import { budget } from "../../lib/budget";
 import type { Scope } from "../../lib/estimate";
@@ -75,6 +75,14 @@ test("drivers: traditional lists no AI band, AI lists it", async ({ page }) => {
   await expect(drivers).toContainText("Contingency: 20%");
   await expect(drivers).toContainText("6 productive hours");
   await expect(drivers).not.toContainText("With AI agents");
+});
+
+test("a live plan offers a feedback email with the plan title in the subject; the example doesn't", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByRole("link", { name: estimatorCopy.feedback.link })).toHaveCount(0);
+  await submitWith(page, plan);
+  const link = page.getByRole("link", { name: estimatorCopy.feedback.link });
+  await expect(link).toHaveAttribute("href", `mailto:${profile.email}?subject=${encodeURIComponent(estimatorCopy.feedback.subject(plan.scope.title))}`);
 });
 
 test("printing includes the drivers even when the disclosure is closed", async ({ page }) => {

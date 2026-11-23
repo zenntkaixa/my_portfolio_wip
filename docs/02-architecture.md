@@ -43,6 +43,7 @@ Order matters: cheap checks run before the paid call. Never move the Claude call
 | `app/layout.tsx` | Fonts, metadata, theme bootstrap script | **Done** (OG, Twitter, canonical metadata) |
 | `app/page.tsx` | Composes the bento grid from tiles | Skeleton |
 | `app/opengraph-image.tsx`, `app/icon.tsx`, `app/apple-icon.tsx` | `next/og` image routes (1200x630 OG, 32px icon, 180px apple icon), static, display font from `app/fonts/` via `lib/ogFont.ts` | **Done** |
+| `app/favicon.ico` | `/favicon.ico` for tools that ask for it by name: the 32px `app/icon.tsx` PNG wrapped in an ICO. Rebuild it if the icon changes | **Done** |
 | `lib/tokens.ts` | Parses light and dark tokens from `app/globals.css`; used by the image routes and the contrast test | **Done** |
 | `app/globals.css` | Design tokens, grid, base styles | Tokens done, layout skeleton |
 | `app/api/estimate/route.ts` | Estimator endpoint (see 03) | **Done** |
