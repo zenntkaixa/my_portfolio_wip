@@ -10,7 +10,7 @@
 | `TURNSTILE_SECRET_KEY` | Vercel, `.env.local` | Server only, type Sensitive. Production: real secret. Preview: test secret |
 | `TURNSTILE_HOSTNAME` | Required with a real secret, Vercel Production | `zenntkaixa.dev`; when set, siteverify must report this hostname |
 | `RATE_LIMIT_PER_HOUR` | Optional | Default 5 |
-| `DAILY_LIMIT` | Optional | Default 150 |
+| `DAILY_LIMIT` | Optional | Default 150. Production sets 500 for launch week (Izzat, 2026-11-23); lower it once traffic settles |
 | `UPSTASH_REDIS_REST_URL` | Optional, Vercel Production | `https://` REST URL of the Upstash database; shares the limits across instances (ADR-009) |
 | `UPSTASH_REDIS_REST_TOKEN` | Optional, Vercel Production | Server only, type Sensitive. Without both vars, or when Upstash fails or takes over 1 s, the in-memory limiter is used |
 | `DATABASE_URL` | Optional, Vercel Production | Server only, type Sensitive. Neon connection string for the usage-event rows (ADR-012), least-privilege role (INSERT + SELECT). Unset: no rows, no plan count |
