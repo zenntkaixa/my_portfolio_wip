@@ -11,6 +11,11 @@ export function ProjectTile() {
         <ExternalLink href={profile.github}>{p.personal.link}</ExternalLink>
       </p>
       <p className="project__tagline">{p.tagline}</p>
+      <picture>
+        <source media="(prefers-reduced-motion: reduce)" srcSet={p.preview.still} />
+        {/* Plain img: a GIF is not optimised by next/image and needs no dependency. */}
+        <img className="project__preview" src={p.preview.gif} alt={p.preview.alt} width={800} height={512} loading="lazy" />
+      </picture>
       <p>{p.description}</p>
       <ul className="project__highlights">
         {p.highlights.map((h) => (

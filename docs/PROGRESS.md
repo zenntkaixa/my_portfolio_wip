@@ -5,27 +5,26 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
-## 2026-11-24 — Session 89: refine fixes from the 22:40 and 22:45 reviews (M14)
+## 2026-11-24 — Session 94: release PR #130 and docs-audit fixes
 
-**Done** on `fix/m14-refine-polish` (Izzat: "resume" after the sync update).
-- E12b: reproduced at 950 and 360 px (heading about 1,000 px above the screen after a refine). Cause: the
-  loading height was released a render after the plan, so the page shrank under a smooth scroll already
-  aimed at the old position. Now released with the plan; moves over a screen are instant. New e2e fails on the old code.
-- B4c: refine form names the human check by the Estimate button and adds "Go to the human check".
-- B4a auto-growing answers; B4b "More/Fewer hours: …" reason.
-- Q1: homework and status page plans differ but both total 178 h in 5 phases; not regenerated (costs a live call).
-- check 386, e2e 178.
+**Done** (Izzat: "release", then "fix docs follow-up").
+- Pre-release: check 415, e2e 180, `security-engineer` (no blockers, audit 0), `release-engineer`, `docs-auditor`.
+  Release PR #130 (develop into main) open for Izzat to merge.
+- Docs fixes on `docs/m14-audit-fixes`: architecture status cells and a `lib/estimateModel.ts` row, rate-limit note,
+  README estimator paths and the two eval scripts.
+- After the release merges: check Vercel, write the dev-update to the sync folder. Confirm prod `DAILY_LIMIT`.
+
+## 2026-11-24 — Session 93: G4 radiozk preview GIF (M14)
+
+**Done** on `feat/m14-radiozk-preview`.
+- Recorded the live radiozk site with Playwright (play, FLAC live, now playing, Liked, About): 800x512, 15 frames, 290 KB.
+  Shows a real track name, as Izzat asked.
+- `featuredProject.preview` in `lib/content.ts`; `ProjectTile` renders a `<picture>`: still PNG under reduced motion,
+  GIF otherwise (plain `<img>`, lazy, width/height set). `.project__preview` CSS, `docs/01b-tiles.md` updated.
+- check 415; visual-check `#projects` at 1440 and 390 light: fine. The GIF shows the track on air at recording time.
+- Re-record when radiozk's UI changes. Render free tier may be asleep; the capture needed one warm-up.
 
 ---
 
-## 2026-11-24 — Session 88: B4 answer the questions and refine (M14)
-
-**Done** on `feat/m14-refine` (Izzat: "start B4", plan approved with "go").
-- `RefineForm` under the tabs: one input per open question, room counter, "Refine this plan" (`aria-disabled`
-  with its reason). `lib/refine.ts` appends the answers to the brief; it is sent as a normal estimate, so no
-  API, prompt or limit changes (no new attack surface).
-- New plan shows "Refined from: … Now: …" (confidence, hours, build range).
-- Tests: unit for the brief builder; e2e for the request body, comparison line and clearing; three specs updated
-  for the second form. check 384, e2e 176.
 
 ---

@@ -713,6 +713,15 @@ p {
   line-height: 1.4;
 }
 
+.project__preview {
+  display: block;
+  margin: 0.75rem 0;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
 .project__highlights > li + li {
   margin-top: 0.25em;
 }
@@ -790,26 +799,87 @@ p {
 .timeline__item {
   display: grid;
   grid-template-columns: 7.5em minmax(0, 1fr);
+  grid-template-areas: "period body";
   column-gap: var(--gap);
   align-items: baseline;
 }
 
 .timeline__period {
+  grid-area: period;
   font-size: var(--fs-sm);
   font-variant-numeric: tabular-nums;
   color: var(--muted);
 }
 
 .timeline__body {
+  grid-area: body;
   display: flex;
   flex-direction: column;
   padding-inline-start: var(--gap);
-  padding-block-end: 0.9em;
+  padding-block-end: calc(0.9em + 0.5rem + 0.4em);
   border-inline-start: 1px solid var(--line);
 }
 
 .timeline__item:last-child > .timeline__body {
-  padding-block-end: 0;
+  padding-block-end: calc(0.5rem + 0.4em);
+}
+
+/* Decorative Gantt bar: position and width are percentages of the shared year axis. */
+.timeline__bar {
+  /* Shares the body cell and sits in the room its bottom padding leaves. */
+  grid-area: body;
+  align-self: end;
+  display: block;
+  position: relative;
+  height: 0.5rem;
+  margin-block-end: 0.9em;
+  margin-inline-start: calc(var(--gap) + 1px);
+  background: linear-gradient(to right, transparent var(--bar-left), var(--accent) var(--bar-left) calc(var(--bar-left) + var(--bar-width)), transparent 0);
+  border-radius: var(--r-sm);
+}
+
+.timeline__item:last-child > .timeline__bar {
+  margin-block-end: 0.4em;
+}
+
+/* Career break: a hollow dashed outline instead of a fill. */
+.timeline__bar--gap {
+  background: none;
+}
+
+.timeline__bar--gap::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  left: var(--bar-left);
+  width: var(--bar-width);
+  border: 1px dashed var(--muted);
+  border-radius: var(--r-sm);
+}
+
+.timeline__axis {
+  position: relative;
+  height: 1.2em;
+  margin-top: 0.4em;
+  margin-inline-start: calc(7.5em + var(--gap) + 1px + var(--gap));
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+.timeline__axis > span {
+  /* Font size is on the ticks, not the axis: its em margin must match the 7.5em period column. */
+  font-size: var(--fs-xs);
+  position: absolute;
+  left: var(--tick);
+  transform: translateX(-50%);
+}
+
+.timeline__axis > span:first-child {
+  transform: none;
+}
+
+.timeline__axis > span:last-child {
+  transform: translateX(-100%);
 }
 
 .timeline__org {
@@ -867,6 +937,31 @@ p {
   .timeline__body {
     padding: 0;
     border: 0;
+  }
+
+  .timeline__bar,
+  .timeline__item:last-child > .timeline__bar {
+    margin-block: 0.35em 0;
+    margin-inline-start: 0;
+  }
+
+  .timeline__item:last-child > .timeline__body {
+    padding-block-end: 0;
+  }
+
+  .timeline__axis {
+    margin-inline-start: var(--gap);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .timeline__bar {
+    animation: timeline-grow 0.6s ease-out both;
+  }
+
+  @keyframes timeline-grow {
+    from { clip-path: inset(0 100% 0 0); }
+    to { clip-path: inset(0); }
   }
 }
 
@@ -2646,7 +2741,7 @@ p {
 }
 
 .flow--live .flow__steps li[data-state="todo"] {
-  opacity: 0.45;
+  opacity: 0.7;
 }
 
 .flow--live .flow__steps li[data-state="todo"]::before {

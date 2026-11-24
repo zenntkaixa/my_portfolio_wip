@@ -1,4 +1,5 @@
 import { FEATURE_MAX } from "@/lib/estimate";
+import type { Plan } from "@/lib/estimate";
 import { estimatorCopy } from "@/lib/content";
 
 export type Answer = { question: string; answer: string };
@@ -19,3 +20,13 @@ export function refinedBrief(brief: string, answers: Answer[]): string {
 
 /** Characters left before the refined brief passes the request limit (negative when over). */
 export const refineRoom = (brief: string, answers: Answer[]) => FEATURE_MAX - refinedBrief(brief, answers).length;
+
+/** B4d: task names that appear only in the new plan (added) or only in the old one (removed). */
+export function taskDiff(before: string[], after: string[]) {
+  const norm = (t: string) => t.trim().toLowerCase();
+  const had = new Set(before.map(norm));
+  const has = new Set(after.map(norm));
+  return { added: after.filter((t) => !had.has(norm(t))), removed: before.filter((t) => !has.has(norm(t))) };
+}
+
+export const taskNames = (plan: Plan) => plan.phases.flatMap((p) => p.tasks.filter((t) => !t.addedByCode).map((t) => t.task));
