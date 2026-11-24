@@ -33,5 +33,5 @@ claude
 In Claude Code, type `/next-task`. It will pick up "First run on Ubuntu" from the roadmap.
 
 ## Working on both machines
-Always `git pull` before starting and `/ship` (commit and push) before switching machines.
+Always `git pull` before starting and `/ship-task` (commit and push) before switching machines.
 `docs/PROGRESS.md` travels with the repo, so Claude Code on either machine knows where you left off.
