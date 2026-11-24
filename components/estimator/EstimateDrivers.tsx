@@ -12,7 +12,10 @@ export function EstimateDrivers({ plan, seniority, mode }: { plan: Plan; seniori
   const lines = [
     d.seniority(seniority, SENIORITY_FACTOR[seniority]),
     ...(mode === "ai-assisted" ? [d.ai(pct(1 - AI_FACTOR.worst), pct(1 - AI_FACTOR.best), pct(1 - AI_FACTOR.likely), pct(REVIEW_SHARE))] : []),
-    d.spread(spread.best, spread.worst, plan.confidence),
+    // AI plans: the shown range also folds in the AI band, so state the real ratios, not just the confidence spread.
+    ...(mode === "ai-assisted"
+      ? [d.spread(plan.effort.best / plan.effort.likely, plan.effort.worst / plan.effort.likely, plan.confidence), d.aiRange(pct(1 - AI_FACTOR.best), pct(1 - AI_FACTOR.worst))]
+      : [d.spread(spread.best, spread.worst, plan.confidence)]),
     d.contingency(pct(CONTINGENCY[plan.confidence])),
     d.capacity(HOURS_PER_DAY),
   ];

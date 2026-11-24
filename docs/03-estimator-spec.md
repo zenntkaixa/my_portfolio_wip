@@ -110,6 +110,11 @@ Upstash error is a silent miss; without the Upstash env vars (local, e2e) the ca
 The browser goes one step further: when the brief (same normalisation) and team size match the last live
 plan, submit rebuilds that saved scope with `buildPlan` and sends no request, so switching seniority or
 working style needs no token, never hits the rate limit and shows no cached note (review round 2).
+Round 3: the seniority and working-style radios update the live plan on screen at once (no click), also when it
+is kept under an error banner, as long as the team size is unchanged; focus stays on the radio. A note under
+the working-style options says this doesn't count toward the hourly limit, and a 429 banner adds that the
+radios still work. The confidence card shows "N of 6 facts"; in AI mode the drivers box states the real
+range ratios and why it is wider.
 The "Same scope, two working styles" table shows effort, calendar, people cost, AI agent seats and the
 build total for both styles, so the AI column carries its seat cost.
 

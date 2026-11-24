@@ -152,3 +152,5 @@ need an ADR and Izzat's privacy call) wait for Izzat.
 - [x] Branded 404 (`app/not-found.tsx`): tile, theme toggle, link home, noindex only (Izzat, pre-launch) [ui-builder]
 - [x] Review round 2: browser rebuild on seniority or working-style change (no request), confidence high at
   5+ of 6 facts, seats and build total in the comparison, "Career break" 2022 to 2023 (Izzat) [ui-builder]
+- [x] Review round 3: radios update the plan at once with a "doesn't count toward your hourly limit" note (and on
+  the 429 banner), "N of 6 facts", AI range in the drivers box, eval re-run 2026-11-24 (Izzat) [ui-builder]

@@ -104,6 +104,10 @@ export function Estimator() {
   const abortRef = useRef<AbortController | null>(null);
   // Focus moves to the results only after a user action, never for the example shown on load.
   const acted = useRef(false);
+  // Set for an instant rebuild from a radio change: focus stays on the radio, and no scroll.
+  const quiet = useRef(false);
+  // Announces (and shows) an instant rebuild, since focus stays on the radio.
+  const [updated, setUpdated] = useState("");
 
   // Abort any in-flight request on unmount.
   useEffect(() => () => abortRef.current?.abort(), []);
@@ -124,6 +128,10 @@ export function Estimator() {
   }, [cooldown]);
 
   useEffect(() => {
+    if (quiet.current) {
+      quiet.current = false;
+      return;
+    }
     if (!acted.current) return;
     // Returning to the stored example (typing after a field error) must not pull focus out of the field.
     if (status.kind === "success" && !status.example) {
@@ -170,6 +178,8 @@ export function Estimator() {
     !lastOk.example && lastOk.description !== undefined && lastOk.team.size === teamSize && sameBrief(lastOk.description, feature)
       ? lastOk.scope
       : null;
+  // The live plan on screen (fresh, or kept under an error banner) for this team size: the radios can rebuild it.
+  const onScreen = !lastOk.example && lastOk.team.size === teamSize ? lastOk : null;
   const canSubmit =
     !tooShort &&
     length <= FEATURE_MAX &&
@@ -213,7 +223,8 @@ export function Estimator() {
           estimatorCopy.fallback[res.status] ?? estimatorCopy.fallback.other;
         if (res.status === 429)
           setCooldown(parseRetryAfter(res.headers.get("Retry-After")));
-        fail(res.status, serverError ?? fallback);
+        const message = serverError ?? fallback;
+        fail(res.status, res.status === 429 && onScreen ? `${message} ${estimatorCopy.mode.freeAfterLimit}` : message);
       } else if (!scope || !built || !isPlan(built)) {
         fail(502, estimatorCopy.badPlan);
       } else {
@@ -228,13 +239,23 @@ export function Estimator() {
     }
   }
 
-  function succeed(scope: Scope, plan: Plan, cached: boolean) {
+  function succeed(scope: Scope, plan: Plan, cached: boolean, keepView = false, description = feature) {
     const teamLabel = `${estimatorCopy.people(teamSize)}, ${seniority}${mode === "ai-assisted" ? estimatorCopy.mode.teamSuffix : ""}`;
-    const ok: Success = { kind: "success", scope, plan, teamLabel, team: { size: teamSize, seniority, mode }, description: feature, ...(cached && { cached: true as const }) };
+    const ok: Success = { kind: "success", scope, plan, teamLabel, team: { size: teamSize, seniority, mode }, description, ...(cached && { cached: true as const }) };
     setLastOk(ok);
+    if (keepView) quiet.current = true;
+    else setTab("phases");
     setStatus(ok);
-    setTab("phases");
+    setUpdated(keepView ? estimatorCopy.mode.updated(teamLabel) : "");
   }
+
+  // A seniority or working-style change updates the plan on screen at once (no request), whatever is typed.
+  useEffect(() => {
+    if (!onScreen || status.kind === "submitting") return;
+    if (onScreen.team.seniority === seniority && onScreen.team.mode === mode) return;
+    succeed(onScreen.scope, buildPlan(onScreen.scope, { teamSize, seniority, mode }), false, true, onScreen.description);
+    // Deliberately keyed on the two choices only: typing or team-size changes must not rebuild.
+  }, [seniority, mode]);
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -417,6 +438,7 @@ export function Estimator() {
               ))}
             </div>
           </fieldset>
+          {onScreen && <p className="estimator__model-note">{estimatorCopy.mode.freeSwitch}</p>}
 
           <Turnstile ref={turnstile} onToken={onToken} />
 
@@ -443,7 +465,7 @@ export function Estimator() {
         aria-busy={submitting}
       >
         <p role="status" className="estimator__status">
-          {submitting ? estimatorCopy.planning : ""}
+          {submitting ? estimatorCopy.planning : updated}
         </p>
 
         {submitting && (

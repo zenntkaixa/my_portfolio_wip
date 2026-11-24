@@ -41,6 +41,9 @@ export function PhaseTimeline({ plan, teamLabel, teamSize }: { plan: Plan; teamL
           <dd>
             <span className={`tab1-badge tab1-badge--${plan.confidence}`}>{plan.confidence}</span>
           </dd>
+          <dd className="tab1-hint">
+            {copy.summary.factCount(Object.keys(copy.factLabels).length - plan.missingFacts.length, Object.keys(copy.factLabels).length)}
+          </dd>
           <dd className="tab1-hint">{copy.summary.hints.confidence[plan.confidence]}</dd>
           <dd className="tab1-hint" data-testid="missing-facts">{missingText(plan)}</dd>
         </div>
