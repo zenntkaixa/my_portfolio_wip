@@ -70,10 +70,9 @@ Per-tile layout rules live in `docs/01b-tiles.md`. Read only the section for the
 - **≤ 1024px:** 6 columns. Half width (span 3): case studies 1 and 2, Stack, Certifications.
   Everything else is full width (span 6). In DOM order this gives clean rows with no orphans.
   Adjust only if `/visual-check` shows a problem, and update this line.
-- **≤ 720px:** single column, Estimator directly after Hero. This is visual only (CSS `order` on
-  `.tile--hero` and `.tile--estimator`). DOM, reading and focus order stay Hero, Now, Estimator, so
-  keyboard and screen-reader users reach Now before the Estimator. Accepted trade-off (Izzat, 2026-11-03):
-  the Now tile has nothing focusable, and moving the DOM would need explicit desktop grid placement.
+- **≤ 720px:** single column in DOM order: Hero, Now, Estimator, then the rest. Visual, reading and
+  focus order match (Izzat, 2026-11-24, review round 4; the Estimator used to move up with CSS `order`,
+  which hid "Right now" about six screens down).
 
 ## Focus
 - `:focus-visible`: 2px `--accent` outline, 2px offset, plus a 4px `--accent-soft` halo outside the outline

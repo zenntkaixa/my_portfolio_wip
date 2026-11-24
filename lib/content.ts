@@ -48,6 +48,7 @@ export const seo = {
 };
 
 export const skipLink = "Skip to the estimator";
+export const backToTop = "Back to top";
 
 export const notFound = {
   title: "Page not found",

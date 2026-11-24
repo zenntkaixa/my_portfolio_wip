@@ -28,7 +28,8 @@ function dailyBlocked(): LimitResult {
 
 function visitorBlocked(oldestHit: number, now: number): LimitResult {
   const retryAfter = Math.ceil((oldestHit + WINDOW_MS - now) / 1000);
-  return { ok: false, reason: `You've used ${PER_HOUR} estimates this hour. Try again in ${Math.ceil(retryAfter / 60)} minutes.`, retryAfter };
+  // No time in the text: the submit button counts down from Retry-After, so there is one live timer.
+  return { ok: false, reason: `You've used ${PER_HOUR} estimates this hour. The button shows when you can try again.`, retryAfter };
 }
 
 function utcDay(now: number) {

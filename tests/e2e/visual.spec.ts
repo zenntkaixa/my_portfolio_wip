@@ -29,6 +29,8 @@ for (const width of widths) {
       await page.addInitScript((t) => localStorage.setItem("theme", t), theme);
       await page.goto("/");
       await page.evaluate(() => document.fonts.ready);
+      // Turnstile loads when the estimator nears the viewport; on phones it sits below Hero and Now.
+      await page.locator(".tile--estimator").scrollIntoViewIfNeeded();
       // Turnstile is the last thing to appear. Wait for its iframe to load, or for the
       // "not configured" note when a reused dev server has no NEXT_PUBLIC_TURNSTILE_SITE_KEY.
       const notConfigured = page.getByRole("note").filter({ hasText: "Human check not configured" });

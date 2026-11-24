@@ -339,20 +339,12 @@ p {
   .tile {
     grid-column: 1 / -1;
   }
-  /* Visual order only: Hero, then Estimator, then every other tile in DOM order (order 0).
-     Reading and keyboard focus order still follow the DOM (Hero, Now, Estimator, ...). */
-  .bento > .tile--hero {
-    order: -2;
-  }
-  .bento > .tile--estimator {
-    order: -1;
-  }
+  /* DOM order throughout (Hero, Now, Estimator, ...), so visual, reading and focus order match. */
 }
 
 /* ---- Load animation ----
    Pure CSS, so tiles appear without hydration (and with JS blocked). Each tile fades and rises 8px,
-   staggered 40ms in DOM order; tiles past the 12th reuse the last delay. On mobile, CSS `order`
-   moves the hero and estimator up but the delays still follow the DOM (accepted trade-off).
+   staggered 40ms in DOM order; tiles past the 12th reuse the last delay.
    Reduced-motion users get no animation: the rules below only exist under no-preference.
    Fill mode is `backwards`, not `both`: the end keyframe equals the resting style, and a forwards
    fill would keep every tile a stacking context and a containing block for position: fixed
@@ -1860,6 +1852,11 @@ p {
   margin: 0;
 }
 
+/* Two columns on phones: the confidence card (last) spans both, so its hint and "Not stated" list aren't squeezed. */
+.tab1-summary > div:last-child {
+  grid-column: 1 / -1;
+}
+
 .tab1-summary > div {
   min-width: 0;
   padding: 0.7rem 0.8rem;
@@ -2065,6 +2062,10 @@ p {
 @media (min-width: 720px) {
   .tab1-summary {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .tab1-summary > div:last-child {
+    grid-column: auto;
   }
 
   .tab1-lists {
@@ -2362,5 +2363,54 @@ p {
 @media (max-width: 30rem) {
   .built__split {
     grid-template-columns: 1fr;
+  }
+}
+
+/* ---- Back to top ----
+   A small round link (arrow; its name is "Back to top") pinned to the corner (the page is about 13 screens on a phone). Where scroll-driven
+   animations work it fades in over the first screen of scrolling; elsewhere it is always shown. */
+.to-top {
+  position: fixed;
+  right: var(--page-pad);
+  bottom: var(--page-pad);
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  font-size: var(--fs-lg);
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  text-decoration: none;
+}
+
+.to-top:hover {
+  border-color: var(--accent);
+}
+
+@supports (animation-timeline: scroll()) {
+  @keyframes to-top-in {
+    from {
+      opacity: 0;
+      visibility: hidden;
+    }
+    to {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+  .to-top {
+    animation: to-top-in linear both;
+    animation-timeline: scroll();
+    animation-range: 0 100vh;
+  }
+}
+
+@media print {
+  .to-top {
+    display: none;
   }
 }
