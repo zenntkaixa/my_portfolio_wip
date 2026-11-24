@@ -476,7 +476,6 @@ export const estimatorCopy = {
   },
   timelineLabel: (days: number) => `Timeline, ${days} ${days === 1 ? "day" : "days"}`,
   weekLabel: (n: number) => `Week ${n}`,
-  duration: (n: number) => `${n} ${n === 1 ? "day" : "days"}`,
   taskCount: (n: number) => `${n} ${n === 1 ? "task" : "tasks"}`,
   tasks: {
     roleChipsLabel: "Hours by role",

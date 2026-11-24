@@ -73,7 +73,7 @@ Read only the section for the tile you are changing.
 
 ## Estimator plan actions (C2)
 - A `.plan-actions` row (base buttons, quiet) sits above the result tabs: "Copy plan" (`lib/planText.ts` to the clipboard; label becomes "Copied" for 2 s, a polite status announces it or the failure) and "Print or save as PDF" (`window.print()`).
-- `@media print` at the end of `app/globals.css` hides everything except `.estimator__results`, stacks all three tab panels (overriding `hidden`), prints black on white with no accent frame, avoids splitting phase cards and table rows, and shows `.plan-print-footer`.
+- `@media print` at the end of `app/globals.css` hides everything except `.estimator__results`, stacks all three tab panels (overriding `hidden`), prints black on white with no accent frame, avoids splitting timeline rows and table rows, and shows `.plan-print-footer`.
 
 ## Estimator usage line and cache notice (C3)
 - `EstimatorTile` is an async Server Component: it calls `countPlans()` and, only when the count is at least 25, shows a muted `.estimator__built` line ("{n} plans generated since November 2026", `en-MY` formatting). `app/page.tsx` sets `revalidate = 3600`. No `DATABASE_URL` means no line.

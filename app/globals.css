@@ -1943,7 +1943,6 @@ p {
   min-width: 0;
 }
 
-.tab1-cards > li,
 .tab1-timeline > li {
   margin-top: 0;
 }
@@ -1957,7 +1956,15 @@ p {
 }
 
 .tab1-row__name {
+  margin: 0;
+  font-size: inherit;
   font-weight: 600;
+}
+
+.tab1-row__goal {
+  margin: 0.3rem 0 0;
+  font-size: var(--fs-sm);
+  color: var(--muted);
 }
 
 .tab1-row__label {
@@ -2011,7 +2018,8 @@ p {
 
 @media (prefers-reduced-motion: no-preference) {
   .tab1-bar {
-    animation: tab1-grow 500ms ease-out both;
+    /* G8: 300 ms, one row after another (--i is the row index). */
+    animation: tab1-grow 300ms ease-out calc(var(--i, 0) * 60ms) both;
     transform-origin: left center;
   }
 
@@ -2020,36 +2028,6 @@ p {
       transform: scaleX(0);
     }
   }
-}
-
-.tab1-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
-  gap: calc(var(--gap) / 2);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.tab1-card {
-  min-width: 0;
-  padding: 0.8rem;
-  background: var(--surface-2);
-  border: 1px solid var(--line);
-  border-radius: var(--r-sm);
-}
-
-.tab1-card p {
-  margin: 0.25rem 0 0;
-  font-size: var(--fs-sm);
-}
-
-.tab1-card .tab1-card__meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0 0.75rem;
-  color: var(--muted);
-  font-variant-numeric: tabular-nums;
 }
 
 .tab1-lists {
@@ -2152,7 +2130,6 @@ p {
     padding-top: 12px;
   }
 
-  .tab1-cards > li,
   .tab2-table tr,
   .tab1-row {
     break-inside: avoid;

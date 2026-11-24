@@ -218,7 +218,8 @@ Above the tabs, under the title, one plain-English answer line built in code (E8
 - Timeline: one horizontal bar per phase. `left = startDay / totalDays`, `width = durationDays / totalDays`.
   Week gridlines every 5 working days, with "Week 1", "Week 2"... centred under each span (at most 6
   labels; long plans label every 2nd or 3rd week). Label "Day 3 to 7" on each bar. Maths lives in `lib/timeline.ts`.
-- Phase cards below: name, goal, duration, task count.
+- No separate phase cards (E10): each timeline row shows the phase name (h4), "Day x to y · N tasks" and the
+  goal under its bar. Bars grow in over 300 ms, one row after another (60 ms apart; none with reduced motion).
 - Assumptions and risks as two short lists.
 
 **Tab 2 — Tasks**
