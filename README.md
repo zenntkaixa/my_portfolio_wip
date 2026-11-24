@@ -14,7 +14,7 @@ Claude returns an end-to-end delivery plan with effort and calendar estimates.
 
 ## What's worth a look
 
-- **The estimator path** (`app/api/estimate/route.ts`, `lib/estimate.ts`). Requests are checked in a
+- **The estimator path** (`app/api/estimate/route.ts`, `lib/estimate.ts`, `lib/estimateModel.ts`). Requests are checked in a
   fixed order: content type and size, then schema validation, then Cloudflare Turnstile, then
   per-visitor and daily limits, and only then the Claude call. The model's JSON is never trusted:
   `normaliseScope` caps and clamps it, and `buildPlan` applies seniority, the AI band and the calendar in code (ADR-013).
@@ -48,6 +48,8 @@ locally without an account.
 | `npm run test` | Vitest unit tests |
 | `npm run test:e2e` | Playwright e2e (AI call mocked). Run `npx playwright install chromium` once. |
 | `npm run check` | Typecheck + unit tests + build |
+| `npm run eval:estimator` | Hand-run estimator eval; makes real Haiku calls, never in CI (`--dry` makes none). See `docs/03-estimator-spec.md`. |
+| `npm run examples:generate` | Regenerates the example plans (about 43 real Haiku calls) |
 
 ## How this repo is developed
 

@@ -41,24 +41,25 @@ Order matters: cheap checks run before the paid call. Never move the Claude call
 | Path | Responsibility | Status |
 |---|---|---|
 | `app/layout.tsx` | Fonts, metadata, theme bootstrap script | **Done** (OG, Twitter, canonical metadata) |
-| `app/page.tsx` | Composes the bento grid from tiles | Skeleton |
+| `app/page.tsx` | Composes the bento grid from tiles | **Done** |
 | `app/opengraph-image.tsx`, `app/icon.tsx`, `app/apple-icon.tsx` | `next/og` image routes (1200x630 OG, 32px icon, 180px apple icon), static, display font from `app/fonts/` via `lib/ogFont.ts` | **Done** |
 | `app/favicon.ico` | `/favicon.ico` for tools that ask for it by name: the 32px `app/icon.tsx` PNG wrapped in an ICO. Rebuild it if the icon changes | **Done** |
 | `lib/tokens.ts` | Parses light and dark tokens from `app/globals.css`; used by the image routes and the contrast test | **Done** |
-| `app/globals.css` | Design tokens, grid, base styles | Tokens done, layout skeleton |
+| `app/globals.css` | Design tokens, grid, base styles | **Done** |
 | `app/api/estimate/route.ts` | Estimator endpoint (see 03) | **Done** |
 | `lib/content.ts` | All site copy, from the CV | **Done** |
-| `lib/estimate.ts` | Types, request validation, plan normalisation | **Done** |
+| `lib/estimate.ts` | Types, request validation, scope normalisation | **Done** |
+| `lib/estimateModel.ts` | Deterministic effort model: `buildPlan` applies seniority, AI band, working style and calendar to the model's scope (ADR-013) | **Done** |
 | `lib/rateLimit.ts` | Per-IP limit and daily cap: Upstash when configured, in-memory fallback | **Done** |
 | `lib/upstash.ts` | Upstash REST config and one-command client (ADR-009) | **Done** |
 | `lib/estimator/service.ts` | Estimator orchestration with injected deps; outcomes and event rows | **Done** |
 | `lib/estimator/turnstile.ts`, `anthropic.ts`, `cache.ts`, `events.ts` | Adapters: siteverify, Messages API, 24 h plan cache (Upstash), event rows and log line (Neon, ADR-012) | **Done** |
 | `db/schema.sql` | DDL of the Neon `estimate_events` table | **Done** |
 | `lib/estimator/events.ts` `usageStats()` | Page data source: 30-day stats (Neon) for the "How it's built" panel, revalidated hourly with `countPlans()` | **Done** |
-| `lib/timeline.ts` | Pure maths for the timeline chart and role totals | Skeleton + tests |
+| `lib/timeline.ts` | Pure maths for the timeline chart and role totals | **Done** |
 | `components/Bento.tsx` | Grid wrapper and `Tile` primitive (span props, `headingLevel`, `titleClassName`) | **Done** |
-| `components/tiles/*` | One file per tile | Skeletons |
-| `components/estimator/*` | Client UI for the demo | Skeletons |
+| `components/tiles/*` | One file per tile | **Done** |
+| `components/estimator/*` | Client UI for the demo | **Done** |
 | `components/ThemeToggle.tsx` | Light/dark icon toggle; follows the system until the visitor chooses | **Done** |
 | `tests/unit/*` | Vitest | Started |
 | `tests/e2e/*` | Playwright, AI call mocked with `page.route` | Started |
