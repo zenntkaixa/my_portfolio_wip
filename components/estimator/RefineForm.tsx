@@ -29,7 +29,10 @@ export function RefineForm({
   const answers = questions.map((question, i) => ({ question, answer: values[i] ?? "" }));
   const room = refineRoom(brief, answers);
   const none = answers.every((a) => !a.answer.trim());
-  const reason = none ? c.needAnswer : room < 0 ? c.tooLong(FEATURE_MAX) : blocked;
+  // The form's own reasons come first; the human check only matters once the answers are ready.
+  const local = none ? c.needAnswer : room < 0 ? c.tooLong(FEATURE_MAX) : null;
+  const reason = local ?? blocked;
+  const showCheck = !local && onShowCheck;
   return (
     <section className="refine" aria-labelledby="refine-heading">
       <h4 id="refine-heading">{c.heading}</h4>
@@ -38,7 +41,7 @@ export function RefineForm({
         onSubmit={(e) => {
           e.preventDefault();
           if (!reason) onRefine(answers);
-          else if (reason === blocked && onShowCheck) onShowCheck();
+          else if (showCheck) showCheck();
         }}
       >
         {questions.map((q, i) => (
@@ -63,8 +66,8 @@ export function RefineForm({
         <p id="refine-why" className="refine__why" aria-live="polite">
           {reason ?? ""}
         </p>
-        {reason === blocked && onShowCheck && (
-          <button type="button" className="refine__check" onClick={onShowCheck}>
+        {showCheck && (
+          <button type="button" className="refine__check" onClick={showCheck}>
             {c.showCheck}
           </button>
         )}

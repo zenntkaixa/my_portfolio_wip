@@ -75,7 +75,8 @@ async function walk(page: Page, key: "Tab" | "Shift+Tab"): Promise<Stop[]> {
     // The Next.js dev overlay lives outside the page; it is not a product stop.
     if (stop.tag === "nextjs-portal") continue;
     stops.push(stop);
-    if (key === "Tab" && stop.tag === "textarea") await page.keyboard.type(FEATURE);
+    // Only the brief: the refine answers (B4) are textareas too, and the walk leaves them empty.
+    if (key === "Tab" && stop.tag === "textarea" && stop.name.startsWith("Feature description")) await page.keyboard.type(FEATURE);
     if (key === "Tab" && stop.role === "radio") await expect(submitButton(page)).toBeEnabled({ timeout: 15_000 });
   }
   throw new Error(`keyboard trap suspected: still focusable after ${MAX_STOPS} Tab presses`);
