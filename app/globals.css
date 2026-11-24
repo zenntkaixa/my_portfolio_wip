@@ -713,6 +713,15 @@ p {
   line-height: 1.4;
 }
 
+.project__preview {
+  display: block;
+  margin: 0.75rem 0;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
 .project__highlights > li + li {
   margin-top: 0.25em;
 }

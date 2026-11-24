@@ -83,6 +83,12 @@ export const featuredProject = {
   ],
   stack: ["React 19", "TypeScript", "Node.js", "Express", "PostgreSQL", "nginx", "Docker"],
   repo: "https://github.com/zenntkaixa/radiozk",
+  // Looping capture of the live site (recorded 2026-11-24); the still is the first frame, for reduced motion.
+  preview: {
+    gif: "/radiozk-demo.gif",
+    still: "/radiozk-demo.png",
+    alt: "Screen recording of radiozk: pressing play, the stream goes live in lossless FLAC with a moving equaliser, then the now-playing card, recently played tracks, the Liked page and the About page.",
+  },
   // Personal GitHub activity (zenntkaixa, public repos), counted 2026-11-19. Dated so it never overclaims.
   personal: {
     value: "176",
