@@ -1490,7 +1490,6 @@ p {
   gap: 0.6rem;
 }
 
-
 .estimator__cta {
   display: flex;
   flex-wrap: wrap;
@@ -2056,7 +2055,6 @@ p {
 
 @media (min-width: 720px) {
   /* Two by two (M6): the results column is about 550 px, too narrow for four cards of 15px hints. */
-
   .tab1-summary > div:nth-child(n + 3) {
     grid-column: auto;
   }
@@ -2114,6 +2112,22 @@ p {
 
   .estimator__results {
     color: black;
+  }
+
+  /* Keep the fills that carry meaning (filled fact dots, chart segments) when printing. */
+  .tab1-dots i,
+  .bchart__bar span,
+  .bchart__legend i,
+  .cbars__range {
+    print-color-adjust: exact;
+  }
+
+  /* Drop the screen-only results panel (M7): its bleed margins would push past the page edge. */
+  .estimator__results:not(:empty) {
+    margin-inline: 0;
+    padding-inline: 0;
+    border: 0;
+    background: none;
   }
 
   .estimator__results * {
@@ -2422,7 +2436,6 @@ p {
   color: var(--muted);
 }
 
-/* Pipeline: numbered steps joined by a vertical rail; wraps into columns when there is room. */
 /* G1 request flow (RequestFlow.tsx): a vertical stepper; each step's marker is --accent (code) or --model
    (the model). Live: done steps filled, the active one ringed and pulsing, later ones faint. */
 .flow__key {

@@ -63,7 +63,6 @@ const sameBrief = (a: string, b: string) => {
   return n(a) === n(b);
 };
 
-/** Visual-only progress line; the status line announces `planning` once, so this is aria-hidden by its parent. */
 type Tab = "phases" | "tasks" | "budget";
 
 type Chip = { label: string; text: string };
