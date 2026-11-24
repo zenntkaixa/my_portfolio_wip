@@ -27,6 +27,9 @@ Read only the section for the tile you are changing.
   number in `--ink`) with a link to the GitHub profile (M11).
 - Tagline is the lead line: `--fs-lg`, weight 600 (bolder than the hero headline because it sits
   right under a tile title), line-height 1.4.
+- Preview: looping GIF of the live site (`featuredProject.preview`, `public/radiozk-demo.gif`, shows a real track
+  name) between tagline and description, full width with a `--line` border. `<picture>` serves the still PNG
+  under `prefers-reduced-motion: reduce`. Re-record when radiozk's UI changes.
 - Highlights: bulleted list with tighter 0.25em item spacing. Stack: `.chips` labelled "Tech stack".
 - Links: a list in a wrapping flex row. Every external link gets `target="_blank"`,
   `rel="noopener noreferrer"` and visually hidden " (opens in a new tab)". No arrow glyphs or icons.
