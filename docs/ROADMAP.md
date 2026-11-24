@@ -169,3 +169,4 @@ need an ADR and Izzat's privacy call) wait for Izzat.
 - [x] B4 answer the open questions and refine the plan, with a before and after line (Izzat) [ui-builder]
 - [x] Refine fixes: E12b scroll after a refine, B4c human-check reason and jump, B4a growing answers, B4b hours reason (reviewer 22:40/22:45) [ui-builder]
 - [x] B4d refine reason names the added and removed tasks ("Same tasks; hours re-estimated." otherwise); always shown when hours or tasks change, so no hidden threshold (reviewer 02:35) [ui-builder]
+- [x] Reviewer T1, T3, T5, T7 as automated tests (`tests/unit/reviewerCases.test.ts`, `tests/e2e/dark-contrast.spec.ts`); found a dark-theme contrast bug on the pending request-flow steps, left as `test.fail` (Izzat) [qa-tester]

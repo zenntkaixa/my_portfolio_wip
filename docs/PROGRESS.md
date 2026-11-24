@@ -5,6 +5,19 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-24 — Session 91: reviewer T-tests (M14)
+
+**Done** on `test/m14-review-t-tests` (Izzat: "do the T-tests").
+- T1 team 4 vs 5, T3 team 1 and 12 plus out-of-range sizes, T5 Malay brief and injection inside a refine answer (23 unit tests, mocked).
+- T7 dark-theme axe contrast on request flow, budget tab and refine form (2 e2e).
+- Bug found, not fixed: pending request-flow steps (`.flow--live ... [data-state="todo"]`, `opacity: 0.45`, globals.css ~2649)
+  measure 3.86:1 in dark theme (AA needs 4.5:1). That test is `test.fail`; switch it to `test` when fixed. Light theme not checked.
+- check 411, new e2e 2 of 2. Reviewer skipped (tests only).
+
+**Next:** fix the contrast bug (needs Izzat's go); S3, B5, G4/G5/C6, E6 as before.
+
+---
+
 ## 2026-11-24 — Session 90: B4d refine reason as a task diff (M14)
 
 **Done** on `feat/m14-refine-diff` (Izzat: "go ahead with B4d as proposed").
@@ -17,27 +30,3 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
-## 2026-11-24 — Session 89: refine fixes from the 22:40 and 22:45 reviews (M14)
-
-**Done** on `fix/m14-refine-polish` (Izzat: "resume" after the sync update).
-- E12b: reproduced at 950 and 360 px (heading about 1,000 px above the screen after a refine). Cause: the
-  loading height was released a render after the plan, so the page shrank under a smooth scroll already
-  aimed at the old position. Now released with the plan; moves over a screen are instant. New e2e fails on the old code.
-- B4c: refine form names the human check by the Estimate button and adds "Go to the human check".
-- B4a auto-growing answers; B4b "More/Fewer hours: …" reason.
-- Q1: homework and status page plans differ but both total 178 h in 5 phases; not regenerated (costs a live call).
-- check 386, e2e 178.
-
----
-
-## 2026-11-24 — Session 88: B4 answer the questions and refine (M14)
-
-**Done** on `feat/m14-refine` (Izzat: "start B4", plan approved with "go").
-- `RefineForm` under the tabs: one input per open question, room counter, "Refine this plan" (`aria-disabled`
-  with its reason). `lib/refine.ts` appends the answers to the brief; it is sent as a normal estimate, so no
-  API, prompt or limit changes (no new attack surface).
-- New plan shows "Refined from: … Now: …" (confidence, hours, build range).
-- Tests: unit for the brief builder; e2e for the request body, comparison line and clearing; three specs updated
-  for the second form. check 384, e2e 176.
-
----
