@@ -1,10 +1,10 @@
 ---
-name: ship
+name: ship-task
 description: Verify, review, update the roadmap and progress log, then commit, push the task branch and open a PR into develop. Use when a roadmap task is finished.
 disable-model-invocation: true
 ---
 
-# /ship
+# /ship-task
 
 Stop at the first failure and report it. Don't re-run work this task already did. Run on the task
 branch, never on `develop` or `main`; if you're on either, create the task branch first (CLAUDE.md

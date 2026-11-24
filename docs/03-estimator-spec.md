@@ -193,7 +193,12 @@ Turnstile, rate limit (counts as one), daily cap, cache, 1500-character limit an
 and no server change. A counter shows room left; the button is `aria-disabled` with its reason (no answer, too
 long, waiting for the human check, cooldown, planning) so it stays focusable. The new plan shows "Refined from:
 <confidence, hours, build range>. Now: <same>." until a plain estimate replaces it; radio rebuilds keep it.
-Hidden in print.
+Hidden in print. Answers are auto-growing textareas (`field-sizing: content`, 2 rows elsewhere; B4a). When the
+hours move more than 5%, the "Refined from" line adds why ("More hours: your answers added detail…" or "Fewer
+hours: …"; B4b). With no human-check token the reason names the widget by the Estimate button and a "Go to the
+human check" button scrolls it into view, since a visible challenge renders there, far above (B4c). After any
+result the loading height is released in the same render as the plan, so the scroll to the heading isn't thrown
+off by the page shrinking mid-scroll; moves longer than a screen are instant (E12b).
 Brief coach (E11): while a typed brief (not a chip) is 20 to 249 characters, a static tip under the counter names
 the six facts (`estimatorCopy.coach`, linked by `aria-describedby`, not a live region). No detection: a keyword
 guess could disagree with the model's own fact check.

@@ -75,7 +75,8 @@ async function walk(page: Page, key: "Tab" | "Shift+Tab"): Promise<Stop[]> {
     // The Next.js dev overlay lives outside the page; it is not a product stop.
     if (stop.tag === "nextjs-portal") continue;
     stops.push(stop);
-    if (key === "Tab" && stop.tag === "textarea") await page.keyboard.type(FEATURE);
+    // Only the brief: the refine answers (B4) are textareas too, and the walk leaves them empty.
+    if (key === "Tab" && stop.tag === "textarea" && stop.name.startsWith("Feature description")) await page.keyboard.type(FEATURE);
     if (key === "Tab" && stop.role === "radio") await expect(submitButton(page)).toBeEnabled({ timeout: 15_000 });
   }
   throw new Error(`keyboard trap suspected: still focusable after ${MAX_STOPS} Tab presses`);
@@ -110,7 +111,7 @@ test("Tab order, visible focus indicators, no trap, Shift+Tab goes back", async 
   // Then the selected tab, its panel, the four list disclosures (Assumptions, Risks, Questions, Not included;
   // open at this width) and the Email me and LinkedIn call-to-action links.
   // Then the refine form (B4): one input per open question and its button.
-  const refine = [...(samplePlan.openQuestions ?? []).map(() => "text"), "button"]; // walk() reports an input by its type
+  const refine = [...(samplePlan.openQuestions ?? []).map(() => "textarea"), "button"];
   expect(after.slice(2).map((s) => s.role || s.tag), listing).toEqual(["tab", "tabpanel", "summary", "summary", "summary", "summary", ...refine, "a", "a"]);
   const chips = est.filter((s) => s.tag === "button" && s.role === "").slice(0, -1);
   const kinds = est.map((s) => (s.tag === "textarea" ? "textarea" : s.role === "range" ? "range" : s.role === "radio" ? "radio" : "button"));

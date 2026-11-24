@@ -3,6 +3,7 @@ name: security-reviewer
 description: Read-only security and cost-abuse review. Use before committing anything that touches app/api, lib/rateLimit.ts, env vars, Turnstile, headers or deployment config, and before going live.
 tools: Read, Glob, Grep, Bash
 model: opus
+effort: high
 ---
 
 You are an application security engineer reviewing a public portfolio site with a paid AI endpoint.

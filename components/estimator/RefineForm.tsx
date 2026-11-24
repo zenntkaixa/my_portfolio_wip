@@ -16,17 +16,23 @@ export function RefineForm({
   questions,
   blocked,
   onRefine,
+  onShowCheck,
 }: {
   brief: string;
   questions: string[];
   blocked: string | null;
   onRefine: (answers: Answer[]) => void;
+  /** Set while the human check has no token: the widget (and any visible challenge) is far above. */
+  onShowCheck?: () => void;
 }) {
   const [values, setValues] = useState<string[]>(() => questions.map(() => ""));
   const answers = questions.map((question, i) => ({ question, answer: values[i] ?? "" }));
   const room = refineRoom(brief, answers);
   const none = answers.every((a) => !a.answer.trim());
-  const reason = none ? c.needAnswer : room < 0 ? c.tooLong(FEATURE_MAX) : blocked;
+  // The form's own reasons come first; the human check only matters once the answers are ready.
+  const local = none ? c.needAnswer : room < 0 ? c.tooLong(FEATURE_MAX) : null;
+  const reason = local ?? blocked;
+  const showCheck = !local && onShowCheck;
   return (
     <section className="refine" aria-labelledby="refine-heading">
       <h4 id="refine-heading">{c.heading}</h4>
@@ -35,14 +41,15 @@ export function RefineForm({
         onSubmit={(e) => {
           e.preventDefault();
           if (!reason) onRefine(answers);
+          else if (showCheck) showCheck();
         }}
       >
         {questions.map((q, i) => (
           <div key={`${i}-${q}`} className="refine__field">
             <label htmlFor={`refine-${i}`}>{q}</label>
-            <input
+            <textarea
               id={`refine-${i}`}
-              type="text"
+              rows={2}
               maxLength={300}
               autoComplete="off"
               value={values[i] ?? ""}
@@ -59,6 +66,11 @@ export function RefineForm({
         <p id="refine-why" className="refine__why" aria-live="polite">
           {reason ?? ""}
         </p>
+        {showCheck && (
+          <button type="button" className="refine__check" onClick={showCheck}>
+            {c.showCheck}
+          </button>
+        )}
       </form>
     </section>
   );

@@ -48,10 +48,10 @@ Kill dev servers by PID (including the child `next-server`), never with `pkill -
 
 ```
 /next-task → plan (ranked options when there's a real choice) → Izzat approves → task branch → build
-  → verify once → reviewer → /ship (push + PR into develop) → /clear → Izzat merges → "PR merged"
+  → verify once → reviewer → /ship-task (push + PR into develop) → /clear → Izzat merges → "PR merged"
 ```
 
-- **One task per session, one branch and one PR per task.** `/clear` after `/ship` opens the PR; ROADMAP and PROGRESS carry the state.
+- **One task per session, one branch and one PR per task.** `/clear` after `/ship-task` opens the PR; ROADMAP and PROGRESS carry the state.
 - **Small tasks** (one tile, a few lines): one subagent does the code and its tests. Docs-only or
   few-line diffs skip `reviewer`; the main agent fixes small review findings inline.
 - **Verify once.** Whoever edited last runs `npm run check` and e2e. Don't re-run unless you edited since.
@@ -59,7 +59,22 @@ Kill dev servers by PID (including the child `next-server`), never with `pkill -
 - **Reports** from subagents: 15 lines or fewer.
 - Run `security-reviewer` before anything touching `app/api/**`, env vars or deployment.
 - Model choice: Sonnet for UI, tests, review of small diffs, content and bookkeeping. Opus for the
-  estimator prompt, security reviews, hard bugs and architecture decisions.
+  estimator prompt, security reviews, hard bugs and architecture decisions. Subagents pin their own model
+  and `effort` in frontmatter; the main session switches with `/model` (say which when proposing a plan).
+
+### Token budget
+
+Every request resends the whole conversation, so session length is the main cost.
+- **Fresh session per task.** `/clear` after `/ship-task`, after a release's dev-update, and before reading a
+  new sync review. State lives in ROADMAP, PROGRESS, open PRs and Drive, never in chat history.
+- **Sync folder:** search by title prefix newer than the last dev-update (the `modifiedTime` filter is
+  ignored and returns every file in full); read only the newest review.
+- **Read narrowly:** file ranges and `grep`, not whole files; filter test output to pass/fail lines;
+  don't re-read a file you just edited.
+- **Heavy skills** (`dataviz`, `hallmark`, design skills) stay loaded for the rest of a session: use them
+  in a session of their own.
+- **Unused MCP servers and plugins** are off for this project in `.claude/settings.local.json`; turn one
+  back on there when a task needs it.
 
 ### Branches and PRs (ADR-004)
 
@@ -69,8 +84,12 @@ Kill dev servers by PID (including the child `next-server`), never with `pkill -
 - **Task branches** come off an up-to-date `develop`, one per roadmap task, named
   `<type>/<milestone>-<slug>` with the conventional-commit type (e.g. `feat/m2-timeline`,
   `docs/m4-readme`, `chore/branch-workflow` when there's no milestone).
-- **`/ship`** pushes the task branch and opens a PR into `develop` with `gh pr create`. Izzat reviews
-  and merges it on GitHub; Claude never merges task PRs.
+- **`/ship-task`** pushes the task branch and opens a PR into `develop` with `gh pr create`. Izzat reviews
+  and merges it on GitHub; Claude never merges task PRs, except the auto-merge case below.
+- **Auto-merge (chore/docs PRs only):** a task PR whose diff touches only `docs/`, root `*.md`, `CLAUDE.md`,
+  `.claude/skills/` or `.claude/agents/` (type `chore` or `docs`; no `app/`, `lib/`, `components/`, `.github/`,
+  env or deployment files) gets `gh pr merge --auto --merge` right after `/ship-task` opens it, so it merges
+  once `ci` is green. Anything else waits for Izzat.
 - **Releasing** = a PR from `develop` into `main`, opened only when Izzat asks and only after
   `npm run check` and `npm run test:e2e` pass on `develop`. Izzat merges it with a merge commit.
 
@@ -103,7 +122,7 @@ Read first by the sub-agents: project ones in `.claude/agents/` (builders: `ui-b
 - **Git conventions:** section 4, *Branches and PRs* (ADR-004): task branches off `develop`, PRs into
   `develop`, release PRs `develop` → `main`, merge commits, commit trailer from the session. Izzat
   merges; pushes need Izzat's go-ahead each time. Sub-agents never commit or push; the main session
-  commits through `/ship`.
+  commits through `/ship-task`.
 - **When to run which agent (cost):** `reviewer` (Sonnet; `model: opus` for large or risky diffs) on
   code PRs, not docs-only or few-line ones; `security-reviewer` before anything in `app/api/**`, env or
   deployment; `security-engineer` for `npm audit` triage and before releases; `verifier` only for
@@ -132,7 +151,7 @@ Read first by the sub-agents: project ones in `.claude/agents/` (builders: `ui-b
 - **Never weaken abuse protection** (Turnstile, rate limit, daily cap, input length limits) without asking.
 - Don't change roadmap scope or design direction without asking Izzat first.
 - Never `git push --force` and never rewrite published history.
-- Never commit directly to `main` or `develop`, and never merge PRs; Izzat merges. Release PRs into
+- Never commit directly to `main` or `develop`, and never merge PRs except the auto-merge case in section 4; otherwise Izzat merges. Release PRs into
   `main` only when Izzat asks.
 - Don't commit `.claude/settings.json` or `AGENTS.md` unless Izzat asks; stage explicit paths.
 

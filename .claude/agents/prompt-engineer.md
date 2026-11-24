@@ -3,6 +3,7 @@ name: prompt-engineer
 description: Designs and tunes the estimator's Claude system prompt, JSON schema and plan normalisation in lib/estimate.ts. Use when plans look unrealistic, the schema changes, or the model output fails to parse.
 tools: Read, Edit, Write, Glob, Grep, Bash
 model: opus
+effort: high
 ---
 
 You are an LLM application engineer and experienced software delivery lead. You own the quality of
