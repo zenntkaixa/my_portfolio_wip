@@ -439,7 +439,7 @@ export const estimatorCopy = {
     },
     // E14: headline figures in whole hours (task rows keep their exact half hours, so subtotals add up).
     hoursValue: (n: number) => `${Math.round(n)} hours`,
-    rangeNote: (best: number, worst: number) => `Likely; ${best}–${worst} h range`,
+    rangeNote: (best: number, worst: number) => `Likely; ${Math.round(best)}–${Math.round(worst)} h range`,
     missing: (list: string) => `Not stated: ${list}.`,
     factCount: (n: number, total: number) => `${n} of ${total} facts`,
     allStated: `All ${Object.keys(factLabels).length} facts were stated: ${Object.values(factLabels).join(", ")}.`,
@@ -476,7 +476,8 @@ export const estimatorCopy = {
     build: "Build total",
     tick: (n: number) => (n === 0 ? "RM 0" : `${n / 1000}k`),
     chartLabel: (trad: string, ai: string) => `Build total range. Traditional: ${trad}. With AI agents: ${ai}.`,
-    hoursRange: (likely: number, best: number, worst: number) => `${likely} h (${best}–${worst})`,
+    hoursRange: (likely: number, best: number, worst: number) =>
+      `${Math.round(likely)} h (${Math.round(best)}–${Math.round(worst)})`,
   },
   timelineLabel: (days: number) => `Timeline, ${Math.ceil(days)} ${Math.ceil(days) === 1 ? "day" : "days"}`,
   weekLabel: (n: number) => `Week ${n}`,
