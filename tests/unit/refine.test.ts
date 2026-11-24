@@ -17,6 +17,11 @@ describe("refinedBrief", () => {
     );
   });
 
+  it("adds a second refine's answers to the existing block", () => {
+    const once = refinedBrief(brief, [{ question: "A?", answer: "yes" }]);
+    expect(refinedBrief(once, [{ question: "B?", answer: "no" }])).toBe(`${once}\n- B? no`);
+  });
+
   it("returns the brief unchanged when nothing is answered", () => {
     expect(refinedBrief(`  ${brief} `, [{ question: "Q?", answer: "" }])).toBe(brief);
   });

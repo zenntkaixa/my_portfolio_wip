@@ -9,8 +9,12 @@ export type Answer = { question: string; answer: string };
  */
 export function refinedBrief(brief: string, answers: Answer[]): string {
   const given = answers.map((a) => ({ q: a.question.trim(), a: a.answer.trim().replace(/\s+/g, " ") })).filter((a) => a.a);
-  if (given.length === 0) return brief.trim();
-  return `${brief.trim()}\n\n${estimatorCopy.refine.lead}\n${given.map((a) => `- ${a.q} ${a.a}`).join("\n")}`;
+  const base = brief.trim();
+  if (given.length === 0) return base;
+  const lines = given.map((a) => `- ${a.q} ${a.a}`).join("\n");
+  // A second refine adds to the answers block the first one wrote, instead of repeating its heading.
+  const lead = `\n\n${estimatorCopy.refine.lead}\n`;
+  return base.includes(lead) ? `${base}\n${lines}` : `${base}${lead}${lines}`;
 }
 
 /** Characters left before the refined brief passes the request limit (negative when over). */

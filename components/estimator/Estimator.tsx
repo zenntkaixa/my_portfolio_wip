@@ -289,6 +289,7 @@ export function Estimator() {
   function submit(e: React.FormEvent) {
     e.preventDefault();
     if (!canSubmit) return;
+    pendingRefine.current = null; // a plain estimate is never a refine, even after an aborted one
     if (reuse) {
       acted.current = true;
       succeed(reuse, buildPlan(reuse, { teamSize, seniority, mode }), lastOk.saved ? "saved" : undefined);

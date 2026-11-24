@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { estimatorCopy } from "@/lib/content";
 import { refineRoom, type Answer } from "@/lib/refine";
+import { FEATURE_MAX } from "@/lib/estimate";
 
 const c = estimatorCopy.refine;
 
@@ -25,7 +26,7 @@ export function RefineForm({
   const answers = questions.map((question, i) => ({ question, answer: values[i] ?? "" }));
   const room = refineRoom(brief, answers);
   const none = answers.every((a) => !a.answer.trim());
-  const reason = none ? c.needAnswer : room < 0 ? c.tooLong : blocked;
+  const reason = none ? c.needAnswer : room < 0 ? c.tooLong(FEATURE_MAX) : blocked;
   return (
     <section className="refine" aria-labelledby="refine-heading">
       <h4 id="refine-heading">{c.heading}</h4>

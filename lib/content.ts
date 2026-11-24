@@ -416,7 +416,7 @@ export const estimatorCopy = {
     button: "Refine this plan",
     left: (n: number) => (n >= 0 ? `${n} characters left for answers` : `${-n} characters over the limit`),
     needAnswer: "Answer at least one question.",
-    tooLong: "Shorten your answers: the brief and answers must fit in 1500 characters.",
+    tooLong: (max: number) => `Shorten your answers: the brief and answers must fit in ${max} characters.`,
     busy: "Planning…",
     waiting: "Waiting for the human check…",
     cooldown: "Hourly limit reached. Try again when the main button is ready.",
