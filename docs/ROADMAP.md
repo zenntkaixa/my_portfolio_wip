@@ -23,7 +23,7 @@ Agent hints in brackets.
 - [x] Case study tiles x3 [ui-builder]
 - [x] Experience, Stack, Certifications, Contact tiles [ui-builder]
 - [x] Load animation with reduced-motion support [ui-builder]
-- [x] `/visual-check` pass at 390 / 1024 / 1440, light and dark; fix findings [qa-tester]
+- [x] `/visual-check` pass at 390 / 1024 / 1440, light and dark; fix findings [qa-tester, ui-builder]
 
 ## M2 — Estimator UI
 - [x] Form: textarea with counter, example chips, team slider, seniority segmented control [ui-builder]
@@ -37,10 +37,10 @@ Agent hints in brackets.
 - [x] Security review of the whole estimator path [security-reviewer]
 
 ## M3 — Quality
-- [x] Unit tests: `validateRequest`, `normalisePlan`, `timeline`, `rateLimit` [qa-tester]
-- [x] E2E: page renders all tiles; estimator happy path and 429 path with mocked API [qa-tester]
-- [x] Accessibility pass: keyboard-only walkthrough, contrast check, labels [qa-tester]
-- [x] GitHub Actions CI: typecheck, unit tests, build, e2e [qa-tester]
+- [x] Unit tests: `validateRequest`, `normalisePlan`, `timeline`, `rateLimit` [qa-tester, ui-builder]
+- [x] E2E: page renders all tiles; estimator happy path and 429 path with mocked API [qa-tester, ui-builder]
+- [x] Accessibility pass: keyboard-only walkthrough, contrast check, labels [qa-tester, ui-builder]
+- [x] GitHub Actions CI: typecheck, unit tests, build, e2e [qa-tester, ui-builder]
   - then (Izzat): auto-delete head branches now; branch protection on `develop` and `main`
     (PR + required `ci` check) once the repo is public (M4) or on GitHub Pro
 
@@ -60,7 +60,7 @@ Agent hints in brackets.
 ## M5 — Polish
 - [x] Open Graph image with `next/og` and full metadata [ui-builder]
 - [x] CI: run in the pinned Playwright container instead of installing browsers each run (ADR-007)
-- [x] Lighthouse targets met on mobile; fix findings (Performance 71 at go-live; others 100) [qa-tester]
+- [x] Lighthouse targets met on mobile; fix findings (Performance 71 at go-live; others 100) [qa-tester, ui-builder]
   - local production build 79 → 93/94 (Turnstile out of the critical path, no fade on first-row tiles); production: PageSpeed Insights mobile 100 (2026-11-12, with analytics); VM Lighthouse runs vary 84–93
 - [x] Vercel Web Analytics (ADR first) [api-engineer]
   - ADR-008: same-origin script, production only, no dependency; Izzat enables it in the dashboard
@@ -87,7 +87,7 @@ Added 2026-11-17. Release #69 (M6) confirmed live by Izzat: human check passes s
   - Scope cut with Izzat 2026-11-17: timeline bars already grow in (M2); no hover lift, since no tile
     is clickable as a whole and the design system says no scale
 - [x] Keyboard Tab-order test uses the fake Turnstile (`tests/e2e/fakeTurnstile.ts`) like the other
-  specs, so it no longer depends on Cloudflare's network (fails about 4 in 8 runs on the VM) [qa-tester]
+  specs, so it no longer depends on Cloudflare's network (fails about 4 in 8 runs on the VM) [qa-tester, ui-builder]
 
 ## M8 — Tidy-up
 Added 2026-11-17 from the audit's leftovers; batched on one branch with M7 (Izzat).
@@ -169,3 +169,4 @@ need an ADR and Izzat's privacy call) wait for Izzat.
 - [x] B4 answer the open questions and refine the plan, with a before and after line (Izzat) [ui-builder]
 - [x] Refine fixes: E12b scroll after a refine, B4c human-check reason and jump, B4a growing answers, B4b hours reason (reviewer 22:40/22:45) [ui-builder]
 - [x] B4d refine reason names the added and removed tasks ("Same tasks; hours re-estimated." otherwise); always shown when hours or tasks change, so no hidden threshold (reviewer 02:35) [ui-builder]
+- [x] Reviewer T1, T3, T5, T7 as automated tests (`tests/unit/reviewerCases.test.ts`, `tests/e2e/dark-contrast.spec.ts`); fixed the dark-theme contrast bug it found on the pending request-flow steps, opacity 0.45 → 0.7 (Izzat) [qa-tester, ui-builder]
