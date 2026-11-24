@@ -5,6 +5,15 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-24 — Session 94: release PR #130 and docs-audit fixes
+
+**Done** (Izzat: "release", then "fix docs follow-up").
+- Pre-release: check 415, e2e 180, `security-engineer` (no blockers, audit 0), `release-engineer`, `docs-auditor`.
+  Release PR #130 (develop into main) open for Izzat to merge.
+- Docs fixes on `docs/m14-audit-fixes`: architecture status cells and a `lib/estimateModel.ts` row, rate-limit note,
+  README estimator paths and the two eval scripts.
+- After the release merges: check Vercel, write the dev-update to the sync folder. Confirm prod `DAILY_LIMIT`.
+
 ## 2026-11-24 — Session 93: G4 radiozk preview GIF (M14)
 
 **Done** on `feat/m14-radiozk-preview`.
@@ -15,17 +24,7 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 - check 415; visual-check `#projects` at 1440 and 390 light: fine. The GIF shows the track on air at recording time.
 - Re-record when radiozk's UI changes. Render free tier may be asleep; the capture needed one warm-up.
 
-## 2026-11-24 — Session 92: G6 Experience Gantt timeline (M14)
-
-**Done** on `feat/m14-experience-timeline` (Izzat: "do g6").
-- `lib/careerSpan.ts` parses the existing `period` strings (no new copy); each row gets an aria-hidden bar on a 2017-to-now
-  axis with year ticks. Career break is a hollow dashed bar. Growth animation only under no-preference motion.
-- Reviewer fixes: axis `em` margin now matches the 7.5em period column; last row's spacing fixed under 420px.
-- check 415 (5 new), e2e 180, visual-check on the tile (1440 and 390 light, 390 dark): no issues.
-- "Now" freezes at build time (`shortcut:` comment); the tick year changes on the next deploy.
-
-**Next:** S3, B5, G4/G5/C6, E6, G7 as before.
-
 ---
+
 
 ---

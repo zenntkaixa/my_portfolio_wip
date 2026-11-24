@@ -4,6 +4,21 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-24 — Session 92: G6 Experience Gantt timeline (M14)
+
+**Done** on `feat/m14-experience-timeline` (Izzat: "do g6").
+- `lib/careerSpan.ts` parses the existing `period` strings (no new copy); each row gets an aria-hidden bar on a 2017-to-now
+  axis with year ticks. Career break is a hollow dashed bar. Growth animation only under no-preference motion.
+- Reviewer fixes: axis `em` margin now matches the 7.5em period column; last row's spacing fixed under 420px.
+- check 415 (5 new), e2e 180, visual-check on the tile (1440 and 390 light, 390 dark): no issues.
+- "Now" freezes at build time (`shortcut:` comment); the tick year changes on the next deploy.
+
+**Next:** S3, B5, G4/G5/C6, E6, G7 as before.
+
+---
+
+---
+
 ## 2026-11-24 — Session 91: reviewer T-tests (M14)
 
 **Done** on `test/m14-review-t-tests` (Izzat: "do the T-tests").
