@@ -1,6 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 import {
   aiWorkflow,
+  backToTop,
   caseStudies,
   certifications,
   certificationsNote,
@@ -429,4 +430,24 @@ test("the estimator says who built it and links the code; the 20-character minim
     estimatorBuiltBy.url,
   );
   await expect(page.locator("#feature-count")).toContainText("at least 20 characters");
+});
+
+test("phones show Hero, Now, then the Estimator, in DOM order", async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 800 });
+  await page.goto("/");
+  const top = (sel: string) => page.locator(sel).evaluate((el) => el.getBoundingClientRect().top);
+  const [hero, nowTile, estimator] = [await top(".tile--hero"), await top(".tile--now"), await top(".tile--estimator")];
+  expect(hero).toBeLessThan(nowTile);
+  expect(nowTile).toBeLessThan(estimator);
+});
+
+test("back-to-top link returns to the top of the page", async ({ page }) => {
+  await page.goto("/");
+  // Hidden over the first screen where scroll-driven animations work, so scroll before looking for it.
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  const link = page.getByRole("link", { name: backToTop });
+  await expect(link).toBeVisible();
+  await expect(link).toHaveAttribute("href", "#top");
+  await link.click();
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeLessThan(50);
 });

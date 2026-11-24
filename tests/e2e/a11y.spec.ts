@@ -13,12 +13,16 @@ type Theme = (typeof themes)[number];
 
 async function scan(page: Page) {
   // Let tile and result entry animations finish, so axe sees final colours and not a half-faded tile.
-  await page.evaluate(() => Promise.all(document.getAnimations().map((a) => a.finished.catch(() => undefined))));
+  // Time-based animations only: a scroll-driven one (the back-to-top fade) never finishes.
+  await page.evaluate(() =>
+    Promise.all(document.getAnimations().filter((a) => a.timeline === document.timeline).map((a) => a.finished.catch(() => undefined))),
+  );
   // The fake Turnstile renders nothing, so there is no widget iframe to exclude.
   // axe cannot compute contrast through a background image: with the estimator's blueprint grid on, 28
   // text nodes there come back "incomplete" and go unchecked. The grid is 1px lines at under 10% alpha,
   // so scan against the plain --surface underneath.
-  await page.addStyleTag({ content: ".tile--estimator { background-image: none !important; }" });
+  // The back-to-top link fades with scroll position; pin it at full opacity so axe checks its real contrast.
+  await page.addStyleTag({ content: ".tile--estimator { background-image: none !important; } .to-top { animation: none !important; }" });
   const { violations } = await new AxeBuilder({ page }).withTags(TAGS).analyze();
   const summary = violations
     .flatMap((v) =>
