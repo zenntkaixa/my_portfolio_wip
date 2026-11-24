@@ -4,6 +4,20 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-24 — Session 90: B4d refine reason as a task diff (M14)
+
+**Done** on `feat/m14-refine-diff` (Izzat: "go ahead with B4d as proposed").
+- `taskDiff` and `taskNames` in `lib/refine.ts`; `refine.why` now says "Added: … Removed: …" (3 names, then "and N more"),
+  or "Same tasks; hours re-estimated." when only hours moved. Shown whenever hours or tasks change, so the 5% threshold is gone.
+- The review-inserted task is left out of the diff. Unit tests added; docs-only wording on the site not needed (no threshold left).
+- check 388, e2e 178. Reviewer skipped (small diff).
+
+**Next:** S3 5-second test is Izzat's; B5 share link needs a privacy call and an ADR.
+
+---
+
+---
+
 ## 2026-11-24 — Session 89: refine fixes from the 22:40 and 22:45 reviews (M14)
 
 **Done** on `fix/m14-refine-polish` (Izzat: "resume" after the sync update).
