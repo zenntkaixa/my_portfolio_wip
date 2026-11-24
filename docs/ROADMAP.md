@@ -168,3 +168,4 @@ need an ADR and Izzat's privacy call) wait for Izzat.
 - [x] Phone-pass polish: E12 scroll to the new plan, E13, E14, G9, G10, S4, M9 (Izzat) [ui-builder]
 - [x] B4 answer the open questions and refine the plan, with a before and after line (Izzat) [ui-builder]
 - [x] Refine fixes: E12b scroll after a refine, B4c human-check reason and jump, B4a growing answers, B4b hours reason (reviewer 22:40/22:45) [ui-builder]
+- [x] B4d refine reason names the added and removed tasks ("Same tasks; hours re-estimated." otherwise); always shown when hours or tasks change, so no hidden threshold (reviewer 02:35) [ui-builder]
