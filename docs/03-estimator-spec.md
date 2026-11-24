@@ -81,7 +81,7 @@ constants with unit tests.
 | AI agents | Only `code`, `tests`, `docs-config`: × 0.7 likely (band 0.6 best to 0.8 worst). Other categories unchanged |
 | Review | With AI agents, each phase with agent work gets "Review and correct agent output" (marked `addedByCode`, shown with an "Added by code" tag): 15% of that phase's agent-work hours (0.5 h steps, at least 0.5 h, but never more than the hours the agents saved in that phase; no row when they saved nothing), the phase's most-hours role, category `code` |
 | AI text | With AI agents, code adds one assumption (agents draft, a named engineer owns every change) and the review-bottleneck risk; with 1 or 2 people also the separation-of-duties risk |
-| Confidence | Facts stated: 4+ high, 2–3 medium, 0–1 low. `missingFacts` lists the false ones |
+| Confidence | Facts stated: 5+ high, 3–4 medium, 0–2 low. `missingFacts` lists the false ones |
 | Effort range | likely = sum of task hours; best/worst = likely × high 0.9/1.15, medium 0.85/1.3, low 0.8/1.5. With AI agents best/worst also use the band's 0.6/0.8 on agent work |
 | Calendar | Model's phase order and shape. Each phase's model days are first scaled by its adjusted hours ÷ base hours (seniority and AI; rounded up to half days, at least 0.5; a phase without tasks keeps its days). It then lasts max(scaled days, hours ÷ (min(team, tasks) × 6)), rounded up to half days. A phase that started after its predecessor ended keeps that gap (back to back stays back to back); one that overlapped starts at the same fraction into it. Team of 1: strictly in sequence. If the result is still shorter than total hours ÷ (team × 6), every phase is stretched by one factor. `calendarAdjusted` when the result is longer than the model's shape with the scaled days (so it means team capacity only). Example plan, mixed team of 4: 13 days (2.6 weeks) traditional, 12.5 days (2.5 weeks) with AI agents |
 
@@ -107,6 +107,11 @@ not in the key: every combination reuses one scope, so comparing them changes on
 normalised scope JSON; `SET ... EX 86400`. The cache is read after Turnstile and the rate limit (a hit
 still uses a slot), and a hit returns the same 200 shape. Only ok plans are written, after the response. Any
 Upstash error is a silent miss; without the Upstash env vars (local, e2e) the cache is off.
+The browser goes one step further: when the brief (same normalisation) and team size match the last live
+plan, submit rebuilds that saved scope with `buildPlan` and sends no request, so switching seniority or
+working style needs no token, never hits the rate limit and shows no cached note (review round 2).
+The "Same scope, two working styles" table shows effort, calendar, people cost, AI agent seats and the
+build total for both styles, so the AI column carries its seat cost.
 
 ### Usage events and logging (M14, ADR-012)
 Every request ends in exactly one outcome: `ok`, `invalid_input` (400/413/415), `misconfigured` (503),
@@ -185,8 +190,8 @@ fallback if rendering throws.
 - Summary row: total effort hours, calendar weeks, team (e.g. "4 people, mixed"), confidence badge.
   Each item has a one-line hint under its value (`estimatorCopy.summary.hints`). Confidence is computed
   in code (`confidenceFor`) from the six facts the model reports the description states (users, existing
-  systems, data, integrations, limits, out of scope): high at four or more, medium at two or three, low
-  at one or none. Each fact is defined concretely in the prompt so runs agree: naming the user group
+  systems, data, integrations, limits, out of scope): high at five or more, medium at three or four, low
+  at two or fewer. Each fact is defined concretely in the prompt so runs agree: naming the user group
   counts as users (no number needed), naming an existing page or system counts as systems, and naming any
   outside service (a payment method, messaging channel, email or SMS provider) counts as integrations. A request that names no concrete capability ("make our app better") gets
   the error answer, like a non-software request; a short concrete one ("add dark mode") is planned. Its hint changes with the level (`hints.confidence.low|medium|high`).

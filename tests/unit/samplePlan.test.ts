@@ -12,7 +12,7 @@ describe("the stored example plan", () => {
 
   it("survives the same normalisation a live reply goes through and keeps its numbers", () => {
     expect(normaliseScope(sampleScope, sampleTeam.size)).toEqual(sampleScope);
-    expect([samplePlan.totalHours, samplePlan.totalDays, samplePlan.calendarWeeks, samplePlan.confidence]).toEqual([112, 13, 2.6, "medium"]);
+    expect([samplePlan.totalHours, samplePlan.totalDays, samplePlan.calendarWeeks, samplePlan.confidence]).toEqual([112, 13, 2.6, "low"]);
     expect(samplePlan.calendarAdjusted).toBeUndefined();
   });
 

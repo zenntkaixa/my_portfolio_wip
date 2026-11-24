@@ -20,6 +20,8 @@ test("a kept plan is dimmed and labelled under an error banner", async ({ page }
   await submit(page);
   await expect(page.getByRole("heading", { name: plan.scope.title })).toBeVisible();
   await expect(page.locator(".estimator__plan[data-kept]")).toHaveCount(0);
+  // A different brief, so the browser can't rebuild the saved plan and has to ask the server.
+  await page.getByLabel("Feature description").fill(`${FEATURE} for admins`);
   await submit(page);
   await expect(page.locator(".estimator__banner")).toBeVisible();
   await expect(page.getByText(estimatorCopy.previousPlan(FEATURE))).toBeVisible();
@@ -79,6 +81,8 @@ test("cached plans say so; fresh ones do not", async ({ page }) => {
   await submit(page);
   await expect(page.getByRole("heading", { name: plan.scope.title })).toBeVisible();
   await expect(page.getByText(estimatorCopy.cachedNote)).toHaveCount(0);
+  // A new team size needs the server (it is part of the cache key); the mock answers from "cache".
+  await page.getByRole("slider", { name: "Team size" }).fill("5");
   await submit(page);
   await expect(page.getByText(estimatorCopy.cachedNote)).toBeVisible();
 });

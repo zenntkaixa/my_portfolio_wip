@@ -10,7 +10,7 @@ describe("planToText", () => {
   it("has the title, every phase, contingency and the footer", () => {
     expect(text).toContain(samplePlan.title);
     for (const p of samplePlan.phases) expect(text).toContain(p.name);
-    expect(text).toContain(estimatorCopy.budget.contingency(20));
+    expect(text).toContain(estimatorCopy.budget.contingency(30));
     expect(text.endsWith(estimatorCopy.actions.footer(profile.name))).toBe(true);
   });
   it("works without team inputs", () => {
@@ -23,7 +23,7 @@ describe("planToText range, facts and comparison", () => {
   const text = planToText(samplePlan, sampleTeam, budget(samplePlan, sampleTeam), sampleScope);
   it("states the effort range, contingency rate and missing facts", () => {
     expect(text).toContain(estimatorCopy.summary.rangeNote(samplePlan.effort.best, samplePlan.effort.worst));
-    expect(text).toContain(estimatorCopy.budget.contingency(20));
+    expect(text).toContain(estimatorCopy.budget.contingency(30));
     expect(text).toContain(estimatorCopy.summary.missing(samplePlan.missingFacts.map((f) => estimatorCopy.factLabels[f]).join(", ")));
   });
   it("includes both working styles only when the scope is given", () => {
