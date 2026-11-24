@@ -301,13 +301,14 @@ export const howItsBuilt = {
   }),
   evalTitle: "Tested against the real model",
   evalCaption:
-    "Run on 2026-11-20 with Claude Haiku on 9 briefs. I run it by hand with npm run eval:estimator, never in CI, because real calls cost money.",
+    "Run on 2026-11-24 with Claude Haiku on 9 briefs, under the current confidence rule. I run it by hand with npm run eval:estimator, never in CI, because real calls cost money.",
   evalHead: ["Check", "Result"],
   evalRows: [
-    ["Valid plans, including a one-line request (dark mode)", "6 of 6"],
+    ["Valid plans, including the one-line \"Add dark mode\" request", "6 of 6"],
     ["Refused as intended (vague, off-topic, prompt injection)", "3 of 3"],
-    ["With AI agents vs traditional, same scope", "10% to 12% fewer hours"],
-    ["Same brief run twice", "264 h vs 291 h (+10%), same facts, 22 tasks each"],
+    ["Confidence (5 or 6 facts is high)", "Detailed brief high, \"Add dark mode\" low, 4 medium"],
+    ["With AI agents vs traditional, same scope", "11% to 13% fewer hours"],
+    ["Same brief run twice", "226 h vs 250 h (+11%), same facts, 19 vs 20 tasks"],
     ["Cost of the whole run", "US$0.0080"],
   ],
   linksTitle: "Why it works this way",
@@ -375,6 +376,9 @@ export const estimatorCopy = {
     legend: "Working style",
     options: { traditional: "Traditional team", "ai-assisted": "With AI agents" },
     teamSuffix: ", with AI agents",
+    freeSwitch: "Switching seniority or working style updates this plan instantly. It doesn't count toward your hourly limit.",
+    freeAfterLimit: "You can still switch seniority or working style on the current plan.",
+    updated: (team: string) => `Plan updated for ${team}. No new estimate was used.`,
   },
   /** Added by code (lib/estimateModel.ts) to plans with AI agents; the model never sees the working style. */
   aiPlan: {
@@ -419,6 +423,7 @@ export const estimatorCopy = {
     hoursValue: (n: number) => `${n} hours`,
     rangeNote: (best: number, worst: number) => `Likely; ${best}–${worst} h range`,
     missing: (list: string) => `Not stated: ${list}.`,
+    factCount: (n: number, total: number) => `${n} of ${total} facts`,
     allStated: `All ${Object.keys(factLabels).length} facts were stated: ${Object.values(factLabels).join(", ")}.`,
     weeksValue: (n: number) => `${n} ${n === 1 ? "week" : "weeks"}`,
   },
@@ -432,6 +437,8 @@ export const estimatorCopy = {
       `With AI agents: ${lessLow}–${lessHigh}% fewer hours, ${likelyPct}% likely, only on code, tests, docs and config. A review task of ${reviewPct}% of that work is added to each phase.`,
     spread: (best: number, worst: number, confidence: string) =>
       `Confidence (${confidence}): the range runs from ${Math.round(best * 100)}% to ${Math.round(worst * 100)}% of the likely hours.`,
+    aiRange: (bestSave: number, worstSave: number) =>
+      `The range is wider with AI agents: the best case also takes the biggest saving (${bestSave}%) and the worst case the smallest (${worstSave}%).`,
     contingency: (ratePct: number) => `Contingency: ${ratePct}% on people cost, set by confidence.`,
     capacity: (hours: number) =>
       `Calendar: ${hours} productive hours per person-day. Each phase grows or shrinks with its adjusted hours (seniority and working style), and the whole plan is stretched if the team is too small.`,

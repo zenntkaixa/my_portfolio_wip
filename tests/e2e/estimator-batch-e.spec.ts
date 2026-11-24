@@ -1,7 +1,7 @@
 import { expect, test, type Page } from "./fakeTurnstile";
 import plan from "../fixtures/plan.json";
 import { estimatorCopy, profile } from "../../lib/content";
-import { AGENT_FRIENDLY, buildPlan } from "../../lib/estimateModel";
+import { AGENT_FRIENDLY, AI_FACTOR, buildPlan } from "../../lib/estimateModel";
 import { budget } from "../../lib/budget";
 import type { Scope } from "../../lib/estimate";
 
@@ -192,17 +192,55 @@ test.describe("role pills and task tags", () => {
   });
 });
 
-test("changing only working style or seniority rebuilds in the browser with no new request", async ({ page }) => {
+test("changing working style or seniority updates the plan at once with no new request", async ({ page }) => {
   let calls = 0;
   page.on("request", (r) => { if (r.url().endsWith("/api/estimate")) calls++; });
   await submitWith(page, { ...plan, cached: true });
   expect(calls).toBe(1);
-  await page.getByRole("group", { name: estimatorCopy.mode.legend }).getByRole("radio", { name: estimatorCopy.mode.options["ai-assisted"] }).check();
+  await expect(page.getByText(estimatorCopy.mode.freeSwitch)).toBeVisible();
+  const aiRadio = page.getByRole("group", { name: estimatorCopy.mode.legend }).getByRole("radio", { name: estimatorCopy.mode.options["ai-assisted"] });
+  await aiRadio.check();
   await page.getByRole("radio", { name: /^senior/i }).check();
-  await page.getByRole("button", { name: estimatorCopy.submit }).click();
+  // No submit click: the radios alone update the plan, focus stays on the radio, and the change is announced.
+  await expect(page.getByRole("radio", { name: /^senior/i })).toBeFocused();
+  await expect(page.locator(".estimator__status")).toHaveText(estimatorCopy.mode.updated(`${estimatorCopy.people(4)}, senior${estimatorCopy.mode.teamSuffix}`));
   const p = buildPlan(scope, { teamSize: 4, seniority: "senior", mode: "ai-assisted" });
   await expect(page.getByTestId("summary").getByText(estimatorCopy.summary.hoursValue(p.totalHours))).toBeVisible();
   // A rebuilt plan is not a cache hit, so the "same request" note goes away.
   await expect(page.getByText(estimatorCopy.cachedNote)).toHaveCount(0);
   expect(calls).toBe(1);
+});
+
+test("after a rate limit, the hint says the radios still work, and they update the kept plan", async ({ page }) => {
+  let n = 0;
+  await page.route("**/api/estimate", (route) =>
+    ++n === 1 ? route.fulfill({ json: plan }) : route.fulfill({ status: 429, json: { error: "Too many estimates." }, headers: { "Retry-After": "60" } }),
+  );
+  await page.goto("/");
+  await page.getByLabel("Feature description").fill(FEATURE);
+  const submit = page.getByRole("button", { name: estimatorCopy.submit });
+  await expect(submit).toBeEnabled({ timeout: 15_000 });
+  await submit.click();
+  await expect(page.getByTestId("summary")).toBeVisible();
+  await page.getByLabel("Feature description").fill(`${FEATURE} for admins`);
+  await expect(submit).toBeEnabled({ timeout: 15_000 });
+  await submit.click();
+  await expect(page.getByRole("alert").filter({ hasText: estimatorCopy.mode.freeAfterLimit })).toBeVisible();
+  await page.getByRole("group", { name: estimatorCopy.mode.legend }).getByRole("radio", { name: estimatorCopy.mode.options["ai-assisted"] }).check();
+  const p = buildPlan(scope, { teamSize: 4, seniority: "mixed", mode: "ai-assisted" });
+  await expect(page.getByTestId("summary").getByText(estimatorCopy.summary.hoursValue(p.totalHours))).toBeVisible();
+  expect(n).toBe(2);
+});
+
+test("confidence badge shows the fact count, and AI drivers state the real range", async ({ page }) => {
+  await submitWith(page, plan, true);
+  const p = buildPlan(scope, { teamSize: 4, seniority: "mixed", mode: "ai-assisted" });
+  const stated = 6 - p.missingFacts.length;
+  await expect(page.getByTestId("summary")).toContainText(estimatorCopy.summary.factCount(stated, 6));
+  await openBudget(page);
+  await page.getByText(estimatorCopy.drivers.heading, { exact: true }).click();
+  await expect(page.locator(".drivers")).toContainText(
+    estimatorCopy.drivers.spread(p.effort.best / p.effort.likely, p.effort.worst / p.effort.likely, p.confidence),
+  );
+  await expect(page.locator(".drivers")).toContainText(estimatorCopy.drivers.aiRange(Math.round((1 - AI_FACTOR.best) * 100), Math.round((1 - AI_FACTOR.worst) * 100)));
 });
