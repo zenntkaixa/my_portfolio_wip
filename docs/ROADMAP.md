@@ -149,3 +149,4 @@ need an ADR and Izzat's privacy call) wait for Izzat.
 - [x] Batch C: usage rows in Neon Postgres (ADR-012) and one JSON log line per request; route → service →
   adapters; 24 h plan cache in Upstash; copy and print the plan; "N plans generated" line from 25; share links
   and click tracking skipped (Izzat) [api-engineer, ui-builder]
+- [x] Branded 404 (`app/not-found.tsx`): tile, theme toggle, link home, noindex only (Izzat, pre-launch) [ui-builder]
