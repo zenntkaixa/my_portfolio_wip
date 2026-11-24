@@ -255,10 +255,10 @@ export const estimatorIntro =
 export const estimatorBuiltBy = {
   text: "I built this with Next.js, the Claude API, Cloudflare Turnstile and a rate limit. ",
   link: "Read the code",
-  url: "https://github.com/zenntkaixa/my_portfolio_wip",
+  url: "https://github.com/zenntkaixa/portfolio",
 };
 
-const adr = "https://github.com/zenntkaixa/my_portfolio_wip/blob/develop/docs/decisions/";
+const adr = "https://github.com/zenntkaixa/portfolio/blob/develop/docs/decisions/";
 
 /** "How it's built" panel under the estimator intro. Stats come from Neon (lib/estimator/events.ts usageStats). */
 export const howItsBuilt = {
@@ -387,6 +387,11 @@ export const estimatorCopy = {
   steps: ["Reading your brief…", "Sizing the phases…", "Estimating tasks…", "Costing the team…"],
   usuallyWait: "Usually about 10 seconds.",
   cta: { text: "Like how I break down work? Let's talk about your team.", email: "Email me", linkedin: "LinkedIn" },
+  feedback: {
+    text: "Spotted something off in this plan?",
+    link: "Tell me",
+    subject: (title: string) => `Feedback on the estimator plan: ${title}`,
+  },
   resultsCrashed: "Something went wrong showing this plan. Reload the page and try again.",
   summary: {
     hours: "Effort",

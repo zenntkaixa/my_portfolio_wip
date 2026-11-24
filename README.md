@@ -1,6 +1,6 @@
 # Mohd. Izzat Fahmi Suhaimi — Portfolio
 
-[![CI](https://github.com/zenntkaixa/my_portfolio_wip/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/zenntkaixa/my_portfolio_wip/actions/workflows/ci.yml)
+[![CI](https://github.com/zenntkaixa/portfolio/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/zenntkaixa/portfolio/actions/workflows/ci.yml)
 
 Personal portfolio of **Mohd. Izzat Fahmi Suhaimi**, a backend-first full-stack software engineer (Java, Spring Boot,
 React, TypeScript) working on AI-integrated software engineering.

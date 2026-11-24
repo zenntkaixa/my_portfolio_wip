@@ -88,6 +88,19 @@ describe("buildPlan hours", () => {
     expect(buildPlan(scope([ph(0, 1, [t("code", 3)])]), ai).totalHours).toBe(2.5); // 2 + 0.5 review, cheaper than 3
   });
 
+  it("caps the review at what the agents saved: tasks already at the 0.5 h floor get no review", () => {
+    // Agents can't shrink a 0.5 h task, so there is nothing saved and no review row.
+    const one = buildPlan(scope([ph(0, 1, [t("code", 0.5)])]), ai);
+    expect(one.phases[0].tasks.some((x) => x.task === REVIEW)).toBe(false);
+    expect(one.totalHours).toBe(0.5);
+    const four = scope([ph(0, 1, [t("code", 0.5), t("code", 0.5), t("tests", 0.5, "QA"), t("docs-config", 0.5)])]);
+    expect(buildPlan(four, ai).totalHours).toBe(buildPlan(four, trad).totalHours); // was 2.5 vs 2
+    for (const h of [0.5, 1, 1.5, 2, 2.5, 3, 5]) {
+      const s = scope([ph(0, 1, [t("code", h), t("tests", h, "QA")])]);
+      expect(buildPlan(s, ai).totalHours).toBeLessThanOrEqual(buildPlan(s, trad).totalHours);
+    }
+  });
+
   it("builds both modes from one scope: same tasks, only agent work reduced, plus review tasks", () => {
     const a = buildPlan(sampleScope, trad);
     const b = buildPlan(sampleScope, ai);

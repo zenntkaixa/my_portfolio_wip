@@ -87,6 +87,25 @@ test.describe("submit on a phone", () => {
   });
 });
 
+test("submitting on a large desktop keeps the page still while loading, then shows the new plan", async ({ page }) => {
+  await page.setViewportSize({ width: 1920, height: 1080 });
+  await page.route("**/api/estimate", async (route) => {
+    await new Promise((r) => setTimeout(r, 1500));
+    await route.fulfill({ json: plan });
+  });
+  const submit = await ready(page);
+  await submit.scrollIntoViewIfNeeded();
+  const estimatorBottom = () => page.evaluate(() => Math.round(document.querySelector("#estimator")!.getBoundingClientRect().bottom));
+  const before = await estimatorBottom();
+  await submit.click();
+  await expect(page.locator(".estimator__bone--card").first()).toBeVisible();
+  // The shorter skeleton must not pull the tiles below the estimator up into view.
+  expect(Math.abs((await estimatorBottom()) - before)).toBeLessThanOrEqual(2);
+  const heading = page.getByRole("heading", { name: plan.scope.title });
+  await expect(heading).toBeFocused();
+  await expect(heading).toBeInViewport();
+});
+
 test("hero links to the live demo", async ({ page }) => {
   await page.goto("/");
   const hero = page.getByRole("region", { name: profile.name, exact: true });

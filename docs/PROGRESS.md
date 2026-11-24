@@ -5,36 +5,29 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
-## 2026-11-23 — Session 74: Desktop layout: role column and wider page (M14)
+## 2026-11-24 — Session 78: Launch content calls and repo rename (M14)
 
-**Done** on `feat/m14-desktop-layout` (Izzat spotted it on a desktop monitor)
-- Release #97 live: How it's built panel with live numbers (10 plans, 13.3 s median); row 16 ok under the new
-  prompt.
-- Tasks tab: with long live task names, Role cells shrank to 74 px and "Architect", "Frontend", "Backend",
-  "DevOps" broke mid-word, because the results' `overflow-wrap: anywhere` lets table columns go below one
-  word. Role cells are now `nowrap`; reproduced and fixed at 1280, 1440 and 1920.
-- New e2e regression test (fails without the fix).
-- Page widened 1200 → 1440 px (Izzat, option 1): estimator results column 510 → 630 px at 1440+; tile prose
-  capped at 70ch; Now tile stats stack under 520 px. 1024 and 1280 unchanged.
-- Roles as outlined pills with a colour dot (7 `--role-*` tokens, ≥3:1 in both themes), role chips as the
-  legend, a "current" pill, and "AI" / "Added by code" tags on task rows (Izzat, option B).
-- Verified: check 379 unit, full e2e 157; reviewer no blockers.
+**Done** on `chore/m14-repo-rename` (Izzat: "go with your suggestions", all certifications).
+- Content calls: case studies launch without figures; full legal name, PR counts and all three
+  certifications stay as they are (no copy change).
+- GitHub repo renamed `my_portfolio_wip` → `portfolio` (old URL 301s; homepage set to zenntkaixa.dev).
+  "Read the code", ADR links, README badge and the deployment doc point at the new name. The Vercel
+  project keeps its name (`my-portfolio-wip.vercel.app`); no domain email for now.
+- Verified: check 380, full e2e 160 (`--workers=2`).
 
-**Next** bumps from 27 Nov and 2 Dec; Neon usage review; the flaky batch-a tests under load.
+**Next** release #100, #101 and this; device checks; release audit; launch.
 
 ---
 
-## 2026-11-20 — Session 73: Prompt fact definitions and vague briefs (M14)
+## 2026-11-23 — Session 77: Plan feedback line and launch checks (M14)
 
-**Done** on `fix/m14-integrations-fact` (Izzat: my suggestion, then the follow-ups the evals showed)
-- The six facts are defined concretely: a named user group counts as users, a named page or system as
-  systems, any named outside service (WhatsApp, FPX, SMS, email) as integrations.
-- New rule: a request with no concrete capability ("make our app better") gets the error answer; a short
-  concrete one ("add dark mode") is planned. Eval gained a ninth brief for that.
-- Three Izzat eval runs (US$0.0071, 0.0080, 0.0080). Final: 6 of 6 plans, 3 of 3 refusals, AI 10–12% lower,
-  leave twice 264 vs 291 h with the same facts. Panel table updated.
-- Verified: check 349 unit, full e2e 152.
-
-**Next** release #95 and this together; bumps from 27 Nov and 2 Dec; Neon usage review.
-
+**Done** on `feat/m14-plan-feedback` (Izzat).
+- Live plans get "Spotted something off in this plan? Tell me", a mailto with the plan title as subject
+  (not on the hand-written example; hidden in print). New e2e for the href.
+- `app/favicon.ico`: the 32px icon wrapped in an ICO, so `/favicon.ico` no longer 404s.
+- Lighthouse 13.6 on production: mobile 91–93 / 100 / 100 / 100, desktop 92 / 100 / 100 / 100. Only miss is
+  TBT 330 ms (one 306 ms hydration task); post-launch item.
+- Spike check: no DAILY_LIMIT or RATE_LIMIT_PER_HOUR env in production, so the defaults apply (150/day, 5 per
+  visitor per hour). Izzat approved `DAILY_LIMIT=500` (Vercel production, at most ~US$1/day); live on next deploy.
+- Verified: check 380, full e2e 160 (`--workers=2`).
 ---

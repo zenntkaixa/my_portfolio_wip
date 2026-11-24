@@ -92,6 +92,8 @@ export function Estimator() {
   const bannerEl = useRef<HTMLDivElement>(null);
   const textarea = useRef<HTMLTextAreaElement>(null);
   const resultsEl = useRef<HTMLElement>(null);
+  // Height the results keep while a new plan loads, so the shorter skeleton doesn't pull the tiles below up.
+  const [holdHeight, setHoldHeight] = useState<number | null>(null);
   const focusField = useRef(false);
   const abortRef = useRef<AbortController | null>(null);
   // Focus moves to the results only after a user action, never for the example shown on load.
@@ -118,7 +120,14 @@ export function Estimator() {
   useEffect(() => {
     if (!acted.current) return;
     // Returning to the stored example (typing after a field error) must not pull focus out of the field.
-    if (status.kind === "success" && !status.example) heading.current?.focus();
+    if (status.kind === "success" && !status.example) {
+      // Scroll only as far as needed, and smoothly: a plain focus() snaps the page to the heading.
+      heading.current?.focus({ preventScroll: true });
+      heading.current?.scrollIntoView({
+        block: "nearest",
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      });
+    }
     else if (status.kind === "error") {
       // 400 is shown inline: focus the field it describes. Other errors: the banner.
       if (status.status === 400) textarea.current?.focus();
@@ -129,6 +138,7 @@ export function Estimator() {
   // Phones and tablets: the results sit below the form. Scroll after the render, since it removes the preview
   // link above. Desktop (the 1025px split in globals.css) keeps them beside the form, so no jump there.
   useEffect(() => {
+    if (status.kind !== "submitting") setHoldHeight(null);
     if (status.kind !== "submitting" || window.matchMedia("(min-width: 1025px)").matches) return;
     resultsEl.current?.scrollIntoView({
       block: "start",
@@ -161,6 +171,7 @@ export function Estimator() {
     const controller = new AbortController();
     abortRef.current = controller;
     acted.current = true;
+    setHoldHeight(resultsEl.current?.offsetHeight ?? null);
     setStatus({ kind: "submitting" });
     // Focus the results before the fieldset disables, so focus isn't lost; the scroll waits for the render below.
     resultsEl.current?.focus({ preventScroll: true });
@@ -230,6 +241,7 @@ export function Estimator() {
         onSubmit={submit}
         className="estimator__form"
         aria-busy={submitting}
+        style={holdHeight ? { minHeight: holdHeight } : undefined}
       >
         {/* Phones only (hidden in CSS once results sit beside the form): the example is below the whole form. */}
         {shown?.example && (
@@ -510,6 +522,15 @@ export function Estimator() {
               <a href={`mailto:${profile.email}`}>{estimatorCopy.cta.email}</a>
               <ExternalLink href={profile.linkedin}>{estimatorCopy.cta.linkedin}</ExternalLink>
             </p>
+            {/* Live plans only: the example was written by hand, so feedback on it says nothing about the model. */}
+            {!shown.example && (
+              <p className="estimator__cta">
+                {estimatorCopy.feedback.text}
+                <a href={`mailto:${profile.email}?subject=${encodeURIComponent(estimatorCopy.feedback.subject(shown.plan.title))}`}>
+                  {estimatorCopy.feedback.link}
+                </a>
+              </p>
+            )}
             <p className="estimator__note">
               {shown.example
                 ? estimatorCopy.example.footer

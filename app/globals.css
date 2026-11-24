@@ -2160,6 +2160,11 @@ p {
     -webkit-print-color-adjust: exact;
   }
 
+  /* A closed <details> hides its content even on paper: print the drivers whether or not they're open. */
+  .drivers::details-content {
+    content-visibility: visible;
+  }
+
   .plan-print-footer {
     display: block;
     margin-top: 16px;
