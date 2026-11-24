@@ -1,5 +1,5 @@
-import type { CSSProperties } from "react";
-import type { Plan } from "@/lib/estimate";
+import { useEffect, useState, type CSSProperties } from "react";
+import { FACTS, type Plan } from "@/lib/estimate";
 import { estimatorCopy as copy } from "@/lib/content";
 import { missingText } from "@/lib/planText";
 import { toBars, weekLabels, weekMarkers } from "@/lib/timeline";
@@ -15,6 +15,25 @@ export function PhaseTimeline({ plan, teamLabel, teamSize }: { plan: Plan; teamL
   const weeks = weekLabels(plan.totalDays);
   const questions = plan.openQuestions ?? [];
   const outOfScope = plan.outOfScope ?? [];
+  // E9: the four lists start closed on phones (open on wider screens) to keep the results short.
+  // Set after mount: the example plan is server-rendered open, and hydration would keep that attribute.
+  const [wide, setWide] = useState(true);
+  useEffect(() => setWide(window.matchMedia("(min-width: 720px)").matches), []);
+  const list = (id: string, heading: string, items: string[], extra = "") =>
+    items.length > 0 && (
+      <section aria-labelledby={id}>
+        <details open={wide}>
+          <summary>
+            <h4 id={id}>{heading}</h4>
+          </summary>
+          <ul role="list" className={`tab1-list${extra}`}>
+            {items.map((x, i) => (
+              <li key={`${i}-${x}`}>{x}</li>
+            ))}
+          </ul>
+        </details>
+      </section>
+    );
 
   return (
     <div className="results-phases">
@@ -40,6 +59,11 @@ export function PhaseTimeline({ plan, teamLabel, teamSize }: { plan: Plan; teamL
           <dt>{copy.summary.confidence}</dt>
           <dd>
             <span className={`tab1-badge tab1-badge--${plan.confidence}`}>{plan.confidence}</span>
+            <span className="tab1-dots" aria-hidden="true" data-testid="fact-dots">
+              {FACTS.map((f) => (
+                <i key={f} data-on={plan.missingFacts.includes(f) ? undefined : ""} title={copy.factLabels[f]} />
+              ))}
+            </span>
           </dd>
           <dd className="tab1-hint">
             {copy.summary.factCount(Object.keys(copy.factLabels).length - plan.missingFacts.length, Object.keys(copy.factLabels).length)}
@@ -100,46 +124,10 @@ export function PhaseTimeline({ plan, teamLabel, teamSize }: { plan: Plan; teamL
 
       {(plan.assumptions.length > 0 || plan.risks.length > 0 || questions.length > 0 || outOfScope.length > 0) && (
         <div className="tab1-lists">
-          {plan.assumptions.length > 0 && (
-            <section aria-labelledby="tab1-assumptions">
-              <h4 id="tab1-assumptions">{copy.assumptionsHeading}</h4>
-              <ul role="list" className="tab1-list">
-                {plan.assumptions.map((a, i) => (
-                  <li key={`${i}-${a}`}>{a}</li>
-                ))}
-              </ul>
-            </section>
-          )}
-          {plan.risks.length > 0 && (
-            <section aria-labelledby="tab1-risks">
-              <h4 id="tab1-risks">{copy.risksHeading}</h4>
-              <ul role="list" className="tab1-list tab1-list--risks">
-                {plan.risks.map((r, i) => (
-                  <li key={`${i}-${r}`}>{r}</li>
-                ))}
-              </ul>
-            </section>
-          )}
-          {questions.length > 0 && (
-            <section aria-labelledby="tab1-questions">
-              <h4 id="tab1-questions">{copy.questionsHeading}</h4>
-              <ul role="list" className="tab1-list">
-                {questions.map((x, i) => (
-                  <li key={`${i}-${x}`}>{x}</li>
-                ))}
-              </ul>
-            </section>
-          )}
-          {outOfScope.length > 0 && (
-            <section aria-labelledby="tab1-scope">
-              <h4 id="tab1-scope">{copy.outOfScopeHeading}</h4>
-              <ul role="list" className="tab1-list">
-                {outOfScope.map((x, i) => (
-                  <li key={`${i}-${x}`}>{x}</li>
-                ))}
-              </ul>
-            </section>
-          )}
+          {list("tab1-assumptions", copy.assumptionsHeading, plan.assumptions)}
+          {list("tab1-risks", copy.risksHeading, plan.risks, " tab1-list--risks")}
+          {list("tab1-questions", copy.questionsHeading, questions)}
+          {list("tab1-scope", copy.outOfScopeHeading, outOfScope)}
         </div>
       )}
     </div>

@@ -106,7 +106,9 @@ test("Tab order, visible focus indicators, no trap, Shift+Tab goes back", async 
   const est = estAll.slice(0, estAll.findIndex((s) => s.name === estimatorCopy.submit) + 1);
   const after = estAll.slice(est.length);
   expect(after.slice(0, 2).map((s) => s.tag), listing).toEqual(["button", "button"]);
-  expect(after.slice(2).map((s) => s.role), listing).toEqual(["tab", "tabpanel", "", ""]); // then the Email me and LinkedIn call-to-action links
+  // Then the selected tab, its panel, the four list disclosures (Assumptions, Risks, Questions, Not included;
+  // open at this width) and the Email me and LinkedIn call-to-action links.
+  expect(after.slice(2).map((s) => s.role || s.tag), listing).toEqual(["tab", "tabpanel", "summary", "summary", "summary", "summary", "a", "a"]);
   const chips = est.filter((s) => s.tag === "button" && s.role === "").slice(0, -1);
   const kinds = est.map((s) => (s.tag === "textarea" ? "textarea" : s.role === "range" ? "range" : s.role === "radio" ? "radio" : "button"));
   expect(kinds, listing).toEqual([...chips.map(() => "button"), "textarea", "range", "radio", "radio", "button"]);

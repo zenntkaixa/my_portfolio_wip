@@ -15,6 +15,7 @@
   --ok: #0e8f7e;
   --warn: #b4570c;
   --danger: #c0362c;
+  --model: #b06d00;
   --grid: rgba(43, 87, 224, 0.08);
   --role-ba: #9a5fc0;
   --role-architect: #2a8f9e;
@@ -39,6 +40,7 @@
   --ok: #4cc9b4;
   --warn: #f0a55e;
   --danger: #ff8a80;
+  --model: #f2c14e;
   --grid: rgba(126, 156, 255, 0.09);
   --role-ba: #c39be0;
   --role-architect: #5fc4d2;
@@ -65,6 +67,7 @@
     --ok: #4cc9b4;
     --warn: #f0a55e;
     --danger: #ff8a80;
+    --model: #f2c14e;
     --grid: rgba(126, 156, 255, 0.09);
     --role-ba: #c39be0;
     --role-architect: #5fc4d2;
@@ -317,13 +320,20 @@ p {
 /* The one bold tile: a blueprint grid behind the estimator (docs/01-design-system.md). Thin --grid
    lines over --surface, so text contrast is unchanged; forced-colour modes drop background images. */
 .tile--estimator {
-  background-image:
-    linear-gradient(var(--grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-  background-size: 24px 24px;
-  background-position: -1px -1px;
-  /* An accent edge marks it as the thing to try (M12); no shadow, per the design system. */
-  border: 2px solid var(--accent);
+  /* S2: the one vivid edge on the page, accent fading into the --model colour (no shadow, per the design
+     system). The grid and surface stay inside the padding box; the gradient only shows in the border. */
+  border: 2px solid transparent;
+  background:
+    linear-gradient(var(--grid) 1px, transparent 1px) -1px -1px / 24px 24px padding-box,
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px) -1px -1px / 24px 24px padding-box,
+    linear-gradient(var(--surface), var(--surface)) padding-box,
+    linear-gradient(135deg, var(--accent) 45%, var(--model)) border-box;
+}
+
+@media (forced-colors: active) {
+  .tile--estimator {
+    border-color: CanvasText;
+  }
 }
 
 @media (max-width: 1024px) {
@@ -1873,8 +1883,8 @@ p {
   margin: 0;
 }
 
-/* Two columns on phones: the confidence card (last) spans both, so its hint and "Not stated" list aren't squeezed. */
-.tab1-summary > div:last-child {
+/* Two columns on phones: Effort and Calendar share a row; Team and Confidence (longer text) span both. */
+.tab1-summary > div:nth-child(n + 3) {
   grid-column: 1 / -1;
 }
 
@@ -1924,6 +1934,38 @@ p {
   color: var(--ink);
   border: 1px solid var(--tone);
   border-radius: var(--r-sm);
+}
+
+/* G3: one dot per fact the brief stated, in the --model colour (decorative; the hint says it in words). */
+.tab1-dots {
+  display: inline-flex;
+  gap: 0.3rem;
+  margin-inline-start: 0.6rem;
+  vertical-align: middle;
+}
+
+.tab1-dots i {
+  width: 0.6rem;
+  height: 0.6rem;
+  border: 1.5px solid var(--model);
+  border-radius: 50%;
+}
+
+.tab1-dots i[data-on] {
+  background: var(--model);
+}
+
+.estimator__answer {
+  margin: 0.25rem 0 0;
+  font-weight: 600;
+}
+
+.tab1-lists summary {
+  cursor: pointer;
+}
+
+.tab1-lists summary h4 {
+  display: inline;
 }
 
 .tab1-badge::before {
@@ -2085,7 +2127,7 @@ p {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
-  .tab1-summary > div:last-child {
+  .tab1-summary > div:nth-child(n + 3) {
     grid-column: auto;
   }
 
