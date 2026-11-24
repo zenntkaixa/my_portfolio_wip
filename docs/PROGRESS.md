@@ -13,7 +13,8 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 - Confidence high at 5+ of 6 facts, medium 3–4, low ≤2 (spec, ADR-013). The example plan is now low (30%).
 - Comparison table and copied plan add AI agent seats and the build total.
 - Experience: "Career break, 2022 to 2023" (no role or field).
-- Verified: check 381, full e2e 162; reviewer no blockers (docs drift fixed). Email: Cloudflare Email Routing next.
+- Verified: check 381, full e2e 162; reviewer no blockers (docs drift fixed).
+- Contact email is now hello@zenntkaixa.dev (Cloudflare Email Routing to Yahoo; Izzat tested delivery).
 
 ---
 

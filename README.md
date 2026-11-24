@@ -84,6 +84,6 @@ model, and a monthly spend limit on the Anthropic account. Details in
 `docs/decisions/ADR-002-abuse-protection.md`.
 
 ## Contact
-[zenntkaixa@yahoo.com](mailto:zenntkaixa@yahoo.com) ·
+[hello@zenntkaixa.dev](mailto:hello@zenntkaixa.dev) ·
 [LinkedIn](https://www.linkedin.com/in/mohamad-izzat-fahmi-bin-suhaimi-00b047145) ·
 [GitHub](https://github.com/zenntkaixa)

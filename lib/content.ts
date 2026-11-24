@@ -31,7 +31,7 @@ export const profile = {
     "Work mode: onsite, hybrid or remote",
     "Malaysian citizen",
   ],
-  email: "zenntkaixa@yahoo.com",
+  email: "hello@zenntkaixa.dev",
   linkedin: "https://www.linkedin.com/in/mohamad-izzat-fahmi-bin-suhaimi-00b047145",
   github: "https://github.com/zenntkaixa",
 };
