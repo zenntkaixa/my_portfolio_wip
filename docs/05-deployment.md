@@ -9,7 +9,7 @@
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Vercel, `.env.local` | Public by design; Vercel type **Config** (it rejects Sensitive for `NEXT_PUBLIC_`). Production: real key. Preview: test key |
 | `TURNSTILE_SECRET_KEY` | Vercel, `.env.local` | Server only, type Sensitive. Production: real secret. Preview: test secret |
 | `TURNSTILE_HOSTNAME` | Required with a real secret, Vercel Production | `zenntkaixa.dev`; when set, siteverify must report this hostname |
-| `RATE_LIMIT_PER_HOUR` | Optional | Default 5 |
+| `RATE_LIMIT_PER_HOUR` | Optional | Default 10 (5 until 2026-11-24) |
 | `DAILY_LIMIT` | Optional | Default 150. Production sets 500 for launch week (Izzat, 2026-11-23); lower it once traffic settles |
 | `UPSTASH_REDIS_REST_URL` | Optional, Vercel Production | `https://` REST URL of the Upstash database; shares the limits across instances (ADR-009) |
 | `UPSTASH_REDIS_REST_TOKEN` | Optional, Vercel Production | Server only, type Sensitive. Without both vars, or when Upstash fails or takes over 1 s, the in-memory limiter is used |
@@ -85,7 +85,7 @@ Push to `main` (a release, see CLAUDE.md section 4, Branches) → Vercel builds 
 - Lighthouse mobile run meets the targets in `00-brief.md`.
 
 First run (2026-11-11, production): plan returned with both tabs; the 6th submission in the hour showed
-"You've used 5 estimates this hour. Try again in 55 minutes."; `{}` → 400; a fake token → 403.
+"You've used 10 estimates this hour. The button shows when you can try again."; `{}` → 400; a fake token → 403.
 PageSpeed Insights mobile: Performance **71** (target 90, tracked in the M5 Lighthouse item),
 Accessibility 100, Best Practices 100, SEO 100.
 

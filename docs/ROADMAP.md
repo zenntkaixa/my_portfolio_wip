@@ -158,3 +158,5 @@ need an ADR and Izzat's privacy call) wait for Izzat.
   back-to-top link (Izzat) [ui-builder]
 - [x] Polish from the sync review: E2 blended-rate wording, E3 filled "current" pill, E4 banner icon and tones,
   M4 bigger slider thumb (Izzat) [ui-builder]
+- [x] UX batch 1 (sync review 18:55): E5 saved example plans, E7 10 per hour, E8 answer line, E9 collapsible lists
+  on phones, M5 team card, G3 fact dots, S1 `--model` token, S2 gradient estimator edge (Izzat) [ui-builder]

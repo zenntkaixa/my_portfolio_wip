@@ -30,12 +30,12 @@ import { PlanActions } from "./PlanActions";
 import { ResultsBoundary } from "./ResultsBoundary";
 import { ResultTabs } from "./ResultTabs";
 import { BudgetView } from "./BudgetView";
-import type { Team } from "@/lib/budget";
+import { budget, type Team } from "@/lib/budget";
 
 type Status =
   | { kind: "idle" }
   | { kind: "submitting" }
-  | { kind: "success"; scope: Scope; plan: Plan; teamLabel: string; team: Team; example?: true; cached?: true; description?: string }
+  | { kind: "success"; scope: Scope; plan: Plan; teamLabel: string; team: Team; example?: true; cached?: true; saved?: true; description?: string }
   | { kind: "error"; message: string; status: number };
 
 const exampleStatus: Status = {
@@ -48,6 +48,12 @@ const exampleStatus: Status = {
 };
 
 type Success = Extract<Status, { kind: "success" }>;
+
+// E5: every chip and brief has a plan Claude generated ahead of time (scripts/examples/generate.mts) for team
+// size 4. Loaded on demand (about 50 KB gzipped), never in the main bundle.
+const SAVED_TEAM_SIZE = 4;
+const chipTexts = new Set([...estimatorExamples, ...estimatorBriefs.map((b) => b.text)]);
+const loadSaved = () => import("@/lib/examplePlans.json").then((m) => m.default);
 
 // Mirrors the server's cache-key normalisation (lib/estimator/cache.ts), so "same brief" means the same thing on both sides.
 const sameBrief = (a: string, b: string) => {
@@ -108,6 +114,8 @@ export function Estimator() {
   const quiet = useRef(false);
   // Announces (and shows) an instant rebuild, since focus stays on the radio.
   const [updated, setUpdated] = useState("");
+  const [savedOn, setSavedOn] = useState("");
+  const savedBusy = useRef(false);
 
   // Abort any in-flight request on unmount.
   useEffect(() => () => abortRef.current?.abort(), []);
@@ -180,11 +188,13 @@ export function Estimator() {
       : null;
   // The live plan on screen (fresh, or kept under an error banner) for this team size: the radios can rebuild it.
   const onScreen = !lastOk.example && lastOk.team.size === teamSize ? lastOk : null;
+  // An unchanged chip at the saved team size needs no request, so no token or rate-limit slot either.
+  const savedChip = teamSize === SAVED_TEAM_SIZE && chipTexts.has(feature);
   const canSubmit =
     !tooShort &&
     length <= FEATURE_MAX &&
     !submitting &&
-    (reuse !== null || (!!token && cooldown === 0));
+    (reuse !== null || savedChip || (!!token && cooldown === 0));
   const canRetry = !!token && !submitting;
 
   async function run() {
@@ -228,7 +238,7 @@ export function Estimator() {
       } else if (!scope || !built || !isPlan(built)) {
         fail(502, estimatorCopy.badPlan);
       } else {
-        succeed(scope, built, isObj(data) && data.cached === true);
+        succeed(scope, built, isObj(data) && data.cached === true ? "cached" : undefined);
       }
     } catch (err) {
       if (err instanceof DOMException && err.name === "AbortError") return;
@@ -239,9 +249,9 @@ export function Estimator() {
     }
   }
 
-  function succeed(scope: Scope, plan: Plan, cached: boolean, keepView = false, description = feature) {
+  function succeed(scope: Scope, plan: Plan, source?: "cached" | "saved", keepView = false, description = feature) {
     const teamLabel = `${estimatorCopy.people(teamSize)}, ${seniority}${mode === "ai-assisted" ? estimatorCopy.mode.teamSuffix : ""}`;
-    const ok: Success = { kind: "success", scope, plan, teamLabel, team: { size: teamSize, seniority, mode }, description, ...(cached && { cached: true as const }) };
+    const ok: Success = { kind: "success", scope, plan, teamLabel, team: { size: teamSize, seniority, mode }, description, ...(source && { [source]: true as const }) };
     setLastOk(ok);
     if (keepView) quiet.current = true;
     else setTab("phases");
@@ -253,7 +263,7 @@ export function Estimator() {
   useEffect(() => {
     if (!onScreen || status.kind === "submitting") return;
     if (onScreen.team.seniority === seniority && onScreen.team.mode === mode) return;
-    succeed(onScreen.scope, buildPlan(onScreen.scope, { teamSize, seniority, mode }), false, true, onScreen.description);
+    succeed(onScreen.scope, buildPlan(onScreen.scope, { teamSize, seniority, mode }), onScreen.saved ? "saved" : undefined, true, onScreen.description);
     // Deliberately keyed on the two choices only: typing or team-size changes must not rebuild.
   }, [seniority, mode]);
 
@@ -262,8 +272,32 @@ export function Estimator() {
     if (!canSubmit) return;
     if (reuse) {
       acted.current = true;
-      succeed(reuse, buildPlan(reuse, { teamSize, seniority, mode }), false);
-    } else void run();
+      succeed(reuse, buildPlan(reuse, { teamSize, seniority, mode }), lastOk.saved ? "saved" : undefined);
+    } else if (savedChip) void showSaved();
+    else void run();
+  }
+
+  async function showSaved() {
+    if (savedBusy.current) return; // a double click while the file loads
+    savedBusy.current = true;
+    let saved: Awaited<ReturnType<typeof loadSaved>>;
+    try {
+      saved = await loadSaved();
+    } catch {
+      // The chunk failed to load (offline, or a deploy changed it): ask the server instead.
+      savedBusy.current = false;
+      return void (token && cooldown === 0 ? run() : undefined);
+    }
+    savedBusy.current = false;
+    const raw: unknown = (saved.plans as Record<string, unknown>)[feature];
+    // A chip the generator skipped stays live, but only once a live request could pass (token, no cooldown).
+    const live = () => (token && cooldown === 0 ? void run() : undefined);
+    if (!isScope(raw)) return live();
+    const built = buildPlan(raw, { teamSize, seniority, mode });
+    if (!isPlan(built)) return live();
+    acted.current = true;
+    setSavedOn(saved.generated);
+    succeed(raw, built, "saved");
   }
 
   const fieldError =
@@ -307,6 +341,7 @@ export function Estimator() {
                 className="estimator__chip"
                 onClick={() => {
                   focusField.current = true;
+                  void loadSaved(); // warm the chunk so the submit that usually follows is instant
                   // Typed text (not another chip's) is kept for Undo instead of being silently lost.
                   const typed = feature.trim() !== "" && !(examples ?? []).some((c) => c.text === feature);
                   // A second chip keeps the original typed text available to Undo.
@@ -518,6 +553,7 @@ export function Estimator() {
             )}
             <div className="estimator__plan" data-kept={banner && !shown.example ? "" : undefined}>
             {!banner && shown.cached && <p className="estimator__note">{estimatorCopy.cachedNote}</p>}
+            {!banner && shown.saved && <p className="estimator__note">{estimatorCopy.savedNote(savedOn)}</p>}
             {/* shown.* below: an error banner keeps the last good plan on screen */}
             {shown.example && (
               <p id="estimator-example-note" className="estimator__example-note">
@@ -532,6 +568,12 @@ export function Estimator() {
             >
               {shown.plan.title}
             </h3>
+            <p className="estimator__answer" data-testid="answer">
+              {(() => {
+                const b = budget(shown.plan, shown.team);
+                return estimatorCopy.answer(shown.plan.calendarWeeks, shown.team.size, b.build.low, b.build.high);
+              })()}
+            </p>
             <p>{shown.plan.summary}</p>
             <PlanActions plan={shown.plan} team={shown.team} scope={shown.scope} />
             <ResultTabs

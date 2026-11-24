@@ -13,7 +13,8 @@ function envLimit(raw: string | undefined, fallback: number) {
   return raw !== undefined && Number.isFinite(n) && n > 0 ? n : fallback;
 }
 
-const PER_HOUR = envLimit(process.env.RATE_LIMIT_PER_HOUR, 5);
+// 10 (was 5, Izzat 2026-11-24): radio switches are free, so this only counts new briefs and team sizes.
+const PER_HOUR = envLimit(process.env.RATE_LIMIT_PER_HOUR, 10);
 const PER_DAY = envLimit(process.env.DAILY_LIMIT, 150);
 const WINDOW_MS = 3_600_000;
 const DAILY_RETRY_AFTER = 3600;

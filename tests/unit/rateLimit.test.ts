@@ -42,8 +42,8 @@ describe("checkLimitsInMemory", () => {
     process.env.RATE_LIMIT_PER_HOUR = "abc";
     process.env.DAILY_LIMIT = "-1";
     const { checkLimitsInMemory } = await import("@/lib/rateLimit");
-    for (let i = 0; i < 5; i++) expect(checkLimitsInMemory("z").ok).toBe(true);
-    expect(checkLimitsInMemory("z").ok).toBe(false); // default 5 per hour
+    for (let i = 0; i < 10; i++) expect(checkLimitsInMemory("z").ok).toBe(true);
+    expect(checkLimitsInMemory("z").ok).toBe(false); // default 10 per hour
     expect(checkLimitsInMemory("y").ok).toBe(true); // default daily cap is not zero
   });
 });
