@@ -12,10 +12,10 @@ export const profile = {
   role: "Senior full-stack engineer · Java, Spring Boot, React, AWS",
   headline: "I build reliable systems and the integrations that hold them together.",
   // Approved by Izzat 2026-11-17 (M6). Employers and the certification only: the Now tile already shows the numbers.
-  proof: ["Built at PwC · Allianz Technology · Hitachi", "AWS Certified Solutions Architect – Associate"],
+  proof: ["Built at PwC · Allianz Technology · Hitachi", "AWS Certified Solutions Architect, Associate"],
   proofLabel: "Track record",
   summary:
-    "Eight years of Java, Spring Boot and React, now shipped with AI coding agents. I stay accountable for every line that merges.",
+    "Eight years of Java, Spring Boot and React. Now I ship with AI coding agents. I stay accountable for every line that merges.",
   emailCta: "Email me",
   demoCta: "Try the live demo",
   // Web copy of the CV: no phone number, clients anonymised (docs/04-content.md).
@@ -27,7 +27,7 @@ export const profile = {
   lookingFor: [
     "Senior full-stack or backend engineering roles",
     "B2B SaaS, enterprise software, platform and cloud teams, or a new industry",
-    "Based in Petaling Jaya, and used to working with teams across time zones",
+    "Based in Petaling Jaya and used to working with teams across time zones",
     "Work mode: onsite, hybrid or remote",
     "Malaysian citizen",
   ],
@@ -42,7 +42,7 @@ export const seo = {
   siteName: "Mohd. Izzat Fahmi Suhaimi, portfolio",
   /** Search and share description: fuller than the hero headline. */
   description:
-    "Backend-first full-stack engineer. Eight years building reliable systems and integrations across insurance, banking, compliance and SaaS, now shipped with AI coding agents.",
+    "Backend-first full-stack engineer. Eight years building reliable systems and integrations across insurance, banking, compliance and SaaS, now shipping with AI coding agents.",
   ogTagline: "Live AI demo: describe a feature, get a delivery plan",
   ogAlt: "Mohd. Izzat Fahmi Suhaimi, senior full-stack engineer. Live AI demo: describe a feature, get a delivery plan.",
 };
@@ -114,7 +114,7 @@ export const caseStudies = [
   {
     title: "Modernising a legacy banking platform",
     context: "Regional bank, digital banking",
-    body: "Started on the legacy platform, then was tasked with moving it to microservices: API-first Spring Boot services on PostgreSQL, data synchronisation between old and new services, and DevOps delivery with GitLab, Jenkins and OpenShift.",
+    body: "Started on the legacy platform, then moved it to microservices: API-first Spring Boot services on PostgreSQL, data synchronisation between old and new services, and DevOps delivery with GitLab, Jenkins and OpenShift.",
     stack: ["Spring Boot", "PostgreSQL", "OpenShift"],
   },
 ];
@@ -125,7 +125,7 @@ export const experience = [
   { org: "Allianz Technology", role: "Life Core Developer", period: "2024 to 2025", field: "Life insurance core systems" },
   { org: "Beyondsoft Malaysia", role: "Java Developer", period: "2023 to 2024", field: "Compliance and document checks" },
   { org: "Hitachi eBworx, then Hitachi Digital Host", role: "Application Engineer", period: "2020 to 2022", field: "Digital banking modernisation" },
-  { org: "Vetter Software", role: "Engineer, then QA Engineer", period: "2017 to 2020", field: "Veterinary practice SaaS" },
+  { org: "Vetter Software", role: "Junior Software Engineer, then QA Engineer", period: "2017 to 2020", field: "Veterinary practice SaaS" },
 ];
 
 export const stack = [
@@ -256,7 +256,7 @@ export const estimatorExamples = [
 ];
 
 export const estimatorIntro =
-  "Describe a software feature, choose your team, and get the end-to-end technical workflow with a time-to-done estimate. This is how I break down requirements at work, powered by Claude.";
+  "Describe a software feature, choose your team, and get a delivery plan with effort and calendar estimates from Claude. It follows how I break down requirements at work.";
 
 export const estimatorBuiltBy = {
   text: "I built this with Next.js, the Claude API, Cloudflare Turnstile and a rate limit. ",
@@ -492,7 +492,7 @@ export const estimatorCopy = {
     400: "Check the description and try again.",
     403: "The human check failed. Wait for it to refresh, then try again.",
     422: "That doesn't look like a software feature. Describe something a team could build.",
-    429: "Too many estimates for now. Please try again shortly.",
+    429: "Too many estimates for now. Try again shortly.",
     502: "The estimator hit a problem. Try again.",
     503: "The estimator isn't set up on this server yet.",
     504: "The estimator took too long to answer. Try again.",
