@@ -26,6 +26,9 @@ import { ExternalLink } from "@/components/ExternalLink";
 import { Turnstile, type TurnstileHandle } from "./Turnstile";
 import { PhaseTimeline } from "./PhaseTimeline";
 import { RequestFlow } from "./RequestFlow";
+import { RefineForm } from "./RefineForm";
+import { range } from "./money";
+import { refinedBrief, type Answer } from "@/lib/refine";
 import { TaskTable } from "./TaskTable";
 import { PlanActions } from "./PlanActions";
 import { ResultsBoundary } from "./ResultsBoundary";
@@ -36,7 +39,7 @@ import { budget, type Team } from "@/lib/budget";
 type Status =
   | { kind: "idle" }
   | { kind: "submitting" }
-  | { kind: "success"; scope: Scope; plan: Plan; teamLabel: string; team: Team; example?: true; cached?: true; saved?: true; description?: string }
+  | { kind: "success"; scope: Scope; plan: Plan; teamLabel: string; team: Team; example?: true; cached?: true; saved?: true; description?: string; refinedFrom?: string }
   | { kind: "error"; message: string; status: number };
 
 const exampleStatus: Status = {
@@ -108,6 +111,8 @@ export function Estimator() {
   const [updated, setUpdated] = useState("");
   const [savedOn, setSavedOn] = useState("");
   const savedBusy = useRef(false);
+  // B4: the plan a refine started from, as one line, until that refine succeeds (or fails).
+  const pendingRefine = useRef<string | null>(null);
 
   // Abort any in-flight request on unmount.
   useEffect(() => () => abortRef.current?.abort(), []);
@@ -196,7 +201,7 @@ export function Estimator() {
     (reuse !== null || savedChip || (!!token && cooldown === 0));
   const canRetry = !!token && !submitting;
 
-  async function run() {
+  async function run(text = feature) {
     abortRef.current?.abort();
     const controller = new AbortController();
     abortRef.current = controller;
@@ -205,13 +210,15 @@ export function Estimator() {
     setStatus({ kind: "submitting" });
     // Focus the results before the fieldset disables, so focus isn't lost; the scroll waits for the render below.
     resultsEl.current?.focus({ preventScroll: true });
-    const fail = (code: number, message: string) =>
+    const fail = (code: number, message: string) => {
+      pendingRefine.current = null;
       setStatus({ kind: "error", message, status: code });
+    };
     try {
       const res = await fetch("/api/estimate", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ feature, teamSize, seniority, mode, token }),
+        body: JSON.stringify({ feature: text, teamSize, seniority, mode, token }),
         signal: controller.signal,
       });
       let data: unknown = null;
@@ -237,7 +244,7 @@ export function Estimator() {
       } else if (!scope || !built || !isPlan(built)) {
         fail(502, estimatorCopy.badPlan);
       } else {
-        succeed(scope, built, isObj(data) && data.cached === true ? "cached" : undefined);
+        succeed(scope, built, isObj(data) && data.cached === true ? "cached" : undefined, false, text);
       }
     } catch (err) {
       if (err instanceof DOMException && err.name === "AbortError") return;
@@ -250,7 +257,10 @@ export function Estimator() {
 
   function succeed(scope: Scope, plan: Plan, source?: "cached" | "saved", keepView = false, description = feature) {
     const teamLabel = `${estimatorCopy.people(teamSize)}, ${seniority}${mode === "ai-assisted" ? estimatorCopy.mode.teamSuffix : ""}`;
-    const ok: Success = { kind: "success", scope, plan, teamLabel, team: { size: teamSize, seniority, mode }, description, ...(source && { [source]: true as const }) };
+    // A radio rebuild keeps the refine comparison of the plan it rebuilds; a new plan takes the pending one.
+    const refinedFrom = keepView ? lastOk.refinedFrom : (pendingRefine.current ?? undefined);
+    pendingRefine.current = null;
+    const ok: Success = { kind: "success", scope, plan, teamLabel, team: { size: teamSize, seniority, mode }, description, ...(source && { [source]: true as const }), ...(refinedFrom && { refinedFrom }) };
     setLastOk(ok);
     if (keepView) quiet.current = true;
     else setTab("phases");
@@ -266,9 +276,20 @@ export function Estimator() {
     // Deliberately keyed on the two choices only: typing or team-size changes must not rebuild.
   }, [seniority, mode]);
 
+  const snapshot = (s: Success) =>
+    estimatorCopy.refine.snap(s.plan.confidence, Math.round(s.plan.totalHours), range(budget(s.plan, s.team).build));
+
+  function refine(from: Success, answers: Answer[]) {
+    const text = refinedBrief(from.description ?? sampleFeature, answers);
+    pendingRefine.current = snapshot(from);
+    setFeature(text);
+    void run(text);
+  }
+
   function submit(e: React.FormEvent) {
     e.preventDefault();
     if (!canSubmit) return;
+    pendingRefine.current = null; // a plain estimate is never a refine, even after an aborted one
     if (reuse) {
       acted.current = true;
       succeed(reuse, buildPlan(reuse, { teamSize, seniority, mode }), lastOk.saved ? "saved" : undefined);
@@ -567,6 +588,11 @@ export function Estimator() {
                 return estimatorCopy.answer(shown.plan.calendarWeeks, shown.team.size, b.build.low, b.build.high);
               })()}
             </p>
+            {!banner && shown.refinedFrom && (
+              <p className="estimator__note" data-testid="refined">
+                {estimatorCopy.refine.from(shown.refinedFrom, snapshot(shown))}
+              </p>
+            )}
             <p>{shown.plan.summary}</p>
             <PlanActions plan={shown.plan} team={shown.team} scope={shown.scope} />
             <ResultTabs
@@ -597,6 +623,17 @@ export function Estimator() {
                 },
               ]}
             />
+            {(shown.plan.openQuestions?.length ?? 0) > 0 && (
+              <RefineForm
+                key={`${shown.description ?? ""}|${shown.plan.title}`}
+                brief={shown.description ?? sampleFeature}
+                questions={shown.plan.openQuestions ?? []}
+                blocked={
+                  submitting ? estimatorCopy.refine.busy : cooldown > 0 ? estimatorCopy.refine.cooldown : !token ? estimatorCopy.refine.waiting : null
+                }
+                onRefine={(answers) => refine(shown, answers)}
+              />
+            )}
             <p className="plan-print-footer">{estimatorCopy.actions.footer(profile.name)}</p>
             <p className="estimator__cta">
               {estimatorCopy.cta.text}

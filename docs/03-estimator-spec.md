@@ -185,6 +185,15 @@ modes; the team line reads e.g. "2 people, senior, with AI agents".
 ## UI states
 `idle → submitting → success | error`. While submitting: disable the form, move focus to the results
 section and scroll it into view (smooth unless reduced motion; on phones the results sit below the form).
+Refine (B4, Izzat 2026-11-24): under the result tabs, when the plan has open questions, "Answer the questions to
+refine the plan" shows one text input per question (300 characters each, any may be skipped) and "Refine this
+plan". `lib/refine.ts` appends the answered ones to the plan's brief as plain text ("Answers to the open
+questions:" then "- question answer" lines), the textarea takes that text, and it goes out as a normal estimate:
+Turnstile, rate limit (counts as one), daily cap, cache, 1500-character limit and prompt handling all unchanged,
+and no server change. A counter shows room left; the button is `aria-disabled` with its reason (no answer, too
+long, waiting for the human check, cooldown, planning) so it stays focusable. The new plan shows "Refined from:
+<confidence, hours, build range>. Now: <same>." until a plain estimate replaces it; radio rebuilds keep it.
+Hidden in print.
 Brief coach (E11): while a typed brief (not a chip) is 20 to 249 characters, a static tip under the counter names
 the six facts (`estimatorCopy.coach`, linked by `aria-describedby`, not a live region). No detection: a keyword
 guess could disagree with the model's own fact check.
