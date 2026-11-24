@@ -5,30 +5,25 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
-## 2026-11-24 — Session 86: G2 budget charts, M6 and M7 readability, G1 request flow, E10 and G8 timeline, E11 coach (M14)
+## 2026-11-24 — Session 88: B4 answer the questions and refine (M14)
 
-**Done** on `feat/m14-budget-charts` (Izzat: "go G2"; sync review 18:55).
-- Budget tab opens with "Where the build money goes": one stacked bar of the build total with a legend of
-  every range. Contingency is accent hatching. The two-styles section opens with low-to-high range bars.
-- Fills: `--accent`, `--model`, `--role-frontend`; dataviz validator passes CVD and contrast in both themes.
-- Tables kept. New e2e ties the chart text to the table totals. Screenshots at 390 and 1280 px, both themes.
-- M6: `--fs-sm` 15px; hints, notes, footer and chart notes moved off `--fs-xs` (labels and tags only). The
-  summary is 2×2 on desktop too. M7: results sit on plain surface; the blueprint grid stays behind the form.
-- G1: `RequestFlow`, the 8-step path tinted code (accent) vs model (`--model`) with a key. Static in "How it's
-  built"; while a plan loads it ticks to the model step and waits there (replaces the skeleton and rotating steps).
-- E10 + G8: phase cards removed; each Gantt row carries "· N tasks" and the goal. Bars grow in 300 ms, staggered.
-- E11: a static six-facts tip under a short typed brief. check 381, e2e 174.
+**Done** on `feat/m14-refine` (Izzat: "start B4", plan approved with "go").
+- `RefineForm` under the tabs: one input per open question, room counter, "Refine this plan" (`aria-disabled`
+  with its reason). `lib/refine.ts` appends the answers to the brief; it is sent as a normal estimate, so no
+  API, prompt or limit changes (no new attack surface).
+- New plan shows "Refined from: … Now: …" (confidence, hours, build range).
+- Tests: unit for the brief builder; e2e for the request body, comparison line and clearing; three specs updated
+  for the second form. check 384, e2e 176.
 
 ---
 
-## 2026-11-24 — Session 85: UX batch 1 from the 18:55 sync review (M14)
+## 2026-11-24 — Session 87: phone-pass polish from the 21:06 sync review (M14)
 
-**Done** on `feat/m14-ux-batch1` (Izzat: "go batch 1, S1/S2 yes, E7 10").
-- E5: `lib/examplePlans.json`, 43 Claude plans for every chip and brief at team size 4 (`npm run examples:generate`,
-  US$0.0525). An unchanged chip at size 4 shows its saved plan at once: no request, token or rate-limit slot.
-- E7: hourly limit default 5 → 10 (daily cap unchanged). E8: one-line answer under the plan title.
-- E9: the four lists are disclosures, closed on phones. M5: Team card spans the row on phones.
-- G3 fact dots and S1 `--model` token (#B06D00 / #F2C14E, ≥3.5:1 as a graphic); S2 gradient estimator edge.
-- security-reviewer and reviewer: no blockers; saved-plan fallback hardened. check 381, e2e 171.
+**Done** on `fix/m14-polish-round5` (Izzat: "go").
+- E12: after a result, the heading scrolls to the top on the next frame (it was left on the bottom edge or above
+  the screen). New 360 px e2e fails on the old code, passes now.
+- E13 "for a team of 8"; E14 whole headline hours and days; G9 fact dots fill by count.
+- G10 RM ticks on the range bars; S4 new `--chart-neutral` token for tools (validator passes both themes);
+  M9 desktop summary three across, Confidence full width.
 
 ---

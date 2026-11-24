@@ -42,7 +42,13 @@ export function BuildBar({ b }: { b: Budget }) {
 /** G2: build-total ranges for both working styles on one shared axis from zero. */
 export function CompareBars({ trad, ai }: { trad: Range; ai: Range }) {
   const k = estimatorCopy.compare;
-  const max = Math.max(trad.high, ai.high, 1);
+  // G10: a round step that gives about 4 ticks; the axis ends at the first tick at or past the largest high.
+  const top = Math.max(trad.high, ai.high, 1);
+  const raw = top / 4;
+  const mag = 10 ** Math.floor(Math.log10(raw));
+  const step = [1, 2, 5, 10].map((m) => m * mag).find((s) => s >= raw)!;
+  const max = Math.ceil(top / step) * step;
+  const ticks = Array.from({ length: max / step + 1 }, (_, i) => i * step);
   const rows = [
     { mode: "traditional", label: k.traditional, r: trad },
     { mode: "ai-assisted", label: k.ai, r: ai },
@@ -53,6 +59,9 @@ export function CompareBars({ trad, ai }: { trad: Range; ai: Range }) {
         <div key={row.mode} className="cbars__row" data-mode={row.mode}>
           <span className="cbars__label">{row.label}</span>
           <span className="cbars__track">
+            {ticks.slice(1, -1).map((t) => (
+              <i key={t} className="cbars__tick" style={{ "--left": pct((t / max) * 100) } as Geometry} />
+            ))}
             <span
               className="cbars__range"
               style={{ "--left": pct((row.r.low / max) * 100), "--width": pct(((row.r.high - row.r.low) / max) * 100) } as Geometry}
@@ -61,6 +70,13 @@ export function CompareBars({ trad, ai }: { trad: Range; ai: Range }) {
           <span className="cbars__value">{range(row.r)}</span>
         </div>
       ))}
+      <div className="cbars__axis" aria-hidden="true">
+        {ticks.map((t) => (
+          <span key={t} style={{ "--left": pct((t / max) * 100) } as Geometry}>
+            {k.tick(t)}
+          </span>
+        ))}
+      </div>
     </div>
   );
 }

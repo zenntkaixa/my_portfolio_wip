@@ -20,7 +20,8 @@ test("print shows all three panels and hides the form", async ({ page }) => {
   for (const name of [estimatorCopy.tabPhases, estimatorCopy.tabTasks, estimatorCopy.tabBudget]) {
     await expect(page.getByRole("tabpanel", { name })).toBeVisible();
   }
-  await expect(page.locator("form")).toBeHidden();
+  // Both the estimate form and the refine form (B4).
+  for (const form of await page.locator("form").all()) await expect(form).toBeHidden();
   await expect(page.getByRole("button", { name: estimatorCopy.actions.print })).toBeHidden();
   await expect(page.getByText(estimatorCopy.actions.footer(profile.name))).toBeVisible();
 });

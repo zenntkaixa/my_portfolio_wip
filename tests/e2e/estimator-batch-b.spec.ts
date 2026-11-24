@@ -21,7 +21,9 @@ test("open questions and out-of-scope lists show the plan's items", async ({ pag
     [estimatorCopy.outOfScopeHeading, plan.scope.outOfScope],
   ] as const) {
     await expect(page.getByRole("heading", { name: heading })).toBeVisible();
-    for (const item of items) await expect(page.getByText(item, { exact: true })).toBeVisible();
+    // Scoped to the list: the refine form (B4) labels its inputs with the same questions.
+    const list = page.getByRole("region", { name: heading }).getByRole("list");
+    for (const item of items) await expect(list.getByText(item, { exact: true })).toBeVisible();
   }
 });
 
