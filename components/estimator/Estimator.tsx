@@ -28,7 +28,7 @@ import { PhaseTimeline } from "./PhaseTimeline";
 import { RequestFlow } from "./RequestFlow";
 import { RefineForm } from "./RefineForm";
 import { range } from "./money";
-import { refinedBrief, type Answer } from "@/lib/refine";
+import { refinedBrief, taskDiff, taskNames, type Answer } from "@/lib/refine";
 import { TaskTable } from "./TaskTable";
 import { PlanActions } from "./PlanActions";
 import { ResultsBoundary } from "./ResultsBoundary";
@@ -39,7 +39,7 @@ import { budget, type Team } from "@/lib/budget";
 type Status =
   | { kind: "idle" }
   | { kind: "submitting" }
-  | { kind: "success"; scope: Scope; plan: Plan; teamLabel: string; team: Team; example?: true; cached?: true; saved?: true; description?: string; refinedFrom?: { text: string; hours: number } }
+  | { kind: "success"; scope: Scope; plan: Plan; teamLabel: string; team: Team; example?: true; cached?: true; saved?: true; description?: string; refinedFrom?: { text: string; hours: number; tasks: string[] } }
   | { kind: "error"; message: string; status: number };
 
 const exampleStatus: Status = {
@@ -122,7 +122,7 @@ export function Estimator() {
   const [savedOn, setSavedOn] = useState("");
   const savedBusy = useRef(false);
   // B4: the plan a refine started from, as one line, until that refine succeeds (or fails).
-  const pendingRefine = useRef<{ text: string; hours: number } | null>(null);
+  const pendingRefine = useRef<{ text: string; hours: number; tasks: string[] } | null>(null);
 
   // Abort any in-flight request on unmount.
   useEffect(() => () => abortRef.current?.abort(), []);
@@ -286,7 +286,7 @@ export function Estimator() {
 
   function refine(from: Success, answers: Answer[]) {
     const text = refinedBrief(from.description ?? sampleFeature, answers);
-    pendingRefine.current = { text: snapshot(from), hours: from.plan.totalHours };
+    pendingRefine.current = { text: snapshot(from), hours: from.plan.totalHours, tasks: taskNames(from.plan) };
     setFeature(text);
     void run(text);
   }
@@ -596,7 +596,10 @@ export function Estimator() {
             {!banner && shown.refinedFrom && (
               <p className="estimator__note" data-testid="refined">
                 {estimatorCopy.refine.from(shown.refinedFrom.text, snapshot(shown))}
-                {estimatorCopy.refine.why(shown.refinedFrom.hours, shown.plan.totalHours)}
+                {(() => {
+                  const d = taskDiff(shown.refinedFrom.tasks, taskNames(shown.plan));
+                  return estimatorCopy.refine.why(shown.refinedFrom.hours, shown.plan.totalHours, d.added, d.removed);
+                })()}
               </p>
             )}
             <p>{shown.plan.summary}</p>

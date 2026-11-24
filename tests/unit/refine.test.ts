@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { refinedBrief, refineRoom } from "@/lib/refine";
+import { refinedBrief, refineRoom, taskDiff } from "@/lib/refine";
 import { FEATURE_MAX } from "@/lib/estimate";
 import { estimatorCopy } from "@/lib/content";
 
@@ -32,10 +32,17 @@ describe("refinedBrief", () => {
   });
 });
 
-describe("refine.why (B4b)", () => {
-  it("explains a rise or fall in hours, and stays quiet within 5%", () => {
-    expect(estimatorCopy.refine.why(178, 254)).toMatch(/^ More hours/);
-    expect(estimatorCopy.refine.why(200, 150)).toMatch(/^ Fewer hours/);
-    expect(estimatorCopy.refine.why(200, 205)).toBe("");
+describe("refine.why and taskDiff (B4d)", () => {
+  it("names added and removed tasks, case-insensitively", () => {
+    const d = taskDiff(["Build API", "Old task"], ["build api", "Digest scheduling"]);
+    expect(d).toEqual({ added: ["Digest scheduling"], removed: ["Old task"] });
+    expect(estimatorCopy.refine.why(100, 130, d.added, d.removed)).toBe(" Added: Digest scheduling. Removed: Old task.");
+  });
+  it("shortens long lists", () => {
+    expect(estimatorCopy.refine.why(1, 2, ["a", "b", "c", "d", "e"], [])).toBe(" Added: a, b, c and 2 more.");
+  });
+  it("says tasks are the same when only hours moved, and is quiet when nothing changed", () => {
+    expect(estimatorCopy.refine.why(175, 202)).toBe(" Same tasks; hours re-estimated.");
+    expect(estimatorCopy.refine.why(200, 200)).toBe("");
   });
 });
