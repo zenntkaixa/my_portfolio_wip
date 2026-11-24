@@ -60,7 +60,7 @@ This project is built with **Claude Code** using a documented workflow:
   `main` (`docs/decisions/ADR-004-pr-branch-workflow.md`)
 - `.claude/agents/` — project builders (UI, API, prompt, QA) and a security reviewer; generic reviewer,
   verifier and release agents come from a shared team setup (`docs/decisions/ADR-005-claude-team-agents.md`)
-- `.claude/skills/` — workflows: `/next-task`, `/visual-check`, `/ship`, `/update-content`
+- `.claude/skills/` — workflows: `/next-task`, `/visual-check`, `/ship-task`, `/update-content`
 - `.claude/settings.json` — permissions (secrets unreadable, pushes need approval) and a typecheck hook
 
 ### First session on a new machine
