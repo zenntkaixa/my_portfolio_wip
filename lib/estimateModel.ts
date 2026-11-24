@@ -27,10 +27,10 @@ export const CONFIDENCE_SPREAD: Record<Confidence, { best: number; worst: number
 
 export type BuildInputs = { teamSize: number; seniority: Seniority; mode: Mode };
 
-/** At least four stated facts is high, two or three medium, one or none low. */
+/** Five or six stated facts is high, three or four medium, two or fewer low (review round 2: a one-line brief must not score high). */
 export function confidenceFor(facts: Record<Fact, boolean>): Confidence {
   const n = Object.values(facts).filter(Boolean).length;
-  return n >= 4 ? "high" : n >= 2 ? "medium" : "low";
+  return n >= 5 ? "high" : n >= 3 ? "medium" : "low";
 }
 
 const half = (n: number) => Math.max(0.5, Math.round(n * 2) / 2);

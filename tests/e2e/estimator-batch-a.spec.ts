@@ -147,6 +147,8 @@ test("a failed re-estimate keeps the previous plan under the error banner", asyn
   const submit = await ready(page);
   await submit.click();
   await expect(page.getByRole("heading", { name: plan.scope.title })).toBeVisible();
+  // A different brief, so the browser can't rebuild the saved plan and has to ask the server.
+  await page.getByLabel("Feature description").fill("Let admins export the user list to CSV with filters");
   await expect(submit).toBeEnabled();
   await submit.click();
   await expect(page.getByRole("alert").filter({ hasText: "Boom" })).toBeVisible();

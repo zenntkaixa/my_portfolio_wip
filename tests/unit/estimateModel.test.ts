@@ -23,7 +23,7 @@ const facts = (n: number) => {
 const t = (category: Category, baseHours: number, role = "Backend"): ScopeTask => ({ task: `${category} ${baseHours}`, role, category, baseHours });
 const ph = (startDay: number, durationDays: number, tasks: ScopeTask[], name = `P${startDay}`) => ({ name, goal: "g", startDay, durationDays, tasks });
 const scope = (phases: Scope["phases"], over: Partial<Scope> = {}): Scope => ({
-  title: "T", summary: "S", assumptions: ["a"], risks: ["r"], facts: facts(2), costs: [], openQuestions: [], outOfScope: [], phases, ...over,
+  title: "T", summary: "S", assumptions: ["a"], risks: ["r"], facts: facts(3), costs: [], openQuestions: [], outOfScope: [], phases, ...over,
 });
 const trad = { teamSize: 4, seniority: "mid", mode: "traditional" } as const;
 const ai = { ...trad, mode: "ai-assisted" } as const;
@@ -40,13 +40,13 @@ describe("published factors", () => {
 });
 
 describe("confidenceFor", () => {
-  it.each([[0, "low"], [1, "low"], [2, "medium"], [3, "medium"], [4, "high"], [6, "high"]] as const)("%i facts -> %s", (n, level) => {
+  it.each([[0, "low"], [1, "low"], [2, "low"], [3, "medium"], [4, "medium"], [5, "high"], [6, "high"]] as const)("%i facts -> %s", (n, level) => {
     expect(confidenceFor(facts(n))).toBe(level);
   });
 
   it("lists the missing facts on the plan in order", () => {
     const p = buildPlan(scope([ph(0, 5, [t("code", 10)])], { facts: facts(4) }), trad);
-    expect(p.confidence).toBe("high");
+    expect(p.confidence).toBe("medium");
     expect(p.missingFacts).toEqual(["limits", "outOfScope"]);
   });
 });
@@ -127,7 +127,7 @@ describe("buildPlan hours", () => {
 });
 
 describe("buildPlan effort range", () => {
-  it.each([[4, "high"], [2, "medium"], [0, "low"]] as const)("traditional with %i facts spreads around likely by the %s band", (n, level) => {
+  it.each([[5, "high"], [3, "medium"], [0, "low"]] as const)("traditional with %i facts spreads around likely by the %s band", (n, level) => {
     const p = buildPlan(scope([ph(0, 5, [t("code", 100)])], { facts: facts(n) }), trad);
     expect(p.effort).toEqual({ best: Math.round(100 * CONFIDENCE_SPREAD[level].best), likely: 100, worst: Math.round(100 * CONFIDENCE_SPREAD[level].worst) });
     expect(p.effort.likely).toBe(p.totalHours);
@@ -200,8 +200,8 @@ describe("buildPlan calendar", () => {
 
   it("gives the example plan its documented numbers", () => {
     const p = buildPlan(sampleScope, { teamSize: 4, seniority: "mixed", mode: "traditional" });
-    expect([p.totalHours, p.totalDays, p.calendarWeeks, p.confidence]).toEqual([112, 13, 2.6, "medium"]);
-    expect(p.effort).toEqual({ best: 95, likely: 112, worst: 146 });
+    expect([p.totalHours, p.totalDays, p.calendarWeeks, p.confidence]).toEqual([112, 13, 2.6, "low"]);
+    expect(p.effort).toEqual({ best: 90, likely: 112, worst: 168 });
   });
 });
 
@@ -209,7 +209,7 @@ describe("effort range order", () => {
   const scopes = [sampleScope, scope([ph(0, 3, [t("code", 2), t("discovery", 4)]), ph(3, 5, [t("tests", 40), t("docs-config", 3), t("release", 6)])])];
   it("best <= likely <= worst for every seniority, mode and confidence", () => {
     for (const s of scopes)
-      for (const n of [0, 2, 4])
+      for (const n of [0, 3, 5])
         for (const seniority of ["junior", "mid", "senior", "mixed"] as const)
           for (const mode of ["traditional", "ai-assisted"] as const) {
             const e = buildPlan({ ...s, facts: facts(n) }, { teamSize: 3, seniority, mode }).effort;

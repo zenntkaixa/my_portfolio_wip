@@ -49,6 +49,12 @@ const exampleStatus: Status = {
 
 type Success = Extract<Status, { kind: "success" }>;
 
+// Mirrors the server's cache-key normalisation (lib/estimator/cache.ts), so "same brief" means the same thing on both sides.
+const sameBrief = (a: string, b: string) => {
+  const n = (s: string) => s.trim().replace(/\s+/g, " ").toLowerCase();
+  return n(a) === n(b);
+};
+
 /** Visual-only progress line; the status line announces `planning` once, so this is aria-hidden by its parent. */
 function PlanningStep() {
   const [i, setI] = useState(0);
@@ -158,12 +164,17 @@ export function Estimator() {
   const length = feature.trim().length;
   const tooShort = length < FEATURE_MIN;
   const submitting = status.kind === "submitting";
+  // Same brief and team size as the last live plan: only seniority or working style changed, and the server
+  // never sees those (ADR-013), so the saved scope is rebuilt here with no request, token or rate-limit slot.
+  const reuse =
+    !lastOk.example && lastOk.description !== undefined && lastOk.team.size === teamSize && sameBrief(lastOk.description, feature)
+      ? lastOk.scope
+      : null;
   const canSubmit =
     !tooShort &&
     length <= FEATURE_MAX &&
-    !!token &&
     !submitting &&
-    cooldown === 0;
+    (reuse !== null || (!!token && cooldown === 0));
   const canRetry = !!token && !submitting;
 
   async function run() {
@@ -206,11 +217,7 @@ export function Estimator() {
       } else if (!scope || !built || !isPlan(built)) {
         fail(502, estimatorCopy.badPlan);
       } else {
-        const teamLabel = `${estimatorCopy.people(teamSize)}, ${seniority}${mode === "ai-assisted" ? estimatorCopy.mode.teamSuffix : ""}`;
-        const ok: Success = { kind: "success", scope, plan: built, teamLabel, team: { size: teamSize, seniority, mode }, description: feature, ...(isObj(data) && data.cached === true && { cached: true as const }) };
-        setLastOk(ok);
-        setStatus(ok);
-        setTab("phases");
+        succeed(scope, built, isObj(data) && data.cached === true);
       }
     } catch (err) {
       if (err instanceof DOMException && err.name === "AbortError") return;
@@ -221,9 +228,21 @@ export function Estimator() {
     }
   }
 
+  function succeed(scope: Scope, plan: Plan, cached: boolean) {
+    const teamLabel = `${estimatorCopy.people(teamSize)}, ${seniority}${mode === "ai-assisted" ? estimatorCopy.mode.teamSuffix : ""}`;
+    const ok: Success = { kind: "success", scope, plan, teamLabel, team: { size: teamSize, seniority, mode }, description: feature, ...(cached && { cached: true as const }) };
+    setLastOk(ok);
+    setStatus(ok);
+    setTab("phases");
+  }
+
   function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (canSubmit) void run();
+    if (!canSubmit) return;
+    if (reuse) {
+      acted.current = true;
+      succeed(reuse, buildPlan(reuse, { teamSize, seniority, mode }), false);
+    } else void run();
   }
 
   const fieldError =
@@ -402,12 +421,12 @@ export function Estimator() {
           <Turnstile ref={turnstile} onToken={onToken} />
 
           <button type="submit" className="estimator__submit" disabled={!canSubmit}>
-            {cooldown > 0
+            {cooldown > 0 && !reuse
               ? estimatorCopy.waitLabel(formatWait(cooldown))
               : estimatorCopy.submit}
           </button>
           {/* The human check runs hidden, so say why submit is still disabled once the text is ready. */}
-          {!tooShort && !token && !submitting && (
+          {!tooShort && !token && !submitting && !reuse && cooldown === 0 && (
             <p className="estimator__model-note">{estimatorCopy.retryWaiting}</p>
           )}
           <p className="estimator__model-note">{estimatorCopy.modelNote}</p>

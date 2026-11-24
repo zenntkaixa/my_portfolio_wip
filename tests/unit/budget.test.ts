@@ -3,7 +3,7 @@ import { budget, CONTINGENCY, HOURLY_RATE, SEAT } from "@/lib/budget";
 import { samplePlan } from "@/lib/samplePlan";
 
 describe("budget", () => {
-  const plan = { ...samplePlan, totalHours: 100, effort: { best: 80, likely: 100, worst: 150 }, calendarWeeks: 5 };
+  const plan = { ...samplePlan, confidence: "medium" as const, totalHours: 100, effort: { best: 80, likely: 100, worst: 150 }, calendarWeeks: 5 };
 
   it("charges hours at the seniority rate and adds one-off costs to the build", () => {
     const b = budget(plan, { size: 3, seniority: "senior", mode: "traditional" });

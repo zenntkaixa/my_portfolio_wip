@@ -14,10 +14,14 @@ export function ExperienceTile() {
             <span className="sr-only">, </span>
             <span className="timeline__body">
               <span className="timeline__org">{e.org}</span>
-              <span className="sr-only">, </span>
-              <span className="timeline__role">{e.role}</span>
-              <span className="sr-only">, </span>
-              <span className="timeline__field">{e.field}</span>
+              {e.role && (
+                <>
+                  <span className="sr-only">, </span>
+                  <span className="timeline__role">{e.role}</span>
+                  <span className="sr-only">, </span>
+                  <span className="timeline__field">{e.field}</span>
+                </>
+              )}
             </span>
           </li>
         ))}

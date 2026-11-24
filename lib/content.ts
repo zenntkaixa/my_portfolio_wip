@@ -124,6 +124,8 @@ export const experience = [
   { org: "PwC Acceleration Centers", role: "Senior Associate, Full-Stack Developer", period: "2025 to now", field: "Insurance customer portals" },
   { org: "Allianz Technology", role: "Life Core Developer", period: "2024 to 2025", field: "Life insurance core systems" },
   { org: "Beyondsoft Malaysia", role: "Java Developer", period: "2023 to 2024", field: "Compliance and document checks" },
+  // Role and field left out on purpose: "Career break" is all Izzat chose to say (2026-11-24).
+  { org: "Career break", period: "2022 to 2023" },
   { org: "Hitachi eBworx, then Hitachi Digital Host", role: "Application Engineer", period: "2020 to 2022", field: "Digital banking modernisation" },
   { org: "Vetter Software", role: "Junior Software Engineer, then QA Engineer", period: "2017 to 2020", field: "Veterinary practice SaaS" },
 ];
@@ -444,6 +446,9 @@ export const estimatorCopy = {
     effort: "Effort (likely)",
     calendar: "Calendar",
     people: "People cost",
+    seats: "AI agent seats",
+    noSeats: "None",
+    build: "Build total",
     hoursRange: (likely: number, best: number, worst: number) => `${likely} h (${best}–${worst})`,
   },
   timelineLabel: (days: number) => `Timeline, ${days} ${days === 1 ? "day" : "days"}`,

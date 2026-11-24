@@ -18,7 +18,7 @@ saw scope drift, not the effect of AI agents, and a delivery lead would not trus
   and the client (display): seniority (junior 1.3, mid 1, senior 0.85, mixed 1); with AI agents, an effort
   band on `code`, `tests` and `docs-config` only (0.6 / 0.7 / 0.8: 20 to 40% less, 30% likely) and one
   human review task per phase with agent work (15% of that work, at least 0.5 h, capped at the hours the agents saved, so a phase never costs more with agents); confidence from facts
-  (4+ high, 2–3 medium, 0–1 low); an effort range from confidence and the AI band; the calendar from the
+  (5+ high, 3–4 medium, 0–2 low; raised from 4+/2–3/0–1 on 2026-11-24 after review round 2); an effort range from confidence and the AI band; the calendar from the
   model's phase shape, each phase's days scaled by its adjusted ÷ base hours (so seniority and AI move
   the calendar, not only the hours), and the team's capacity; contingency by confidence (10 / 20 / 30%).
 - **One cache entry per feature and team size.** Seniority and mode no longer reach the model, so all

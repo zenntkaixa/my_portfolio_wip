@@ -292,7 +292,7 @@ test.describe("experience tile", () => {
     await expect(timeline).toHaveCount(1);
     // Exact text proves the hidden ", " separators sit between the parts, in this order.
     await expect(timeline.getByRole("listitem")).toHaveText(
-      experience.map((e) => `${e.period}, ${e.org}, ${e.role}, ${e.field}`),
+      experience.map((e) => (e.role ? `${e.period}, ${e.org}, ${e.role}, ${e.field}` : `${e.period}, ${e.org}`)),
     );
   });
 
