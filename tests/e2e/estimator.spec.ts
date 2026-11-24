@@ -65,3 +65,17 @@ test("on phones the four lists start closed and open on tap (E9), and every card
   await expect(dots).toHaveCount(6);
   await expect(page.getByTestId("fact-dots").locator("i[data-on]")).toHaveCount(Object.values(plan.scope.facts).filter(Boolean).length);
 });
+
+test("budget charts match the tables (G2)", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("tab", { name: "Budget" }).click();
+  const table = page.getByTestId("budget");
+  const build = (await table.getByRole("row", { name: /Estimated build cost/ }).getByRole("cell").last().textContent())!.trim();
+  // Compare text, not accessible names: money uses a no-break space that names normalise.
+  await expect(page.locator(".bchart__heading")).toHaveText(`Where the build money goes: ${build}`);
+  await expect(page.locator(".bchart__legend li")).toHaveCount(await page.getByTestId("build-bar").locator("span").count());
+  const cmp = page.getByTestId("compare");
+  const total = async (i: number) => (await cmp.getByRole("row", { name: /Build total/ }).getByRole("cell").nth(i).textContent())!.trim();
+  const label = await page.getByTestId("compare-bars").getAttribute("aria-label");
+  expect(label).toBe(`Build total range. Traditional: ${await total(0)}. With AI agents: ${await total(1)}.`);
+});

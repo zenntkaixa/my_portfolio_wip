@@ -4,6 +4,7 @@ import { estimatorCopy } from "@/lib/content";
 import { range } from "./money";
 import { ModeComparison } from "./ModeComparison";
 import { EstimateDrivers } from "./EstimateDrivers";
+import { BuildBar } from "./BudgetChart";
 
 /**
  * Tab 3 of the results: people cost and seats calculated in lib/budget.ts, plus the model's tool and
@@ -16,6 +17,7 @@ export function BudgetView({ plan, team, scope }: { plan: Plan; team: Team; scop
   const monthly = plan.costs.filter((x) => x.kind === "monthly");
   return (
     <div className="tab2">
+      <BuildBar b={b} />
       <div className="tab2-scroll" role="region" aria-label={c.regionLabel} tabIndex={0}>
         <table className="tab2-table tab3-table" data-testid="budget">
           <caption className="sr-only">{c.caption}</caption>

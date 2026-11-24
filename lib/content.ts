@@ -338,6 +338,12 @@ export const estimatorCopy = {
   tabTasks: "Tasks",
   tabBudget: "Budget",
   budget: {
+    // G2: the build total as one bar. Copy for its heading, legend and the screen-reader summary.
+    chart: {
+      heading: "Where the build money goes",
+      tools: "Tools and one-off costs",
+      note: "Segment lengths use the middle of each range.",
+    },
     caption: "Estimated budget in Malaysian ringgit",
     regionLabel: "Budget table, scrolls sideways on small screens",
     item: "Item",
@@ -465,6 +471,7 @@ export const estimatorCopy = {
     seats: "AI agent seats",
     noSeats: "None",
     build: "Build total",
+    chartLabel: (trad: string, ai: string) => `Build total range. Traditional: ${trad}. With AI agents: ${ai}.`,
     hoursRange: (likely: number, best: number, worst: number) => `${likely} h (${best}–${worst})`,
   },
   timelineLabel: (days: number) => `Timeline, ${days} ${days === 1 ? "day" : "days"}`,

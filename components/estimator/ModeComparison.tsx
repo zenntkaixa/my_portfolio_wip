@@ -3,6 +3,7 @@ import type { Team } from "@/lib/budget";
 import { compareModes } from "@/lib/estimateCompare";
 import { estimatorCopy } from "@/lib/content";
 import { range } from "./money";
+import { CompareBars } from "./BudgetChart";
 
 /** Same scope built both ways (traditional and with AI agents); nothing is requested again. */
 export function ModeComparison({ scope, team }: { scope: Scope; team: Team }) {
@@ -16,6 +17,7 @@ export function ModeComparison({ scope, team }: { scope: Scope; team: Team }) {
   return (
     <section aria-labelledby="cmp-heading" className="cmp">
       <h4 id="cmp-heading">{k.heading}</h4>
+      <CompareBars trad={both.traditional.budget.build} ai={both["ai-assisted"].budget.build} />
       <table className="cmp-table" data-testid="compare">
         <caption className="sr-only">{k.caption}</caption>
         <thead>

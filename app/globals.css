@@ -2237,6 +2237,142 @@ p {
 }
 
 /* Budget tab: working-style comparison and the "Estimate drivers" disclosure (Batch E). */
+/* G2 budget charts (docs/01-design-system.md): fills are --accent (people, traditional), --model (seats,
+   AI) and --role-frontend (tools); contingency is hatched accent, so no fourth hue. 2px surface gaps. */
+.bchart {
+  margin: 0 0 var(--gap);
+}
+
+.bchart__heading {
+  font-weight: 600;
+}
+
+.bchart__bar {
+  display: flex;
+  gap: 2px;
+  height: 1.25rem;
+  margin: 0.5rem 0;
+}
+
+.bchart__bar span {
+  flex: var(--grow) 1 0;
+  min-width: 4px;
+  border-radius: 2px;
+}
+
+.bchart__bar span:first-child {
+  border-radius: 4px 2px 2px 4px;
+}
+
+.bchart__bar span:last-child {
+  border-radius: 2px 4px 4px 2px;
+}
+
+.bchart [data-kind="people"] {
+  background: var(--accent);
+}
+
+.bchart [data-kind="seats"] {
+  background: var(--model);
+}
+
+.bchart [data-kind="tools"] {
+  background: var(--role-frontend);
+}
+
+.bchart [data-kind="contingency"] {
+  background: repeating-linear-gradient(135deg, var(--accent) 0 2px, transparent 2px 6px);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.bchart__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--fs-sm);
+}
+
+.bchart__legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.bchart__legend i {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 2px;
+}
+
+.bchart__value {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.bchart__note {
+  margin: 0.4rem 0 0;
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+
+.cbars {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0.5rem 0 0.75rem;
+}
+
+.cbars__row {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  grid-template-areas: "label value" "track track";
+  gap: 0.2rem 0.75rem;
+  font-size: var(--fs-sm);
+}
+
+.cbars__label {
+  grid-area: label;
+}
+
+.cbars__value {
+  grid-area: value;
+  justify-self: end;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.cbars__track {
+  grid-area: track;
+  position: relative;
+  height: 0.75rem;
+  background: var(--surface-2);
+  border-radius: 4px;
+}
+
+.cbars__range {
+  position: absolute;
+  inset-block: 0;
+  left: min(var(--left), calc(100% - 4px));
+  width: max(var(--width), 4px);
+  border-radius: 4px;
+  background: var(--accent);
+}
+
+.cbars__row[data-mode="ai-assisted"] .cbars__range {
+  background: var(--model);
+}
+
+/* Forced colours drop the fills: outline each mark instead (the legend text carries identity and values). */
+@media (forced-colors: active) {
+  .bchart__bar span,
+  .bchart__legend i,
+  .cbars__range {
+    border: 1px solid CanvasText;
+  }
+}
+
 .cmp {
   display: flex;
   flex-direction: column;

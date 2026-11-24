@@ -230,7 +230,12 @@ Above the tabs, under the title, one plain-English answer line built in code (E8
 
 Tabs use proper ARIA (`role="tablist"`, `aria-selected`, arrow-key navigation).
 
-**Tab 3 — Budget** (`components/estimator/BudgetView.tsx`, numbers in `lib/budget.ts`), in MYR:
+**Tab 3 — Budget** (`components/estimator/BudgetView.tsx`, numbers in `lib/budget.ts`), in MYR.
+Charts first (G2, `BudgetChart.tsx`): "Where the build money goes" is one stacked bar of the build total
+(people, AI seats when on, tools and one-off costs, contingency; segment length = middle of each range) with
+a legend that carries every range, so the bar is decorative. The "Same scope, two working styles" section opens
+with two range bars (low to high build total, shared axis from zero; `role="img"` with both ranges in its label).
+The tables stay as the full view:
 - **Build:** people cost = total hours × an assumed in-house rate per seniority (junior RM 40, mid
   RM 75, senior RM 120, mixed RM 78 per hour: mid-range Klang Valley salary × 1.3 for EPF, SOCSO, EIS
   and overheads ÷ 160 hours; approved by Izzat 2026-11-17; mixed is the 1 senior, 2 mid, 1 junior blend,
