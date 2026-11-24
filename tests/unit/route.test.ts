@@ -147,7 +147,7 @@ describe("POST /api/estimate", () => {
       ),
     );
     const ip = "10.9.0.1";
-    for (let i = 0; i < 6; i++) expect((await POST(request("mixed", { ip }))).status).toBe(502); // more than the 5 an hour
+    for (let i = 0; i < 11; i++) expect((await POST(request("mixed", { ip }))).status).toBe(502); // more than the 10 an hour
     anthropicStatus.value = 200;
     expect((await POST(request("mixed", { ip }))).status).toBe(200);
   });
@@ -155,9 +155,9 @@ describe("POST /api/estimate", () => {
   it("keeps the slot used when the reply is unreadable, cut off or refused (those calls are charged)", async () => {
     const ip = "10.9.0.2";
     mockFetch({ text: modelPlan.slice(0, 300) });
-    for (let i = 0; i < 2; i++) expect((await POST(request("mixed", { ip }))).status).toBe(502);
+    for (let i = 0; i < 5; i++) expect((await POST(request("mixed", { ip }))).status).toBe(502);
     mockFetch({ text: modelPlan.slice(0, 300), stop_reason: "max_tokens" });
-    for (let i = 0; i < 2; i++) expect((await POST(request("mixed", { ip }))).status).toBe(502);
+    for (let i = 0; i < 4; i++) expect((await POST(request("mixed", { ip }))).status).toBe(502);
     mockFetch({ text: "", stop_reason: "refusal" });
     expect((await POST(request("mixed", { ip }))).status).toBe(422);
     mockFetch({ text: modelPlan });
@@ -173,7 +173,7 @@ describe("POST /api/estimate", () => {
       }),
     );
     const ip = "10.9.0.3";
-    for (let i = 0; i < 5; i++) expect((await POST(request("mixed", { ip }))).status).toBe(504);
+    for (let i = 0; i < 10; i++) expect((await POST(request("mixed", { ip }))).status).toBe(504);
     expect((await POST(request("mixed", { ip }))).status).toBe(429);
   });
 
