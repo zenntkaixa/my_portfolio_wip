@@ -156,3 +156,5 @@ need an ADR and Izzat's privacy call) wait for Izzat.
   the 429 banner), "N of 6 facts", AI range in the drivers box, eval re-run 2026-11-24 (Izzat) [ui-builder]
 - [x] Review round 4: one 429 timer, phones show Hero → Now → Estimator, full-width confidence card on phones,
   back-to-top link (Izzat) [ui-builder]
+- [x] Polish from the sync review: E2 blended-rate wording, E3 filled "current" pill, E4 banner icon and tones,
+  M4 bigger slider thumb (Izzat) [ui-builder]

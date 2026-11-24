@@ -21,6 +21,7 @@ else stays quiet.
 | `--accent-soft` | `#E3EAFD` | `#22325C` | Accent backgrounds, focus halo |
 | `--ok` | `#0E8F7E` | `#4CC9B4` | Success, "open to roles" dot |
 | `--warn` | `#B4570C` | `#F0A55E` | Risks, rate-limit messages |
+| `--danger` | `#C0362C` | `#FF8A80` | Error banners only (edge and icon, never text) |
 | `--role-ba` / `-architect` / `-backend` / `-frontend` / `-qa` / `-devops` / `-pm` | `#9A5FC0` `#2A8F9E` `#3F6FD0` `#C0508A` `#3F8F4F` `#A8741A` `#6B7686` | `#C39BE0` `#5FC4D2` `#86A6F0` `#E88FB8` `#7FCF8F` `#E0B45E` `#A3ADBD` | Estimator role dots only; each is at least 3:1 on `--surface` and `--surface-2` (tested in `contrast.test.ts`) |
 | `--grid` | `rgba(43,87,224,.08)` | `rgba(126,156,255,.09)` | Blueprint grid lines |
 

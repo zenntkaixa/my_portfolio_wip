@@ -360,7 +360,7 @@ export const estimatorCopy = {
         .map(([k, v]) => `${k} RM ${v}`)
         .join(", ")} per hour. Agency rates are higher.`,
     seniorityNote:
-      "Juniors take more hours at a lower rate; seniors fewer hours at a higher rate. Mixed assumes 1 senior, 2 mid and 1 junior.",
+      "Juniors take more hours at a lower rate; seniors fewer hours at a higher rate. Mixed is one blended rate (about 1 senior to 2 mid-level and 1 junior), applied at any team size.",
     note: "Tool and running costs are typical market ranges for planning only. Verify with vendors before you commit.",
   },
   submit: "Estimate this feature",
