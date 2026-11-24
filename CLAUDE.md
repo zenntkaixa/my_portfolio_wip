@@ -59,7 +59,22 @@ Kill dev servers by PID (including the child `next-server`), never with `pkill -
 - **Reports** from subagents: 15 lines or fewer.
 - Run `security-reviewer` before anything touching `app/api/**`, env vars or deployment.
 - Model choice: Sonnet for UI, tests, review of small diffs, content and bookkeeping. Opus for the
-  estimator prompt, security reviews, hard bugs and architecture decisions.
+  estimator prompt, security reviews, hard bugs and architecture decisions. Subagents pin their own model
+  and `effort` in frontmatter; the main session switches with `/model` (say which when proposing a plan).
+
+### Token budget
+
+Every request resends the whole conversation, so session length is the main cost.
+- **Fresh session per task.** `/clear` after `/ship`, after a release's dev-update, and before reading a
+  new sync review. State lives in ROADMAP, PROGRESS, open PRs and Drive, never in chat history.
+- **Sync folder:** search by title prefix newer than the last dev-update (the `modifiedTime` filter is
+  ignored and returns every file in full); read only the newest review.
+- **Read narrowly:** file ranges and `grep`, not whole files; filter test output to pass/fail lines;
+  don't re-read a file you just edited.
+- **Heavy skills** (`dataviz`, `hallmark`, design skills) stay loaded for the rest of a session: use them
+  in a session of their own.
+- **Unused MCP servers and plugins** are off for this project in `.claude/settings.local.json`; turn one
+  back on there when a task needs it.
 
 ### Branches and PRs (ADR-004)
 
