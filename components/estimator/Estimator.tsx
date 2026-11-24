@@ -53,6 +53,7 @@ type Success = Extract<Status, { kind: "success" }>;
 // E5: every chip and brief has a plan Claude generated ahead of time (scripts/examples/generate.mts) for team
 // size 4. Loaded on demand (about 50 KB gzipped), never in the main bundle.
 const SAVED_TEAM_SIZE = 4;
+const COACH_BELOW = 250;
 const chipTexts = new Set([...estimatorExamples, ...estimatorBriefs.map((b) => b.text)]);
 const loadSaved = () => import("@/lib/examplePlans.json").then((m) => m.default);
 
@@ -182,6 +183,8 @@ export function Estimator() {
   const onScreen = !lastOk.example && lastOk.team.size === teamSize ? lastOk : null;
   // An unchanged chip at the saved team size needs no request, so no token or rate-limit slot either.
   const savedChip = teamSize === SAVED_TEAM_SIZE && chipTexts.has(feature);
+  // E11: a short typed brief gets the six facts as a tip before it costs a request. Not a live region.
+  const coach = !tooShort && length < COACH_BELOW && !chipTexts.has(feature);
   const canSubmit =
     !tooShort &&
     length <= FEATURE_MAX &&
@@ -381,9 +384,7 @@ export function Estimator() {
               }}
               maxLength={FEATURE_MAX}
               rows={4}
-              aria-describedby={
-                fieldError ? "feature-count feature-error" : "feature-count"
-              }
+              aria-describedby={[fieldError && "feature-error", "feature-count", coach && "feature-coach"].filter(Boolean).join(" ")}
               aria-invalid={fieldError ? true : undefined}
             />
             {fieldError && (
@@ -407,6 +408,11 @@ export function Estimator() {
                 {tooShort ? (length > 0 ? estimatorCopy.moreWords(FEATURE_MIN) : estimatorCopy.atLeast(FEATURE_MIN)) : ""}
               </span>
             </p>
+            {coach && (
+              <p id="feature-coach" className="estimator__coach">
+                {estimatorCopy.coach}
+              </p>
+            )}
           </div>
 
           <div className="estimator__field">

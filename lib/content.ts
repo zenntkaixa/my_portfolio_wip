@@ -413,6 +413,8 @@ export const estimatorCopy = {
   undo: { button: "Undo", announce: "Example added. Undo is available for 10 seconds." },
   planning: "Planning phases…",
   usuallyWait: "Usually about 10 seconds.",
+  coach:
+    "Tip: for a high-confidence plan, say who uses it, which systems and data it touches, any outside services, limits such as volume or deadlines, and what is out of scope.",
   cta: { text: "Like how I break down work? Let's talk about your team.", email: "Email me", linkedin: "LinkedIn" },
   feedback: {
     text: "Spotted something off in this plan?",

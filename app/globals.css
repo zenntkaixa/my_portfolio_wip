@@ -1472,6 +1472,14 @@ p {
   color: var(--muted);
 }
 
+.estimator__coach {
+  margin: 0.4rem 0 0;
+  padding-inline-start: 0.6rem;
+  border-inline-start: 2px solid var(--accent);
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+
 .estimator__status:empty {
   display: none;
 }

@@ -185,6 +185,9 @@ modes; the team line reads e.g. "2 people, senior, with AI agents".
 ## UI states
 `idle → submitting → success | error`. While submitting: disable the form, move focus to the results
 section and scroll it into view (smooth unless reduced motion; on phones the results sit below the form).
+Brief coach (E11): while a typed brief (not a chip) is 20 to 249 characters, a static tip under the counter names
+the six facts (`estimatorCopy.coach`, linked by `aria-describedby`, not a live region). No detection: a keyword
+guess could disagree with the model's own fact check.
 Show the status line ("Planning phases…", announced once), the request flow lighting up (G1,
 `RequestFlow live`, decorative): the five fast steps tick through at 250 ms each, then it holds on the model
 step (Claude Haiku, in `--model`) until the response; later steps are faint. Then "Usually about 10 seconds."

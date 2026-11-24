@@ -1,5 +1,6 @@
 import { expect, test } from "./fakeTurnstile";
 import plan from "../fixtures/plan.json";
+import { estimatorCopy } from "../../lib/content";
 
 // The real API is never called: /api/estimate is intercepted in every test.
 
@@ -78,4 +79,16 @@ test("budget charts match the tables (G2)", async ({ page }) => {
   const total = async (i: number) => (await cmp.getByRole("row", { name: /Build total/ }).getByRole("cell").nth(i).textContent())!.trim();
   const label = await page.getByTestId("compare-bars").getAttribute("aria-label");
   expect(label).toBe(`Build total range. Traditional: ${await total(0)}. With AI agents: ${await total(1)}.`);
+});
+
+test("a short typed brief shows the six-facts tip; a chip or a long brief does not (E11)", async ({ page }) => {
+  await page.goto("/");
+  const field = page.getByLabel("Feature description");
+  await field.fill("Add one-time code login with email delivery");
+  await expect(page.getByText(estimatorCopy.coach)).toBeVisible();
+  await expect(field).toHaveAttribute("aria-describedby", /feature-coach/);
+  await field.fill("x".repeat(260));
+  await expect(page.getByText(estimatorCopy.coach)).toBeHidden();
+  await page.getByRole("group", { name: "Example features" }).getByRole("button").first().click();
+  await expect(page.getByText(estimatorCopy.coach)).toBeHidden();
 });
