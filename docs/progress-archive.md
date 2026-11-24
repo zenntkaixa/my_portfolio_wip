@@ -4,6 +4,18 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-23 — Session 76: Three small fixes (M14)
+
+**Done** on `fix/m14-submit-jump` (Izzat: my suggestion from the backlog).
+- Review task is capped at the hours the agents saved: tasks already at the 0.5 h floor got a review
+  that made AI cost more (0.5 vs 1 h; four 0.5 h tasks 2 vs 2.5 h). No review row when nothing is saved.
+- Print: "What changed the numbers" now prints when closed (print-only `::details-content` rule).
+- HSTS gains `includeSubDomains` (`.dev` is preloaded anyway); security-reviewer: no blockers.
+- Verified: check 380; full e2e 158/159, the miss an axe scan stalled >27 s (2.8 s alone, 6/6).
+  VM now 3 vCPUs and 0 soft lockups, but the suite is slower (4.5 min).
+
+---
+
 ## 2026-11-23 — Session 75: Submit no longer jumps to the tiles below (M14)
 
 **Done** on `fix/m14-submit-jump` (Izzat's bug report).
