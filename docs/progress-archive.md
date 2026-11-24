@@ -4,6 +4,20 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-23 — Session 77: Plan feedback line and launch checks (M14)
+
+**Done** on `feat/m14-plan-feedback` (Izzat).
+- Live plans get "Spotted something off in this plan? Tell me", a mailto with the plan title as subject
+  (not on the hand-written example; hidden in print). New e2e for the href.
+- `app/favicon.ico`: the 32px icon wrapped in an ICO, so `/favicon.ico` no longer 404s.
+- Lighthouse 13.6 on production: mobile 91–93 / 100 / 100 / 100, desktop 92 / 100 / 100 / 100. Only miss is
+  TBT 330 ms (one 306 ms hydration task); post-launch item.
+- Spike check: no DAILY_LIMIT or RATE_LIMIT_PER_HOUR env in production, so the defaults apply (150/day, 5 per
+  visitor per hour). Izzat approved `DAILY_LIMIT=500` (Vercel production, at most ~US$1/day); live on next deploy.
+- Verified: check 380, full e2e 160 (`--workers=2`).
+
+---
+
 ## 2026-11-23 — Session 76: Three small fixes (M14)
 
 **Done** on `fix/m14-submit-jump` (Izzat: my suggestion from the backlog).

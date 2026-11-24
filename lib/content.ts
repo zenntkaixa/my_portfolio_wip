@@ -49,6 +49,12 @@ export const seo = {
 
 export const skipLink = "Skip to the estimator";
 
+export const notFound = {
+  title: "Page not found",
+  body: "That link doesn't go anywhere. The whole portfolio, including the live AI demo, is on one page.",
+  homeCta: "Back to the portfolio",
+};
+
 export const footer = {
   text: (year: number) => `© ${year} ${profile.name}. Built with Next.js and Claude.`,
 };
