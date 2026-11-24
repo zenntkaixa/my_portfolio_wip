@@ -5,6 +5,19 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-24 — Session 92: G6 Experience Gantt timeline (M14)
+
+**Done** on `feat/m14-experience-timeline` (Izzat: "do g6").
+- `lib/careerSpan.ts` parses the existing `period` strings (no new copy); each row gets an aria-hidden bar on a 2017-to-now
+  axis with year ticks. Career break is a hollow dashed bar. Growth animation only under no-preference motion.
+- Reviewer fixes: axis `em` margin now matches the 7.5em period column; last row's spacing fixed under 420px.
+- check 415 (5 new), e2e 180, visual-check on the tile (1440 and 390 light, 390 dark): no issues.
+- "Now" freezes at build time (`shortcut:` comment); the tick year changes on the next deploy.
+
+**Next:** S3, B5, G4/G5/C6, E6, G7 as before.
+
+---
+
 ## 2026-11-24 — Session 91: reviewer T-tests (M14)
 
 **Done** on `test/m14-review-t-tests` (Izzat: "do the T-tests").
@@ -16,18 +29,6 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
   Reviewer and visual-check skipped (one opacity value).
 
 **Next:** S3, B5, G4/G5/C6, E6 as before.
-
----
-
-## 2026-11-24 — Session 90: B4d refine reason as a task diff (M14)
-
-**Done** on `feat/m14-refine-diff` (Izzat: "go ahead with B4d as proposed").
-- `taskDiff` and `taskNames` in `lib/refine.ts`; `refine.why` now says "Added: … Removed: …" (3 names, then "and N more"),
-  or "Same tasks; hours re-estimated." when only hours moved. Shown whenever hours or tasks change, so the 5% threshold is gone.
-- The review-inserted task is left out of the diff. Unit tests added; docs-only wording on the site not needed (no threshold left).
-- check 388, e2e 178. Reviewer skipped (small diff).
-
-**Next:** S3 5-second test is Izzat's; B5 share link needs a privacy call and an ADR.
 
 ---
 

@@ -170,3 +170,4 @@ need an ADR and Izzat's privacy call) wait for Izzat.
 - [x] Refine fixes: E12b scroll after a refine, B4c human-check reason and jump, B4a growing answers, B4b hours reason (reviewer 22:40/22:45) [ui-builder]
 - [x] B4d refine reason names the added and removed tasks ("Same tasks; hours re-estimated." otherwise); always shown when hours or tasks change, so no hidden threshold (reviewer 02:35) [ui-builder]
 - [x] Reviewer T1, T3, T5, T7 as automated tests (`tests/unit/reviewerCases.test.ts`, `tests/e2e/dark-contrast.spec.ts`); fixed the dark-theme contrast bug it found on the pending request-flow steps, opacity 0.45 → 0.7 (Izzat) [qa-tester, ui-builder]
+- [x] G6 Experience as a Gantt-style timeline: a bar per job on a shared 2017-to-now axis, hollow dashed bar for the career break; text and list semantics unchanged (Izzat: "do g6") [ui-builder]
