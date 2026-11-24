@@ -112,3 +112,44 @@ test("on a 360 px phone a saved chip plan scrolls its heading into view (E12)", 
   // Near the top, so the plan under it is on screen too (scrolling to "nearest" left it on the bottom edge).
   await expect.poll(async () => (await heading.boundingBox())!.y).toBeLessThan(800 / 3);
 });
+
+test("answering the questions refines the plan: answers go in the brief and the change is shown (B4)", async ({ page }) => {
+  const bodies: { feature: string }[] = [];
+  await page.route("**/api/estimate", (route) => {
+    bodies.push(route.request().postDataJSON());
+    const n = bodies.length;
+    // Second plan: more facts stated, so confidence rises.
+    const facts = n === 1 ? plan.scope.facts : Object.fromEntries(Object.keys(plan.scope.facts).map((k) => [k, true]));
+    return route.fulfill({ json: { ...plan, scope: { ...plan.scope, facts } } });
+  });
+  await page.goto("/");
+  const brief = "Add one-time code login with email delivery and rate limiting";
+  await page.getByLabel("Feature description").fill(brief);
+  const submit = page.getByRole("button", { name: "Estimate this feature" });
+  await expect(submit).toBeEnabled({ timeout: 15_000 });
+  await submit.click();
+  await expect(page.locator("#estimator-results h3")).toHaveText(plan.scope.title);
+
+  const form = page.getByRole("region", { name: estimatorCopy.refine.heading });
+  const refineBtn = form.getByRole("button", { name: estimatorCopy.refine.button });
+  // Nothing answered: the button says why it can't go.
+  await expect(form.getByText(estimatorCopy.refine.needAnswer)).toBeVisible();
+  // aria-disabled, not disabled: a visitor can still press it, and nothing is sent.
+  await refineBtn.click({ force: true });
+  expect(bodies).toHaveLength(1);
+
+  const q = plan.scope.openQuestions[0];
+  await form.getByLabel(q).fill("Five minutes, three wrong tries");
+  await expect(refineBtn).toHaveAttribute("aria-disabled", "false", { timeout: 15_000 });
+  await refineBtn.click();
+  await expect(page.getByTestId("refined")).toHaveText(/^Refined from: medium confidence, \d+ h, RM\s[\d,–]+\. Now: high confidence, \d+ h, RM\s[\d,–]+\.$/);
+  expect(bodies).toHaveLength(2);
+  expect(bodies[1].feature).toBe(`${brief}\n\n${estimatorCopy.refine.lead}\n- ${q} Five minutes, three wrong tries`);
+  await expect(page.getByLabel("Feature description")).toHaveValue(bodies[1].feature);
+
+  // A plain new estimate drops the comparison.
+  await page.getByLabel("Feature description").fill("Staff apply for leave online and managers approve it in one tap");
+  await expect(submit).toBeEnabled({ timeout: 15_000 });
+  await submit.click();
+  await expect(page.getByTestId("refined")).toHaveCount(0);
+});

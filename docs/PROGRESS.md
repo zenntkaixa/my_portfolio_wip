@@ -5,6 +5,18 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-24 — Session 88: B4 answer the questions and refine (M14)
+
+**Done** on `feat/m14-refine` (Izzat: "start B4", plan approved with "go").
+- `RefineForm` under the tabs: one input per open question, room counter, "Refine this plan" (`aria-disabled`
+  with its reason). `lib/refine.ts` appends the answers to the brief; it is sent as a normal estimate, so no
+  API, prompt or limit changes (no new attack surface).
+- New plan shows "Refined from: … Now: …" (confidence, hours, build range).
+- Tests: unit for the brief builder; e2e for the request body, comparison line and clearing; three specs updated
+  for the second form. check 384, e2e 176.
+
+---
+
 ## 2026-11-24 — Session 87: phone-pass polish from the 21:06 sync review (M14)
 
 **Done** on `fix/m14-polish-round5` (Izzat: "go").
@@ -13,21 +25,5 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 - E13 "for a team of 8"; E14 whole headline hours and days; G9 fact dots fill by count.
 - G10 RM ticks on the range bars; S4 new `--chart-neutral` token for tools (validator passes both themes);
   M9 desktop summary three across, Confidence full width.
-
----
-
-## 2026-11-24 — Session 86: G2 budget charts, M6 and M7 readability, G1 request flow, E10 and G8 timeline, E11 coach (M14)
-
-**Done** on `feat/m14-budget-charts` (Izzat: "go G2"; sync review 18:55).
-- Budget tab opens with "Where the build money goes": one stacked bar of the build total with a legend of
-  every range. Contingency is accent hatching. The two-styles section opens with low-to-high range bars.
-- Fills: `--accent`, `--model`, `--role-frontend`; dataviz validator passes CVD and contrast in both themes.
-- Tables kept. New e2e ties the chart text to the table totals. Screenshots at 390 and 1280 px, both themes.
-- M6: `--fs-sm` 15px; hints, notes, footer and chart notes moved off `--fs-xs` (labels and tags only). The
-  summary is 2×2 on desktop too. M7: results sit on plain surface; the blueprint grid stays behind the form.
-- G1: `RequestFlow`, the 8-step path tinted code (accent) vs model (`--model`) with a key. Static in "How it's
-  built"; while a plan loads it ticks to the model step and waits there (replaces the skeleton and rotating steps).
-- E10 + G8: phase cards removed; each Gantt row carries "· N tasks" and the goal. Bars grow in 300 ms, staggered.
-- E11: a static six-facts tip under a short typed brief. check 381, e2e 174.
 
 ---

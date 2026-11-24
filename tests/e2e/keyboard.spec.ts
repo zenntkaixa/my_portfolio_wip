@@ -1,6 +1,7 @@
 import { expect, test, type Page } from "./fakeTurnstile";
 import plan from "../fixtures/plan.json";
 import { backToTop, estimatorBuiltBy, estimatorCopy, howItsBuilt } from "../../lib/content";
+import { samplePlan } from "../../lib/samplePlan";
 
 // Keyboard-only walkthrough. The real API is never called: /api/estimate is intercepted.
 // Turnstile is faked (./fakeTurnstile), so submit enables at once without waiting on Cloudflare;
@@ -108,7 +109,9 @@ test("Tab order, visible focus indicators, no trap, Shift+Tab goes back", async 
   expect(after.slice(0, 2).map((s) => s.tag), listing).toEqual(["button", "button"]);
   // Then the selected tab, its panel, the four list disclosures (Assumptions, Risks, Questions, Not included;
   // open at this width) and the Email me and LinkedIn call-to-action links.
-  expect(after.slice(2).map((s) => s.role || s.tag), listing).toEqual(["tab", "tabpanel", "summary", "summary", "summary", "summary", "a", "a"]);
+  // Then the refine form (B4): one input per open question and its button.
+  const refine = [...(samplePlan.openQuestions ?? []).map(() => "text"), "button"]; // walk() reports an input by its type
+  expect(after.slice(2).map((s) => s.role || s.tag), listing).toEqual(["tab", "tabpanel", "summary", "summary", "summary", "summary", ...refine, "a", "a"]);
   const chips = est.filter((s) => s.tag === "button" && s.role === "").slice(0, -1);
   const kinds = est.map((s) => (s.tag === "textarea" ? "textarea" : s.role === "range" ? "range" : s.role === "radio" ? "radio" : "button"));
   expect(kinds, listing).toEqual([...chips.map(() => "button"), "textarea", "range", "radio", "radio", "button"]);
