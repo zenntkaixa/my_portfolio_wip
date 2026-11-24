@@ -4,6 +4,17 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-24 — Session 87: phone-pass polish from the 21:06 sync review (M14)
+
+**Done** on `fix/m14-polish-round5` (Izzat: "go").
+- E12: after a result, the heading scrolls to the top on the next frame (it was left on the bottom edge or above
+  the screen). New 360 px e2e fails on the old code, passes now.
+- E13 "for a team of 8"; E14 whole headline hours and days; G9 fact dots fill by count.
+- G10 RM ticks on the range bars; S4 new `--chart-neutral` token for tools (validator passes both themes);
+  M9 desktop summary three across, Confidence full width.
+
+---
+
 ## 2026-11-24 — Session 86: G2 budget charts, M6 and M7 readability, G1 request flow, E10 and G8 timeline, E11 coach (M14)
 
 **Done** on `feat/m14-budget-charts` (Izzat: "go G2"; sync review 18:55).

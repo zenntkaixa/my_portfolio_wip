@@ -39,7 +39,7 @@ import { budget, type Team } from "@/lib/budget";
 type Status =
   | { kind: "idle" }
   | { kind: "submitting" }
-  | { kind: "success"; scope: Scope; plan: Plan; teamLabel: string; team: Team; example?: true; cached?: true; saved?: true; description?: string; refinedFrom?: string }
+  | { kind: "success"; scope: Scope; plan: Plan; teamLabel: string; team: Team; example?: true; cached?: true; saved?: true; description?: string; refinedFrom?: { text: string; hours: number } }
   | { kind: "error"; message: string; status: number };
 
 const exampleStatus: Status = {
@@ -61,6 +61,16 @@ const chipTexts = new Set([...estimatorExamples, ...estimatorBriefs.map((b) => b
 const loadSaved = () => import("@/lib/examplePlans.json").then((m) => m.default);
 
 // Mirrors the server's cache-key normalisation (lib/estimator/cache.ts), so "same brief" means the same thing on both sides.
+/**
+ * Scroll an element to the top of the screen, smoothly only for moves under one screen: a long smooth scroll
+ * is slow, and any layout change on the way leaves it off target.
+ */
+function scrollToTop(el: HTMLElement) {
+  const far = Math.abs(el.getBoundingClientRect().top) > window.innerHeight;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  el.scrollIntoView({ block: "start", behavior: far || reduce ? "auto" : "smooth" });
+}
+
 const sameBrief = (a: string, b: string) => {
   const n = (s: string) => s.trim().replace(/\s+/g, " ").toLowerCase();
   return n(a) === n(b);
@@ -112,7 +122,7 @@ export function Estimator() {
   const [savedOn, setSavedOn] = useState("");
   const savedBusy = useRef(false);
   // B4: the plan a refine started from, as one line, until that refine succeeds (or fails).
-  const pendingRefine = useRef<string | null>(null);
+  const pendingRefine = useRef<{ text: string; hours: number } | null>(null);
 
   // Abort any in-flight request on unmount.
   useEffect(() => () => abortRef.current?.abort(), []);
@@ -144,12 +154,7 @@ export function Estimator() {
       // held loading height and the phone disclosures have settled (scrolling now aimed at a stale position).
       const h = heading.current;
       h?.focus({ preventScroll: true });
-      const id = requestAnimationFrame(() =>
-        h?.scrollIntoView({
-          block: "start",
-          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-        }),
-      );
+      const id = requestAnimationFrame(() => h && scrollToTop(h));
       return () => cancelAnimationFrame(id);
     }
     else if (status.kind === "error") {
@@ -164,10 +169,7 @@ export function Estimator() {
   useEffect(() => {
     if (status.kind !== "submitting") setHoldHeight(null);
     if (status.kind !== "submitting" || window.matchMedia("(min-width: 1025px)").matches) return;
-    resultsEl.current?.scrollIntoView({
-      block: "start",
-      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-    });
+    if (resultsEl.current) scrollToTop(resultsEl.current);
   }, [status.kind]);
 
   // After a chip fills the field: caret at the end, ready to type or submit.
@@ -262,6 +264,9 @@ export function Estimator() {
     pendingRefine.current = null;
     const ok: Success = { kind: "success", scope, plan, teamLabel, team: { size: teamSize, seniority, mode }, description, ...(source && { [source]: true as const }), ...(refinedFrom && { refinedFrom }) };
     setLastOk(ok);
+    // Release the loading height in the same render as the plan (E12b): released a render later, the page
+    // shrinks after the scroll to the heading has started, and that scroll ends a screen or more too far down.
+    setHoldHeight(null);
     if (keepView) quiet.current = true;
     else setTab("phases");
     setStatus(ok);
@@ -281,7 +286,7 @@ export function Estimator() {
 
   function refine(from: Success, answers: Answer[]) {
     const text = refinedBrief(from.description ?? sampleFeature, answers);
-    pendingRefine.current = snapshot(from);
+    pendingRefine.current = { text: snapshot(from), hours: from.plan.totalHours };
     setFeature(text);
     void run(text);
   }
@@ -590,7 +595,8 @@ export function Estimator() {
             </p>
             {!banner && shown.refinedFrom && (
               <p className="estimator__note" data-testid="refined">
-                {estimatorCopy.refine.from(shown.refinedFrom, snapshot(shown))}
+                {estimatorCopy.refine.from(shown.refinedFrom.text, snapshot(shown))}
+                {estimatorCopy.refine.why(shown.refinedFrom.hours, shown.plan.totalHours)}
               </p>
             )}
             <p>{shown.plan.summary}</p>
@@ -632,6 +638,7 @@ export function Estimator() {
                   submitting ? estimatorCopy.refine.busy : cooldown > 0 ? estimatorCopy.refine.cooldown : !token ? estimatorCopy.refine.waiting : null
                 }
                 onRefine={(answers) => refine(shown, answers)}
+                onShowCheck={!token && !submitting && cooldown === 0 ? () => turnstile.current?.show() : undefined}
               />
             )}
             <p className="plan-print-footer">{estimatorCopy.actions.footer(profile.name)}</p>

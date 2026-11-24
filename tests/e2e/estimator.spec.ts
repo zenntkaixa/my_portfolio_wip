@@ -153,3 +153,46 @@ test("answering the questions refines the plan: answers go in the brief and the 
   await submit.click();
   await expect(page.getByTestId("refined")).toHaveCount(0);
 });
+
+test("a refine started at the bottom of the plan lands on the new plan's heading (E12b)", async ({ page }) => {
+  await page.setViewportSize({ width: 950, height: 800 });
+  await page.route("**/api/estimate", async (route) => {
+    await new Promise((f) => setTimeout(f, 800));
+    return route.fulfill({ json: plan });
+  });
+  await page.goto("/");
+  await page.getByLabel("Feature description").fill("Add one-time code login with email delivery and rate limiting");
+  const submit = page.getByRole("button", { name: "Estimate this feature" });
+  await expect(submit).toBeEnabled({ timeout: 15_000 });
+  await submit.click();
+  const form = page.getByRole("region", { name: estimatorCopy.refine.heading });
+  await form.getByLabel(plan.scope.openQuestions[0]).fill("Five minutes");
+  const refine = form.getByRole("button", { name: estimatorCopy.refine.button });
+  await refine.scrollIntoViewIfNeeded();
+  await expect(refine).toHaveAttribute("aria-disabled", "false", { timeout: 15_000 });
+  await refine.click();
+  await expect(page.getByTestId("refined")).toBeVisible();
+  const heading = page.locator("#estimator-results h3");
+  await expect(heading).toBeFocused();
+  // Before the fix the smooth scroll ended about 1,000 px past the heading.
+  await expect.poll(async () => (await heading.boundingBox())?.y ?? -1, { timeout: 3_000 }).toBeGreaterThanOrEqual(0);
+  await expect.poll(async () => (await heading.boundingBox())?.y ?? 999).toBeLessThan(800 / 3);
+});
+
+test("without a human-check token the refine form says why and can jump to the check (B4c)", async ({ page }) => {
+  // A widget that never issues a token, like Cloudflare waiting on a visible challenge.
+  await page.route("https://challenges.cloudflare.com/turnstile/v0/api.js*", (route) =>
+    route.fulfill({
+      contentType: "text/javascript",
+      body: "window.turnstile={render(){return 'w1'},reset(){},remove(){}};",
+    }),
+  );
+  await page.setViewportSize({ width: 360, height: 800 });
+  await page.goto("/");
+  // The example plan's refine form, far below the widget.
+  const form = page.getByRole("region", { name: estimatorCopy.refine.heading });
+  await form.getByRole("textbox").first().fill("Five minutes");
+  await expect(form.getByText(estimatorCopy.refine.waiting)).toBeVisible();
+  await form.getByRole("button", { name: estimatorCopy.refine.showCheck }).click();
+  await expect(page.locator(".turnstile")).toBeInViewport();
+});

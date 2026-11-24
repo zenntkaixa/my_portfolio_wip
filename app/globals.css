@@ -1516,8 +1516,12 @@ p {
   font-weight: 600;
 }
 
-.refine__field input {
-  min-height: 44px;
+/* Grows with the answer where field-sizing is supported (B4a); elsewhere 2 rows, resizable. */
+.refine__field textarea {
+  field-sizing: content;
+  min-height: 3.2em;
+  max-height: 8em;
+  resize: vertical;
   padding: 0.4rem 0.6rem;
   font: inherit;
   color: var(--ink);
@@ -1535,6 +1539,20 @@ p {
   color: var(--accent-ink);
   border: 1px solid transparent;
   font-weight: 600;
+}
+
+.refine__check {
+  display: block;
+  margin-top: 0.3rem;
+  padding: 0;
+  min-height: 44px;
+  font: inherit;
+  font-size: var(--fs-sm);
+  color: var(--accent);
+  text-decoration: underline;
+  background: none;
+  border: 0;
+  cursor: pointer;
 }
 
 .refine__submit[aria-disabled="true"] {
