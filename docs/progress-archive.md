@@ -4,6 +4,18 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-24 — Session 93: G4 radiozk preview GIF (M14)
+
+**Done** on `feat/m14-radiozk-preview`.
+- Recorded the live radiozk site with Playwright (play, FLAC live, now playing, Liked, About): 800x512, 15 frames, 290 KB.
+  Shows a real track name, as Izzat asked.
+- `featuredProject.preview` in `lib/content.ts`; `ProjectTile` renders a `<picture>`: still PNG under reduced motion,
+  GIF otherwise (plain `<img>`, lazy, width/height set). `.project__preview` CSS, `docs/01b-tiles.md` updated.
+- check 415; visual-check `#projects` at 1440 and 390 light: fine. The GIF shows the track on air at recording time.
+- Re-record when radiozk's UI changes. Render free tier may be asleep; the capture needed one warm-up.
+
+---
+
 ## 2026-11-24 — Session 92: G6 Experience Gantt timeline (M14)
 
 **Done** on `feat/m14-experience-timeline` (Izzat: "do g6").
