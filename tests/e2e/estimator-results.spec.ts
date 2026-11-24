@@ -47,9 +47,11 @@ test("tab 1 shows summary, timeline bars, cards, assumptions and risks", async (
   }
   await expect(page.getByTestId("summary").getByText(confidence[p.confidence as keyof typeof confidence])).toBeVisible();
   await expect(page.getByRole("heading", { level: 4, name: p.phases[0].name })).toBeVisible();
-  const card = page.getByTestId("phase-card").first();
-  await expect(card).toContainText(estimatorCopy.taskCount(p.phases[0].tasks.length));
-  await expect(card).toContainText(estimatorCopy.duration(p.phases[0].durationDays));
+  // E10: each Gantt row carries the task count and goal (no separate phase cards).
+  const row = page.getByTestId("phase-row").first();
+  await expect(row).toContainText(estimatorCopy.taskCount(p.phases[0].tasks.length));
+  await expect(row).toContainText(p.phases[0].goal);
+  await expect(page.getByTestId("phase-card")).toHaveCount(0);
 
   const assumptions = page.getByRole("region", { name: estimatorCopy.assumptionsHeading });
   await expect(assumptions.getByRole("listitem")).toHaveCount(p.assumptions.length);
@@ -64,14 +66,14 @@ test("tab 1 does not scroll horizontally at 320px", async ({ page }) => {
   expect(overflow).toBeLessThanOrEqual(0);
 });
 
-test("repeated phase names render every bar and card without duplicate-key warnings", async ({ page }) => {
+test("repeated phase names render every bar and row without duplicate-key warnings", async ({ page }) => {
   const logs: string[] = [];
   page.on("console", (m) => logs.push(m.text()));
   const [a, b] = plan.scope.phases;
   const dup = { ...plan, scope: { ...plan.scope, title: "Duplicate names", phases: [a, { ...b, name: a.name, startDay: 2 }], assumptions: ["Same", "Same"], risks: ["Same", "Same"] } };
   await showResults(page, dup, "Duplicate names");
   await expect(page.getByTestId("timeline-bar")).toHaveCount(2);
-  await expect(page.getByTestId("phase-card")).toHaveCount(2);
+  await expect(page.getByTestId("phase-row")).toHaveCount(2);
   await expect(page.getByRole("region", { name: estimatorCopy.risksHeading }).getByRole("listitem")).toHaveCount(2);
   expect(logs.filter((l) => /same key|unique "key"/i.test(l))).toEqual([]);
 });

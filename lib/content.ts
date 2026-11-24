@@ -273,13 +273,15 @@ const adr = "https://github.com/zenntkaixa/portfolio/blob/develop/docs/decisions
 export const howItsBuilt = {
   summary: "How it's built",
   pathTitle: "The path of one request",
+  // G1: the flow is tinted by who decides each step; the key names the two colours in words.
+  flowKey: { code: "Code", model: "The model" },
   path: [
     { step: "Browser form", note: "You describe the feature, team size and seniority." },
     { step: "Cloudflare Turnstile", note: "A human check, verified on the server." },
     { step: "API route", note: "Validates and length-limits every input." },
     { step: "Rate limit and daily cap", note: "Shared across servers in Upstash Redis." },
     { step: "24-hour plan cache", note: "The same brief inside a day costs nothing." },
-    { step: "Claude Haiku", note: "Returns the scope as schema-checked JSON (structured outputs)." },
+    { step: "Claude Haiku", note: "Returns the scope as schema-checked JSON (structured outputs).", model: true },
     { step: "Code applies every factor", note: "buildPlan turns the scope into hours, calendar and budget." },
     { step: "Plan shown", note: "One metadata row goes to Postgres (Neon, Singapore), never your text." },
   ],
@@ -338,6 +340,12 @@ export const estimatorCopy = {
   tabTasks: "Tasks",
   tabBudget: "Budget",
   budget: {
+    // G2: the build total as one bar. Copy for its heading, legend and the screen-reader summary.
+    chart: {
+      heading: "Where the build money goes",
+      tools: "Tools and one-off costs",
+      note: "Segment lengths use the middle of each range.",
+    },
     caption: "Estimated budget in Malaysian ringgit",
     regionLabel: "Budget table, scrolls sideways on small screens",
     item: "Item",
@@ -404,9 +412,9 @@ export const estimatorCopy = {
   previousPlan: (desc: string) => `Previous plan for: “${desc.length > 60 ? `${desc.slice(0, 60).trimEnd()}…` : desc}”`,
   undo: { button: "Undo", announce: "Example added. Undo is available for 10 seconds." },
   planning: "Planning phases…",
-  /** Rotates every ~2.5s while waiting; visual only (the status line announces `planning` once). */
-  steps: ["Reading your brief…", "Sizing the phases…", "Estimating tasks…", "Costing the team…"],
   usuallyWait: "Usually about 10 seconds.",
+  coach:
+    "Tip: for a high-confidence plan, say who uses it, which systems and data it touches, any outside services, limits such as volume or deadlines, and what is out of scope.",
   cta: { text: "Like how I break down work? Let's talk about your team.", email: "Email me", linkedin: "LinkedIn" },
   feedback: {
     text: "Spotted something off in this plan?",
@@ -465,11 +473,11 @@ export const estimatorCopy = {
     seats: "AI agent seats",
     noSeats: "None",
     build: "Build total",
+    chartLabel: (trad: string, ai: string) => `Build total range. Traditional: ${trad}. With AI agents: ${ai}.`,
     hoursRange: (likely: number, best: number, worst: number) => `${likely} h (${best}–${worst})`,
   },
   timelineLabel: (days: number) => `Timeline, ${days} ${days === 1 ? "day" : "days"}`,
   weekLabel: (n: number) => `Week ${n}`,
-  duration: (n: number) => `${n} ${n === 1 ? "day" : "days"}`,
   taskCount: (n: number) => `${n} ${n === 1 ? "task" : "tasks"}`,
   tasks: {
     roleChipsLabel: "Hours by role",

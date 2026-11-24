@@ -5,6 +5,22 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-24 — Session 86: G2 budget charts, M6 and M7 readability, G1 request flow, E10 and G8 timeline, E11 coach (M14)
+
+**Done** on `feat/m14-budget-charts` (Izzat: "go G2"; sync review 18:55).
+- Budget tab opens with "Where the build money goes": one stacked bar of the build total with a legend of
+  every range. Contingency is accent hatching. The two-styles section opens with low-to-high range bars.
+- Fills: `--accent`, `--model`, `--role-frontend`; dataviz validator passes CVD and contrast in both themes.
+- Tables kept. New e2e ties the chart text to the table totals. Screenshots at 390 and 1280 px, both themes.
+- M6: `--fs-sm` 15px; hints, notes, footer and chart notes moved off `--fs-xs` (labels and tags only). The
+  summary is 2×2 on desktop too. M7: results sit on plain surface; the blueprint grid stays behind the form.
+- G1: `RequestFlow`, the 8-step path tinted code (accent) vs model (`--model`) with a key. Static in "How it's
+  built"; while a plan loads it ticks to the model step and waits there (replaces the skeleton and rotating steps).
+- E10 + G8: phase cards removed; each Gantt row carries "· N tasks" and the goal. Bars grow in 300 ms, staggered.
+- E11: a static six-facts tip under a short typed brief. check 381, e2e 174.
+
+---
+
 ## 2026-11-24 — Session 85: UX batch 1 from the 18:55 sync review (M14)
 
 **Done** on `feat/m14-ux-batch1` (Izzat: "go batch 1, S1/S2 yes, E7 10").
@@ -14,17 +30,5 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 - E9: the four lists are disclosures, closed on phones. M5: Team card spans the row on phones.
 - G3 fact dots and S1 `--model` token (#B06D00 / #F2C14E, ≥3.5:1 as a graphic); S2 gradient estimator edge.
 - security-reviewer and reviewer: no blockers; saved-plan fallback hardened. check 381, e2e 171.
-
----
-
-## 2026-11-24 — Session 84: Polish E2, E3, E4, M4 (M14)
-
-**Done** on `fix/m14-polish-e2-e4` (Izzat: "do e3, m4, e4, e2"; IDs from the Drive sync review).
-- E3: the "current" tag in the two-styles table is a filled accent pill sized to its text.
-- M4: slider thumb 32px inside a 44px-tall touch target.
-- E4: banners get a decorative icon and a tone edge: error `--danger` (new token, edge and icon only),
-  rate limit `--warn`, refusal (422) `--accent`. New e2e per tone.
-- E2: "Mixed is one blended rate (about 1 senior to 2 mid-level and 1 junior), applied at any team size."
-- Verified: check 381, full e2e 169; banner, slider and pill screenshots at 390 px in both themes.
 
 ---

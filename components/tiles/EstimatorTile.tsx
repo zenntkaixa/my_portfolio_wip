@@ -1,3 +1,4 @@
+import { RequestFlow } from "@/components/estimator/RequestFlow";
 import { Tile } from "@/components/Bento";
 import { Estimator } from "@/components/estimator/Estimator";
 import { ExternalLink } from "@/components/ExternalLink";
@@ -21,14 +22,7 @@ export async function EstimatorTile() {
         <div className="built__body">
           <section aria-labelledby="built-path">
             <h3 id="built-path">{h.pathTitle}</h3>
-            <ol className="built__path" role="list">
-              {h.path.map((p) => (
-                <li key={p.step}>
-                  <strong>{p.step}</strong>
-                  <span>{p.note}</span>
-                </li>
-              ))}
-            </ol>
+            <RequestFlow />
           </section>
           <section aria-labelledby="built-split">
             <h3 id="built-split">{h.splitTitle}</h3>

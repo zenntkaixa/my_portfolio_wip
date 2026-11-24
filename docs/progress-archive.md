@@ -4,6 +4,18 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-24 — Session 84: Polish E2, E3, E4, M4 (M14)
+
+**Done** on `fix/m14-polish-e2-e4` (Izzat: "do e3, m4, e4, e2"; IDs from the Drive sync review).
+- E3: the "current" tag in the two-styles table is a filled accent pill sized to its text.
+- M4: slider thumb 32px inside a 44px-tall touch target.
+- E4: banners get a decorative icon and a tone edge: error `--danger` (new token, edge and icon only),
+  rate limit `--warn`, refusal (422) `--accent`. New e2e per tone.
+- E2: "Mixed is one blended rate (about 1 senior to 2 mid-level and 1 junior), applied at any team size."
+- Verified: check 381, full e2e 169; banner, slider and pill screenshots at 390 px in both themes.
+
+---
+
 ## 2026-11-24 — Session 83: Review round 4 (M14)
 
 **Done** on `fix/m14-review-round4` (Izzat: "go, all four").
