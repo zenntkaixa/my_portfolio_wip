@@ -191,7 +191,8 @@ guess could disagree with the model's own fact check.
 Show the status line ("Planning phases…", announced once), the request flow lighting up (G1,
 `RequestFlow live`, decorative): the five fast steps tick through at 250 ms each, then it holds on the model
 step (Claude Haiku, in `--model`) until the response; later steps are faint. Then "Usually about 10 seconds."
-The same flow, with each step's note, is the static "Path of one request" in "How it's built". On success focus moves to the plan heading; on error to the banner.
+The same flow, with each step's note, is the static "Path of one request" in "How it's built". On success focus moves to the plan heading (no browser jump), and on the next frame the
+heading scrolls to the top of the screen (E12; smooth unless reduced motion); on error focus goes to the banner.
 A failed estimate never wipes the last successful plan (example or live): it stays below the banner.
 Under every plan, above the footer note: "Like how I break down work? Let's talk about your team." with Email me and
 LinkedIn links (never a phone number). A chip click fills the field and puts the caret at its end.
@@ -202,12 +203,14 @@ fallback if rendering throws.
 ## Output tabs
 
 Above the tabs, under the title, one plain-English answer line built in code (E8):
-"About N weeks for a P-person team, roughly RM Xk–Yk to build." (rounded calendar weeks, `budget().build`).
+"About N weeks for a team of P, roughly RM Xk–Yk to build." (rounded calendar weeks, `budget().build`).
 
 **Tab 1 — Timeline** (default; was "Phases and timeline", shortened in M11 so tabs fit one line on phones)
 - Summary row: total effort hours, calendar weeks, team (e.g. "4 people, mixed"), confidence badge with six
-  fact dots in `--model` (filled = stated; decorative, the "N of 6 facts" hint says it). Phones: Effort and
-  Calendar share a row; Team and Confidence span it. Assumptions, Risks, Questions and Not included are
+  fact dots in `--model`, filled left to right by count like a meter (decorative; the "N of 6 facts" hint and
+  "Not stated" say it in words). Headline hours and days are whole numbers; task rows keep half hours. Phones:
+  Effort and Calendar share a row; Team and Confidence span it. From 720 px: Effort, Calendar and Team in a row,
+  Confidence full width below. Assumptions, Risks, Questions and Not included are
   `<details>` disclosures, closed below 720 px and open above (E9).
   Each item has a one-line hint under its value (`estimatorCopy.summary.hints`). Confidence is computed
   in code (`confidenceFor`) from the six facts the model reports the description states (users, existing
@@ -239,7 +242,8 @@ Tabs use proper ARIA (`role="tablist"`, `aria-selected`, arrow-key navigation).
 Charts first (G2, `BudgetChart.tsx`): "Where the build money goes" is one stacked bar of the build total
 (people, AI seats when on, tools and one-off costs, contingency; segment length = middle of each range) with
 a legend that carries every range, so the bar is decorative. The "Same scope, two working styles" section opens
-with two range bars (low to high build total, shared axis from zero; `role="img"` with both ranges in its label).
+with two range bars (low to high build total, shared axis from zero with faint ticks at a round step such as
+RM 0 · 10k · 20k · 30k; `role="img"` with both ranges in its label).
 The tables stay as the full view:
 - **Build:** people cost = total hours × an assumed in-house rate per seniority (junior RM 40, mid
   RM 75, senior RM 120, mixed RM 78 per hour: mid-range Klang Valley salary × 1.3 for EPF, SOCSO, EIS

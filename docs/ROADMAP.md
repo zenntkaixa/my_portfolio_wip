@@ -165,3 +165,4 @@ need an ADR and Izzat's privacy call) wait for Izzat.
 - [x] G1 request-flow diagram: static in How it's built, lights up to the model step while loading [ui-builder]
 - [x] E10 one timeline (task count and goal on each Gantt row, no phase cards) and G8 staggered bar growth [ui-builder]
 - [x] E11 brief coach: six-facts tip under a short typed brief, no extra call [ui-builder]
+- [x] Phone-pass polish: E12 scroll to the new plan, E13, E14, G9, G10, S4, M9 (Izzat) [ui-builder]

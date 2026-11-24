@@ -135,12 +135,17 @@ export function Estimator() {
     if (!acted.current) return;
     // Returning to the stored example (typing after a field error) must not pull focus out of the field.
     if (status.kind === "success" && !status.example) {
-      // Scroll only as far as needed, and smoothly: a plain focus() snaps the page to the heading.
-      heading.current?.focus({ preventScroll: true });
-      heading.current?.scrollIntoView({
-        block: "nearest",
-        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-      });
+      // E12: focus without the browser's jump, then scroll the heading to the top on the next frame, after the
+      // held loading height and the phone disclosures have settled (scrolling now aimed at a stale position).
+      const h = heading.current;
+      h?.focus({ preventScroll: true });
+      const id = requestAnimationFrame(() =>
+        h?.scrollIntoView({
+          block: "start",
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+        }),
+      );
+      return () => cancelAnimationFrame(id);
     }
     else if (status.kind === "error") {
       // 400 is shown inline: focus the field it describes. Other errors: the banner.

@@ -60,8 +60,9 @@ export function PhaseTimeline({ plan, teamLabel, teamSize }: { plan: Plan; teamL
           <dd>
             <span className={`tab1-badge tab1-badge--${plan.confidence}`}>{plan.confidence}</span>
             <span className="tab1-dots" aria-hidden="true" data-testid="fact-dots">
-              {FACTS.map((f) => (
-                <i key={f} data-on={plan.missingFacts.includes(f) ? undefined : ""} title={copy.factLabels[f]} />
+              {/* G9: filled left to right by count, like a meter; "Not stated" names the missing ones. */}
+              {FACTS.map((f, i) => (
+                <i key={f} data-on={i < FACTS.length - plan.missingFacts.length ? "" : undefined} />
               ))}
             </span>
           </dd>
