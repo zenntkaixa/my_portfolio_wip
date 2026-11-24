@@ -5,29 +5,27 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
-## 2026-11-24 — Session 78: Launch content calls and repo rename (M14)
+## 2026-11-24 — Session 80: Copy proofread (M14)
 
-**Done** on `chore/m14-repo-rename` (Izzat: "go with your suggestions", all certifications).
-- Content calls: case studies launch without figures; full legal name, PR counts and all three
-  certifications stay as they are (no copy change).
-- GitHub repo renamed `my_portfolio_wip` → `portfolio` (old URL 301s; homepage set to zenntkaixa.dev).
-  "Read the code", ADR links, README badge and the deployment doc point at the new name. The Vercel
-  project keeps its name (`my-portfolio-wip.vercel.app`); no domain email for now.
-- Verified: check 380, full e2e 160 (`--workers=2`).
+**Done** on `fix/m14-copy-proofread` (Izzat approved all edits).
+- `lib/content.ts`: estimator intro says "delivery plan with effort and calendar estimates"; "now shipped"
+  dangling modifier fixed in summary and SEO description; AWS cert name matches the list; one stray comma;
+  no "Please" in the 429 message; Vetter role "Junior Software Engineer, then QA Engineer" (matches CV);
+  banking case study "then moved it to microservices".
+- Verified: check 380, full e2e 161.
 
-**Next** release #100, #101 and this; device checks; release audit; launch.
+**Next** release develop → main; real-device checks; share previews; launch.
 
 ---
 
-## 2026-11-23 — Session 77: Plan feedback line and launch checks (M14)
+## 2026-11-24 — Session 79: Branded 404 page (M14)
 
-**Done** on `feat/m14-plan-feedback` (Izzat).
-- Live plans get "Spotted something off in this plan? Tell me", a mailto with the plan title as subject
-  (not on the hand-written example; hidden in print). New e2e for the href.
-- `app/favicon.ico`: the 32px icon wrapped in an ICO, so `/favicon.ico` no longer 404s.
-- Lighthouse 13.6 on production: mobile 91–93 / 100 / 100 / 100, desktop 92 / 100 / 100 / 100. Only miss is
-  TBT 330 ms (one 306 ms hydration task); post-launch item.
-- Spike check: no DAILY_LIMIT or RATE_LIMIT_PER_HOUR env in production, so the defaults apply (150/day, 5 per
-  visitor per hour). Izzat approved `DAILY_LIMIT=500` (Vercel production, at most ~US$1/day); live on next deploy.
-- Verified: check 380, full e2e 160 (`--workers=2`).
+**Done** on `feat/m14-not-found` (Izzat: "go ahead with the 404 page", from a pre-launch scan).
+- `app/not-found.tsx`: one tile with the theme toggle and footer, copy in `lib/content.ts` (`notFound`).
+- Its metadata sets `robots: noindex`; the layout's "index, follow" was rendering beside Next's noindex.
+- Pre-launch scan: npm audit 0, domain live on Vercel, all roadmap items ticked; patch bumps left to Dependabot.
+- Verified: check 380, full e2e 161; 404 screenshots at 390/1440 in light and dark.
+
+**Next** release #100–#104 and this; real-device checks; LinkedIn/WhatsApp share preview; launch.
+
 ---

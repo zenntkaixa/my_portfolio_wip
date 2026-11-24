@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { profile, seo, siteUrl } from "@/lib/content";
+import { notFound, profile, seo, siteUrl } from "@/lib/content";
 
 // Escape the dots so the canonical match is exact; an optional trailing slash is fine.
 const siteUrlPattern = new RegExp(`^${siteUrl.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}/?$`);
@@ -49,4 +49,16 @@ test("robots.txt and sitemap.xml are served and point at the site", async ({ req
   const xml = await sitemap.text();
   expect(xml).toContain(`<loc>${siteUrl}</loc>`);
   expect(xml).toContain(`<loc>${siteUrl}${profile.cv.href}</loc>`);
+});
+
+test("unknown paths get the branded 404 with a link home and noindex", async ({ page }) => {
+  const res = await page.goto("/no-such-page");
+  expect(res?.status()).toBe(404);
+  await expect(page.getByRole("heading", { level: 1, name: notFound.title })).toBeVisible();
+  const robots = await page.locator('meta[name="robots"]').evaluateAll((els) => els.map((e) => e.getAttribute("content")));
+  expect(robots.length).toBeGreaterThan(0);
+  for (const content of robots) expect(content).toMatch(/noindex/);
+  await page.getByRole("link", { name: notFound.homeCta }).click();
+  await expect(page).toHaveURL(/\/$/);
+  await expect(page.getByRole("heading", { level: 1, name: profile.name })).toBeVisible();
 });
