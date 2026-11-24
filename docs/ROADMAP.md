@@ -161,3 +161,4 @@ need an ADR and Izzat's privacy call) wait for Izzat.
 - [x] UX batch 1 (sync review 18:55): E5 saved example plans, E7 10 per hour, E8 answer line, E9 collapsible lists
   on phones, M5 team card, G3 fact dots, S1 `--model` token, S2 gradient estimator edge (Izzat) [ui-builder]
 - [x] G2 budget charts: build-cost stacked bar and traditional vs AI range bars, tables kept (Izzat) [ui-builder]
+- [x] M6 15px reading text and M7 plain results background (Izzat: "move on to the next items") [ui-builder]

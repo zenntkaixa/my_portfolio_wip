@@ -81,7 +81,7 @@
 
 :root {
   --fs-xs: 0.8rem;
-  --fs-sm: 0.9rem;
+  --fs-sm: 0.9375rem; /* 15px: the floor for any reading text (M6); --fs-xs is for labels and tags only */
   --fs-base: 1rem;
   --fs-lg: 1.2rem;
   --fs-xl: 1.6rem;
@@ -233,7 +233,7 @@ p {
   max-width: var(--max-w);
   margin: 0 auto;
   padding: 0 var(--page-pad) var(--page-pad);
-  font-size: var(--fs-xs);
+  font-size: var(--fs-sm);
   color: var(--muted);
 }
 
@@ -1065,6 +1065,15 @@ p {
   scroll-margin-top: var(--gap);
 }
 
+/* M7: the blueprint grid stays behind the form; results read on plain surface, edge to edge of the tile. */
+.estimator__results:not(:empty) {
+  margin-inline: calc(-1 * clamp(20px, 3vw, 32px));
+  padding-inline: clamp(20px, 3vw, 32px);
+  padding-block: var(--gap);
+  background-color: var(--surface);
+  border-top: 1px solid var(--line);
+}
+
 /* Programmatic focus on submit only; the section isn't interactive. */
 .estimator__results:focus {
   outline: none;
@@ -1853,13 +1862,13 @@ p {
 .tab3-detail {
   display: block;
   margin-top: 0.15rem;
-  font-size: var(--fs-xs);
+  font-size: var(--fs-sm);
   color: var(--muted);
 }
 
 .tab3-note {
   margin: 0;
-  font-size: var(--fs-xs);
+  font-size: var(--fs-sm);
   color: var(--muted);
 }
 
@@ -1910,7 +1919,7 @@ p {
 
 .tab1-summary dd.tab1-hint {
   margin-top: 0.35rem;
-  font-size: var(--fs-xs);
+  font-size: var(--fs-sm);
   font-variant-numeric: normal;
   color: var(--muted);
   overflow-wrap: break-word;
@@ -1918,7 +1927,7 @@ p {
 
 .estimator__model-note {
   margin: 0;
-  font-size: var(--fs-xs);
+  font-size: var(--fs-sm);
   color: var(--muted);
 }
 
@@ -2123,9 +2132,7 @@ p {
 }
 
 @media (min-width: 720px) {
-  .tab1-summary {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
+  /* Two by two (M6): the results column is about 550 px, too narrow for four cards of 15px hints. */
 
   .tab1-summary > div:nth-child(n + 3) {
     grid-column: auto;
@@ -2314,7 +2321,7 @@ p {
 
 .bchart__note {
   margin: 0.4rem 0 0;
-  font-size: var(--fs-xs);
+  font-size: var(--fs-sm);
   color: var(--muted);
 }
 
