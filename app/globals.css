@@ -2646,7 +2646,7 @@ p {
 }
 
 .flow--live .flow__steps li[data-state="todo"] {
-  opacity: 0.45;
+  opacity: 0.7;
 }
 
 .flow--live .flow__steps li[data-state="todo"]::before {

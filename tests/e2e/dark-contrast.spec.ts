@@ -29,10 +29,7 @@ async function submit(page: Page) {
   await button.click();
 }
 
-// BUG (real, not fixed per task rules): .flow--live li[data-state="todo"] uses opacity 0.45 (app/globals.css),
-// so the pending step titles measure 3.86:1 in dark (needs 4.5:1). test.fail keeps CI green and turns red
-// once the app is fixed: then change test.fail to test.
-test.fail("dark: the request flow shown while waiting is readable", async ({ page }) => {
+test("dark: the request flow shown while waiting is readable", async ({ page }) => {
   let release!: () => void;
   const gate = new Promise<void>((r) => (release = r));
   await page.route("**/api/estimate", async (route) => {
