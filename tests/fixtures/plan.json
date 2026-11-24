@@ -65,7 +65,7 @@
     "facts": {
       "users": true,
       "systems": false,
-      "data": false,
+      "data": true,
       "integrations": true,
       "limits": false,
       "outOfScope": false

@@ -54,6 +54,19 @@ export function ModeComparison({ scope, team }: { scope: Scope; team: Team }) {
               <td key={c.mode} className={cur(c.mode)}>{range(both[c.mode].budget.peopleRange)}</td>
             ))}
           </tr>
+          <tr>
+            <th scope="row">{k.seats}</th>
+            {cols.map((c) => {
+              const s = both[c.mode].budget.seats;
+              return <td key={c.mode} className={cur(c.mode)}>{s ? range(s) : k.noSeats}</td>;
+            })}
+          </tr>
+          <tr>
+            <th scope="row">{k.build}</th>
+            {cols.map((c) => (
+              <td key={c.mode} className={cur(c.mode)}>{range(both[c.mode].budget.build)}</td>
+            ))}
+          </tr>
         </tbody>
       </table>
     </section>

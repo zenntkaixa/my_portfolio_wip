@@ -45,7 +45,7 @@ export function planToText(plan: Plan, team: Team | undefined, b: Budget, scope?
     lines.push("", k.heading);
     for (const m of ["traditional", "ai-assisted"] as const) {
       const { plan: p, budget: x } = both[m];
-      lines.push(`${m === "traditional" ? k.traditional : k.ai}: ${k.hoursRange(p.effort.likely, p.effort.best, p.effort.worst)}, ${estimatorCopy.summary.weeksValue(p.calendarWeeks)}, ${range(x.peopleRange)}`);
+      lines.push(`${m === "traditional" ? k.traditional : k.ai}: ${k.hoursRange(p.effort.likely, p.effort.best, p.effort.worst)}, ${estimatorCopy.summary.weeksValue(p.calendarWeeks)}, ${range(x.peopleRange)}, ${k.seats}: ${x.seats ? range(x.seats) : k.noSeats}, ${k.build}: ${range(x.build)}`);
     }
   }
   lines.push(

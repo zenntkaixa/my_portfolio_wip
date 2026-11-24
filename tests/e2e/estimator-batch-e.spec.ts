@@ -113,7 +113,10 @@ test("comparison table equals buildPlan for both modes, current one marked", asy
     const cell = (row: string) => table.getByRole("row", { name: row });
     await expect(cell(estimatorCopy.compare.effort)).toContainText(estimatorCopy.summary.rangeNote(p.effort.best, p.effort.worst));
     await expect(cell(estimatorCopy.compare.calendar)).toContainText(estimatorCopy.summary.weeksValue(p.calendarWeeks));
-    await expect(cell(estimatorCopy.compare.people)).toContainText(budget(p, { ...team, mode }).peopleRange.low.toLocaleString("en-MY"));
+    const b = budget(p, { ...team, mode });
+    await expect(cell(estimatorCopy.compare.people)).toContainText(b.peopleRange.low.toLocaleString("en-MY"));
+    await expect(cell(estimatorCopy.compare.seats)).toContainText(b.seats ? b.seats.low.toLocaleString("en-MY") : estimatorCopy.compare.noSeats);
+    await expect(cell(estimatorCopy.compare.build)).toContainText(b.build.high.toLocaleString("en-MY"));
   }
   await expect(table.locator("th[data-mode='ai-assisted']")).toContainText(estimatorCopy.compare.current);
   await expect(table.locator("th[data-mode='traditional']")).not.toContainText(estimatorCopy.compare.current);
@@ -187,4 +190,19 @@ test.describe("role pills and task tags", () => {
     await openTasks(page);
     expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
   });
+});
+
+test("changing only working style or seniority rebuilds in the browser with no new request", async ({ page }) => {
+  let calls = 0;
+  page.on("request", (r) => { if (r.url().endsWith("/api/estimate")) calls++; });
+  await submitWith(page, { ...plan, cached: true });
+  expect(calls).toBe(1);
+  await page.getByRole("group", { name: estimatorCopy.mode.legend }).getByRole("radio", { name: estimatorCopy.mode.options["ai-assisted"] }).check();
+  await page.getByRole("radio", { name: /^senior/i }).check();
+  await page.getByRole("button", { name: estimatorCopy.submit }).click();
+  const p = buildPlan(scope, { teamSize: 4, seniority: "senior", mode: "ai-assisted" });
+  await expect(page.getByTestId("summary").getByText(estimatorCopy.summary.hoursValue(p.totalHours))).toBeVisible();
+  // A rebuilt plan is not a cache hit, so the "same request" note goes away.
+  await expect(page.getByText(estimatorCopy.cachedNote)).toHaveCount(0);
+  expect(calls).toBe(1);
 });
