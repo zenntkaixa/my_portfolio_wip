@@ -185,9 +185,10 @@ modes; the team line reads e.g. "2 people, senior, with AI agents".
 ## UI states
 `idle → submitting → success | error`. While submitting: disable the form, move focus to the results
 section and scroll it into view (smooth unless reduced motion; on phones the results sit below the form).
-Show a plan-shaped skeleton (4 summary cards, 5 timeline bars), the status line ("Planning phases…",
-announced once) and a visual-only step line that rotates every 2.5 s ("Reading your brief…" ...), plus
-"Usually about 10 seconds." On success focus moves to the plan heading; on error to the banner.
+Show the status line ("Planning phases…", announced once), the request flow lighting up (G1,
+`RequestFlow live`, decorative): the five fast steps tick through at 250 ms each, then it holds on the model
+step (Claude Haiku, in `--model`) until the response; later steps are faint. Then "Usually about 10 seconds."
+The same flow, with each step's note, is the static "Path of one request" in "How it's built". On success focus moves to the plan heading; on error to the banner.
 A failed estimate never wipes the last successful plan (example or live): it stays below the banner.
 Under every plan, above the footer note: "Like how I break down work? Let's talk about your team." with Email me and
 LinkedIn links (never a phone number). A chip click fills the field and puts the caret at its end.

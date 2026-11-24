@@ -5,7 +5,7 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
-## 2026-11-24 — Session 86: G2 budget charts, M6 and M7 readability (M14)
+## 2026-11-24 — Session 86: G2 budget charts, M6 and M7 readability, G1 request flow (M14)
 
 **Done** on `feat/m14-budget-charts` (Izzat: "go G2"; sync review 18:55).
 - Budget tab opens with "Where the build money goes": one stacked bar of the build total with a legend of
@@ -14,6 +14,8 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 - Tables kept. New e2e ties the chart text to the table totals. Screenshots at 390 and 1280 px, both themes.
 - M6: `--fs-sm` 15px; hints, notes, footer and chart notes moved off `--fs-xs` (labels and tags only). The
   summary is 2×2 on desktop too. M7: results sit on plain surface; the blueprint grid stays behind the form.
+- G1: `RequestFlow`, the 8-step path tinted code (accent) vs model (`--model`) with a key. Static in "How it's
+  built"; while a plan loads it ticks to the model step and waits there (replaces the skeleton and rotating steps).
 
 ---
 

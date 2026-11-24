@@ -25,6 +25,7 @@ import { pickRandom } from "@/lib/pick";
 import { ExternalLink } from "@/components/ExternalLink";
 import { Turnstile, type TurnstileHandle } from "./Turnstile";
 import { PhaseTimeline } from "./PhaseTimeline";
+import { RequestFlow } from "./RequestFlow";
 import { TaskTable } from "./TaskTable";
 import { PlanActions } from "./PlanActions";
 import { ResultsBoundary } from "./ResultsBoundary";
@@ -62,15 +63,6 @@ const sameBrief = (a: string, b: string) => {
 };
 
 /** Visual-only progress line; the status line announces `planning` once, so this is aria-hidden by its parent. */
-function PlanningStep() {
-  const [i, setI] = useState(0);
-  useEffect(() => {
-    const id = setInterval(() => setI((n) => (n + 1) % estimatorCopy.steps.length), 2500);
-    return () => clearInterval(id);
-  }, []);
-  return <p className="estimator__step">{estimatorCopy.steps[i]}</p>;
-}
-
 type Tab = "phases" | "tasks" | "budget";
 
 type Chip = { label: string; text: string };
@@ -505,17 +497,8 @@ export function Estimator() {
 
         {submitting && (
           <div className="estimator__skeleton" aria-hidden="true">
-            <PlanningStep />
+            <RequestFlow live />
             <p className="estimator__status">{estimatorCopy.usuallyWait}</p>
-            <span className="estimator__bone estimator__bone--title" />
-            <div className="estimator__skeleton-cards">
-              {[0, 1, 2, 3].map((n) => (
-                <span key={n} className="estimator__bone estimator__bone--card" />
-              ))}
-            </div>
-            {[70, 45, 80, 60, 35].map((w, n) => (
-              <span key={n} className="estimator__bone estimator__bone--bar" style={{ width: `${w}%` }} />
-            ))}
           </div>
         )}
 

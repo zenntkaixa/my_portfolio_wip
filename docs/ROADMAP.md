@@ -162,3 +162,4 @@ need an ADR and Izzat's privacy call) wait for Izzat.
   on phones, M5 team card, G3 fact dots, S1 `--model` token, S2 gradient estimator edge (Izzat) [ui-builder]
 - [x] G2 budget charts: build-cost stacked bar and traditional vs AI range bars, tables kept (Izzat) [ui-builder]
 - [x] M6 15px reading text and M7 plain results background (Izzat: "move on to the next items") [ui-builder]
+- [x] G1 request-flow diagram: static in How it's built, lights up to the model step while loading [ui-builder]
