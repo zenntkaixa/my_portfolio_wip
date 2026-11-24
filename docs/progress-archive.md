@@ -4,6 +4,19 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-24 — Session 80: Copy proofread (M14)
+
+**Done** on `fix/m14-copy-proofread` (Izzat approved all edits).
+- `lib/content.ts`: estimator intro says "delivery plan with effort and calendar estimates"; "now shipped"
+  dangling modifier fixed in summary and SEO description; AWS cert name matches the list; one stray comma;
+  no "Please" in the 429 message; Vetter role "Junior Software Engineer, then QA Engineer" (matches CV);
+  banking case study "then moved it to microservices".
+- Verified: check 380, full e2e 161.
+
+**Next** release develop → main; real-device checks; share previews; launch.
+
+---
+
 ## 2026-11-24 — Session 79: Branded 404 page (M14)
 
 **Done** on `feat/m14-not-found` (Izzat: "go ahead with the 404 page", from a pre-launch scan).
