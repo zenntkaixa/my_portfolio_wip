@@ -31,3 +31,11 @@ describe("refinedBrief", () => {
     expect(refineRoom(brief, [{ question: "Q?", answer: "x".repeat(FEATURE_MAX) }])).toBeLessThan(0);
   });
 });
+
+describe("refine.why (B4b)", () => {
+  it("explains a rise or fall in hours, and stays quiet within 5%", () => {
+    expect(estimatorCopy.refine.why(178, 254)).toMatch(/^ More hours/);
+    expect(estimatorCopy.refine.why(200, 150)).toMatch(/^ Fewer hours/);
+    expect(estimatorCopy.refine.why(200, 205)).toBe("");
+  });
+});

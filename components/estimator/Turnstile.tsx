@@ -52,7 +52,7 @@ function loadScript(): Promise<void> {
   return scriptPromise;
 }
 
-export type TurnstileHandle = { reset: () => void };
+export type TurnstileHandle = { reset: () => void; show: () => void };
 
 type Props = { onToken: (token: string | null) => void };
 
@@ -78,6 +78,10 @@ export const Turnstile = forwardRef<TurnstileHandle, Props>(function Turnstile(
   }, [onToken]);
 
   useImperativeHandle(ref, () => ({
+    // B4c: the refine form sits far below the widget, so it can bring a visible challenge into view.
+    show() {
+      container.current?.scrollIntoView({ block: "center" });
+    },
     reset() {
       setFailed(false);
       onTokenRef.current(null);

@@ -5,6 +5,19 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-24 — Session 89: refine fixes from the 22:40 and 22:45 reviews (M14)
+
+**Done** on `fix/m14-refine-polish` (Izzat: "resume" after the sync update).
+- E12b: reproduced at 950 and 360 px (heading about 1,000 px above the screen after a refine). Cause: the
+  loading height was released a render after the plan, so the page shrank under a smooth scroll already
+  aimed at the old position. Now released with the plan; moves over a screen are instant. New e2e fails on the old code.
+- B4c: refine form names the human check by the Estimate button and adds "Go to the human check".
+- B4a auto-growing answers; B4b "More/Fewer hours: …" reason.
+- Q1: homework and status page plans differ but both total 178 h in 5 phases; not regenerated (costs a live call).
+- check 386, e2e 178.
+
+---
+
 ## 2026-11-24 — Session 88: B4 answer the questions and refine (M14)
 
 **Done** on `feat/m14-refine` (Izzat: "start B4", plan approved with "go").
@@ -14,16 +27,5 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 - New plan shows "Refined from: … Now: …" (confidence, hours, build range).
 - Tests: unit for the brief builder; e2e for the request body, comparison line and clearing; three specs updated
   for the second form. check 384, e2e 176.
-
----
-
-## 2026-11-24 — Session 87: phone-pass polish from the 21:06 sync review (M14)
-
-**Done** on `fix/m14-polish-round5` (Izzat: "go").
-- E12: after a result, the heading scrolls to the top on the next frame (it was left on the bottom edge or above
-  the screen). New 360 px e2e fails on the old code, passes now.
-- E13 "for a team of 8"; E14 whole headline hours and days; G9 fact dots fill by count.
-- G10 RM ticks on the range bars; S4 new `--chart-neutral` token for tools (validator passes both themes);
-  M9 desktop summary three across, Confidence full width.
 
 ---

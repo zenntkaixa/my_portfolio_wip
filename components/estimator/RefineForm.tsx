@@ -16,11 +16,14 @@ export function RefineForm({
   questions,
   blocked,
   onRefine,
+  onShowCheck,
 }: {
   brief: string;
   questions: string[];
   blocked: string | null;
   onRefine: (answers: Answer[]) => void;
+  /** Set while the human check has no token: the widget (and any visible challenge) is far above. */
+  onShowCheck?: () => void;
 }) {
   const [values, setValues] = useState<string[]>(() => questions.map(() => ""));
   const answers = questions.map((question, i) => ({ question, answer: values[i] ?? "" }));
@@ -35,14 +38,15 @@ export function RefineForm({
         onSubmit={(e) => {
           e.preventDefault();
           if (!reason) onRefine(answers);
+          else if (reason === blocked && onShowCheck) onShowCheck();
         }}
       >
         {questions.map((q, i) => (
           <div key={`${i}-${q}`} className="refine__field">
             <label htmlFor={`refine-${i}`}>{q}</label>
-            <input
+            <textarea
               id={`refine-${i}`}
-              type="text"
+              rows={2}
               maxLength={300}
               autoComplete="off"
               value={values[i] ?? ""}
@@ -59,6 +63,11 @@ export function RefineForm({
         <p id="refine-why" className="refine__why" aria-live="polite">
           {reason ?? ""}
         </p>
+        {reason === blocked && onShowCheck && (
+          <button type="button" className="refine__check" onClick={onShowCheck}>
+            {c.showCheck}
+          </button>
+        )}
       </form>
     </section>
   );

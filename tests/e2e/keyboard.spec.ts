@@ -110,7 +110,7 @@ test("Tab order, visible focus indicators, no trap, Shift+Tab goes back", async 
   // Then the selected tab, its panel, the four list disclosures (Assumptions, Risks, Questions, Not included;
   // open at this width) and the Email me and LinkedIn call-to-action links.
   // Then the refine form (B4): one input per open question and its button.
-  const refine = [...(samplePlan.openQuestions ?? []).map(() => "text"), "button"]; // walk() reports an input by its type
+  const refine = [...(samplePlan.openQuestions ?? []).map(() => "textarea"), "button"];
   expect(after.slice(2).map((s) => s.role || s.tag), listing).toEqual(["tab", "tabpanel", "summary", "summary", "summary", "summary", ...refine, "a", "a"]);
   const chips = est.filter((s) => s.tag === "button" && s.role === "").slice(0, -1);
   const kinds = est.map((s) => (s.tag === "textarea" ? "textarea" : s.role === "range" ? "range" : s.role === "radio" ? "radio" : "button"));
