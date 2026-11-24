@@ -25,7 +25,9 @@ else stays quiet.
 | `--danger` | `#C0362C` | `#FF8A80` | Error banners only (edge and icon, never text) |
 | `--model` | `#B06D00` | `#F2C14E` | "The model" only: estimator border gradient, confidence fact dots, AI seats and the AI bar in the budget charts, later the flow diagram. Never links, buttons or body text |
 
-Budget charts (G2) use `--accent` (people, traditional), `--model` (AI seats, with AI agents) and `--role-frontend`
+| `--chart-neutral` | `#6B7686` | `#748099` | Budget chart "tools and one-off costs" segment only (S4: a neutral, not a third hue) |
+
+Budget charts (G2) use `--accent` (people, traditional), `--model` (AI seats, with AI agents) and `--chart-neutral`
 (tools and one-off costs); contingency is accent hatching, not a fourth hue. Checked with the dataviz palette
 validator: colour-blind and normal-vision separation and 3:1 contrast pass in both themes (the dark accents sit
 above its lightness band, so a legend with values and 2px gaps always go with the fills).

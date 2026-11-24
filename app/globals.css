@@ -16,6 +16,7 @@
   --warn: #b4570c;
   --danger: #c0362c;
   --model: #b06d00;
+  --chart-neutral: #6b7686;
   --grid: rgba(43, 87, 224, 0.08);
   --role-ba: #9a5fc0;
   --role-architect: #2a8f9e;
@@ -41,6 +42,7 @@
   --warn: #f0a55e;
   --danger: #ff8a80;
   --model: #f2c14e;
+  --chart-neutral: #748099;
   --grid: rgba(126, 156, 255, 0.09);
   --role-ba: #c39be0;
   --role-architect: #5fc4d2;
@@ -68,6 +70,7 @@
     --warn: #f0a55e;
     --danger: #ff8a80;
     --model: #f2c14e;
+    --chart-neutral: #748099;
     --grid: rgba(126, 156, 255, 0.09);
     --role-ba: #c39be0;
     --role-architect: #5fc4d2;
@@ -1061,7 +1064,8 @@ p {
   text-decoration: underline;
 }
 
-.estimator__results {
+.estimator__results,
+.estimator__results h3 {
   scroll-margin-top: var(--gap);
 }
 
@@ -2054,8 +2058,12 @@ p {
 }
 
 @media (min-width: 720px) {
-  /* Two by two (M6): the results column is about 550 px, too narrow for four cards of 15px hints. */
-  .tab1-summary > div:nth-child(n + 3) {
+  /* M9: Effort, Calendar and Team across; Confidence (the longest) spans the row below. */
+  .tab1-summary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .tab1-summary > div:nth-child(3) {
     grid-column: auto;
   }
 
@@ -2181,7 +2189,7 @@ p {
 
 /* Budget tab: working-style comparison and the "Estimate drivers" disclosure (Batch E). */
 /* G2 budget charts (docs/01-design-system.md): fills are --accent (people, traditional), --model (seats,
-   AI) and --role-frontend (tools); contingency is hatched accent, so no fourth hue. 2px surface gaps. */
+   AI) and --chart-neutral (tools, S4); contingency is hatched accent, so no fourth hue. 2px surface gaps. */
 .bchart {
   margin: 0 0 var(--gap);
 }
@@ -2220,7 +2228,7 @@ p {
 }
 
 .bchart [data-kind="tools"] {
-  background: var(--role-frontend);
+  background: var(--chart-neutral);
 }
 
 .bchart [data-kind="contingency"] {
@@ -2292,6 +2300,37 @@ p {
   height: 0.75rem;
   background: var(--surface-2);
   border-radius: 4px;
+}
+
+.cbars__tick {
+  position: absolute;
+  inset-block: 0;
+  left: var(--left);
+  width: 1px;
+  background: var(--line);
+}
+
+.cbars__axis {
+  position: relative;
+  height: 1.2em;
+  margin-top: -0.25rem;
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+
+.cbars__axis span {
+  position: absolute;
+  left: var(--left);
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.cbars__axis span:first-child {
+  transform: none;
+}
+
+.cbars__axis span:last-child {
+  transform: translateX(-100%);
 }
 
 .cbars__range {
