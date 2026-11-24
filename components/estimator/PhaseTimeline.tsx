@@ -77,10 +77,12 @@ export function PhaseTimeline({ plan, teamLabel, teamSize }: { plan: Plan; teamL
       {bars.length > 0 && (
         <ol className="tab1-timeline" role="list" aria-label={copy.timelineLabel(plan.totalDays)}>
           {bars.map((b, i) => (
-            <li key={`${i}-${b.name}`} className="tab1-row">
+            <li key={`${i}-${b.name}`} className="tab1-row" data-testid="phase-row" style={{ "--i": String(i) } as Geometry}>
               <div className="tab1-row__head">
-                <span className="tab1-row__name">{b.name}</span>
-                <span className="tab1-row__label">{b.label}</span>
+                <h4 className="tab1-row__name">{b.name}</h4>
+                <span className="tab1-row__label">
+                  {b.label} · {copy.taskCount(plan.phases[i].tasks.length)}
+                </span>
               </div>
               <div className="tab1-track">
                 <span className="tab1-weeks" aria-hidden="true">
@@ -94,6 +96,8 @@ export function PhaseTimeline({ plan, teamLabel, teamSize }: { plan: Plan; teamL
                   style={{ "--left": pct(b.leftPct), "--width": pct(b.widthPct) } as Geometry}
                 />
               </div>
+              {/* E10: the goal lives here now; the separate phase cards repeated the days. */}
+              {plan.phases[i].goal && <p className="tab1-row__goal">{plan.phases[i].goal}</p>}
             </li>
           ))}
         </ol>
@@ -108,19 +112,6 @@ export function PhaseTimeline({ plan, teamLabel, teamSize }: { plan: Plan; teamL
           ))}
         </div>
       )}
-
-      <ul className="tab1-cards" role="list">
-        {plan.phases.map((ph, i) => (
-          <li key={`${i}-${ph.name}`} className="tab1-card" data-testid="phase-card">
-            <h4>{ph.name}</h4>
-            <p>{ph.goal}</p>
-            <p className="tab1-card__meta">
-              <span>{copy.duration(ph.durationDays)}</span>
-              <span>{copy.taskCount(ph.tasks.length)}</span>
-            </p>
-          </li>
-        ))}
-      </ul>
 
       {(plan.assumptions.length > 0 || plan.risks.length > 0 || questions.length > 0 || outOfScope.length > 0) && (
         <div className="tab1-lists">

@@ -42,3 +42,12 @@ test("no horizontal scroll at 320px when open", async ({ page }) => {
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(0);
 });
+
+test("the request flow names both colours and marks the one model step (G1)", async ({ page }) => {
+  await page.getByText(h.summary).click();
+  const flow = page.getByTestId("flow");
+  await expect(flow.locator("li")).toHaveCount(h.path.length);
+  await expect(flow.locator('li[data-kind="model"]')).toHaveText(/Claude Haiku/);
+  await expect(flow.getByText(h.flowKey.model, { exact: true })).toBeVisible();
+  await expect(flow.getByText(h.flowKey.code, { exact: true })).toBeVisible();
+});

@@ -81,7 +81,7 @@
 
 :root {
   --fs-xs: 0.8rem;
-  --fs-sm: 0.9rem;
+  --fs-sm: 0.9375rem; /* 15px: the floor for any reading text (M6); --fs-xs is for labels and tags only */
   --fs-base: 1rem;
   --fs-lg: 1.2rem;
   --fs-xl: 1.6rem;
@@ -233,7 +233,7 @@ p {
   max-width: var(--max-w);
   margin: 0 auto;
   padding: 0 var(--page-pad) var(--page-pad);
-  font-size: var(--fs-xs);
+  font-size: var(--fs-sm);
   color: var(--muted);
 }
 
@@ -1065,6 +1065,15 @@ p {
   scroll-margin-top: var(--gap);
 }
 
+/* M7: the blueprint grid stays behind the form; results read on plain surface, edge to edge of the tile. */
+.estimator__results:not(:empty) {
+  margin-inline: calc(-1 * clamp(20px, 3vw, 32px));
+  padding-inline: clamp(20px, 3vw, 32px);
+  padding-block: var(--gap);
+  background-color: var(--surface);
+  border-top: 1px solid var(--line);
+}
+
 /* Programmatic focus on submit only; the section isn't interactive. */
 .estimator__results:focus {
   outline: none;
@@ -1463,6 +1472,14 @@ p {
   color: var(--muted);
 }
 
+.estimator__coach {
+  margin: 0.4rem 0 0;
+  padding-inline-start: 0.6rem;
+  border-inline-start: 2px solid var(--accent);
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+
 .estimator__status:empty {
   display: none;
 }
@@ -1471,52 +1488,6 @@ p {
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
-}
-
-.estimator__bone {
-  display: block;
-  height: 0.9rem;
-  background: var(--surface-2);
-  border-radius: var(--r-sm);
-}
-
-.estimator__bone--title {
-  width: 55%;
-  height: 1.4rem;
-}
-
-.estimator__bone--short {
-  width: 70%;
-}
-
-.estimator__bone--block {
-  height: 5rem;
-}
-
-.estimator__bone--card {
-  height: 4rem;
-}
-
-.estimator__bone--bar {
-  height: 1.1rem;
-}
-
-.estimator__skeleton-cards {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: calc(var(--gap) / 2);
-}
-
-@media (min-width: 720px) {
-  .estimator__skeleton-cards {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-
-.estimator__step {
-  margin: 0;
-  font-size: var(--fs-sm);
-  color: var(--ink);
 }
 
 .estimator__cta {
@@ -1532,24 +1503,6 @@ p {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .estimator__bone {
-    background: linear-gradient(
-      90deg,
-      var(--surface-2) 0%,
-      var(--line) 50%,
-      var(--surface-2) 100%
-    );
-    background-size: 200% 100%;
-    animation: bone-shimmer 1.6s ease-in-out infinite;
-  }
-
-  @keyframes bone-shimmer {
-    from { background-position: 100% 0; }
-    to { background-position: -100% 0; }
-  }
 }
 
 .estimator__banner {
@@ -1853,13 +1806,13 @@ p {
 .tab3-detail {
   display: block;
   margin-top: 0.15rem;
-  font-size: var(--fs-xs);
+  font-size: var(--fs-sm);
   color: var(--muted);
 }
 
 .tab3-note {
   margin: 0;
-  font-size: var(--fs-xs);
+  font-size: var(--fs-sm);
   color: var(--muted);
 }
 
@@ -1910,7 +1863,7 @@ p {
 
 .tab1-summary dd.tab1-hint {
   margin-top: 0.35rem;
-  font-size: var(--fs-xs);
+  font-size: var(--fs-sm);
   font-variant-numeric: normal;
   color: var(--muted);
   overflow-wrap: break-word;
@@ -1918,7 +1871,7 @@ p {
 
 .estimator__model-note {
   margin: 0;
-  font-size: var(--fs-xs);
+  font-size: var(--fs-sm);
   color: var(--muted);
 }
 
@@ -1997,7 +1950,6 @@ p {
   min-width: 0;
 }
 
-.tab1-cards > li,
 .tab1-timeline > li {
   margin-top: 0;
 }
@@ -2011,7 +1963,15 @@ p {
 }
 
 .tab1-row__name {
+  margin: 0;
+  font-size: inherit;
   font-weight: 600;
+}
+
+.tab1-row__goal {
+  margin: 0.3rem 0 0;
+  font-size: var(--fs-sm);
+  color: var(--muted);
 }
 
 .tab1-row__label {
@@ -2065,7 +2025,8 @@ p {
 
 @media (prefers-reduced-motion: no-preference) {
   .tab1-bar {
-    animation: tab1-grow 500ms ease-out both;
+    /* G8: 300 ms, one row after another (--i is the row index). */
+    animation: tab1-grow 300ms ease-out calc(var(--i, 0) * 60ms) both;
     transform-origin: left center;
   }
 
@@ -2074,36 +2035,6 @@ p {
       transform: scaleX(0);
     }
   }
-}
-
-.tab1-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
-  gap: calc(var(--gap) / 2);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.tab1-card {
-  min-width: 0;
-  padding: 0.8rem;
-  background: var(--surface-2);
-  border: 1px solid var(--line);
-  border-radius: var(--r-sm);
-}
-
-.tab1-card p {
-  margin: 0.25rem 0 0;
-  font-size: var(--fs-sm);
-}
-
-.tab1-card .tab1-card__meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0 0.75rem;
-  color: var(--muted);
-  font-variant-numeric: tabular-nums;
 }
 
 .tab1-lists {
@@ -2123,10 +2054,7 @@ p {
 }
 
 @media (min-width: 720px) {
-  .tab1-summary {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
+  /* Two by two (M6): the results column is about 550 px, too narrow for four cards of 15px hints. */
   .tab1-summary > div:nth-child(n + 3) {
     grid-column: auto;
   }
@@ -2186,6 +2114,22 @@ p {
     color: black;
   }
 
+  /* Keep the fills that carry meaning (filled fact dots, chart segments) when printing. */
+  .tab1-dots i,
+  .bchart__bar span,
+  .bchart__legend i,
+  .cbars__range {
+    print-color-adjust: exact;
+  }
+
+  /* Drop the screen-only results panel (M7): its bleed margins would push past the page edge. */
+  .estimator__results:not(:empty) {
+    margin-inline: 0;
+    padding-inline: 0;
+    border: 0;
+    background: none;
+  }
+
   .estimator__results * {
     color: black !important;
     background-color: transparent !important;
@@ -2208,7 +2152,6 @@ p {
     padding-top: 12px;
   }
 
-  .tab1-cards > li,
   .tab2-table tr,
   .tab1-row {
     break-inside: avoid;
@@ -2237,6 +2180,142 @@ p {
 }
 
 /* Budget tab: working-style comparison and the "Estimate drivers" disclosure (Batch E). */
+/* G2 budget charts (docs/01-design-system.md): fills are --accent (people, traditional), --model (seats,
+   AI) and --role-frontend (tools); contingency is hatched accent, so no fourth hue. 2px surface gaps. */
+.bchart {
+  margin: 0 0 var(--gap);
+}
+
+.bchart__heading {
+  font-weight: 600;
+}
+
+.bchart__bar {
+  display: flex;
+  gap: 2px;
+  height: 1.25rem;
+  margin: 0.5rem 0;
+}
+
+.bchart__bar span {
+  flex: var(--grow) 1 0;
+  min-width: 4px;
+  border-radius: 2px;
+}
+
+.bchart__bar span:first-child {
+  border-radius: 4px 2px 2px 4px;
+}
+
+.bchart__bar span:last-child {
+  border-radius: 2px 4px 4px 2px;
+}
+
+.bchart [data-kind="people"] {
+  background: var(--accent);
+}
+
+.bchart [data-kind="seats"] {
+  background: var(--model);
+}
+
+.bchart [data-kind="tools"] {
+  background: var(--role-frontend);
+}
+
+.bchart [data-kind="contingency"] {
+  background: repeating-linear-gradient(135deg, var(--accent) 0 2px, transparent 2px 6px);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.bchart__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--fs-sm);
+}
+
+.bchart__legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.bchart__legend i {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 2px;
+}
+
+.bchart__value {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.bchart__note {
+  margin: 0.4rem 0 0;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+
+.cbars {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0.5rem 0 0.75rem;
+}
+
+.cbars__row {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  grid-template-areas: "label value" "track track";
+  gap: 0.2rem 0.75rem;
+  font-size: var(--fs-sm);
+}
+
+.cbars__label {
+  grid-area: label;
+}
+
+.cbars__value {
+  grid-area: value;
+  justify-self: end;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.cbars__track {
+  grid-area: track;
+  position: relative;
+  height: 0.75rem;
+  background: var(--surface-2);
+  border-radius: 4px;
+}
+
+.cbars__range {
+  position: absolute;
+  inset-block: 0;
+  left: min(var(--left), calc(100% - 4px));
+  width: max(var(--width), 4px);
+  border-radius: 4px;
+  background: var(--accent);
+}
+
+.cbars__row[data-mode="ai-assisted"] .cbars__range {
+  background: var(--model);
+}
+
+/* Forced colours drop the fills: outline each mark instead (the legend text carries identity and values). */
+@media (forced-colors: active) {
+  .bchart__bar span,
+  .bchart__legend i,
+  .cbars__range {
+    border: 1px solid CanvasText;
+  }
+}
+
 .cmp {
   display: flex;
   flex-direction: column;
@@ -2357,46 +2436,116 @@ p {
   color: var(--muted);
 }
 
-/* Pipeline: numbered steps joined by a vertical rail; wraps into columns when there is room. */
-.built__path {
+/* G1 request flow (RequestFlow.tsx): a vertical stepper; each step's marker is --accent (code) or --model
+   (the model). Live: done steps filled, the active one ringed and pulsing, later ones faint. */
+.flow__key {
+  display: flex;
+  gap: 1rem;
+  margin: 0 0 0.5rem;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+
+.flow__key span::before,
+.flow__steps li::before {
+  content: "";
+  display: inline-block;
+  width: 0.75rem;
+  height: 0.75rem;
+  margin-inline-end: 0.4rem;
+  vertical-align: -0.05em;
+  border-radius: 50%;
+  background: var(--tone);
+  border: 2px solid var(--tone);
+}
+
+.flow [data-kind="code"] {
+  --tone: var(--accent);
+}
+
+.flow [data-kind="model"] {
+  --tone: var(--model);
+}
+
+.flow__steps {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
-  gap: 0.5rem;
   margin: 0;
   padding: 0;
   list-style: none;
-  counter-reset: step;
 }
 
-.built__path li {
+.flow__steps li {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-  padding: 0.5rem 0.75rem 0.5rem 2.4rem;
-  background: var(--surface-2);
-  border-radius: var(--r-sm);
-  counter-increment: step;
-}
-
-.built__path li::before {
-  content: counter(step);
-  position: absolute;
-  left: 0.6rem;
-  top: 0.5rem;
   display: grid;
-  place-items: center;
-  width: 1.3rem;
-  height: 1.3rem;
-  border-radius: 50%;
-  background: var(--accent);
-  color: var(--accent-ink);
-  font-size: var(--fs-xs);
-  font-weight: 700;
+  grid-template-columns: 1.15rem 1fr;
+  column-gap: 0.6rem;
+  padding-bottom: 0.6rem;
 }
 
-.built__path strong {
+.flow__steps li::before {
+  grid-row: 1 / span 2;
+  margin: 0.3rem 0 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* The connector between markers. */
+.flow__steps li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: calc(0.375rem + 1px);
+  top: 1.25rem;
+  bottom: 0;
+  width: 2px;
+  background: var(--line);
+}
+
+.flow__steps strong {
   color: var(--ink);
+}
+
+.flow__steps span {
+  grid-column: 2;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+
+.flow__steps li[data-kind="model"] strong {
+  text-decoration: underline 2px var(--model);
+  text-underline-offset: 0.25em;
+}
+
+.flow--live .flow__steps li {
+  padding-bottom: 0.35rem;
+}
+
+.flow--live .flow__steps li[data-state="todo"] {
+  opacity: 0.45;
+}
+
+.flow--live .flow__steps li[data-state="todo"]::before {
+  background: transparent;
+}
+
+.flow--live .flow__steps li[data-state="active"]::before {
+  background: transparent;
+  box-shadow: 0 0 0 3px var(--surface), 0 0 0 5px var(--tone);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .flow--live .flow__steps li {
+    transition: opacity 0.2s ease;
+  }
+
+  .flow--live .flow__steps li[data-state="active"]::before {
+    animation: flow-pulse 1.2s ease-in-out infinite;
+  }
+}
+
+@keyframes flow-pulse {
+  50% {
+    background: var(--tone);
+  }
 }
 
 .built__split {

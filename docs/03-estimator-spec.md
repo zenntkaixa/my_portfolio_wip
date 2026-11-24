@@ -185,9 +185,13 @@ modes; the team line reads e.g. "2 people, senior, with AI agents".
 ## UI states
 `idle → submitting → success | error`. While submitting: disable the form, move focus to the results
 section and scroll it into view (smooth unless reduced motion; on phones the results sit below the form).
-Show a plan-shaped skeleton (4 summary cards, 5 timeline bars), the status line ("Planning phases…",
-announced once) and a visual-only step line that rotates every 2.5 s ("Reading your brief…" ...), plus
-"Usually about 10 seconds." On success focus moves to the plan heading; on error to the banner.
+Brief coach (E11): while a typed brief (not a chip) is 20 to 249 characters, a static tip under the counter names
+the six facts (`estimatorCopy.coach`, linked by `aria-describedby`, not a live region). No detection: a keyword
+guess could disagree with the model's own fact check.
+Show the status line ("Planning phases…", announced once), the request flow lighting up (G1,
+`RequestFlow live`, decorative): the five fast steps tick through at 250 ms each, then it holds on the model
+step (Claude Haiku, in `--model`) until the response; later steps are faint. Then "Usually about 10 seconds."
+The same flow, with each step's note, is the static "Path of one request" in "How it's built". On success focus moves to the plan heading; on error to the banner.
 A failed estimate never wipes the last successful plan (example or live): it stays below the banner.
 Under every plan, above the footer note: "Like how I break down work? Let's talk about your team." with Email me and
 LinkedIn links (never a phone number). A chip click fills the field and puts the caret at its end.
@@ -217,7 +221,8 @@ Above the tabs, under the title, one plain-English answer line built in code (E8
 - Timeline: one horizontal bar per phase. `left = startDay / totalDays`, `width = durationDays / totalDays`.
   Week gridlines every 5 working days, with "Week 1", "Week 2"... centred under each span (at most 6
   labels; long plans label every 2nd or 3rd week). Label "Day 3 to 7" on each bar. Maths lives in `lib/timeline.ts`.
-- Phase cards below: name, goal, duration, task count.
+- No separate phase cards (E10): each timeline row shows the phase name (h4), "Day x to y · N tasks" and the
+  goal under its bar. Bars grow in over 300 ms, one row after another (60 ms apart; none with reduced motion).
 - Assumptions and risks as two short lists.
 
 **Tab 2 — Tasks**
@@ -230,7 +235,12 @@ Above the tabs, under the title, one plain-English answer line built in code (E8
 
 Tabs use proper ARIA (`role="tablist"`, `aria-selected`, arrow-key navigation).
 
-**Tab 3 — Budget** (`components/estimator/BudgetView.tsx`, numbers in `lib/budget.ts`), in MYR:
+**Tab 3 — Budget** (`components/estimator/BudgetView.tsx`, numbers in `lib/budget.ts`), in MYR.
+Charts first (G2, `BudgetChart.tsx`): "Where the build money goes" is one stacked bar of the build total
+(people, AI seats when on, tools and one-off costs, contingency; segment length = middle of each range) with
+a legend that carries every range, so the bar is decorative. The "Same scope, two working styles" section opens
+with two range bars (low to high build total, shared axis from zero; `role="img"` with both ranges in its label).
+The tables stay as the full view:
 - **Build:** people cost = total hours × an assumed in-house rate per seniority (junior RM 40, mid
   RM 75, senior RM 120, mixed RM 78 per hour: mid-range Klang Valley salary × 1.3 for EPF, SOCSO, EIS
   and overheads ÷ 160 hours; approved by Izzat 2026-11-17; mixed is the 1 senior, 2 mid, 1 junior blend,

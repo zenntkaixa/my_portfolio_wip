@@ -68,9 +68,9 @@ test("role names never break mid-word on desktop, even beside long task names", 
 test.describe("submit on a phone", () => {
   test.use({ viewport: { width: 390, height: 844 } });
 
-  test("results are focused and in view while waiting, with steps and a plan-shaped skeleton", async ({ page }) => {
+  test("results are focused and in view while waiting, with the request flow lighting up to the model step (G1)", async ({ page }) => {
     await page.route("**/api/estimate", async (route) => {
-      await new Promise((r) => setTimeout(r, 1500));
+      await new Promise((r) => setTimeout(r, 3000));
       await route.fulfill({ json: plan });
     });
     const submit = await ready(page);
@@ -78,11 +78,14 @@ test.describe("submit on a phone", () => {
     const results = page.getByRole("region", { name: "Estimate results" });
     await expect(results).toBeFocused();
     await expect(results).toBeInViewport();
-    // The step line at the top must be fully on screen (the preview link above it disappears on submit).
-    await expect(page.getByText(estimatorCopy.steps[0])).toBeInViewport({ ratio: 1 });
+    // The flow's first step must be fully on screen (the preview link above it disappears on submit).
+    const flow = page.getByTestId("flow-live");
+    await expect(flow.locator("li").first()).toBeInViewport({ ratio: 1 });
     await expect(page.getByText(estimatorCopy.usuallyWait)).toBeVisible();
-    await expect(page.locator(".estimator__bone--card")).toHaveCount(4);
-    await expect(page.locator(".estimator__bone--bar")).toHaveCount(5);
+    await expect(flow.locator("li")).toHaveCount(8);
+    // The fast steps tick through, then it waits on the model step.
+    await expect(flow.locator('li[data-state="active"]')).toHaveAttribute("data-kind", "model");
+    await expect(flow.locator('li[data-state="done"]')).toHaveCount(5);
     await expect(page.getByRole("heading", { name: plan.scope.title })).toBeFocused();
   });
 });
@@ -98,7 +101,7 @@ test("submitting on a large desktop keeps the page still while loading, then sho
   const estimatorBottom = () => page.evaluate(() => Math.round(document.querySelector("#estimator")!.getBoundingClientRect().bottom));
   const before = await estimatorBottom();
   await submit.click();
-  await expect(page.locator(".estimator__bone--card").first()).toBeVisible();
+  await expect(page.getByTestId("flow-live")).toBeVisible();
   // The shorter skeleton must not pull the tiles below the estimator up into view.
   expect(Math.abs((await estimatorBottom()) - before)).toBeLessThanOrEqual(2);
   const heading = page.getByRole("heading", { name: plan.scope.title });
