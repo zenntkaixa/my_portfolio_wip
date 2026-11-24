@@ -14,6 +14,7 @@
   --accent-soft: #e3eafd;
   --ok: #0e8f7e;
   --warn: #b4570c;
+  --danger: #c0362c;
   --grid: rgba(43, 87, 224, 0.08);
   --role-ba: #9a5fc0;
   --role-architect: #2a8f9e;
@@ -37,6 +38,7 @@
   --accent-soft: #22325c;
   --ok: #4cc9b4;
   --warn: #f0a55e;
+  --danger: #ff8a80;
   --grid: rgba(126, 156, 255, 0.09);
   --role-ba: #c39be0;
   --role-architect: #5fc4d2;
@@ -62,6 +64,7 @@
     --accent-soft: #22325c;
     --ok: #4cc9b4;
     --warn: #f0a55e;
+    --danger: #ff8a80;
     --grid: rgba(126, 156, 255, 0.09);
     --role-ba: #c39be0;
     --role-architect: #5fc4d2;
@@ -1169,7 +1172,7 @@ p {
 
 .estimator__slider {
   width: 100%;
-  height: 1.5rem;
+  height: 2.75rem; /* 44px touch target */
   margin: 0;
   background: transparent;
   appearance: none;
@@ -1192,17 +1195,17 @@ p {
 
 .estimator__slider::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 1.25rem;
-  height: 1.25rem;
-  margin-top: calc((6px - 1.25rem) / 2 - 1px);
+  width: 2rem;
+  height: 2rem;
+  margin-top: calc((6px - 2rem) / 2 - 1px);
   background: var(--accent);
   border: 2px solid var(--surface);
   border-radius: 50%;
 }
 
 .estimator__slider::-moz-range-thumb {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 2rem;
+  height: 2rem;
   background: var(--accent);
   border: 2px solid var(--surface);
   border-radius: 50%;
@@ -1546,13 +1549,26 @@ p {
   gap: calc(var(--gap) / 2) var(--gap);
   padding: 0.75rem 1rem;
   background: var(--surface-2);
-  /* One hairline all round: --ink for errors, --warn for the rate limit. */
-  border: 1px solid var(--ink);
+  /* Tone shows in the thick start edge and the icon: --danger errors, --warn rate limit, --accent refusals. */
+  --tone: var(--danger);
+  border: 1px solid var(--line);
+  border-inline-start: 4px solid var(--tone);
   border-radius: var(--r-sm);
 }
 
 .estimator__banner[data-tone="warn"] {
-  border-color: var(--warn);
+  --tone: var(--warn);
+}
+
+.estimator__banner[data-tone="info"] {
+  --tone: var(--accent);
+}
+
+.estimator__banner-icon {
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--tone);
 }
 
 .estimator__banner p {
@@ -1726,7 +1742,12 @@ p {
 .pill--current {
   display: inline-block;
   margin-block-start: 0.2em;
-  border-color: var(--muted);
+  /* Filled, so it reads as a label and not as an input box. */
+  padding: 0.1em 0.65em;
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-color: var(--accent);
+  border-radius: 999px;
 }
 
 .role-dot {
@@ -2221,10 +2242,11 @@ p {
 }
 
 .cmp-tag {
-  display: table;
+  /* Own line under the header, sized to its text (the cell's overflow-wrap would otherwise squeeze it). */
+  display: block;
+  width: max-content;
   margin-block-start: 0.25rem;
   font-weight: 400;
-  color: var(--ink);
 }
 
 .drivers {

@@ -5,6 +5,18 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-24 — Session 84: Polish E2, E3, E4, M4 (M14)
+
+**Done** on `fix/m14-polish-e2-e4` (Izzat: "do e3, m4, e4, e2"; IDs from the Drive sync review).
+- E3: the "current" tag in the two-styles table is a filled accent pill sized to its text.
+- M4: slider thumb 32px inside a 44px-tall touch target.
+- E4: banners get a decorative icon and a tone edge: error `--danger` (new token, edge and icon only),
+  rate limit `--warn`, refusal (422) `--accent`. New e2e per tone.
+- E2: "Mixed is one blended rate (about 1 senior to 2 mid-level and 1 junior), applied at any team size."
+- Verified: check 381, full e2e 169; banner, slider and pill screenshots at 390 px in both themes.
+
+---
+
 ## 2026-11-24 — Session 83: Review round 4 (M14)
 
 **Done** on `fix/m14-review-round4` (Izzat: "go, all four").
@@ -15,18 +27,5 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 - Back to top: a 44px round arrow link pinned to the corner, faded in by scroll where supported; last Tab stop.
 - Tests: a11y scan ignores the scroll-driven animation and pins the link; keyboard and visual tests updated.
 - Verified: check 381, full e2e 166; phone and desktop screenshots checked; security-reviewer on rateLimit text.
-
----
-
-## 2026-11-24 — Session 82: Review round 3 (M14)
-
-**Done** on `fix/m14-review-round3` (Izzat: "go, add both lines, re-run the eval").
-- Seniority and working-style radios update the live plan at once (also under an error banner), no request;
-  focus stays put and the status line says "Plan updated for…". Note: doesn't count toward the hourly limit;
-  the 429 banner says the radios still work.
-- Confidence card shows "N of 6 facts"; AI drivers state the real range and why it is wider.
-- Eval re-run (Haiku, US$0.0080): 6/6 valid, 3/3 refused, detailed brief high, dark mode low, 4 medium;
-  AI 11–13% fewer hours; repeat 226 vs 250 h. Table updated; "(dark mode)" label reworded.
-- Verified: check 381, full e2e 164 (one run had the known startup flake; repeats green). Reviewer: no blockers.
 
 ---
