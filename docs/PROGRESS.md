@@ -5,6 +5,14 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-25 — Session 95: remove the Experience Gantt bars (M14)
+
+**Done** on `fix/m14-remove-experience-timeline` (Izzat: the horizontal timeline "is not pleasing my views").
+- Reverted G6 (#128 code): bars, year axis, `lib/careerSpan.ts`, its tests, the CSS and the tile rules. The Experience
+  tile is the vertical timeline it was before. No copy changed.
+- check 411 (the 5 careerSpan tests went with it), e2e 180; visual-check `#experience` at 390 and 1440 light: no issues.
+- Production still shows the bars until this ships; dev-update to follow with the next release.
+
 ## 2026-11-24 — Session 94: release PR #130 and docs-audit fixes
 
 **Done** (Izzat: "release", then "fix docs follow-up").
@@ -13,18 +21,5 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 - Docs fixes on `docs/m14-audit-fixes`: architecture status cells and a `lib/estimateModel.ts` row, rate-limit note,
   README estimator paths and the two eval scripts.
 - After the release merges: check Vercel, write the dev-update to the sync folder. Confirm prod `DAILY_LIMIT`.
-
-## 2026-11-24 — Session 93: G4 radiozk preview GIF (M14)
-
-**Done** on `feat/m14-radiozk-preview`.
-- Recorded the live radiozk site with Playwright (play, FLAC live, now playing, Liked, About): 800x512, 15 frames, 290 KB.
-  Shows a real track name, as Izzat asked.
-- `featuredProject.preview` in `lib/content.ts`; `ProjectTile` renders a `<picture>`: still PNG under reduced motion,
-  GIF otherwise (plain `<img>`, lazy, width/height set). `.project__preview` CSS, `docs/01b-tiles.md` updated.
-- check 415; visual-check `#projects` at 1440 and 390 light: fine. The GIF shows the track on air at recording time.
-- Re-record when radiozk's UI changes. Render free tier may be asleep; the capture needed one warm-up.
-
----
-
 
 ---

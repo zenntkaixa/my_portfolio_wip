@@ -51,10 +51,6 @@ Read only the section for the tile you are changing.
 - A vertical timeline (`ol.timeline`, `role="list"`): the period in a 7.5em left column at `--fs-sm`,
   tabular-nums, `--muted`; the org in semibold with the role below it, then the field (`experience[].field`,
   `--fs-sm`, `--muted`) so the range of industries shows at a glance (M11); a 1px `--line` rule between.
-- Each row has a decorative bar (`.timeline__bar`, `aria-hidden`) on a shared year axis from 2017 to the current year
-  (`lib/careerSpan.ts` parses `period`; "now" is frozen at build time). A bar is a `--accent` fill; "Career break" is
-  a hollow dashed `--muted` outline. Year ticks sit under the list (`aria-hidden`). Bars grow in only under
-  `prefers-reduced-motion: no-preference`. Under 420px bars span the full row width.
 - Visually hidden commas separate period, org, role and field for screen readers and copy-paste.
 - Container query: when the tile is narrower than 420px, the period sits above each entry and the rule runs down
   the left edge. Education follows under an h3 "Education".
