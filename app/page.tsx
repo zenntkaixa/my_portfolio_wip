@@ -11,7 +11,7 @@ import { ExperienceTile } from "@/components/tiles/ExperienceTile";
 import { StackTile } from "@/components/tiles/StackTile";
 import { CertificationsTile } from "@/components/tiles/CertificationsTile";
 import { ContactTile } from "@/components/tiles/ContactTile";
-import { caseStudies, skipLink } from "@/lib/content";
+import { backToTop, caseStudies, skipLink } from "@/lib/content";
 
 // Hourly refresh keeps the plans-generated count current without a request-time query.
 export const revalidate = 3600;
@@ -20,7 +20,7 @@ export const revalidate = 3600;
 export default function Home() {
   return (
     <>
-      <main className="page">
+      <main className="page" id="top">
         <a className="skip-link" href="#estimator">
           {skipLink}
         </a>
@@ -47,6 +47,10 @@ export default function Home() {
         </Bento>
       </main>
       <Footer />
+      {/* Last in the DOM, so keyboard users reach it after the footer; CSS pins it to the corner. */}
+      <a className="to-top" href="#top" aria-label={backToTop}>
+        <span aria-hidden="true">↑</span>
+      </a>
     </>
   );
 }

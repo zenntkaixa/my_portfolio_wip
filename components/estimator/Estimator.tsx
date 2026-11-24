@@ -490,9 +490,14 @@ export function Estimator() {
             tabIndex={-1}
             role="alert"
             data-status={banner.status}
-            data-tone={banner.status === 429 ? "warn" : "error"}
+            data-tone={banner.status === 429 ? "warn" : banner.status === 422 ? "info" : "error"}
             className="estimator__banner"
           >
+            <svg className="estimator__banner-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+              <circle cx="10" cy="10" r="8.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+              <path d="M10 5.5v5.5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
+              <circle cx="10" cy="14.25" r="1.1" fill="currentColor" />
+            </svg>
             <p>{banner.message}</p>
             {retryable && (
               <button

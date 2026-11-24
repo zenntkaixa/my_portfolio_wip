@@ -14,6 +14,7 @@
   --accent-soft: #e3eafd;
   --ok: #0e8f7e;
   --warn: #b4570c;
+  --danger: #c0362c;
   --grid: rgba(43, 87, 224, 0.08);
   --role-ba: #9a5fc0;
   --role-architect: #2a8f9e;
@@ -37,6 +38,7 @@
   --accent-soft: #22325c;
   --ok: #4cc9b4;
   --warn: #f0a55e;
+  --danger: #ff8a80;
   --grid: rgba(126, 156, 255, 0.09);
   --role-ba: #c39be0;
   --role-architect: #5fc4d2;
@@ -62,6 +64,7 @@
     --accent-soft: #22325c;
     --ok: #4cc9b4;
     --warn: #f0a55e;
+    --danger: #ff8a80;
     --grid: rgba(126, 156, 255, 0.09);
     --role-ba: #c39be0;
     --role-architect: #5fc4d2;
@@ -339,20 +342,12 @@ p {
   .tile {
     grid-column: 1 / -1;
   }
-  /* Visual order only: Hero, then Estimator, then every other tile in DOM order (order 0).
-     Reading and keyboard focus order still follow the DOM (Hero, Now, Estimator, ...). */
-  .bento > .tile--hero {
-    order: -2;
-  }
-  .bento > .tile--estimator {
-    order: -1;
-  }
+  /* DOM order throughout (Hero, Now, Estimator, ...), so visual, reading and focus order match. */
 }
 
 /* ---- Load animation ----
    Pure CSS, so tiles appear without hydration (and with JS blocked). Each tile fades and rises 8px,
-   staggered 40ms in DOM order; tiles past the 12th reuse the last delay. On mobile, CSS `order`
-   moves the hero and estimator up but the delays still follow the DOM (accepted trade-off).
+   staggered 40ms in DOM order; tiles past the 12th reuse the last delay.
    Reduced-motion users get no animation: the rules below only exist under no-preference.
    Fill mode is `backwards`, not `both`: the end keyframe equals the resting style, and a forwards
    fill would keep every tile a stacking context and a containing block for position: fixed
@@ -1177,7 +1172,7 @@ p {
 
 .estimator__slider {
   width: 100%;
-  height: 1.5rem;
+  height: 2.75rem; /* 44px touch target */
   margin: 0;
   background: transparent;
   appearance: none;
@@ -1200,17 +1195,17 @@ p {
 
 .estimator__slider::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 1.25rem;
-  height: 1.25rem;
-  margin-top: calc((6px - 1.25rem) / 2 - 1px);
+  width: 2rem;
+  height: 2rem;
+  margin-top: calc((6px - 2rem) / 2 - 1px);
   background: var(--accent);
   border: 2px solid var(--surface);
   border-radius: 50%;
 }
 
 .estimator__slider::-moz-range-thumb {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 2rem;
+  height: 2rem;
   background: var(--accent);
   border: 2px solid var(--surface);
   border-radius: 50%;
@@ -1554,13 +1549,26 @@ p {
   gap: calc(var(--gap) / 2) var(--gap);
   padding: 0.75rem 1rem;
   background: var(--surface-2);
-  /* One hairline all round: --ink for errors, --warn for the rate limit. */
-  border: 1px solid var(--ink);
+  /* Tone shows in the thick start edge and the icon: --danger errors, --warn rate limit, --accent refusals. */
+  --tone: var(--danger);
+  border: 1px solid var(--line);
+  border-inline-start: 4px solid var(--tone);
   border-radius: var(--r-sm);
 }
 
 .estimator__banner[data-tone="warn"] {
-  border-color: var(--warn);
+  --tone: var(--warn);
+}
+
+.estimator__banner[data-tone="info"] {
+  --tone: var(--accent);
+}
+
+.estimator__banner-icon {
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--tone);
 }
 
 .estimator__banner p {
@@ -1734,7 +1742,12 @@ p {
 .pill--current {
   display: inline-block;
   margin-block-start: 0.2em;
-  border-color: var(--muted);
+  /* Filled, so it reads as a label and not as an input box. */
+  padding: 0.1em 0.65em;
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-color: var(--accent);
+  border-radius: 999px;
 }
 
 .role-dot {
@@ -1858,6 +1871,11 @@ p {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: calc(var(--gap) / 2);
   margin: 0;
+}
+
+/* Two columns on phones: the confidence card (last) spans both, so its hint and "Not stated" list aren't squeezed. */
+.tab1-summary > div:last-child {
+  grid-column: 1 / -1;
 }
 
 .tab1-summary > div {
@@ -2067,6 +2085,10 @@ p {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
+  .tab1-summary > div:last-child {
+    grid-column: auto;
+  }
+
   .tab1-lists {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -2220,10 +2242,11 @@ p {
 }
 
 .cmp-tag {
-  display: table;
+  /* Own line under the header, sized to its text (the cell's overflow-wrap would otherwise squeeze it). */
+  display: block;
+  width: max-content;
   margin-block-start: 0.25rem;
   font-weight: 400;
-  color: var(--ink);
 }
 
 .drivers {
@@ -2362,5 +2385,54 @@ p {
 @media (max-width: 30rem) {
   .built__split {
     grid-template-columns: 1fr;
+  }
+}
+
+/* ---- Back to top ----
+   A small round link (arrow; its name is "Back to top") pinned to the corner (the page is about 13 screens on a phone). Where scroll-driven
+   animations work it fades in over the first screen of scrolling; elsewhere it is always shown. */
+.to-top {
+  position: fixed;
+  right: var(--page-pad);
+  bottom: var(--page-pad);
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  font-size: var(--fs-lg);
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  text-decoration: none;
+}
+
+.to-top:hover {
+  border-color: var(--accent);
+}
+
+@supports (animation-timeline: scroll()) {
+  @keyframes to-top-in {
+    from {
+      opacity: 0;
+      visibility: hidden;
+    }
+    to {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+  .to-top {
+    animation: to-top-in linear both;
+    animation-timeline: scroll();
+    animation-range: 0 100vh;
+  }
+}
+
+@media print {
+  .to-top {
+    display: none;
   }
 }

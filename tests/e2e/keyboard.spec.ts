@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "./fakeTurnstile";
 import plan from "../fixtures/plan.json";
-import { estimatorBuiltBy, estimatorCopy, howItsBuilt } from "../../lib/content";
+import { backToTop, estimatorBuiltBy, estimatorCopy, howItsBuilt } from "../../lib/content";
 
 // Keyboard-only walkthrough. The real API is never called: /api/estimate is intercepted.
 // Turnstile is faked (./fakeTurnstile), so submit enables at once without waiting on Cloudflare;
@@ -113,12 +113,15 @@ test("Tab order, visible focus indicators, no trap, Shift+Tab goes back", async 
   expect(chips.length, listing).toBeGreaterThanOrEqual(1);
   expect(est.at(-1)?.name, listing).toBe(estimatorCopy.submit);
 
-  // Contact links come last; nothing focusable follows them.
-  const lastEstimator = stops.findLastIndex((s) => s.section.startsWith("estimator"));
-  const firstContact = stops.findIndex((s) => s.section === "contact");
+  // Back to top is the very last stop, after the contact links.
+  expect(stops.at(-1)?.name, listing).toBe(backToTop);
+  const inPage = stops.slice(0, -1);
+  // Contact links come last in the page; nothing else focusable follows them.
+  const lastEstimator = inPage.findLastIndex((s) => s.section.startsWith("estimator"));
+  const firstContact = inPage.findIndex((s) => s.section === "contact");
   expect(firstContact, listing).toBeGreaterThan(lastEstimator);
-  expect(stops.slice(firstContact).every((s) => s.section === "contact"), listing).toBe(true);
-  expect(stops.at(-1)?.section, listing).toBe("contact");
+  expect(inPage.slice(firstContact).every((s) => s.section === "contact"), listing).toBe(true);
+  expect(inPage.at(-1)?.section, listing).toBe("contact");
 
   // Every stop shows a focus indicator (outline or the halo box-shadow).
   const missing = stops.filter((s) => !s.indicator);

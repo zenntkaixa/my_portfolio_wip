@@ -97,3 +97,15 @@ test("short input gets a text hint tied to the field", async ({ page }) => {
   await field.fill(FEATURE);
   await expect(page.locator("#feature-count")).not.toContainText("Add a few more words");
 });
+
+for (const [status, tone] of [[422, "info"], [429, "warn"], [503, "error"]] as const) {
+  test(`a ${status} banner has the ${tone} tone and a decorative icon`, async ({ page }) => {
+    await page.route("**/api/estimate", (route) => route.fulfill({ status, json: { error: "Nope." } }));
+    await page.goto("/");
+    await page.getByLabel("Feature description").fill(FEATURE);
+    await submit(page);
+    const banner = page.locator(".estimator__banner");
+    await expect(banner).toHaveAttribute("data-tone", tone);
+    await expect(banner.locator("svg[aria-hidden='true']")).toHaveCount(1);
+  });
+}

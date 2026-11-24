@@ -87,11 +87,12 @@ describe("checkLimitsInMemory over time", () => {
     if (!r.ok) {
       expect(r.retryAfter).toBe(45 * 60);
       expect(r.reason).toContain("2 estimates this hour");
-      expect(r.reason).toContain("45 minutes");
+      // No fixed time in the text: the button counts down from retryAfter.
+      expect(r.reason).not.toMatch(/\d+ minutes/);
     }
   });
 
-  it("rounds retryAfter up to whole seconds and minutes", async () => {
+  it("rounds retryAfter up to whole seconds", async () => {
     const { checkLimitsInMemory } = await import("@/lib/rateLimit");
     checkLimitsInMemory("ip");
     checkLimitsInMemory("ip");
@@ -99,7 +100,6 @@ describe("checkLimitsInMemory over time", () => {
     const r = checkLimitsInMemory("ip");
     if (r.ok) throw new Error("expected a block");
     expect(r.retryAfter).toBe(2);
-    expect(r.reason).toContain("1 minutes");
   });
 
   it("isolates IPs from each other", async () => {
@@ -236,7 +236,7 @@ describe("checkLimits with Upstash (fetch mocked, never the real service)", () =
     const r = await checkLimits(IP);
     if (r.ok) throw new Error("expected a block");
     expect(r.retryAfter).toBe(45 * 60);
-    expect(r.reason).toBe("You've used 2 estimates this hour. Try again in 45 minutes.");
+    expect(r.reason).toBe("You've used 2 estimates this hour. The button shows when you can try again.");
   });
 
   it("rounds Retry-After up like the in-memory limiter", async () => {
@@ -245,7 +245,6 @@ describe("checkLimits with Upstash (fetch mocked, never the real service)", () =
     const r = await checkLimits(IP);
     if (r.ok) throw new Error("expected a block");
     expect(r.retryAfter).toBe(2);
-    expect(r.reason).toContain("1 minutes");
   });
 
   it("blocks on the daily cap with a 3600 s Retry-After", async () => {
