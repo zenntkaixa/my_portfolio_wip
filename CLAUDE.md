@@ -85,7 +85,11 @@ Every request resends the whole conversation, so session length is the main cost
   `<type>/<milestone>-<slug>` with the conventional-commit type (e.g. `feat/m2-timeline`,
   `docs/m4-readme`, `chore/branch-workflow` when there's no milestone).
 - **`/ship-task`** pushes the task branch and opens a PR into `develop` with `gh pr create`. Izzat reviews
-  and merges it on GitHub; Claude never merges task PRs.
+  and merges it on GitHub; Claude never merges task PRs, except the auto-merge case below.
+- **Auto-merge (chore/docs PRs only):** a task PR whose diff touches only `docs/`, root `*.md`, `CLAUDE.md`,
+  `.claude/skills/` or `.claude/agents/` (type `chore` or `docs`; no `app/`, `lib/`, `components/`, `.github/`,
+  env or deployment files) gets `gh pr merge --auto --merge` right after `/ship-task` opens it, so it merges
+  once `ci` is green. Anything else waits for Izzat.
 - **Releasing** = a PR from `develop` into `main`, opened only when Izzat asks and only after
   `npm run check` and `npm run test:e2e` pass on `develop`. Izzat merges it with a merge commit.
 
@@ -147,7 +151,7 @@ Read first by the sub-agents: project ones in `.claude/agents/` (builders: `ui-b
 - **Never weaken abuse protection** (Turnstile, rate limit, daily cap, input length limits) without asking.
 - Don't change roadmap scope or design direction without asking Izzat first.
 - Never `git push --force` and never rewrite published history.
-- Never commit directly to `main` or `develop`, and never merge PRs; Izzat merges. Release PRs into
+- Never commit directly to `main` or `develop`, and never merge PRs except the auto-merge case in section 4; otherwise Izzat merges. Release PRs into
   `main` only when Izzat asks.
 - Don't commit `.claude/settings.json` or `AGENTS.md` unless Izzat asks; stage explicit paths.
 
