@@ -177,3 +177,7 @@ need an ADR and Izzat's privacy call) wait for Izzat.
 - [x] W3 rest: plan summary shows one sentence (code cap for saved plans, prompt asks for one sentence of at most 30 words) [prompt-engineer]
 - [x] W5 short refine diff line (2 names per side, "Plan re-drafted" when most tasks changed) · W6 radiozk tile to one sentence plus a tech line [ui-builder]
 - [x] Refine finish (review 2026-11-25 15:50, Izzat: "finish the refine work"): B4g stated facts stick across refines so confidence never drops, with a live eval case; B4e reworded task names match (word overlap); B4f desktop refine scrolls the request flow into view [ui-builder, prompt-engineer]
+
+## M15 — Phone and layout follow-ups
+
+- [x] R1 refine line explains a calendar that moves against the hours ("Calendar +0.6 wk: the phases were rescheduled.") · L1 radiozk GIF beside the description on desktop, closing most of the empty space next to the AI workflow tile (review 2026-11-25 18:35, Izzat: "go for it", picked "GIF beside text") [ui-builder]

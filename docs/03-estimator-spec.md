@@ -200,7 +200,7 @@ the refined one (`stickyFacts`), since answers only add to the brief, so confide
 "leave-refined" case checks it live. On desktop, a refine started below the results top scrolls them into view so
 the request flow shows instead of a blank column; a plain submit never scrolls there (B4f). Hidden in print. Answers are auto-growing textareas
 (`field-sizing: content`, 2 rows elsewhere; B4a). The reason is always shown when the hours or tasks change, with
-"Same tasks; hours re-estimated." when only the hours moved (B4b, B4d). With no human-check token the reason names the widget by the Estimate button and a "Go to the
+"Same tasks; hours re-estimated." when only the hours moved (B4b, B4d). When the calendar moves against the hours (fewer hours, more weeks, or the reverse), it adds "Calendar +0.6 wk: the phases were rescheduled.", since weeks come from the phase schedule, not the hours (R1). With no human-check token the reason names the widget by the Estimate button and a "Go to the
 human check" button scrolls it into view, since a visible challenge renders there, far above (B4c). After any
 result the loading height is released in the same render as the plan, so the scroll to the heading isn't thrown
 off by the page shrinking mid-scroll; moves longer than a screen are instant (E12b).

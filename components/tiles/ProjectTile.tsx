@@ -5,7 +5,7 @@ import { featuredProject as p, profile } from "@/lib/content";
 /** Featured project: lead tagline, description, tech line, stack chips, then repo and live links, after a dated personal GitHub stat. */
 export function ProjectTile() {
   return (
-    <Tile span={7} title={`Featured project: ${p.name}`} id="projects">
+    <Tile span={7} title={`Featured project: ${p.name}`} id="projects" className="tile--project">
       <p className="project__personal">
         <strong>{p.personal.value}</strong> {p.personal.text} ·{" "}
         <ExternalLink href={profile.github}>{p.personal.link}</ExternalLink>
@@ -16,8 +16,10 @@ export function ProjectTile() {
         {/* Plain img: a GIF is not optimised by next/image and needs no dependency. */}
         <img className="project__preview" src={p.preview.gif} alt={p.preview.alt} width={800} height={512} loading="lazy" />
       </picture>
-      <p>{p.description}</p>
-      <p className="project__tech">{p.tech}</p>
+      <div className="project__about">
+        <p>{p.description}</p>
+        <p className="project__tech">{p.tech}</p>
+      </div>
       <ul className="chips" role="list" aria-label="Tech stack">
         {p.stack.map((s) => (
           <li key={s}>{s}</li>

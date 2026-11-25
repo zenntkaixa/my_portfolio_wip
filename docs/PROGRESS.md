@@ -5,6 +5,16 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-25 — Session 100: release #136, live check, R1 and L1 (M15)
+
+**Done** on `feat/m15-quick-wins` (Izzat: "go for it"; L1 option "GIF beside text").
+- Released #136 (1b1b820); dev-update 2026-11-25-1804 in Drive. Live check of the 18:35 review: claims hold;
+  my "two helper lines" finding was wrong (the cache note sits in the closed "About plans").
+- R1: `refine.calendar` adds "Calendar ±N wk: the phases were rescheduled." only when weeks move against hours.
+- L1: radiozk GIF beside description + tech on desktop (2:3). Gap beside the AI tile 352–466 px → 137–156 px;
+  GIF now 304–423 px wide on desktop (was 522–721).
+- Next: G4a phone crop; S3 is Izzat's.
+
 ## 2026-11-25 — Session 99: release prep, B4f fix (M14)
 
 **Done** on `fix/m14-b4f-refine-only` (Izzat: "go for release").
@@ -13,16 +23,3 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 - check 416; estimator + batch-a 105/105 on 5 repeats (2 focus flakes in an earlier 42-run, not reproduced).
 - security-engineer: no findings, audit 0. release-engineer: green, no env/API/deps changes. docs-auditor: 1 fix.
 - Next: merge this, then the release PR develop to main, then the dev-update with word counts.
-
-## 2026-11-25 — Session 98: finish the refine work, B4g, B4e, B4f (M14)
-
-**Done** on `feat/m14-concision` (Izzat: "finish the refine work", live run allowed this round).
-- B4g: `stickyFacts` keeps facts stated before a refine, so confidence never drops; eval case "leave-refined".
-- B4e: `taskDiff` matches reworded names (Jaccard of words ≥ 0.6), each old task once. Phase and role not used.
-- B4f: on desktop a refine scrolls the results top into view when it is off screen (test fails without the fix).
-- Live Haiku eval (US$0.009): 7 plans all one-sentence summaries (20–28 words, W3 prompt works); leave refined
-  medium to high; leave repeat 260 h vs 268 h, 19 tasks both; vague, recipe and injection refused. "medium"
-  flagged the AI/seniority word check (not inspected).
-- check 416; e2e estimator, batch-b, keyboard 17/17.
-
----
