@@ -28,7 +28,7 @@ import { PhaseTimeline } from "./PhaseTimeline";
 import { RequestFlow } from "./RequestFlow";
 import { RefineForm } from "./RefineForm";
 import { range } from "./money";
-import { firstSentence, refinedBrief, taskDiff, taskNames, type Answer } from "@/lib/refine";
+import { firstSentence, refinedBrief, stickyFacts, taskDiff, taskNames, type Answer } from "@/lib/refine";
 import { TaskTable } from "./TaskTable";
 import { PlanActions } from "./PlanActions";
 import { ResultsBoundary } from "./ResultsBoundary";
@@ -122,7 +122,7 @@ export function Estimator() {
   const [savedOn, setSavedOn] = useState("");
   const savedBusy = useRef(false);
   // B4: the plan a refine started from, as one line, until that refine succeeds (or fails).
-  const pendingRefine = useRef<{ text: string; hours: number; tasks: string[] } | null>(null);
+  const pendingRefine = useRef<{ text: string; hours: number; tasks: string[]; facts: Scope["facts"] } | null>(null);
 
   // Abort any in-flight request on unmount.
   useEffect(() => () => abortRef.current?.abort(), []);
@@ -165,11 +165,13 @@ export function Estimator() {
   }, [status]);
 
   // Phones and tablets: the results sit below the form. Scroll after the render, since it removes the preview
-  // link above. Desktop (the 1025px split in globals.css) keeps them beside the form, so no jump there.
+  // link above. Desktop (the 1025px split in globals.css) keeps them beside the form, so no jump there, unless
+  // the results top is scrolled off screen (B4f: Refine sits at the bottom of a long plan, so the stepper was out of view).
   useEffect(() => {
     if (status.kind !== "submitting") setHoldHeight(null);
-    if (status.kind !== "submitting" || window.matchMedia("(min-width: 1025px)").matches) return;
-    if (resultsEl.current) scrollToTop(resultsEl.current);
+    const el = resultsEl.current;
+    if (status.kind !== "submitting" || !el) return;
+    if (!window.matchMedia("(min-width: 1025px)").matches || el.getBoundingClientRect().top < 0) scrollToTop(el);
   }, [status.kind]);
 
   // After a chip fills the field: caret at the end, ready to type or submit.
@@ -234,7 +236,9 @@ export function Estimator() {
           ? data.error
           : null;
       // The server sends the scope; seniority and working style are applied here (ADR-013).
-      const scope = isObj(data) && isScope(data.scope) ? data.scope : null;
+      const sent = isObj(data) && isScope(data.scope) ? data.scope : null;
+      const prev = pendingRefine.current?.facts;
+      const scope = sent && prev ? { ...sent, facts: stickyFacts(prev, sent.facts) } : sent;
       const built = scope ? buildPlan(scope, { teamSize, seniority, mode }) : null;
       if (!res.ok) {
         const fallback =
@@ -286,7 +290,7 @@ export function Estimator() {
 
   function refine(from: Success, answers: Answer[]) {
     const text = refinedBrief(from.description ?? sampleFeature, answers);
-    pendingRefine.current = { text: snapshot(from), hours: from.plan.totalHours, tasks: taskNames(from.plan) };
+    pendingRefine.current = { text: snapshot(from), hours: from.plan.totalHours, tasks: taskNames(from.plan), facts: from.scope.facts };
     setFeature(text);
     void run(text);
   }

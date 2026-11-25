@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { firstSentence, refinedBrief, refineRoom, taskDiff } from "@/lib/refine";
+import { firstSentence, refinedBrief, stickyFacts, refineRoom, taskDiff } from "@/lib/refine";
 import { FEATURE_MAX } from "@/lib/estimate";
 import { estimatorCopy } from "@/lib/content";
 
@@ -29,6 +29,24 @@ describe("refinedBrief", () => {
   it("reports the room left under the request limit, negative when over", () => {
     expect(refineRoom(brief, [])).toBe(FEATURE_MAX - brief.length);
     expect(refineRoom(brief, [{ question: "Q?", answer: "x".repeat(FEATURE_MAX) }])).toBeLessThan(0);
+  });
+});
+
+describe("taskDiff fuzzy matching (B4e)", () => {
+  it("treats reworded names as the same task and keeps different ones apart", () => {
+    const d = taskDiff(["Build OTP API", "Write unit tests", "Build API"], ["Build the OTP service API", "Write tests", "Build UI"]);
+    expect(d).toEqual({ added: ["Build UI"], removed: ["Build API"] });
+  });
+  it("matches each old task once", () => {
+    expect(taskDiff(["Build API"], ["Build API", "build api"])).toEqual({ added: ["build api"], removed: [] });
+  });
+});
+
+describe("stickyFacts (B4g)", () => {
+  it("keeps facts stated before a refine, so confidence never drops", () => {
+    const f = { users: true, systems: true, data: true, integrations: false, limits: false, outOfScope: false };
+    const g = { users: false, systems: true, data: false, integrations: true, limits: false, outOfScope: false };
+    expect(stickyFacts(f, g)).toEqual({ ...f, integrations: true });
   });
 });
 

@@ -5,6 +5,17 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-25 — Session 98: finish the refine work, B4g, B4e, B4f (M14)
+
+**Done** on `feat/m14-concision` (Izzat: "finish the refine work", live run allowed this round).
+- B4g: `stickyFacts` keeps facts stated before a refine, so confidence never drops; eval case "leave-refined".
+- B4e: `taskDiff` matches reworded names (Jaccard of words ≥ 0.6), each old task once. Phase and role not used.
+- B4f: on desktop a refine scrolls the results top into view when it is off screen (test fails without the fix).
+- Live Haiku eval (US$0.009): 7 plans all one-sentence summaries (20–28 words, W3 prompt works); leave refined
+  medium to high; leave repeat 260 h vs 268 h, 19 tasks both; vague, recipe and injection refused. "medium"
+  flagged the AI/seniority word check (not inspected).
+- check 416; e2e estimator, batch-b, keyboard 17/17.
+
 ## 2026-11-25 — Session 97: concision rest, W3 summary, W5, W6 (M14)
 
 **Done** on `feat/m14-concision` (Izzat: "keep building", same batch as session 96).
@@ -14,15 +25,5 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 - W6: radiozk description cut to one sentence, the three highlight bullets replaced by one tech line.
 - check 413; targeted e2e (home, estimator x3, a11y) 78/80, the 2 a11y timeouts passed 30/30 on repeat;
   visual-check `#projects` and `#estimator` at 390 light: no issues. Reviewer skipped (small diff).
-
-## 2026-11-25 — Session 96: concision quick wins (M14)
-
-**Done** on `feat/m14-concision` (Izzat: "do the quick wins" from review 2026-11-25 15:50).
-- W1 summary-card hints, W2 form notes (one line + "About plans"; code link inside "How it's built"), W3 lists
-  closed at all widths with counts, W4 one "How costs are worked out" disclosure, W7 repeated "32" and "Eight years".
-- Words in `main` at 360 px with the example plan: 1,283 on production, 1,205 here (estimator 509 to 433). Desktop
-  saves more (lists were open there). W3 summary cap, W5 and W6 stay open.
-- check 411, e2e 180 (estimator-submit 429 test flaked once under load; 106/108 repeats, base 36/36); visual-check
-  `#estimator` 390 and 1440 light: no issues.
 
 ---

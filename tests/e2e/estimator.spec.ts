@@ -179,6 +179,35 @@ test("a refine started at the bottom of the plan lands on the new plan's heading
   await expect.poll(async () => (await heading.boundingBox())?.y ?? 999).toBeLessThan(800 / 3);
 });
 
+test("desktop refine shows the progress at once and never lowers confidence (B4f, B4g)", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 800 });
+  let n = 0;
+  await page.route("**/api/estimate", async (route) => {
+    n += 1;
+    if (n === 1) return route.fulfill({ json: plan });
+    await new Promise((f) => setTimeout(f, 1500));
+    // The refined plan reports no facts at all; the ones stated before must stay.
+    const facts = Object.fromEntries(Object.keys(plan.scope.facts).map((k) => [k, false]));
+    return route.fulfill({ json: { ...plan, scope: { ...plan.scope, facts } } });
+  });
+  await page.goto("/");
+  await page.getByLabel("Feature description").fill("Add one-time code login with email delivery and rate limiting");
+  const submit = page.getByRole("button", { name: "Estimate this feature" });
+  await expect(submit).toBeEnabled({ timeout: 15_000 });
+  await submit.click();
+  const form = page.getByRole("region", { name: estimatorCopy.refine.heading });
+  await form.getByLabel(plan.scope.openQuestions[0]).fill("Five minutes");
+  const refine = form.getByRole("button", { name: estimatorCopy.refine.button });
+  await refine.scrollIntoViewIfNeeded();
+  await expect(refine).toHaveAttribute("aria-disabled", "false", { timeout: 15_000 });
+  await refine.click();
+  // While planning, the top of the results (the request flow) is on screen, not a blank column.
+  const results = page.locator("#estimator-results");
+  await expect(results).toHaveAttribute("aria-busy", "true");
+  await expect.poll(async () => (await results.boundingBox())?.y ?? -1, { timeout: 1_000 }).toBeGreaterThanOrEqual(0);
+  await expect(page.getByTestId("refined")).toHaveText(/^Refined from: medium confidence, .*Now: medium confidence/);
+});
+
 test("without a human-check token the refine form says why and can jump to the check (B4c)", async ({ page }) => {
   // A widget that never issues a token, like Cloudflare waiting on a visible challenge.
   await page.route("https://challenges.cloudflare.com/turnstile/v0/api.js*", (route) =>

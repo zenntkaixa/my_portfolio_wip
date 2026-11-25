@@ -194,7 +194,11 @@ and no server change. A counter shows room left; the button is `aria-disabled` w
 long, waiting for the human check, cooldown, planning) so it stays focusable. The new plan shows "Refined from:
 <confidence, hours, build range>. Now: <same>." until a plain estimate replaces it; radio rebuilds keep it.
 The reason names at most 2 added and 2 removed tasks ("a, b and 3 more"); when more than half the old tasks
-are gone it says "Plan re-drafted from your answers (+4 h)." instead (W5, B4e). Hidden in print. Answers are auto-growing textareas (`field-sizing: content`, 2 rows elsewhere; B4a). When the
+are gone it says "Plan re-drafted from your answers (+4 h)." instead (W5). Reworded tasks are not changes: names
+sharing at least 60% of their words (two letters or more) match (B4e). Facts the previous plan stated stay stated in
+the refined one (`stickyFacts`), since answers only add to the brief, so confidence never drops (B4g); the eval's
+"leave-refined" case checks it live. On desktop, a refine started below the results top scrolls them into view so
+the request flow shows instead of a blank column (B4f). Hidden in print. Answers are auto-growing textareas (`field-sizing: content`, 2 rows elsewhere; B4a). When the
 hours move more than 5%, the "Refined from" line adds why ("More hours: your answers added detail…" or "Fewer
 hours: …"; B4b). With no human-check token the reason names the widget by the Estimate button and a "Go to the
 human check" button scrolls it into view, since a visible challenge renders there, far above (B4c). After any

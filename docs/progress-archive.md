@@ -4,6 +4,16 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-25 — Session 96: concision quick wins (M14)
+
+**Done** on `feat/m14-concision` (Izzat: "do the quick wins" from review 2026-11-25 15:50).
+- W1 summary-card hints, W2 form notes (one line + "About plans"; code link inside "How it's built"), W3 lists
+  closed at all widths with counts, W4 one "How costs are worked out" disclosure, W7 repeated "32" and "Eight years".
+- Words in `main` at 360 px with the example plan: 1,283 on production, 1,205 here (estimator 509 to 433). Desktop
+  saves more (lists were open there). W3 summary cap, W5 and W6 stay open.
+- check 411, e2e 180 (estimator-submit 429 test flaked once under load; 106/108 repeats, base 36/36); visual-check
+  `#estimator` 390 and 1440 light: no issues.
+
 ## 2026-11-25 — Session 95: remove the Experience Gantt bars (M14)
 
 **Done** on `fix/m14-remove-experience-timeline` (Izzat: the horizontal timeline "is not pleasing my views").
