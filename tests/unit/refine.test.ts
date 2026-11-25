@@ -70,7 +70,8 @@ describe("refine.why and taskDiff (B4d)", () => {
   it("says re-drafted, with the hour change, when most old tasks went (W5)", () => {
     expect(estimatorCopy.refine.why(100, 104.4, ["x", "y"], ["a", "b", "c"], 4)).toBe(" Plan re-drafted from your answers (+4 h).");
     expect(estimatorCopy.refine.why(100, 90, [], ["a", "b", "c"], 4)).toBe(" Plan re-drafted from your answers (−10 h).");
-    expect(estimatorCopy.refine.why(100, 100, [], ["a", "b"], 4)).toBe(" Removed: a, b.");
+    expect(estimatorCopy.refine.why(100, 100, [], ["a", "b"], 4)).toBe(" Removed: a, b."); // exactly half: still a list
+    expect(estimatorCopy.refine.why(100, 100.3, ["x"], ["a", "b", "c"], 4)).toBe(" Plan re-drafted from your answers.");
   });
   it("says tasks are the same when only hours moved, and is quiet when nothing changed", () => {
     expect(estimatorCopy.refine.why(175, 202)).toBe(" Same tasks; hours re-estimated.");
