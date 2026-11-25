@@ -4,6 +4,16 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-25 — Session 97: concision rest, W3 summary, W5, W6 (M14)
+
+**Done** on `feat/m14-concision` (Izzat: "keep building", same batch as session 96).
+- W3: the plan summary shows its first sentence (`firstSentence`, covers saved plans); prompt asks for one
+  sentence of at most 30 words. W5: refine reason caps names at 2 per side; "Plan re-drafted from your answers
+  (+N h)." when more than half the old tasks are gone. B4e fuzzy matching not done.
+- W6: radiozk description cut to one sentence, the three highlight bullets replaced by one tech line.
+- check 413; targeted e2e (home, estimator x3, a11y) 78/80, the 2 a11y timeouts passed 30/30 on repeat;
+  visual-check `#projects` and `#estimator` at 390 light: no issues. Reviewer skipped (small diff).
+
 ## 2026-11-25 — Session 96: concision quick wins (M14)
 
 **Done** on `feat/m14-concision` (Izzat: "do the quick wins" from review 2026-11-25 15:50).

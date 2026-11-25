@@ -198,7 +198,7 @@ are gone it says "Plan re-drafted from your answers (+4 h)." instead (W5). Rewor
 sharing at least 60% of their words (two letters or more) match (B4e). Facts the previous plan stated stay stated in
 the refined one (`stickyFacts`), since answers only add to the brief, so confidence never drops (B4g); the eval's
 "leave-refined" case checks it live. On desktop, a refine started below the results top scrolls them into view so
-the request flow shows instead of a blank column (B4f). Hidden in print. Answers are auto-growing textareas
+the request flow shows instead of a blank column; a plain submit never scrolls there (B4f). Hidden in print. Answers are auto-growing textareas
 (`field-sizing: content`, 2 rows elsewhere; B4a). The reason is always shown when the hours or tasks change, with
 "Same tasks; hours re-estimated." when only the hours moved (B4b, B4d). With no human-check token the reason names the widget by the Estimate button and a "Go to the
 human check" button scrolls it into view, since a visible challenge renders there, far above (B4c). After any

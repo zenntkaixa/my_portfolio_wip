@@ -171,7 +171,9 @@ export function Estimator() {
     if (status.kind !== "submitting") setHoldHeight(null);
     const el = resultsEl.current;
     if (status.kind !== "submitting" || !el) return;
-    if (!window.matchMedia("(min-width: 1025px)").matches || el.getBoundingClientRect().top < 0) scrollToTop(el);
+    // Refines only: a plain submit sits by the form, and the page must stay still there (batch-a large-desktop test).
+    const refineOffScreen = pendingRefine.current !== null && el.getBoundingClientRect().top < 0;
+    if (!window.matchMedia("(min-width: 1025px)").matches || refineOffScreen) scrollToTop(el);
   }, [status.kind]);
 
   // After a chip fills the field: caret at the end, ready to type or submit.
