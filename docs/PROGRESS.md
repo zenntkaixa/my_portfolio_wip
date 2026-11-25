@@ -5,6 +5,15 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-25 — Session 99: release prep, B4f fix (M14)
+
+**Done** on `fix/m14-b4f-refine-only` (Izzat: "go for release").
+- Full e2e on `develop` failed 1/181: B4f also scrolled a plain desktop submit when the results top was off screen
+  (batch-a large-desktop test). Now refines only. Spec B4e wording made exact (docs-auditor).
+- check 416; estimator + batch-a 105/105 on 5 repeats (2 focus flakes in an earlier 42-run, not reproduced).
+- security-engineer: no findings, audit 0. release-engineer: green, no env/API/deps changes. docs-auditor: 1 fix.
+- Next: merge this, then the release PR develop to main, then the dev-update with word counts.
+
 ## 2026-11-25 — Session 98: finish the refine work, B4g, B4e, B4f (M14)
 
 **Done** on `feat/m14-concision` (Izzat: "finish the refine work", live run allowed this round).
@@ -15,15 +24,5 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
   medium to high; leave repeat 260 h vs 268 h, 19 tasks both; vague, recipe and injection refused. "medium"
   flagged the AI/seniority word check (not inspected).
 - check 416; e2e estimator, batch-b, keyboard 17/17.
-
-## 2026-11-25 — Session 97: concision rest, W3 summary, W5, W6 (M14)
-
-**Done** on `feat/m14-concision` (Izzat: "keep building", same batch as session 96).
-- W3: the plan summary shows its first sentence (`firstSentence`, covers saved plans); prompt asks for one
-  sentence of at most 30 words. W5: refine reason caps names at 2 per side; "Plan re-drafted from your answers
-  (+N h)." when more than half the old tasks are gone. B4e fuzzy matching not done.
-- W6: radiozk description cut to one sentence, the three highlight bullets replaced by one tech line.
-- check 413; targeted e2e (home, estimator x3, a11y) 78/80, the 2 a11y timeouts passed 30/30 on repeat;
-  visual-check `#projects` and `#estimator` at 390 light: no issues. Reviewer skipped (small diff).
 
 ---
