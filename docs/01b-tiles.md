@@ -30,6 +30,9 @@ Read only the section for the tile you are changing.
 - Preview: looping GIF of the live site (`featuredProject.preview`, `public/radiozk-demo.gif`, shows a real track
   name) between tagline and description, full width with a `--line` border. `<picture>` serves the still PNG
   under `prefers-reduced-motion: reduce`. Re-record when radiozk's UI changes.
+- Desktop (≥ 1025 px, L1): the GIF sits in the right 3/5 beside `.project__about` (description and tech line),
+  so the tile is about as tall as the AI workflow tile next to it. Title, stat, tagline, chips and links stay full width.
+  Tablet and phone keep the stacked order.
 - Description is one sentence; a one-line tech summary (`featuredProject.tech`, `--fs-sm`, `--muted`) replaces
   the old highlight bullets (W6). Stack: `.chips` labelled "Tech stack".
 - Links: a list in a wrapping flex row. Every external link gets `target="_blank"`,
