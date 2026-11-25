@@ -73,8 +73,10 @@ included, no force pushes or deletion. Head branches auto-delete on merge; secre
 protection and Dependabot alerts are on (alerts only: no automatic update PRs).
 
 ## Every later deploy
-Push to `main` (a release, see CLAUDE.md section 4, Branches) → Vercel builds and deploys to production. Pushes to
-`develop` and pull requests get preview URLs.
+Push to `main` (a release, see CLAUDE.md section 4, Branches) → Vercel builds and deploys to production. Each merge into
+`develop` builds one preview. Task branches and their PRs get no Vercel build (`git.deploymentEnabled` in
+`vercel.json`, 2026-11-25): each deployment stores its own copy of the function bundles (about 50–100 MB), and per-PR
+previews filled most of the Hobby plan's 10 GB of Functions Storage. Task PRs are gated by CI (check + e2e).
 
 ## Post-deploy checks
 - Estimator works on the live URL and the Turnstile widget appears.
