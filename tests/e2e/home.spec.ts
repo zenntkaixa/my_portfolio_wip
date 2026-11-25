@@ -1,5 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import {
+  howItsBuilt,
   aiWorkflow,
   backToTop,
   caseStudies,
@@ -425,6 +426,7 @@ test("the footer is a contentinfo landmark with the year, name and build line", 
 test("the estimator says who built it and links the code; the 20-character minimum shows before typing", async ({ page }) => {
   await page.goto("/");
   const tile = page.locator("#estimator");
+  await tile.getByText(howItsBuilt.summary).click(); // W2: the code link sits inside the panel
   await expect(tile.getByRole("link", { name: `${estimatorBuiltBy.link} (opens in a new tab)` })).toHaveAttribute(
     "href",
     estimatorBuiltBy.url,

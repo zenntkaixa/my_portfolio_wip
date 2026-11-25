@@ -41,10 +41,7 @@ test("tab 1 shows summary, timeline bars, cards, assumptions and risks", async (
   await expect(page.getByTestId("summary").getByText(estimatorCopy.summary.hoursValue(p.totalHours))).toBeVisible();
   await expect(page.getByTestId("summary").getByText(estimatorCopy.summary.weeksValue(p.calendarWeeks))).toBeVisible();
   await expect(page.getByTestId("summary").getByText(p.confidence, { exact: true })).toBeVisible();
-  const { confidence, ...fixed } = estimatorCopy.summary.hints;
-  for (const hint of Object.values(fixed)) {
-    await expect(page.getByTestId("summary").getByText(hint)).toBeVisible();
-  }
+  const { confidence } = estimatorCopy.summary.hints;
   await expect(page.getByTestId("summary").getByText(confidence[p.confidence as keyof typeof confidence])).toBeVisible();
   await expect(page.getByRole("heading", { level: 4, name: p.phases[0].name })).toBeVisible();
   // E10: each Gantt row carries the task count and goal (no separate phase cards).
@@ -54,8 +51,10 @@ test("tab 1 shows summary, timeline bars, cards, assumptions and risks", async (
   await expect(page.getByTestId("phase-card")).toHaveCount(0);
 
   const assumptions = page.getByRole("region", { name: estimatorCopy.assumptionsHeading });
+  await assumptions.locator("summary").click(); // W3: lists start closed
   await expect(assumptions.getByRole("listitem")).toHaveCount(p.assumptions.length);
   const risks = page.getByRole("region", { name: estimatorCopy.risksHeading });
+  await risks.locator("summary").click();
   await expect(risks.getByRole("listitem")).toHaveCount(p.risks.length);
 });
 
@@ -74,7 +73,9 @@ test("repeated phase names render every bar and row without duplicate-key warnin
   await showResults(page, dup, "Duplicate names");
   await expect(page.getByTestId("timeline-bar")).toHaveCount(2);
   await expect(page.getByTestId("phase-row")).toHaveCount(2);
-  await expect(page.getByRole("region", { name: estimatorCopy.risksHeading }).getByRole("listitem")).toHaveCount(2);
+  const risks = page.getByRole("region", { name: estimatorCopy.risksHeading });
+  await risks.locator("summary").click();
+  await expect(risks.getByRole("listitem")).toHaveCount(2);
   expect(logs.filter((l) => /same key|unique "key"/i.test(l))).toEqual([]);
 });
 

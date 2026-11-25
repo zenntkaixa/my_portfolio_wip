@@ -25,6 +25,7 @@ test("traditional: people cost from hours x rate, the model's costs, totals and 
   // Build: people 7,410–11,388 + 20% contingency 1,482–2,278 + one-off 3,000–8,000. Per month: 150–800.
   await expect(table.getByRole("row", { name: new RegExp(estimatorCopy.budget.buildTotal) })).toContainText("RM 11,892–21,666");
   await expect(table.getByRole("row", { name: new RegExp(estimatorCopy.budget.monthlyTotal) })).toContainText("RM 150–800");
+  await page.getByText(estimatorCopy.budget.notesSummary).click();
   await expect(page.getByText(estimatorCopy.budget.note)).toBeVisible();
 });
 

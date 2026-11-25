@@ -1974,6 +1974,14 @@ p {
   color: var(--muted);
 }
 
+.estimator__about {
+  font-size: var(--fs-sm);
+}
+
+.estimator__about[open] summary {
+  margin-bottom: 0.25rem;
+}
+
 .tab1-badge {
   --tone: var(--muted);
   display: inline-flex;
@@ -2272,7 +2280,9 @@ p {
   }
 
   /* A closed <details> hides its content even on paper: print the drivers whether or not they're open. */
-  .drivers::details-content {
+  .drivers::details-content,
+  .cost-notes::details-content,
+  .tab1-lists details::details-content {
     content-visibility: visible;
   }
 
@@ -2459,7 +2469,8 @@ p {
 }
 
 .cmp h4,
-.drivers summary {
+.drivers summary,
+.cost-notes summary {
   margin: 0;
   font-size: var(--fs-base);
 }
@@ -2505,11 +2516,13 @@ p {
   font-weight: 400;
 }
 
-.drivers {
+.drivers,
+.cost-notes {
   margin-top: var(--gap);
 }
 
-.drivers summary {
+.drivers summary,
+.cost-notes summary {
   cursor: pointer;
   font-weight: 600;
 }
@@ -2524,7 +2537,8 @@ p {
   color: var(--muted);
 }
 
-.built summary {
+.built summary,
+.estimator__about summary {
   cursor: pointer;
   width: fit-content;
   font-weight: 600;

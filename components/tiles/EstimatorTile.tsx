@@ -13,13 +13,14 @@ export async function EstimatorTile() {
   return (
     <Tile span={12} size="lg" title="Try it: feature to delivery plan" id="estimator" focusTarget className="tile--estimator">
       <p>{estimatorIntro}</p>
-      <p className="estimator__built">
-        {estimatorBuiltBy.text}
-        <ExternalLink href={estimatorBuiltBy.url}>{estimatorBuiltBy.link}</ExternalLink>
-      </p>
       <details className="built">
         <summary>{h.summary}</summary>
         <div className="built__body">
+          {/* W2: moved inside the panel so the tile opens with one intro line. */}
+          <p>
+            {estimatorBuiltBy.text}
+            <ExternalLink href={estimatorBuiltBy.url}>{estimatorBuiltBy.link}</ExternalLink>
+          </p>
           <section aria-labelledby="built-path">
             <h3 id="built-path">{h.pathTitle}</h3>
             <RequestFlow />

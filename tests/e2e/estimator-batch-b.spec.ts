@@ -21,6 +21,7 @@ test("open questions and out-of-scope lists show the plan's items", async ({ pag
     [estimatorCopy.outOfScopeHeading, plan.scope.outOfScope],
   ] as const) {
     await expect(page.getByRole("heading", { name: heading })).toBeVisible();
+    await page.getByRole("heading", { name: heading }).click(); // W3: lists start closed
     // Scoped to the list: the refine form (B4) labels its inputs with the same questions.
     const list = page.getByRole("region", { name: heading }).getByRole("list");
     for (const item of items) await expect(list.getByText(item, { exact: true })).toBeVisible();
@@ -31,6 +32,7 @@ test("budget tab shows the contingency row", async ({ page }) => {
   await submitWith(page, plan);
   await page.getByRole("tab", { name: estimatorCopy.tabBudget }).click();
   await expect(page.getByRole("row", { name: /Contingency \(\d+%\)/ })).toBeVisible();
+  await page.getByText(estimatorCopy.budget.notesSummary).click();
   await expect(page.getByText(estimatorCopy.budget.rateNote(HOURLY_RATE))).toBeVisible();
 });
 

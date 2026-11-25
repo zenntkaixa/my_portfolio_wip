@@ -515,7 +515,11 @@ export function Estimator() {
             <p className="estimator__model-note">{estimatorCopy.retryWaiting}</p>
           )}
           <p className="estimator__model-note">{estimatorCopy.modelNote}</p>
-          <p className="estimator__model-note">{estimatorCopy.cacheNote}</p>
+          {/* W2: secondary notes sit one click away to keep the form short. */}
+          <details className="estimator__about">
+            <summary>{estimatorCopy.aboutSummary}</summary>
+            <p className="estimator__model-note">{estimatorCopy.cacheNote}</p>
+          </details>
         </fieldset>
       </form>
 
