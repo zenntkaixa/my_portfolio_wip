@@ -2,6 +2,9 @@
 
 import { CONTINGENCY } from "@/lib/budget";
 
+/** Before or after figures of a refine (R3). */
+export type RefineSnap = { confidence: string; hours: number; low: number; high: number };
+
 export const profile = {
   name: "Mohd. Izzat Fahmi Suhaimi",
   firstName: "Mohd. Izzat Fahmi",
@@ -80,8 +83,10 @@ export const featuredProject = {
   stack: ["React 19", "TypeScript", "Node.js", "Express", "PostgreSQL", "nginx", "Docker"],
   repo: "https://github.com/zenntkaixa/radiozk",
   // Looping capture of the live site (recorded 2026-11-24); the still is the first frame, for reduced motion.
+  // G4a: cropped to the player without the buffering frame; phones get a taller crop without the About frame.
   preview: {
     gif: "/radiozk-demo.gif",
+    phoneGif: "/radiozk-demo-phone.gif",
     still: "/radiozk-demo.png",
     alt: "Screen recording of radiozk: pressing play, the stream goes live in lossless FLAC with a moving equaliser, then the now-playing card, recently played tracks, the Liked page and the About page.",
   },
@@ -425,8 +430,14 @@ export const estimatorCopy = {
     waiting: "Waiting for the human check by the Estimate button. If a \"Verify you are human\" box shows there, tick it.",
     showCheck: "Go to the human check",
     cooldown: "Hourly limit reached. Try again when the main button is ready.",
-    snap: (confidence: string, hours: number, build: string) => `${confidence} confidence, ${hours} h, ${build}`,
-    from: (before: string, after: string) => `Refined from: ${before}. Now: ${after}.`,
+    // R3: one compact before → after row; money in rounded k, the full figures stay in the Budget tab.
+    compare: (a: RefineSnap, b: RefineSnap) => {
+      const k = (n: number) => `${Math.round(n / 100) / 10}k`;
+      const cap = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
+      const pair = (x: string, y: string) => (x === y ? x : `${x} → ${y}`);
+      const money = (r: RefineSnap) => (r.low === r.high ? k(r.low) : `${k(r.low)}–${k(r.high)}`);
+      return `Refined: ${pair(cap(a.confidence), cap(b.confidence))} · ${pair(`${a.hours}`, `${b.hours}`)} h · RM ${pair(money(a), money(b))}`;
+    },
     // B4d: name the tasks that changed. Always shown when hours or tasks change, so there is no hidden threshold.
     // W5/B4e: at most 2 names per side; when most of the old tasks went, one "re-drafted" line instead of a list.
     why: (beforeHours: number, afterHours: number, added: string[] = [], removed: string[] = [], beforeCount = 0) => {
@@ -434,7 +445,7 @@ export const estimatorCopy = {
         names.length > 2 ? `${names.slice(0, 2).join(", ")} and ${names.length - 2} more` : names.join(", ");
       const delta = Math.round(afterHours) - Math.round(beforeHours);
       if (beforeCount && removed.length > beforeCount / 2)
-        return ` Plan re-drafted from your answers${delta ? ` (${delta > 0 ? "+" : "−"}${Math.abs(delta)} h)` : ""}.`;
+        return " Re-drafted from your answers."; // R3: the hour change is already in the compare row
       if (added.length || removed.length)
         return ` ${[added.length && `Added: ${list(added)}.`, removed.length && `Removed: ${list(removed)}.`].filter(Boolean).join(" ")}`;
       return delta ? " Same tasks; hours re-estimated." : "";

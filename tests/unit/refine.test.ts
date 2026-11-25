@@ -67,11 +67,19 @@ describe("refine.why and taskDiff (B4d)", () => {
   it("shortens long lists", () => {
     expect(estimatorCopy.refine.why(1, 2, ["a", "b", "c", "d", "e"], [])).toBe(" Added: a, b and 3 more.");
   });
-  it("says re-drafted, with the hour change, when most old tasks went (W5)", () => {
-    expect(estimatorCopy.refine.why(100, 104.4, ["x", "y"], ["a", "b", "c"], 4)).toBe(" Plan re-drafted from your answers (+4 h).");
-    expect(estimatorCopy.refine.why(100, 90, [], ["a", "b", "c"], 4)).toBe(" Plan re-drafted from your answers (−10 h).");
+  it("says re-drafted, without the hour change the compare row already shows, when most old tasks went (W5, R3)", () => {
+    expect(estimatorCopy.refine.why(100, 104.4, ["x", "y"], ["a", "b", "c"], 4)).toBe(" Re-drafted from your answers.");
     expect(estimatorCopy.refine.why(100, 100, [], ["a", "b"], 4)).toBe(" Removed: a, b."); // exactly half: still a list
-    expect(estimatorCopy.refine.why(100, 100.3, ["x"], ["a", "b", "c"], 4)).toBe(" Plan re-drafted from your answers.");
+    expect(estimatorCopy.refine.why(100, 100.3, ["x"], ["a", "b", "c"], 4)).toBe(" Re-drafted from your answers.");
+  });
+
+  it("compacts the before and after figures into one row (R3)", () => {
+    const cmp = estimatorCopy.refine.compare;
+    expect(cmp({ confidence: "medium", hours: 233, low: 18_540, high: 28_400 }, { confidence: "high", hours: 216, low: 17_400, high: 22_800 }))
+      .toBe("Refined: Medium → High · 233 → 216 h · RM 18.5k–28.4k → 17.4k–22.8k");
+    // Unchanged values show once.
+    expect(cmp({ confidence: "low", hours: 40, low: 3000, high: 3000 }, { confidence: "low", hours: 40, low: 3000, high: 3000 }))
+      .toBe("Refined: Low · 40 h · RM 3k");
   });
   it("says tasks are the same when only hours moved, and is quiet when nothing changed", () => {
     expect(estimatorCopy.refine.why(175, 202)).toBe(" Same tasks; hours re-estimated.");

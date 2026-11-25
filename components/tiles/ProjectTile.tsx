@@ -12,9 +12,10 @@ export function ProjectTile() {
       </p>
       <p className="project__tagline">{p.tagline}</p>
       <picture>
-        <source media="(prefers-reduced-motion: reduce)" srcSet={p.preview.still} />
+        <source media="(prefers-reduced-motion: reduce)" srcSet={p.preview.still} width={540} height={400} />
+        <source media="(max-width: 720px)" srcSet={p.preview.phoneGif} width={420} height={512} />
         {/* Plain img: a GIF is not optimised by next/image and needs no dependency. */}
-        <img className="project__preview" src={p.preview.gif} alt={p.preview.alt} width={800} height={512} loading="lazy" />
+        <img className="project__preview" src={p.preview.gif} alt={p.preview.alt} width={540} height={400} loading="lazy" />
       </picture>
       <div className="project__about">
         <p>{p.description}</p>
