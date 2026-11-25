@@ -2,7 +2,7 @@ import { Tile } from "@/components/Bento";
 import { ExternalLink } from "@/components/ExternalLink";
 import { featuredProject as p, profile } from "@/lib/content";
 
-/** Featured project: lead tagline, description, highlights, stack chips, then repo and live links, after a dated personal GitHub stat. */
+/** Featured project: lead tagline, description, tech line, stack chips, then repo and live links, after a dated personal GitHub stat. */
 export function ProjectTile() {
   return (
     <Tile span={7} title={`Featured project: ${p.name}`} id="projects">
@@ -17,11 +17,7 @@ export function ProjectTile() {
         <img className="project__preview" src={p.preview.gif} alt={p.preview.alt} width={800} height={512} loading="lazy" />
       </picture>
       <p>{p.description}</p>
-      <ul className="project__highlights">
-        {p.highlights.map((h) => (
-          <li key={h}>{h}</li>
-        ))}
-      </ul>
+      <p className="project__tech">{p.tech}</p>
       <ul className="chips" role="list" aria-label="Tech stack">
         {p.stack.map((s) => (
           <li key={s}>{s}</li>

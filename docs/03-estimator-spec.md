@@ -193,7 +193,8 @@ Turnstile, rate limit (counts as one), daily cap, cache, 1500-character limit an
 and no server change. A counter shows room left; the button is `aria-disabled` with its reason (no answer, too
 long, waiting for the human check, cooldown, planning) so it stays focusable. The new plan shows "Refined from:
 <confidence, hours, build range>. Now: <same>." until a plain estimate replaces it; radio rebuilds keep it.
-Hidden in print. Answers are auto-growing textareas (`field-sizing: content`, 2 rows elsewhere; B4a). When the
+The reason names at most 2 added and 2 removed tasks ("a, b and 3 more"); when more than half the old tasks
+are gone it says "Plan re-drafted from your answers (+4 h)." instead (W5, B4e). Hidden in print. Answers are auto-growing textareas (`field-sizing: content`, 2 rows elsewhere; B4a). When the
 hours move more than 5%, the "Refined from" line adds why ("More hours: your answers added detail…" or "Fewer
 hours: …"; B4b). With no human-check token the reason names the widget by the Estimate button and a "Go to the
 human check" button scrolls it into view, since a visible challenge renders there, far above (B4c). After any
@@ -216,7 +217,8 @@ fallback if rendering throws.
 
 ## Output tabs
 
-Above the tabs, under the title, one plain-English answer line built in code (E8):
+Above the tabs, under the title, one plain-English answer line built in code (E8). The summary under it shows its first sentence only
+(`firstSentence` in `lib/refine.ts`; the prompt also asks for one sentence of at most 30 words) (W3):
 "About N weeks for a team of P, roughly RM Xk–Yk to build." (rounded calendar weeks, `budget().build`).
 
 **Tab 1 — Timeline** (default; was "Phases and timeline", shortened in M11 so tabs fit one line on phones)

@@ -30,7 +30,8 @@ Read only the section for the tile you are changing.
 - Preview: looping GIF of the live site (`featuredProject.preview`, `public/radiozk-demo.gif`, shows a real track
   name) between tagline and description, full width with a `--line` border. `<picture>` serves the still PNG
   under `prefers-reduced-motion: reduce`. Re-record when radiozk's UI changes.
-- Highlights: bulleted list with tighter 0.25em item spacing. Stack: `.chips` labelled "Tech stack".
+- Description is one sentence; a one-line tech summary (`featuredProject.tech`, `--fs-sm`, `--muted`) replaces
+  the old highlight bullets (W6). Stack: `.chips` labelled "Tech stack".
 - Links: a list in a wrapping flex row. Every external link gets `target="_blank"`,
   `rel="noopener noreferrer"` and visually hidden " (opens in a new tab)". No arrow glyphs or icons.
 

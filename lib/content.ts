@@ -74,13 +74,9 @@ export const now = {
 export const featuredProject = {
   name: "radiozk",
   tagline: "A lossless web radio player with listener ratings",
-  description:
-    "Plays the Radio Calico HLS stream in FLAC with an automatic AAC fallback, shows what's playing, and stores thumbs up or down per track in PostgreSQL.",
-  highlights: [
-    "Express 5 API with per-IP rate limiting and request validation",
-    "Unit, API, UI and Playwright end-to-end tests in GitHub Actions",
-    "Production and dev Docker Compose setups, plus a Render Blueprint",
-  ],
+  description: "Streams Radio Calico in lossless FLAC with an AAC fallback, shows what's playing and saves listener ratings.",
+  // W6: one tech line in place of the three highlight bullets.
+  tech: "Express 5 and PostgreSQL behind per-IP rate limits, four test layers in GitHub Actions, Docker and Render deploys.",
   stack: ["React 19", "TypeScript", "Node.js", "Express", "PostgreSQL", "nginx", "Docker"],
   repo: "https://github.com/zenntkaixa/radiozk",
   // Looping capture of the live site (recorded 2026-11-24); the still is the first frame, for reduced motion.
@@ -432,12 +428,16 @@ export const estimatorCopy = {
     snap: (confidence: string, hours: number, build: string) => `${confidence} confidence, ${hours} h, ${build}`,
     from: (before: string, after: string) => `Refined from: ${before}. Now: ${after}.`,
     // B4d: name the tasks that changed. Always shown when hours or tasks change, so there is no hidden threshold.
-    why: (beforeHours: number, afterHours: number, added: string[] = [], removed: string[] = []) => {
+    // W5/B4e: at most 2 names per side; when most of the old tasks went, one "re-drafted" line instead of a list.
+    why: (beforeHours: number, afterHours: number, added: string[] = [], removed: string[] = [], beforeCount = 0) => {
       const list = (names: string[]) =>
-        names.length > 3 ? `${names.slice(0, 3).join(", ")} and ${names.length - 3} more` : names.join(", ");
+        names.length > 2 ? `${names.slice(0, 2).join(", ")} and ${names.length - 2} more` : names.join(", ");
+      const delta = Math.round(afterHours) - Math.round(beforeHours);
+      if (beforeCount && removed.length > beforeCount / 2)
+        return ` Plan re-drafted from your answers${delta ? ` (${delta > 0 ? "+" : "−"}${Math.abs(delta)} h)` : ""}.`;
       if (added.length || removed.length)
         return ` ${[added.length && `Added: ${list(added)}.`, removed.length && `Removed: ${list(removed)}.`].filter(Boolean).join(" ")}`;
-      return Math.round(beforeHours) === Math.round(afterHours) ? "" : " Same tasks; hours re-estimated.";
+      return delta ? " Same tasks; hours re-estimated." : "";
     },
   },
   savedNote: (date: string) =>

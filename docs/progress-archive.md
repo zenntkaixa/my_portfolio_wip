@@ -4,6 +4,14 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-25 — Session 95: remove the Experience Gantt bars (M14)
+
+**Done** on `fix/m14-remove-experience-timeline` (Izzat: the horizontal timeline "is not pleasing my views").
+- Reverted G6 (#128 code): bars, year axis, `lib/careerSpan.ts`, its tests, the CSS and the tile rules. The Experience
+  tile is the vertical timeline it was before. No copy changed.
+- check 411 (the 5 careerSpan tests went with it), e2e 180; visual-check `#experience` at 390 and 1440 light: no issues.
+- Production still shows the bars until this ships; dev-update to follow with the next release.
+
 ## 2026-11-24 — Session 94: release PR #130 and docs-audit fixes
 
 **Done** (Izzat: "release", then "fix docs follow-up").

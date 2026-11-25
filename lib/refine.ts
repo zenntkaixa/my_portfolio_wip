@@ -30,3 +30,7 @@ export function taskDiff(before: string[], after: string[]) {
 }
 
 export const taskNames = (plan: Plan) => plan.phases.flatMap((p) => p.tasks.filter((t) => !t.addedByCode).map((t) => t.task));
+
+/** W3: the plan summary shows one sentence (saved plans were written before the prompt asked for one). */
+// shortcut: splits at the first ". " so an abbreviation like "e.g. " ends it early; fine for model prose.
+export const firstSentence = (text: string) => text.match(/^.*?[.!?](?=\s|$)/s)?.[0] ?? text;

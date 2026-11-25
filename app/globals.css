@@ -722,8 +722,9 @@ p {
   border-radius: 8px;
 }
 
-.project__highlights > li + li {
-  margin-top: 0.25em;
+.project__tech {
+  color: var(--muted);
+  font-size: var(--fs-sm);
 }
 
 .tile > .project__links {

@@ -28,7 +28,7 @@ import { PhaseTimeline } from "./PhaseTimeline";
 import { RequestFlow } from "./RequestFlow";
 import { RefineForm } from "./RefineForm";
 import { range } from "./money";
-import { refinedBrief, taskDiff, taskNames, type Answer } from "@/lib/refine";
+import { firstSentence, refinedBrief, taskDiff, taskNames, type Answer } from "@/lib/refine";
 import { TaskTable } from "./TaskTable";
 import { PlanActions } from "./PlanActions";
 import { ResultsBoundary } from "./ResultsBoundary";
@@ -602,11 +602,11 @@ export function Estimator() {
                 {estimatorCopy.refine.from(shown.refinedFrom.text, snapshot(shown))}
                 {(() => {
                   const d = taskDiff(shown.refinedFrom.tasks, taskNames(shown.plan));
-                  return estimatorCopy.refine.why(shown.refinedFrom.hours, shown.plan.totalHours, d.added, d.removed);
+                  return estimatorCopy.refine.why(shown.refinedFrom.hours, shown.plan.totalHours, d.added, d.removed, shown.refinedFrom.tasks.length);
                 })()}
               </p>
             )}
-            <p>{shown.plan.summary}</p>
+            <p>{firstSentence(shown.plan.summary)}</p>
             <PlanActions plan={shown.plan} team={shown.team} scope={shown.scope} />
             <ResultTabs
               label={estimatorCopy.tabsLabel}

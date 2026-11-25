@@ -178,14 +178,12 @@ test.describe("featured project tile", () => {
   const region = (page: Page) =>
     page.getByRole("region", { name: `Featured project: ${featuredProject.name}`, exact: true });
 
-  test("shows the tagline, description and each highlight", async ({ page }) => {
+  test("shows the tagline, description and tech line", async ({ page }) => {
     await page.goto("/");
     const tile = region(page);
     await expect(tile.getByText(featuredProject.tagline, { exact: true })).toBeVisible();
     await expect(tile.getByText(featuredProject.description, { exact: true })).toBeVisible();
-    for (const highlight of featuredProject.highlights) {
-      await expect(tile.getByText(highlight, { exact: true })).toBeVisible();
-    }
+    await expect(tile.getByText(featuredProject.tech, { exact: true })).toBeVisible();
   });
 
   test("shows the dated personal GitHub stat with a link to the profile", async ({ page }) => {
