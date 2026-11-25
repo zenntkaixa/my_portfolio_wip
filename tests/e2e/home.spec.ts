@@ -1,5 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import {
+  howItsBuilt,
   aiWorkflow,
   backToTop,
   caseStudies,
@@ -177,14 +178,12 @@ test.describe("featured project tile", () => {
   const region = (page: Page) =>
     page.getByRole("region", { name: `Featured project: ${featuredProject.name}`, exact: true });
 
-  test("shows the tagline, description and each highlight", async ({ page }) => {
+  test("shows the tagline, description and tech line", async ({ page }) => {
     await page.goto("/");
     const tile = region(page);
     await expect(tile.getByText(featuredProject.tagline, { exact: true })).toBeVisible();
     await expect(tile.getByText(featuredProject.description, { exact: true })).toBeVisible();
-    for (const highlight of featuredProject.highlights) {
-      await expect(tile.getByText(highlight, { exact: true })).toBeVisible();
-    }
+    await expect(tile.getByText(featuredProject.tech, { exact: true })).toBeVisible();
   });
 
   test("shows the dated personal GitHub stat with a link to the profile", async ({ page }) => {
@@ -425,6 +424,7 @@ test("the footer is a contentinfo landmark with the year, name and build line", 
 test("the estimator says who built it and links the code; the 20-character minimum shows before typing", async ({ page }) => {
   await page.goto("/");
   const tile = page.locator("#estimator");
+  await tile.getByText(howItsBuilt.summary).click(); // W2: the code link sits inside the panel
   await expect(tile.getByRole("link", { name: `${estimatorBuiltBy.link} (opens in a new tab)` })).toHaveAttribute(
     "href",
     estimatorBuiltBy.url,

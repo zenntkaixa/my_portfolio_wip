@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "./fakeTurnstile";
 import plan from "../fixtures/plan.json";
-import { backToTop, estimatorBuiltBy, estimatorCopy, howItsBuilt } from "../../lib/content";
+import { backToTop, estimatorCopy, howItsBuilt } from "../../lib/content";
 import { samplePlan } from "../../lib/samplePlan";
 
 // Keyboard-only walkthrough. The real API is never called: /api/estimate is intercepted.
@@ -97,22 +97,21 @@ test("Tab order, visible focus indicators, no trap, Shift+Tab goes back", async 
   // First stop is the skip link; it targets the estimator.
   expect(stops[0], listing).toMatchObject({ tag: "a", name: "Skip to the estimator" });
 
-  // Estimator: the "built by me" code link under the intro, then the controls in the documented order:
-  // chips, textarea, slider, seniority, working style, submit.
+  // Estimator: the closed "How it's built" disclosure (one stop; the code link inside it is not focusable
+  // while closed), then the controls in the documented order: chips, textarea, slider, seniority, working style, submit.
   const inEstimator = stops.filter((s) => s.section.startsWith("estimator"));
-  expect(inEstimator[0], listing).toMatchObject({ tag: "a", name: `${estimatorBuiltBy.link} (opens in a new tab)` });
-  // Then the closed "How it's built" disclosure (one stop; its contents are not focusable while closed).
-  expect(inEstimator[1], listing).toMatchObject({ tag: "summary", name: howItsBuilt.summary });
-  const estAll = inEstimator.slice(2);
+  expect(inEstimator[0], listing).toMatchObject({ tag: "summary", name: howItsBuilt.summary });
+  const estAll = inEstimator.slice(1);
   // The example results follow the form: Copy and Print, the selected tab, then its panel.
   const est = estAll.slice(0, estAll.findIndex((s) => s.name === estimatorCopy.submit) + 1);
   const after = estAll.slice(est.length);
-  expect(after.slice(0, 2).map((s) => s.tag), listing).toEqual(["button", "button"]);
-  // Then the selected tab, its panel, the four list disclosures (Assumptions, Risks, Questions, Not included;
-  // open at this width) and the Email me and LinkedIn call-to-action links.
+  // The "About plans" disclosure (W2) sits under submit, before Copy and Print.
+  expect(after.slice(0, 3).map((s) => s.tag), listing).toEqual(["summary", "button", "button"]);
+  // Then the selected tab, its panel, the four closed list disclosures (Assumptions, Risks, Questions,
+  // Not included) and the Email me and LinkedIn call-to-action links.
   // Then the refine form (B4): one input per open question and its button.
   const refine = [...(samplePlan.openQuestions ?? []).map(() => "textarea"), "button"];
-  expect(after.slice(2).map((s) => s.role || s.tag), listing).toEqual(["tab", "tabpanel", "summary", "summary", "summary", "summary", ...refine, "a", "a"]);
+  expect(after.slice(3).map((s) => s.role || s.tag), listing).toEqual(["tab", "tabpanel", "summary", "summary", "summary", "summary", ...refine, "a", "a"]);
   const chips = est.filter((s) => s.tag === "button" && s.role === "").slice(0, -1);
   const kinds = est.map((s) => (s.tag === "textarea" ? "textarea" : s.role === "range" ? "range" : s.role === "radio" ? "radio" : "button"));
   expect(kinds, listing).toEqual([...chips.map(() => "button"), "textarea", "range", "radio", "radio", "button"]);

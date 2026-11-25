@@ -61,6 +61,7 @@ test("the model note under submit sets expectations", async ({ page }) => {
 
 test("cache notice is visible and the usage line is absent without a database", async ({ page }) => {
   await page.goto("/");
+  await page.getByText(estimatorCopy.aboutSummary).click();
   await expect(page.getByText(estimatorCopy.cacheNote)).toBeVisible();
   await expect(page.getByText(/plans generated since/)).toHaveCount(0);
 });

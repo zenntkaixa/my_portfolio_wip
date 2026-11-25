@@ -133,6 +133,7 @@ test("the AI review task and code-added risk render", async ({ page }) => {
   await page.getByRole("tab", { name: estimatorCopy.tabTasks }).click();
   await expect(page.getByText(estimatorCopy.aiPlan.reviewTask).first()).toBeVisible();
   await page.getByRole("tab", { name: estimatorCopy.tabPhases }).click();
+  await page.getByRole("heading", { name: estimatorCopy.risksHeading }).click();
   await expect(page.getByText(estimatorCopy.aiPlan.reviewRisk)).toBeVisible();
 });
 

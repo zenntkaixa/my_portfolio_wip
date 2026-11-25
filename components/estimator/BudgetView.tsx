@@ -89,9 +89,13 @@ export function BudgetView({ plan, team, scope }: { plan: Plan; team: Team; scop
       </div>
       <ModeComparison scope={scope} team={team} />
       <EstimateDrivers plan={plan} seniority={team.seniority} mode={team.mode} />
-      <p className="tab3-note">{c.seniorityNote}</p>
-      <p className="tab3-note">{c.rateNote(HOURLY_RATE)}</p>
-      <p className="tab3-note">{c.note}</p>
+      {/* W4: the three footnotes share one disclosure. */}
+      <details className="cost-notes">
+        <summary>{c.notesSummary}</summary>
+        <p className="tab3-note">{c.seniorityNote}</p>
+        <p className="tab3-note">{c.rateNote(HOURLY_RATE)}</p>
+        <p className="tab3-note">{c.note}</p>
+      </details>
     </div>
   );
 }

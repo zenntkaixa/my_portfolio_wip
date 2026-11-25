@@ -30,7 +30,8 @@ Read only the section for the tile you are changing.
 - Preview: looping GIF of the live site (`featuredProject.preview`, `public/radiozk-demo.gif`, shows a real track
   name) between tagline and description, full width with a `--line` border. `<picture>` serves the still PNG
   under `prefers-reduced-motion: reduce`. Re-record when radiozk's UI changes.
-- Highlights: bulleted list with tighter 0.25em item spacing. Stack: `.chips` labelled "Tech stack".
+- Description is one sentence; a one-line tech summary (`featuredProject.tech`, `--fs-sm`, `--muted`) replaces
+  the old highlight bullets (W6). Stack: `.chips` labelled "Tech stack".
 - Links: a list in a wrapping flex row. Every external link gets `target="_blank"`,
   `rel="noopener noreferrer"` and visually hidden " (opens in a new tab)". No arrow glyphs or icons.
 
@@ -100,5 +101,5 @@ Read only the section for the tile you are changing.
 - The comparison table marks the current working style with a `.pill--current` pill.
 
 ## Estimator "How it's built" panel (M14)
-- A native `<details class="built">` in `EstimatorTile`, directly under the "Read the code" line, closed by default, no client JS. Copy is `howItsBuilt` in `lib/content.ts`.
+- A native `<details class="built">` in `EstimatorTile`, directly under the intro, closed by default; the "I built this… Read the code" line is its first paragraph (W2), no client JS. Copy is `howItsBuilt` in `lib/content.ts`.
 - Sections: request pipeline (numbered `ol`, auto-fit grid, no horizontal scroll at 320px), "Model proposes, code enforces" (two lists, stacked under 30rem), "Live numbers" (`usageStats()`, last 30 days; shown only with at least 5 ok plans, so absent without `DATABASE_URL`), dated eval table (static record from `npm run eval:estimator`, run by hand, never in CI; the variance row stays), and ADR links on GitHub.
