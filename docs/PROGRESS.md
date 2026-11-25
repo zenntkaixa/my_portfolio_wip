@@ -5,6 +5,17 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-25 — Session 101: release #138, G4a and R3 (M15)
+
+**Done** on `feat/m15-gif-crop-refine-row` (Izzat: "go", review 2026-11-25 19:20).
+- Released #138 (fbcb894); dev-update 2026-11-25-1903 in Drive.
+- G4a: GIF cropped to the player (540×400), no buffering frame; ≤720 px loads a 420×512 phone crop (no About
+  frame). Player text scale on phone 0.36 → 0.68, desktop 0.53 → 0.78. Reduced motion keeps one wide still.
+- R3: refine note is one row ("Refined: Medium → High · 233 → 216 h · RM 18.5k–28.4k → …") plus a reason line;
+  "Re-drafted from your answers." drops its hour delta (now in the row).
+- check 418; estimator + home e2e 44/44; source per width checked at 360 and 1440.
+- Next: S3 is Izzat's; R2 optional (prompt work, paid eval).
+
 ## 2026-11-25 — Session 100: release #136, live check, R1 and L1 (M15)
 
 **Done** on `feat/m15-quick-wins` (Izzat: "go for it"; L1 option "GIF beside text").
@@ -14,12 +25,3 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 - L1: radiozk GIF beside description + tech on desktop (2:3). Gap beside the AI tile 352–466 px → 137–156 px;
   GIF now 304–423 px wide on desktop (was 522–721).
 - Next: G4a phone crop; S3 is Izzat's.
-
-## 2026-11-25 — Session 99: release prep, B4f fix (M14)
-
-**Done** on `fix/m14-b4f-refine-only` (Izzat: "go for release").
-- Full e2e on `develop` failed 1/181: B4f also scrolled a plain desktop submit when the results top was off screen
-  (batch-a large-desktop test). Now refines only. Spec B4e wording made exact (docs-auditor).
-- check 416; estimator + batch-a 105/105 on 5 repeats (2 focus flakes in an earlier 42-run, not reproduced).
-- security-engineer: no findings, audit 0. release-engineer: green, no env/API/deps changes. docs-auditor: 1 fix.
-- Next: merge this, then the release PR develop to main, then the dev-update with word counts.

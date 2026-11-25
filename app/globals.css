@@ -1674,6 +1674,9 @@ p {
   font-size: var(--fs-sm);
   color: var(--muted);
 }
+.estimator__note-line {
+  display: block; /* R3: the reason sits on its own short line under the compare row */
+}
 
 /* Result tabs: underline style. Focus uses the global :focus-visible halo (nothing here clips it). */
 .rtabs__list {

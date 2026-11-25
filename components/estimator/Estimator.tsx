@@ -18,7 +18,7 @@ import {
   isScope,
   parseRetryAfter,
 } from "@/lib/estimatorClient";
-import { estimatorBriefs, estimatorCopy, estimatorExamples, profile } from "@/lib/content";
+import { estimatorBriefs, estimatorCopy, estimatorExamples, profile, type RefineSnap } from "@/lib/content";
 import { sampleFeature, samplePlan, sampleScope, sampleTeam } from "@/lib/samplePlan";
 import { buildPlan } from "@/lib/estimateModel";
 import { pickRandom } from "@/lib/pick";
@@ -27,7 +27,6 @@ import { Turnstile, type TurnstileHandle } from "./Turnstile";
 import { PhaseTimeline } from "./PhaseTimeline";
 import { RequestFlow } from "./RequestFlow";
 import { RefineForm } from "./RefineForm";
-import { range } from "./money";
 import { firstSentence, refinedBrief, stickyFacts, taskDiff, taskNames, type Answer } from "@/lib/refine";
 import { TaskTable } from "./TaskTable";
 import { PlanActions } from "./PlanActions";
@@ -39,7 +38,7 @@ import { budget, type Team } from "@/lib/budget";
 type Status =
   | { kind: "idle" }
   | { kind: "submitting" }
-  | { kind: "success"; scope: Scope; plan: Plan; teamLabel: string; team: Team; example?: true; cached?: true; saved?: true; description?: string; refinedFrom?: { text: string; hours: number; weeks: number; tasks: string[] } }
+  | { kind: "success"; scope: Scope; plan: Plan; teamLabel: string; team: Team; example?: true; cached?: true; saved?: true; description?: string; refinedFrom?: { snap: RefineSnap; hours: number; weeks: number; tasks: string[] } }
   | { kind: "error"; message: string; status: number };
 
 const exampleStatus: Status = {
@@ -122,7 +121,7 @@ export function Estimator() {
   const [savedOn, setSavedOn] = useState("");
   const savedBusy = useRef(false);
   // B4: the plan a refine started from, as one line, until that refine succeeds (or fails).
-  const pendingRefine = useRef<{ text: string; hours: number; weeks: number; tasks: string[]; facts: Scope["facts"] } | null>(null);
+  const pendingRefine = useRef<{ snap: RefineSnap; hours: number; weeks: number; tasks: string[]; facts: Scope["facts"] } | null>(null);
 
   // Abort any in-flight request on unmount.
   useEffect(() => () => abortRef.current?.abort(), []);
@@ -287,12 +286,11 @@ export function Estimator() {
     // Deliberately keyed on the two choices only: typing or team-size changes must not rebuild.
   }, [seniority, mode]);
 
-  const snapshot = (s: Success) =>
-    estimatorCopy.refine.snap(s.plan.confidence, Math.round(s.plan.totalHours), range(budget(s.plan, s.team).build));
+  const snapshot = (s: Success): RefineSnap => ({ confidence: s.plan.confidence, hours: Math.round(s.plan.totalHours), ...budget(s.plan, s.team).build });
 
   function refine(from: Success, answers: Answer[]) {
     const text = refinedBrief(from.description ?? sampleFeature, answers);
-    pendingRefine.current = { text: snapshot(from), hours: from.plan.totalHours, weeks: from.plan.calendarWeeks, tasks: taskNames(from.plan), facts: from.scope.facts };
+    pendingRefine.current = { snap: snapshot(from), hours: from.plan.totalHours, weeks: from.plan.calendarWeeks, tasks: taskNames(from.plan), facts: from.scope.facts };
     setFeature(text);
     void run(text);
   }
@@ -605,13 +603,18 @@ export function Estimator() {
             </p>
             {!banner && shown.refinedFrom && (
               <p className="estimator__note" data-testid="refined">
-                {estimatorCopy.refine.from(shown.refinedFrom.text, snapshot(shown))}
                 {(() => {
-                  const d = taskDiff(shown.refinedFrom.tasks, taskNames(shown.plan));
                   const r = shown.refinedFrom;
-                  return (
+                  const d = taskDiff(r.tasks, taskNames(shown.plan));
+                  const reason = (
                     estimatorCopy.refine.why(r.hours, shown.plan.totalHours, d.added, d.removed, r.tasks.length) +
                     estimatorCopy.refine.calendar(r.hours, shown.plan.totalHours, r.weeks, shown.plan.calendarWeeks)
+                  ).trim();
+                  return (
+                    <>
+                      {estimatorCopy.refine.compare(r.snap, snapshot(shown))}
+                      {reason && <span className="estimator__note-line"> {reason}</span>}
+                    </>
                   );
                 })()}
               </p>

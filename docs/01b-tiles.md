@@ -30,6 +30,8 @@ Read only the section for the tile you are changing.
 - Preview: looping GIF of the live site (`featuredProject.preview`, `public/radiozk-demo.gif`, shows a real track
   name) between tagline and description, full width with a `--line` border. `<picture>` serves the still PNG
   under `prefers-reduced-motion: reduce`. Re-record when radiozk's UI changes.
+- G4a crop: 540×400 of the player for tablet and desktop; ≤ 720 px gets `radiozk-demo-phone.gif` (420×512, no About
+  frame), via `<source media>` with its own width and height. Neither has the "Buffering…" frame.
 - Desktop (≥ 1025 px, L1): the GIF sits in the right 3/5 beside `.project__about` (description and tech line),
   so the tile is about as tall as the AI workflow tile next to it. Title, stat, tagline, chips and links stay full width.
   Tablet and phone keep the stacked order.

@@ -142,7 +142,7 @@ test("answering the questions refines the plan: answers go in the brief and the 
   await form.getByLabel(q).fill("Five minutes, three wrong tries");
   await expect(refineBtn).toHaveAttribute("aria-disabled", "false", { timeout: 15_000 });
   await refineBtn.click();
-  await expect(page.getByTestId("refined")).toHaveText(/^Refined from: medium confidence, \d+ h, RM\s[\d,–]+\. Now: high confidence, \d+ h, RM\s[\d,–]+\.$/);
+  await expect(page.getByTestId("refined")).toHaveText(/^Refined: Medium → High · (\d+ → )?\d+ h · RM [\d.]+k(–[\d.]+k)?( → [\d.]+k(–[\d.]+k)?)?( .+)?$/);
   expect(bodies).toHaveLength(2);
   expect(bodies[1].feature).toBe(`${brief}\n\n${estimatorCopy.refine.lead}\n- ${q} Five minutes, three wrong tries`);
   await expect(page.getByLabel("Feature description")).toHaveValue(bodies[1].feature);
@@ -205,7 +205,7 @@ test("desktop refine shows the progress at once and never lowers confidence (B4f
   const results = page.locator("#estimator-results");
   await expect(results).toHaveAttribute("aria-busy", "true");
   await expect.poll(async () => (await results.boundingBox())?.y ?? -1, { timeout: 1_000 }).toBeGreaterThanOrEqual(0);
-  await expect(page.getByTestId("refined")).toHaveText(/^Refined from: medium confidence, .*Now: medium confidence/);
+  await expect(page.getByTestId("refined")).toHaveText(/^Refined: Medium · /);
 });
 
 test("without a human-check token the refine form says why and can jump to the check (B4c)", async ({ page }) => {

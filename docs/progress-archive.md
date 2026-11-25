@@ -4,6 +4,15 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-25 — Session 99: release prep, B4f fix (M14)
+
+**Done** on `fix/m14-b4f-refine-only` (Izzat: "go for release").
+- Full e2e on `develop` failed 1/181: B4f also scrolled a plain desktop submit when the results top was off screen
+  (batch-a large-desktop test). Now refines only. Spec B4e wording made exact (docs-auditor).
+- check 416; estimator + batch-a 105/105 on 5 repeats (2 focus flakes in an earlier 42-run, not reproduced).
+- security-engineer: no findings, audit 0. release-engineer: green, no env/API/deps changes. docs-auditor: 1 fix.
+- Next: merge this, then the release PR develop to main, then the dev-update with word counts.
+
 ## 2026-11-25 — Session 98: finish the refine work, B4g, B4e, B4f (M14)
 
 **Done** on `feat/m14-concision` (Izzat: "finish the refine work", live run allowed this round).

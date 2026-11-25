@@ -191,10 +191,11 @@ plan". `lib/refine.ts` appends the answered ones to the plan's brief as plain te
 questions:" then "- question answer" lines), the textarea takes that text, and it goes out as a normal estimate:
 Turnstile, rate limit (counts as one), daily cap, cache, 1500-character limit and prompt handling all unchanged,
 and no server change. A counter shows room left; the button is `aria-disabled` with its reason (no answer, too
-long, waiting for the human check, cooldown, planning) so it stays focusable. The new plan shows "Refined from:
-<confidence, hours, build range>. Now: <same>." until a plain estimate replaces it; radio rebuilds keep it.
+long, waiting for the human check, cooldown, planning) so it stays focusable. The new plan shows one compact row, "Refined:
+Medium → High · 233 → 216 h · RM 18.5k–28.4k → 17.4k–22.8k" (unchanged values once, money in rounded k; full
+figures stay in the Budget tab), with the reason on a short line under it (R3), until a plain estimate replaces it; radio rebuilds keep it.
 The reason names at most 2 added and 2 removed tasks ("a, b and 3 more"); when more than half the old tasks
-are gone it says "Plan re-drafted from your answers (+4 h)." instead (W5). Reworded tasks are not changes: names
+are gone it says "Re-drafted from your answers." (the hour change is in the row above) instead (W5). Reworded tasks are not changes: names
 sharing at least 60% of their words (two letters or more) match (B4e). Facts the previous plan stated stay stated in
 the refined one (`stickyFacts`), since answers only add to the brief, so confidence never drops (B4g); the eval's
 "leave-refined" case checks it live. On desktop, a refine started below the results top scrolls them into view so
