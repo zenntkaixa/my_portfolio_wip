@@ -4,7 +4,7 @@
 import { requestBody } from "@/lib/prompt";
 import { normaliseScope, type Scope } from "@/lib/estimate";
 import { buildPlan, confidenceFor } from "@/lib/estimateModel";
-import { firstSentence, refinedBrief, stickyFacts } from "@/lib/refine";
+import { firstSentence, refinedBrief, stickyFacts, taskDiff, taskNames } from "@/lib/refine";
 
 // Same default as lib/estimator/anthropic.ts, so the eval tests the model production uses.
 const MODEL = process.env.ANTHROPIC_MODEL || "claude-haiku-5-5";
@@ -98,5 +98,14 @@ if (scopes.leave && scopes["leave-refined"]) {
   const rank = { low: 0, medium: 1, high: 2 } as const;
   const was = confidenceFor(before);
   console.log(`refine confidence: ${was} -> model ${raw}, shown ${shown}${rank[shown] < rank[was] ? "  FAIL: dropped" : "  ok"}`);
+  // R2: a small answer should keep most of the plan. Share of the old task names still there (reworded counts).
+  const names = (s: Scope) => taskNames(buildPlan(s, { teamSize: 4, seniority: "mixed", mode: "traditional" }));
+  const kept = (a: Scope, b: Scope) => {
+    const before = names(a);
+    return Math.round((100 * (before.length - taskDiff(before, names(b)).removed.length)) / (before.length || 1));
+  };
+  const refined = kept(scopes.leave, scopes["leave-refined"]);
+  const repeat = scopes["leave-repeat"] ? ` (same brief twice: ${kept(scopes.leave, scopes["leave-repeat"])}%)` : "";
+  console.log(`refine task overlap: ${refined}%${repeat}${refined < 70 ? "  FAIL: under 70%" : "  ok"}`);
 }
 console.log(`\ncost about US$${cost.toFixed(4)}`);

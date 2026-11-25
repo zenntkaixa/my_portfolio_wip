@@ -5,6 +5,15 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
 
 ---
 
+## 2026-11-25 — Session 102: R2 refine stability measured, prompt rule dropped (M15)
+
+**Done** on `chore/m15-refine-overlap-eval` (Izzat: "do R2", then "option 2"; live eval allowed, two runs).
+- Eval prints "refine task overlap" (share of old tasks kept, reworded names count) with a same-brief baseline.
+- A "keep the same phases and task names" prompt rule kept 17% and 24% (baseline 39%, 52%); reverted, no gain.
+- Open question: the "large" brief was refused ("one feature at a time") in both runs; no control run, so not
+  known whether that predates this session.
+- Next: release G4a and R3 when Izzat asks; option 1 (send previous task names) only if refines matter to visitors.
+
 ## 2026-11-25 — Session 101: release #138, G4a and R3 (M15)
 
 **Done** on `feat/m15-gif-crop-refine-row` (Izzat: "go", review 2026-11-25 19:20).
@@ -15,13 +24,3 @@ waiting on Izzat. Keep the latest two entries here; move older ones to `docs/pro
   "Re-drafted from your answers." drops its hour delta (now in the row).
 - check 418; estimator + home e2e 44/44; source per width checked at 360 and 1440.
 - Next: S3 is Izzat's; R2 optional (prompt work, paid eval).
-
-## 2026-11-25 — Session 100: release #136, live check, R1 and L1 (M15)
-
-**Done** on `feat/m15-quick-wins` (Izzat: "go for it"; L1 option "GIF beside text").
-- Released #136 (1b1b820); dev-update 2026-11-25-1804 in Drive. Live check of the 18:35 review: claims hold;
-  my "two helper lines" finding was wrong (the cache note sits in the closed "About plans").
-- R1: `refine.calendar` adds "Calendar ±N wk: the phases were rescheduled." only when weeks move against hours.
-- L1: radiozk GIF beside description + tech on desktop (2:3). Gap beside the AI tile 352–466 px → 137–156 px;
-  GIF now 304–423 px wide on desktop (was 522–721).
-- Next: G4a phone crop; S3 is Izzat's.
