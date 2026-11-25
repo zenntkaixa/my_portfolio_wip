@@ -4,6 +4,15 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-24 — Session 94: release PR #130 and docs-audit fixes
+
+**Done** (Izzat: "release", then "fix docs follow-up").
+- Pre-release: check 415, e2e 180, `security-engineer` (no blockers, audit 0), `release-engineer`, `docs-auditor`.
+  Release PR #130 (develop into main) open for Izzat to merge.
+- Docs fixes on `docs/m14-audit-fixes`: architecture status cells and a `lib/estimateModel.ts` row, rate-limit note,
+  README estimator paths and the two eval scripts.
+- After the release merges: check Vercel, write the dev-update to the sync folder. Confirm prod `DAILY_LIMIT`.
+
 ## 2026-11-24 — Session 93: G4 radiozk preview GIF (M14)
 
 **Done** on `feat/m14-radiozk-preview`.

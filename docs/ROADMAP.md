@@ -173,3 +173,6 @@ need an ADR and Izzat's privacy call) wait for Izzat.
 - [x] G6 Experience as a Gantt-style timeline: a bar per job on a shared 2017-to-now axis, hollow dashed bar for the career break; text and list semantics unchanged (Izzat: "do g6") [ui-builder]
 - [x] G6 reverted: the Gantt-style Experience bars and axis removed; vertical timeline as before (Izzat: "not pleasing my views") [ui-builder]
 - [x] G4 radiozk preview on the featured project tile: looping GIF of the live site (shows a real track name), still PNG under reduced motion (Izzat: "looping GIF will do for now. show track name") [ui-builder]
+- [x] W1, W2, W4, W7 and the list half of W3 (review 2026-11-25 15:50, Izzat: "do the quick wins"): summary-card hints cut, form notes to one line plus an "About plans" disclosure, the code link inside "How it's built", the four plan lists closed at every width with counts, budget footnotes in one "How costs are worked out" disclosure, repeated "32" and "Eight years" removed [ui-builder]
+- [ ] W3 rest: cap the plan summary at one sentence (prompt or code) [prompt-engineer]
+- [ ] W5 short refine diff line (with B4e) · W6 radiozk tile to one sentence plus a tech line [ui-builder]
