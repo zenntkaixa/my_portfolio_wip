@@ -312,6 +312,7 @@ p {
 }
 
 .tile > p,
+.project__about > p,
 .tile .tab3-note {
   max-width: 70ch; /* readable measure in wide tiles; left-aligned */
 }
@@ -419,7 +420,8 @@ p {
 }
 
 /* Vertical rhythm between direct children (this also spaces the title from what follows). */
-.tile > * + * {
+.tile > * + *,
+.project__about > * + * {
   margin-top: 0.75em;
 }
 
@@ -738,6 +740,33 @@ p {
 
 .project__links > li {
   margin: 0;
+}
+
+/* L1: on desktop the GIF sits beside the description and tech line (.project__about), so the tile is about as
+   tall as the AI workflow tile next to it. Everything else stays full width. */
+@media (min-width: 1025px) {
+  .tile--project {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    column-gap: var(--gap);
+    align-content: start;
+  }
+  .tile--project > * {
+    grid-column: 1 / -1;
+  }
+  .tile--project > picture {
+    grid-column: 2;
+    grid-row: 4;
+    align-self: start;
+    margin-top: 0.75rem;
+  }
+  .tile--project > .project__about {
+    grid-column: 1;
+    grid-row: 4;
+  }
+  .tile--project .project__preview {
+    margin: 0;
+  }
 }
 
 /* ---- AI workflow tile ----

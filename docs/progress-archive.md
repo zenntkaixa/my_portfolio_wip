@@ -4,6 +4,19 @@ Older `docs/PROGRESS.md` entries, newest first. Read only when history is needed
 
 ---
 
+## 2026-11-25 — Session 98: finish the refine work, B4g, B4e, B4f (M14)
+
+**Done** on `feat/m14-concision` (Izzat: "finish the refine work", live run allowed this round).
+- B4g: `stickyFacts` keeps facts stated before a refine, so confidence never drops; eval case "leave-refined".
+- B4e: `taskDiff` matches reworded names (Jaccard of words ≥ 0.6), each old task once. Phase and role not used.
+- B4f: on desktop a refine scrolls the results top into view when it is off screen (test fails without the fix).
+- Live Haiku eval (US$0.009): 7 plans all one-sentence summaries (20–28 words, W3 prompt works); leave refined
+  medium to high; leave repeat 260 h vs 268 h, 19 tasks both; vague, recipe and injection refused. "medium"
+  flagged the AI/seniority word check (not inspected).
+- check 416; e2e estimator, batch-b, keyboard 17/17.
+
+---
+
 ## 2026-11-25 — Session 97: concision rest, W3 summary, W5, W6 (M14)
 
 **Done** on `feat/m14-concision` (Izzat: "keep building", same batch as session 96).

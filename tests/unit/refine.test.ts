@@ -77,4 +77,13 @@ describe("refine.why and taskDiff (B4d)", () => {
     expect(estimatorCopy.refine.why(175, 202)).toBe(" Same tasks; hours re-estimated.");
     expect(estimatorCopy.refine.why(200, 200)).toBe("");
   });
+
+  it("explains the calendar only when it moves against the hours (R1)", () => {
+    const cal = estimatorCopy.refine.calendar;
+    expect(cal(340, 310, 6.2, 6.8)).toBe(" Calendar +0.6 wk: the phases were rescheduled.");
+    expect(cal(300, 340, 6.8, 6.2)).toBe(" Calendar −0.6 wk: the phases were rescheduled.");
+    expect(cal(300, 340, 6.2, 6.8)).toBe(""); // same direction needs no reason
+    expect(cal(300, 300, 6.2, 6.8)).toBe("");
+    expect(cal(340, 310, 6.2, 6.2)).toBe("");
+  });
 });

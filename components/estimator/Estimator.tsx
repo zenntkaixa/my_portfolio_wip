@@ -39,7 +39,7 @@ import { budget, type Team } from "@/lib/budget";
 type Status =
   | { kind: "idle" }
   | { kind: "submitting" }
-  | { kind: "success"; scope: Scope; plan: Plan; teamLabel: string; team: Team; example?: true; cached?: true; saved?: true; description?: string; refinedFrom?: { text: string; hours: number; tasks: string[] } }
+  | { kind: "success"; scope: Scope; plan: Plan; teamLabel: string; team: Team; example?: true; cached?: true; saved?: true; description?: string; refinedFrom?: { text: string; hours: number; weeks: number; tasks: string[] } }
   | { kind: "error"; message: string; status: number };
 
 const exampleStatus: Status = {
@@ -122,7 +122,7 @@ export function Estimator() {
   const [savedOn, setSavedOn] = useState("");
   const savedBusy = useRef(false);
   // B4: the plan a refine started from, as one line, until that refine succeeds (or fails).
-  const pendingRefine = useRef<{ text: string; hours: number; tasks: string[]; facts: Scope["facts"] } | null>(null);
+  const pendingRefine = useRef<{ text: string; hours: number; weeks: number; tasks: string[]; facts: Scope["facts"] } | null>(null);
 
   // Abort any in-flight request on unmount.
   useEffect(() => () => abortRef.current?.abort(), []);
@@ -292,7 +292,7 @@ export function Estimator() {
 
   function refine(from: Success, answers: Answer[]) {
     const text = refinedBrief(from.description ?? sampleFeature, answers);
-    pendingRefine.current = { text: snapshot(from), hours: from.plan.totalHours, tasks: taskNames(from.plan), facts: from.scope.facts };
+    pendingRefine.current = { text: snapshot(from), hours: from.plan.totalHours, weeks: from.plan.calendarWeeks, tasks: taskNames(from.plan), facts: from.scope.facts };
     setFeature(text);
     void run(text);
   }
@@ -608,7 +608,11 @@ export function Estimator() {
                 {estimatorCopy.refine.from(shown.refinedFrom.text, snapshot(shown))}
                 {(() => {
                   const d = taskDiff(shown.refinedFrom.tasks, taskNames(shown.plan));
-                  return estimatorCopy.refine.why(shown.refinedFrom.hours, shown.plan.totalHours, d.added, d.removed, shown.refinedFrom.tasks.length);
+                  const r = shown.refinedFrom;
+                  return (
+                    estimatorCopy.refine.why(r.hours, shown.plan.totalHours, d.added, d.removed, r.tasks.length) +
+                    estimatorCopy.refine.calendar(r.hours, shown.plan.totalHours, r.weeks, shown.plan.calendarWeeks)
+                  );
                 })()}
               </p>
             )}
