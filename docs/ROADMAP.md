@@ -181,3 +181,5 @@ need an ADR and Izzat's privacy call) wait for Izzat.
 ## M15 — Phone and layout follow-ups
 
 - [x] R1 refine line explains a calendar that moves against the hours ("Calendar +0.6 wk: the phases were rescheduled.") · L1 radiozk GIF beside the description on desktop, closing most of the empty space next to the AI workflow tile (review 2026-11-25 18:35, Izzat: "go for it", picked "GIF beside text") [ui-builder]
+- [x] G4a radiozk GIF cropped to the player (540×400) without the buffering frame; phones get a 420×512 crop via `<source media>` · R3 refine comparison as one compact row plus a short reason line (review 2026-11-25 19:20, Izzat: "go") [ui-builder]
+- [x] R2 refine stability (review 2026-11-25 19:20; Izzat: "option 2"): eval now reports the share of old tasks kept after a refine. A prompt-only rule was tried and dropped: 2 live Haiku runs kept 17% and 24% (same brief twice: 39%, 52%), because the model never sees the earlier tasks. Real fix would send previous task names with the refine (API change, security review); parked [prompt-engineer]
