@@ -1,4 +1,4 @@
-import { useEffect, useState, type CSSProperties } from "react";
+import type { CSSProperties } from "react";
 import { FACTS, type Plan } from "@/lib/estimate";
 import { estimatorCopy as copy } from "@/lib/content";
 import { missingText } from "@/lib/planText";
@@ -15,16 +15,15 @@ export function PhaseTimeline({ plan, teamLabel, teamSize }: { plan: Plan; teamL
   const weeks = weekLabels(plan.totalDays);
   const questions = plan.openQuestions ?? [];
   const outOfScope = plan.outOfScope ?? [];
-  // E9: the four lists start closed on phones (open on wider screens) to keep the results short.
-  // Set after mount: the example plan is server-rendered open, and hydration would keep that attribute.
-  const [wide, setWide] = useState(true);
-  useEffect(() => setWide(window.matchMedia("(min-width: 720px)").matches), []);
+  // E9, W3: the four lists start closed at every width; the count in the summary says what's inside.
   const list = (id: string, heading: string, items: string[], extra = "") =>
     items.length > 0 && (
       <section aria-labelledby={id}>
-        <details open={wide}>
+        <details>
           <summary>
-            <h4 id={id}>{heading}</h4>
+            <h4 id={id}>
+              {copy.listHeading(heading, items.length)}
+            </h4>
           </summary>
           <ul role="list" className={`tab1-list${extra}`}>
             {items.map((x, i) => (
@@ -42,18 +41,16 @@ export function PhaseTimeline({ plan, teamLabel, teamSize }: { plan: Plan; teamL
           <dt>{copy.summary.hours}</dt>
           <dd>{copy.summary.hoursValue(plan.totalHours)}</dd>
           <dd className="tab1-hint">
-            {copy.summary.rangeNote(plan.effort.best, plan.effort.worst)}. {copy.summary.hints.hours}
+            {copy.summary.rangeNote(plan.effort.best, plan.effort.worst)}
           </dd>
         </div>
         <div>
           <dt>{copy.summary.weeks}</dt>
           <dd>{copy.summary.weeksValue(plan.calendarWeeks)}</dd>
-          <dd className="tab1-hint">{copy.summary.hints.weeks}</dd>
         </div>
         <div>
           <dt>{copy.summary.team}</dt>
           <dd>{teamLabel}</dd>
-          <dd className="tab1-hint">{copy.summary.hints.team}</dd>
         </div>
         <div>
           <dt>{copy.summary.confidence}</dt>

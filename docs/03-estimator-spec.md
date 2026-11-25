@@ -193,9 +193,14 @@ Turnstile, rate limit (counts as one), daily cap, cache, 1500-character limit an
 and no server change. A counter shows room left; the button is `aria-disabled` with its reason (no answer, too
 long, waiting for the human check, cooldown, planning) so it stays focusable. The new plan shows "Refined from:
 <confidence, hours, build range>. Now: <same>." until a plain estimate replaces it; radio rebuilds keep it.
-Hidden in print. Answers are auto-growing textareas (`field-sizing: content`, 2 rows elsewhere; B4a). When the
-hours move more than 5%, the "Refined from" line adds why ("More hours: your answers added detail…" or "Fewer
-hours: …"; B4b). With no human-check token the reason names the widget by the Estimate button and a "Go to the
+The reason names at most 2 added and 2 removed tasks ("a, b and 3 more"); when more than half the old tasks
+are gone it says "Plan re-drafted from your answers (+4 h)." instead (W5). Reworded tasks are not changes: names
+sharing at least 60% of their words (two letters or more) match (B4e). Facts the previous plan stated stay stated in
+the refined one (`stickyFacts`), since answers only add to the brief, so confidence never drops (B4g); the eval's
+"leave-refined" case checks it live. On desktop, a refine started below the results top scrolls them into view so
+the request flow shows instead of a blank column; a plain submit never scrolls there (B4f). Hidden in print. Answers are auto-growing textareas
+(`field-sizing: content`, 2 rows elsewhere; B4a). The reason is always shown when the hours or tasks change, with
+"Same tasks; hours re-estimated." when only the hours moved (B4b, B4d). With no human-check token the reason names the widget by the Estimate button and a "Go to the
 human check" button scrolls it into view, since a visible challenge renders there, far above (B4c). After any
 result the loading height is released in the same render as the plan, so the scroll to the heading isn't thrown
 off by the page shrinking mid-scroll; moves longer than a screen are instant (E12b).
@@ -216,7 +221,8 @@ fallback if rendering throws.
 
 ## Output tabs
 
-Above the tabs, under the title, one plain-English answer line built in code (E8):
+Above the tabs, under the title, one plain-English answer line built in code (E8). The summary under it shows its first sentence only
+(`firstSentence` in `lib/refine.ts`; the prompt also asks for one sentence of at most 30 words) (W3):
 "About N weeks for a team of P, roughly RM Xk–Yk to build." (rounded calendar weeks, `budget().build`).
 
 **Tab 1 — Timeline** (default; was "Phases and timeline", shortened in M11 so tabs fit one line on phones)
@@ -225,16 +231,16 @@ Above the tabs, under the title, one plain-English answer line built in code (E8
   "Not stated" say it in words). Headline hours and days are whole numbers; task rows keep half hours. Phones:
   Effort and Calendar share a row; Team and Confidence span it. From 720 px: Effort, Calendar and Team in a row,
   Confidence full width below. Assumptions, Risks, Questions and Not included are
-  `<details>` disclosures, closed below 720 px and open above (E9).
-  Each item has a one-line hint under its value (`estimatorCopy.summary.hints`). Confidence is computed
+  `<details>` disclosures, closed at every width with the item count in the heading, e.g. "Risks (4)" (E9, W3).
+  Effort shows its best-to-worst range under the value; Calendar and Team have no hint (W1). Confidence is computed
   in code (`confidenceFor`) from the six facts the model reports the description states (users, existing
   systems, data, integrations, limits, out of scope): high at five or more, medium at three or four, low
   at two or fewer. Each fact is defined concretely in the prompt so runs agree: naming the user group
   counts as users (no number needed), naming an existing page or system counts as systems, and naming any
   outside service (a payment method, messaging channel, email or SMS provider) counts as integrations. A request that names no concrete capability ("make our app better") gets
   the error answer, like a non-software request; a short concrete one ("add dark mode") is planned. Its hint changes with the level (`hints.confidence.low|medium|high`).
-- Under the submit button, a note says the estimator uses Claude Haiku for speed and the plan is a
-  starting point, not a quote (`estimatorCopy.modelNote`).
+- Under the submit button, one line: Claude Haiku, about 10 s, a starting point, not a quote
+  (`estimatorCopy.modelNote`), then a closed "About plans" `<details>` holding the 24-hour cache note (W2).
 - Timeline: one horizontal bar per phase. `left = startDay / totalDays`, `width = durationDays / totalDays`.
   Week gridlines every 5 working days, with "Week 1", "Week 2"... centred under each span (at most 6
   labels; long plans label every 2nd or 3rd week). Label "Day 3 to 7" on each bar. Maths lives in `lib/timeline.ts`.
